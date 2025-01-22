@@ -2,20 +2,16 @@
   <h1>Playground</h1>
   <p>Count: {{ count }}</p>
   <button @click="increment">Increment</button>
+  <ImageUpload />
 </template>
-<script>
+
+<script setup>
 import { useMainStore } from '../store';
 import { storeToRefs } from 'pinia';
+import ImageUpload from '../components/ImageUpload.vue';
 
-export default {
-  setup() {
-    const store = useMainStore();
-    const { count } = storeToRefs(store);
+const store = useMainStore();
+const { count } = storeToRefs(store);
 
-    return {
-      count,
-      increment: store.increment,
-    };
-  },
-};
+const increment = store.increment;
 </script>

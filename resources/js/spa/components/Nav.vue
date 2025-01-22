@@ -18,11 +18,5 @@
     </ul>
   </nav>
 </template>
-<script>
-import { defineComponent } from 'vue';
-export default defineComponent({
-  name: 'NavComponent',
-  setup() {
-  }
-});
+<script setup>
 </script>
