@@ -6,7 +6,7 @@
   
     <form 
       method="POST" 
-      action="{{ route('login') }}" 
+      action="{{ route('auth.login') }}" 
       class="bg-white flex flex-col gap-y-16 w-full">
       @csrf
 
@@ -35,8 +35,8 @@
 
       <div class="flex items-center justify-between">
         
-        @if (Route::has('password.request'))
-          <a class="underline  focus:outline-none" href="{{ route('password.request') }}">
+        @if (Route::has('auth.password.request'))
+          <a class="underline  focus:outline-none" href="{{ route('auth.password.request') }}">
             {{ __('Forgot your password?') }}
           </a>
         @endif

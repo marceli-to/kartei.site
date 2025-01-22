@@ -1,0 +1,28 @@
+<template>
+  <nav class="bg-gray-100 p-16 flex justify-between">
+    <ul class="flex gap-x-16 list-none p-0">
+      <li>
+        <router-link to="/archiv">Home</router-link>
+      </li>
+      <li>
+        <router-link to="/archiv/benutzer">Users</router-link>
+      </li>
+      <li>
+        <router-link to="/archiv/playground">Playground</router-link>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="/logout">Logout</a>
+      </li>
+    </ul>
+  </nav>
+</template>
+<script>
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name: 'NavComponent',
+  setup() {
+  }
+});
+</script>

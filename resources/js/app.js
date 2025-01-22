@@ -1,2 +1,2 @@
 import './bootstrap';
-import './spa/dashboard.js';
+import './spa/app.js';

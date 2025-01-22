@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('page.home');
 
-Route::get('/dashboard', function () {
-  return view('dashboard');
-})->middleware(['auth', 'verified'])->name('page.dashboard');
+Route::get('/archiv/{any?}', function () {
+  return view('archive');
+})->where('any', '.*')->middleware(['auth', 'verified'])->name('page.archive');
 
 require __DIR__.'/auth.php';

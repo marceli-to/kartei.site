@@ -10,7 +10,7 @@
 
     <form 
       method="POST" 
-      action="{{ route('password.email') }}"
+      action="{{ route('auth.password.email') }}"
       class="bg-white flex flex-col gap-y-16 w-full">
       @csrf
 
