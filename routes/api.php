@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DummyController;
+use App\Http\Controllers\Api\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+  Route::post('/upload', [FileUploadController::class, 'store']);
   // Route::get('/participants', [ParticipantController::class, 'index']);
   // Route::put('/participant/{participant}', [ParticipantController::class, 'update']);
   // Route::delete('/participant/{participant}', [ParticipantController::class, 'destroy']);

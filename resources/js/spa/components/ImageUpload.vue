@@ -17,15 +17,14 @@
         style="display: none;"
       />
     </div>
-    <div v-if="imageUrl" class="image-preview">
-      <img :src="imageUrl" alt="Image Preview" />
+    <div v-if="imageUrl" class="max-w-md mx-auto">
+      <img :src="imageUrl" alt="Image Preview" class="w-full h-auto aspect-square object-cover" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-
 const imageUrl = ref(null);
 const isDragging = ref(false);
 
