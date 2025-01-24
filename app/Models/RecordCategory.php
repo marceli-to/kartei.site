@@ -1,9 +1,12 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasUuid;
 
 class RecordCategory extends Model
 {
+  use HasUuid;
+  
   protected $fillable = [
     'uuid', 
     'number', 
