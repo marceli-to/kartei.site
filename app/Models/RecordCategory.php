@@ -13,22 +13,22 @@ class RecordCategory extends Model
     'parent_id'
   ];
 
-  public function record()
+  public function record(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Record::class);
   }
 
-  public function numeral()
+  public function numeral(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Numeral::class);
   }
 
-  public function parent()
+  public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(RecordCategory::class, 'parent_id');
   }
 
-  public function children()
+  public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
     return $this->hasMany(RecordCategory::class, 'parent_id');
   }

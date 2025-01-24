@@ -12,7 +12,7 @@ class Tag extends Model
     'title'
   ];
 
-  public function records()
+  public function records(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
   {
     return $this->belongsToMany(Record::class, 'record_tags');
   }

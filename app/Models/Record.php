@@ -20,22 +20,22 @@ class Record extends Model
     'attributes' => 'array'
   ];
 
-  public function archive()
+  public function archive(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Archive::class);
   }
 
-  public function categories()
+  public function categories(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
     return $this->hasMany(RecordCategory::class);
   }
 
-  public function tags()
+  public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
   {
     return $this->belongsToMany(Tag::class, 'record_tags');
   }
   
-  public function media()
+  public function media(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Media::class);
   }

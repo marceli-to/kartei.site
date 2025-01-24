@@ -3,17 +3,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Numeral extends Model
+class Subscription extends Model
 {
   use SoftDeletes;
   
   protected $fillable = [
     'uuid',
-    'title'
+    'name',
   ];
 
-  public function categories(): \Illuminate\Database\Eloquent\Relations\HasMany
+  public function companies(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
-    return $this->hasMany(RecordCategory::class);
+    return $this->hasMany(Company::class);
   }
 }

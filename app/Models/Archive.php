@@ -15,17 +15,17 @@ class Archive extends Model
     'company_id'
   ];
 
-  public function records()
+  public function records(): \Illuminate\Database\Eloquent\Relations\HasMany
   {
     return $this->hasMany(Record::class);
   }
 
-  public function media()
+  public function media(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Media::class);
   }
 
-  public function company()
+  public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Company::class);
   }

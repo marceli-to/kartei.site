@@ -11,13 +11,15 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('archives', function (Blueprint $table) {
+    Schema::create('companies', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
-      $table->string('title');
-      $table->string('acronym', 10);
-      $table->foreignId('media_id')->nullable()->constrained()->nullOnDelete();
-      $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
+      $table->string('name');
+      $table->string('street');
+      $table->string('street_number')->nullable();
+      $table->string('zip');
+      $table->string('city');
+      $table->foreignId('subscription_id')->nullable()->constrained()->nullOnDelete();
       $table->timestamps();
       $table->softDeletes();
     });
@@ -28,6 +30,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('archives');
+    Schema::dropIfExists('companies');
   }
 };

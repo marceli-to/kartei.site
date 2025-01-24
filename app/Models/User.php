@@ -1,20 +1,24 @@
 <?php
 namespace App\Models;
-
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-  use HasApiTokens, HasFactory, Notifiable;
+  use HasApiTokens;
+  use Notifiable;
+  use SoftDeletes;
 
   protected $fillable = [
+    'uuid',
+    'firstname',
     'name',
     'email',
     'password',
+    'company_id',
   ];
 
   protected $hidden = [
@@ -26,4 +30,9 @@ class User extends Authenticatable implements MustVerifyEmail
     'email_verified_at' => 'datetime',
     'password' => 'hashed',
   ];
+
+  public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+  {
+    return $this->belongsTo(Company::class);
+  }
 }
