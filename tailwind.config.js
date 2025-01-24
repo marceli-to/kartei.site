@@ -17,7 +17,9 @@ export default {
       },
 
       colors: {
-
+        'sky': '#C8E6FF',
+        'pearl': '#F5F5F2',
+        'graphite': '#78786E',
       },
 
       fontFamily: {
