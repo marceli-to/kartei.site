@@ -5,6 +5,9 @@
         <router-link to="/archiv">Home</router-link>
       </li>
       <li>
+        <router-link to="/archiv/karteien">Karteien</router-link>
+      </li>
+      <li>
         <router-link to="/archiv/benutzer">Users</router-link>
       </li>
       <li>
