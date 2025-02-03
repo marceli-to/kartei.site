@@ -5,16 +5,14 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script setup>
+import { onMounted } from 'vue';
+import { usePermissionStore } from './store/permissions';
 import NavComponent from './components/Nav.vue';
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    NavComponent,
-  },
-  setup() {
-  }
+const permissionStore = usePermissionStore();
+
+onMounted(() => {
+  permissionStore.initialize();
 });
 </script>

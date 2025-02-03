@@ -6,6 +6,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasUuid;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasPermissions;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -13,7 +15,9 @@ class User extends Authenticatable implements MustVerifyEmail
   use Notifiable;
   use SoftDeletes;
   use HasUuid;
-  
+  use HasRoles;
+  use HasPermissions;
+
   protected $fillable = [
     'uuid',
     'firstname',

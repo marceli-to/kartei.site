@@ -1,6 +1,6 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// TestController
+Route::get('/user', [UserController::class, 'index']);
 
 Route::view('/', 'home')->name('page.home');
 
