@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Faker\Factory as Faker;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use App\Actions\User\Create as CreateAction;
+use App\Actions\User\Create as CreateUserAction;
 
 class UserCreate extends Command
 {
@@ -23,7 +23,7 @@ class UserCreate extends Command
       'email_verified_at' => now()->toDateTimeString(),
     ];
 
-    $user = (new CreateAction())->execute($data);
+    $user = (new CreateUserAction())->execute($data);
     $this->info('User created: ' . $user->email);
   }
 }
