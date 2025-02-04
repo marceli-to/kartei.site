@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Actions\User\Create as CreateAction;
 
 class UserController extends Controller
 {
@@ -16,4 +17,5 @@ class UserController extends Controller
     $user->givePermissionTo('edit records');
     dd($user->permissions);
   }
+
 }

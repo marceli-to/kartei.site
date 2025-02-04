@@ -1,9 +1,15 @@
 <template>
-  <div class="mt-20" v-if="permissionStore.can('view archives')">
+  <div class="mt-20" v-if="permissionStore.can('view.archives')">
     <div 
       v-for="archive in archives" :key="archive.id" 
       class="border-b last-of-type:border-b-0 py-10">
       {{ archive.title }}
+      <template v-if="permissionStore.can('delete.archive.' + archive.id)">
+        can delete
+      </template>
+      <template v-if="permissionStore.can('update.archive.' + archive.id)">
+        can update
+      </template>
     </div>
   </div>
 </template>

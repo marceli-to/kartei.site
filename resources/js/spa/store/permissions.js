@@ -26,6 +26,6 @@ export const usePermissionStore = defineStore('permissions', {
     
     can(permission) {
       return this.permissions.some(p => p.name === permission);
-    }
+    },
   }
 });
