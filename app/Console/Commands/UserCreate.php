@@ -19,7 +19,7 @@ class UserCreate extends Command
       'firstname' => $this->ask('Enter firstname') ?? $faker->firstName,
       'name' => $this->ask('Enter lastname') ?? $faker->lastName,
       'email' => $this->ask('Enter email') ?? $faker->unique()->safeEmail,
-      'password' => Str::random(10),
+      'password' => env('FAKE_USER_PASSWORD'),
       'email_verified_at' => now()->toDateTimeString(),
     ];
 

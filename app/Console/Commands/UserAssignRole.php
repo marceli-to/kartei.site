@@ -9,7 +9,7 @@ class UserAssignRole extends Command
 {
   protected $signature = 'user:assign:role';
 
-  protected $description = 'Test the user creation action';
+  protected $description = 'Test the user role assignment action';
 
   public function handle()
   {

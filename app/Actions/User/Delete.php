@@ -7,7 +7,13 @@ class Delete
 {
   public function execute(User $user): Bool
   {
-    // todo: remove roles and permissions
+
+    // remove roles
+    $user->roles()->detach();
+
+    // remove permissions
+    $user->permissions()->detach();
+
     return $user->delete();
   }
 }
