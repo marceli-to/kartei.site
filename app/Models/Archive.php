@@ -26,6 +26,11 @@ class Archive extends Model
     return $this->belongsTo(Company::class);
   }
 
+  public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+  {
+    return $this->belongsToMany(User::class);
+  }
+
   public function media()
   {
     return $this->morphMany(Media::class, 'mediable');

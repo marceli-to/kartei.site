@@ -2,8 +2,6 @@
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Faker\Factory as Faker;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use App\Actions\User\Create as CreateUserAction;
 
 class UserCreate extends Command

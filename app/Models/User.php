@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
     'password',
     'company_id',
     'email_verified_at',
+    'deleted_at',
   ];
 
   protected $hidden = [
@@ -41,5 +42,10 @@ class User extends Authenticatable implements MustVerifyEmail
   public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Company::class);
+  }
+
+  public function archives(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+  {
+    return $this->belongsToMany(Archive::class);
   }
 }

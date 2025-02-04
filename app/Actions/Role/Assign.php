@@ -2,7 +2,6 @@
 namespace App\Actions\Role;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Hash;
 
 class Assign
 {
