@@ -1,13 +1,12 @@
 <?php
-namespace App\Actions\User;
+namespace App\Actions\Permission;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Hash;
 
-class AssignPermission
+class Revoke
 {
   public function execute(User $user, Permission $permission): User
   {
-    return $user->givePermissionTo($permission->name);
+    return $user->revokePermissionTo($permission);
   }
 }

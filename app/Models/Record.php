@@ -15,7 +15,6 @@ class Record extends Model
     'acronym',
     'attributes',
     'archive_id',
-    'media_id',
   ];
 
   protected $casts = [
@@ -37,9 +36,8 @@ class Record extends Model
     return $this->belongsToMany(Tag::class, 'record_tags');
   }
   
-  public function media(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+  public function media()
   {
-    return $this->belongsTo(Media::class);
+    return $this->morphMany(Media::class, 'mediable');
   }
-
 }

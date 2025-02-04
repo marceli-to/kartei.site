@@ -16,4 +16,9 @@ class Media extends Model
     'mime_type',
     'size'
   ];
+
+  public function mediable()
+  {
+    return $this->morphTo();
+  }
 }

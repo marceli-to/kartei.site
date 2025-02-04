@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Console\Commands;
-
 use Illuminate\Console\Command;
-use App\Actions\User\RevokePermission as RevokePermissionAction;
+use App\Actions\Permission\Revoke as RevokePermissionAction;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 

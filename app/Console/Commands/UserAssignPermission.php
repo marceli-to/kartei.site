@@ -1,7 +1,7 @@
 <?php
 namespace App\Console\Commands;
 use Illuminate\Console\Command;
-use App\Actions\User\AssignPermission as AssignPermissionAction;
+use App\Actions\Permission\Assign as AssignPermissionAction;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 

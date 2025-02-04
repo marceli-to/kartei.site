@@ -17,7 +17,6 @@ return new class extends Migration
       $table->string('title');
       $table->string('acronym', 10);
       $table->json('attributes');
-      $table->foreignId('media_id')->nullable()->constrained()->nullOnDelete();
       $table->foreignId('archive_id')->constrained()->cascadeOnDelete();
       $table->timestamps();
       $table->softDeletes();

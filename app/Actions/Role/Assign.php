@@ -1,10 +1,10 @@
 <?php
-namespace App\Actions\User;
+namespace App\Actions\Role;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
-class AssignRole
+class Assign
 {
   public function execute(User $user, Role $role): array
   {

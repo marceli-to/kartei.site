@@ -16,7 +16,6 @@ return new class extends Migration
       $table->uuid('uuid')->unique();
       $table->string('title');
       $table->string('acronym', 10);
-      $table->foreignId('media_id')->nullable()->constrained()->nullOnDelete();
       $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
       $table->timestamps();
       $table->softDeletes();

@@ -22,14 +22,14 @@ class DatabaseSeeder extends Seeder
 
     // create an archive
     Archive::create([
-      'title' => 'Test archive',
-      'acronym' => 'TA'
+      'title' => 'Sammlung Bert Fiefelstein',
+      'acronym' => 'BF'
     ]);
 
     // add another archive
     Archive::create([
-      'title' => 'Test archive 2',
-      'acronym' => 'TA2'
+      'title' => 'Bildarchiv Kretschmann',
+      'acronym' => 'BK'
     ]);
 
     // create a company

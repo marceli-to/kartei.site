@@ -13,7 +13,6 @@ class Archive extends Model
     'uuid', 
     'title', 
     'acronym', 
-    'media_id', 
     'company_id'
   ];
 
@@ -22,13 +21,13 @@ class Archive extends Model
     return $this->hasMany(Record::class);
   }
 
-  public function media(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-  {
-    return $this->belongsTo(Media::class);
-  }
-
   public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Company::class);
+  }
+
+  public function media()
+  {
+    return $this->morphMany(Media::class, 'mediable');
   }
 }
