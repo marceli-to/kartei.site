@@ -1,12 +1,11 @@
 <?php
 namespace App\Actions\ArchiveUser;
 use App\Models\User;
-use App\Models\Archive;
 
 class Detach
 {
-  public function execute(User $user, Archive $archive): int
+  public function execute(User $user, $archives): int
   {
-    return $user->archives()->detach([$archive->id]);
+    return $user->archives()->detach($archives);
   }
 }

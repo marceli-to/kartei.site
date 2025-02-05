@@ -1,12 +1,11 @@
 <?php
 namespace App\Actions\ArchiveUser;
 use App\Models\User;
-use App\Models\Archive;
 
 class Attach
 {
-  public function execute(User $user, Archive $archive): array
+  public function execute(User $user, array $archives): array
   {
-    return $user->archives()->syncWithoutDetaching([$archive->id]);
+    return $user->archives()->syncWithoutDetaching($archives);
   }
 }

@@ -20,10 +20,9 @@ class ArchiveUserDetach extends Command
 
     $archives = Archive::all()->pluck('title', 'id')->toArray();
     $choice = $this->choice('Which archive do you want to remove this user from?', $archives);
-    $archiveId = array_search($choice, $archives);
-    $archive = Archive::find($archiveId);
+    $archiveIds = array_search($choice, $archives);
 
-    $archive_user = (new ArchiveUserDetachAction())->execute($user, $archive);
-    $this->info('Detached user ' . $user->email. ' from archive ' . $archive->title);
+    $archive_user = (new ArchiveUserDetachAction())->execute($user, [$archiveIds]);
+    $this->info('Detached user ' . $user->email. ' from archive ' . implode(', ', [$archiveIds]));
   }
 }

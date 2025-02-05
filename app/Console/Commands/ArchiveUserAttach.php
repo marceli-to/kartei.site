@@ -20,10 +20,9 @@ class ArchiveUserAttach extends Command
 
     $archives = Archive::all()->pluck('title', 'id')->toArray();
     $choice = $this->choice('Which archive do you want to add this user to?', $archives);
-    $archiveId = array_search($choice, $archives);
-    $archive = Archive::find($archiveId);
+    $archiveIds = array_search($choice, $archives);
 
-    $archive_user = (new ArchiveUserAttachAction())->execute($user, $archive);
-    $this->info('Attached user ' . $user->email. ' to archive ' . $archive->title);
+    $archive_user = (new ArchiveUserAttachAction())->execute($user, [$archiveIds]);
+    $this->info('Attached user ' . $user->email. ' to archive(s) ' . implode(', ', [$archiveIds]));
   }
 }
