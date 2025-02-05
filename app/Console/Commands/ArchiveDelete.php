@@ -1,6 +1,6 @@
 <?php
 namespace App\Console\Commands;
-use App\Actions\User\Delete as DeleteArchiveAction;
+use App\Actions\Archive\Delete as DeleteArchiveAction;
 use App\Models\Archive;
 use Illuminate\Console\Command;
 
@@ -12,9 +12,10 @@ class ArchiveDelete extends Command
 
   public function handle()
   {
-    $archives = Archive::all();
-    $title = $this->choice('Which archive do you want to delete?', $archives->pluck('title')->toArray());
-    $archive = Archive::where('title', $title)->first();
+    $archives = Archive::all()->pluck('title', 'id')->toArray();
+    $choice = $this->choice('Which archive do you want to delete?', $archives);
+    $archiveId = array_search($choice, $archives);
+    $archive = Archive::find($archiveId);
     (new DeleteArchiveAction())->execute($archive);
     $this->info('Archive deleted: ' . $archive->title);
   }

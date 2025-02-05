@@ -1,11 +1,14 @@
 <?php
-namespace App\Actions\User;
-use App\Models\User;
+namespace App\Actions\Archive;
+use App\Models\Archive;
 
 class Delete
 {
-  public function execute(User $user): Bool
+  public function execute(Archive $archive): Bool
   {
-    return $user->delete();
+    // @todo: delete associated records
+    
+    $archive->users()->detach();
+    return $archive->delete();
   }
 }
