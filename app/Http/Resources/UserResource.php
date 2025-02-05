@@ -9,9 +9,10 @@ class UserResource extends JsonResource
   {
     return [
       // 'id' => $this->id,
+      'firstname' => $this->firstname,
       'name' => $this->name,
       'email' => $this->email,
-      // 'roles' => RoleResource::collection($this->roles),
+      'roles' => RoleResource::collection($this->roles),
       'permissions' => $this->getPermissionsViaRoles()
         ->merge($this->permissions)
         ->map(fn($permission) => [

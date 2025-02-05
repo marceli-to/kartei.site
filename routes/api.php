@@ -27,22 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   return new UserResource($request->user());
 });
 
-Route::middleware('auth:sanctum')->get('/permissions/{resourceType}/{resourceId}', function (Request $request, $resourceType, $resourceId) {
-  $class = match($resourceType) {
-    'archive' => Archive::class,
-    'record' => Record::class,
-    default => abort(404)
-  };
-  $resource = $class::findOrFail($resourceId);
-  return [
-    'permissions' => $request->user()->getAllPermissions()
-      ->filter(fn($permission) => Str::endsWith($permission->name, ".{$resource->id}"))
-      //->map(fn($p) => Str::beforeLast($p->name, '.'))
-      ->unique()
-      ->values()
-  ];
-});
-
 Route::middleware('auth:sanctum')->group(function () {
   Route::post('/upload', [FileUploadController::class, 'store']);
   Route::get('/archives', [ArchiveController::class, 'get']);

@@ -3,13 +3,13 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\Archive;
-use App\Actions\ArchiveUser\Sync as ArchiveUserSyncAction;
+use App\Actions\ArchiveUser\Attach as ArchiveUserAttachAction;
 
-class ArchiveUserSync extends Command
+class ArchiveUserAttach extends Command
 {
-  protected $signature = 'archive:user:sync';
+  protected $signature = 'archive:user:attach';
 
-  protected $description = 'Test the archive user sync action';
+  protected $description = 'Test the archive user attach action';
 
   public function handle()
   {
@@ -23,7 +23,7 @@ class ArchiveUserSync extends Command
     $archiveId = array_search($choice, $archives);
     $archive = Archive::find($archiveId);
 
-    $archive_user = (new ArchiveUserSyncAction())->execute($user, $archive);
-    $this->info('Synced user ' . $user->email. ' with archive ' . $archive->title);
+    $archive_user = (new ArchiveUserAttachAction())->execute($user, $archive);
+    $this->info('Attached user ' . $user->email. ' to archive ' . $archive->title);
   }
 }

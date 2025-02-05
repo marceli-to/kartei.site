@@ -3,12 +3,13 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Archive;
+use App\Http\Resources\ArchiveResource;
 
 class ArchiveController extends Controller
 {
   public function get(): \Illuminate\Http\JsonResponse
   {
-    return response()->json(Archive::get());
+    return response()->json(ArchiveResource::collection(Archive::get()));
   }
 
   public function create(): \Illuminate\Http\JsonResponse
