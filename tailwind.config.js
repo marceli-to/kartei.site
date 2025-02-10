@@ -17,9 +17,18 @@ export default {
       },
 
       colors: {
-        'sky': '#C8E6FF',
-        'pearl': '#F5F5F2',
         'graphite': '#78786E',
+        'ash': '#96968C',
+        'pebble': '#D2D2C8',
+        'snow': '#F5F5F3',
+        'ice': '#96E6FF',
+        'candy': '#FF8CD2',
+        'lemon': '#EBF000',
+        'lime': '#B4E600',
+        'flame': '#FF3200',
+        'onyx': '#1E1E1E',
+        'charcoal': '#464644',
+        'steel': '#8C8C8C',
       },
 
       fontFamily: {

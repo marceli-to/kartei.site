@@ -97,10 +97,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useFileUpload } from '../composables/useFileUpload'
-import IconUpload from './icons/Upload.vue'
-import IconError from './icons/Error.vue'
-import IconCheck from './icons/Check.vue'
-import IconFile from './icons/File.vue'
+import IconUpload from './icons/temp/Upload.vue'
+import IconError from './icons/temp/Error.vue'
+import IconCheck from './icons/temp/Check.vue'
+import IconFile from './icons/temp/File.vue'
 
 const props = defineProps({
   maxSize: {

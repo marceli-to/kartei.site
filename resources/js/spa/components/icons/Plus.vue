@@ -1,13 +1,19 @@
 <template>
-  <template v-if="variant === 'bold'">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
+  <template v-if="variant === 'small'">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.5 0H5.5V12H6.5V0Z" fill="currentColor"/>
+      <path d="M12 5.5H0V6.5H12V5.5Z" fill="currentColor"/>
+    </svg>
+  </template>
+  <template v-if="variant === 'small-bold'">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M5.25 0V5.25H0V6.75H5.25V12H6.75V6.75H12V5.25H6.75V0H5.25Z" fill="currentColor"/>
     </svg>
   </template>
-  <template v-else>
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
-      <path d="M6.5 0H5.5V12H6.5V0Z" fill="currentColor"/>
-      <path d="M12 5.5H0V6.5H12V5.5Z" fill="currentColor"/>
+  <template v-if="variant === 'square'">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 0V20H20V0H0ZM19.5 19.5H0.5V0.5H19.5V19.5Z" fill="currentColor"/>
+      <path d="M9.25 15H10.75V10.75H15V9.25H10.75V5H9.25V9.25H5V10.75H9.25V15Z" fill="currentColor"/>
     </svg>
   </template>
 </template>
@@ -15,8 +21,8 @@
 const props = defineProps({
   variant: {
     type: String,
-    default: 'default',
-    validator: value => ['default', 'bold'].includes(value)
+    default: 'small',
+    validator: value => ['small', 'small-bold', 'square'].includes(value)
   },
   class: {
     type: String,

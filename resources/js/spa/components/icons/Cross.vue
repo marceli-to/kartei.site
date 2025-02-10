@@ -6,18 +6,24 @@
   </template>
   <template v-if="variant === 'small'">
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
-      <path d="M0.707481 -6.51071e-06L0.000244141 0.70723L9.2925 9.99949L9.99974 9.29225L0.707481 -6.51071e-06Z" fill="currentColor"/>
-      <path d="M9.29256 -3.54019e-05L0.000305176 9.29222L0.707563 9.99948L9.99982 0.707222L9.29256 -3.54019e-05Z" fill="currentColor"/>
+      <path d="M0.707502 1.76865e-05L0.000244141 0.707275L9.2925 9.99953L9.99976 9.29228L0.707502 1.76865e-05Z" fill="currentColor"/>
+      <path d="M9.29254 1.43608e-06L0.000305176 9.29224L0.707563 9.99949L9.9998 0.707259L9.29254 1.43608e-06Z" fill="currentColor"/>
     </svg>
   </template>
-  <template v-if="variant === 'smallBold'">
+  <template v-if="variant === 'small-bold'">
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
-      <path d="M8.94 0L5.00098 3.939L1.06 0L0 1.05899L3.94 4.99899L0 8.939L1.06 10L5.00098 6.06L8.94 10L10 8.939L6.06097 4.99899L10 1.05899L8.94 0Z" fill="currentColor"/>
+      <path d="M8.94 0L5.00101 3.93903L1.06 0L0 1.05902L3.94 4.99902L0 8.93903L1.06 10L5.00101 6.06L8.94 10L10 8.93903L6.061 4.99902L10 1.05902L8.94 0Z" fill="currentColor"/>
     </svg>
   </template>
   <template v-if="variant === 'tiny'">
     <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
-      <path d="M7.293 0L4 3.29303L0.708008 0L0 0.70697L3.293 4.00098L0 7.29303L0.708008 8L4 4.70697L7.293 8L8 7.29303L4.707 4.00098L8 0.70697L7.293 0Z" fill="currentColor"/>
+      <path d="M7.293 0L4 3.29303L0.708 0L0 0.70697L3.293 4.00098L0 7.29303L0.708 8L4 4.70697L7.293 8L8 7.29303L4.707 4.00098L8 0.70697L7.293 0Z" fill="currentColor"/>
+    </svg>
+  </template>
+  <template v-if="variant === 'square'">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
+      <path d="M0 0V20H20V0H0ZM19.5 19.5H0.5V0.5H19.5V19.5Z" fill="currentColor"/>
+      <path d="M6.06067 15L10 11.0607L13.9393 15L15 13.9394L11.0607 10L15 6.06067L13.9393 5L10 8.93933L6.06067 5L5 6.06067L8.93933 10L5 13.9394L6.06067 15Z" fill="currentColor"/>
     </svg>
   </template>
 </template>
@@ -26,7 +32,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'large',
-    validator: value => ['large', 'small', 'smallBold', 'tiny'].includes(value)
+    validator: value => ['large', 'small', 'small-bold', 'tiny', 'square'].includes(value)
   },
   class: {
     type: String,
