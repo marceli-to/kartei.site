@@ -7,6 +7,6 @@ class Assign
 {
   public function execute(User $user, Role $role): array
   {
-    return $user->roles()->sync([$role->id]);
+    return $user->roles()->syncWithoutDetaching([$role->id]);
   }
 }

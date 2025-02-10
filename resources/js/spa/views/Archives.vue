@@ -1,14 +1,17 @@
 <template>
-  <div class="mt-20" v-if="permissionStore.can('view.archives')">
+  <div class="mt-20" v-if="userStore.can('view.archives')">
     <div 
       v-for="archive in archives" :key="archive.id" 
       class="border-b last-of-type:border-b-0 py-10">
       {{ archive.title }}
-      <template v-if="permissionStore.can('delete.archive.' + archive.id)">
-        can delete
+      <template v-if="userStore.can('view.archive.' + archive.id)">
+        [can view]
       </template>
-      <template v-if="permissionStore.can('update.archive.' + archive.id)">
-        can update
+      <template v-if="userStore.can('edit.archive.' + archive.id)">
+        [can edit]
+      </template>
+      <template v-if="userStore.can('delete.archive.' + archive.id)">
+        [can delete]
       </template>
     </div>
   </div>
@@ -17,8 +20,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getArchives } from '@/services/api';
-import { usePermissionStore } from '@/store/permissions';
-const permissionStore = usePermissionStore();
+import { useUserStore } from '@/store/user';
+const userStore = useUserStore();
 const archives = ref([]);
 const isLoading = ref(true);
 

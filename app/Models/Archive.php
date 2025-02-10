@@ -3,14 +3,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasUuid;
+use App\Traits\Sluggable;
 
 class Archive extends Model
 {
   use SoftDeletes;
   use HasUuid;
+  use Sluggable;
 
   protected $fillable = [
     'uuid', 
+    'slug',
     'title', 
     'acronym', 
     'company_id'
@@ -34,5 +37,10 @@ class Archive extends Model
   public function media()
   {
     return $this->morphMany(Media::class, 'mediable');
+  }
+
+  protected static function getSlugSource(): string
+  {
+    return 'title';
   }
 }

@@ -14,6 +14,7 @@ return new class extends Migration
     Schema::create('archives', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
+      $table->string('slug', 255)->unique();
       $table->string('title');
       $table->string('acronym', 10);
       $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();

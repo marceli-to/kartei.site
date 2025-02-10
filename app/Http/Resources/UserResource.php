@@ -5,13 +5,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
+  public static $wrap = null;
+
   public function toArray(Request $request): array
   {
     return [
-      // 'id' => $this->id,
-      'firstname' => $this->firstname,
-      'name' => $this->name,
-      'email' => $this->email,
+      'user' => [
+        'firstname' => $this->firstname,
+        'name' => $this->name,
+        'email' => $this->email,
+      ],
       'roles' => RoleResource::collection($this->roles),
       'permissions' => $this->getPermissionsViaRoles()
         ->merge($this->permissions)

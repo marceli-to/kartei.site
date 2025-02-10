@@ -14,6 +14,7 @@ return new class extends Migration
     Schema::create('records', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
+      $table->string('slug', 255)->unique();
       $table->string('title');
       $table->string('acronym', 10);
       $table->json('attributes');

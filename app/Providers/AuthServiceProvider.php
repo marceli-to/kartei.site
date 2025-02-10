@@ -1,7 +1,8 @@
 <?php
 namespace App\Providers;
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
 use App\Models\Archive;
 use App\Policies\ArchivePolicy;
 // use App\Models\Record;
@@ -24,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-    //
+    // Implicitly grant "Super Admin" role all permissions
+    Gate::before(function ($user, $ability) {
+      return $user->hasRole('Super Admin') ? true : null;
+    });
   }
 }

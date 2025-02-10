@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
-export const usePermissionStore = defineStore('permissions', {
+export const useUserStore = defineStore('user', {
   state: () => ({
+    user: {},
     permissions: window.permissions || [],
+    roles: window.roles || [],
     initialized: false
   }),
   
@@ -18,13 +20,20 @@ export const usePermissionStore = defineStore('permissions', {
     async fetchPermissions() {
       try {
         const { data } = await axios.get('/api/user');
-        this.permissions = data.data.permissions;
-      } catch (error) {
-        console.error('Failed to fetch permissions:', error);
+        this.user = data.user;
+        console.log(this.user);
+        this.permissions = data.permissions;
+        this.roles = data.roles;
+      } 
+      catch (error) {
+        console.error('Failed to fetch permissions and roles:', error);
       }
     },
     
     can(permission) {
+      if (this.roles.some(r => r.name === 'Super Admin')) {
+        return true;
+      }
       return this.permissions.some(p => p.name === permission);
     },
   }
