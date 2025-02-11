@@ -1,4 +1,3 @@
-// composables/useFileUpload.js
 import { ref, computed } from 'vue'
 import axios from 'axios'
 
@@ -87,12 +86,14 @@ export function useFileUpload(options = {}) {
       })
 
       uploadedFiles.value = [...uploadedFiles.value, ...files]
-      return response.data
-    } catch (error) {
+      return response.data;
+    } 
+    catch (error) {
       hasError.value = true
       retryQueue.value = [...retryQueue.value, ...files]
       throw error
-    } finally {
+    } 
+    finally {
       isUploading.value = false
     }
   }

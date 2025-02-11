@@ -45,7 +45,13 @@
   </div>
   <div>
     <h2 class="mb-12 font-muoto-medium">Image upload</h2>
-    <FileUpload v-bind="config" />
+    <ImageUpload
+      :maxSize="250 * 1024 * 1024"
+      :allowedTypes="['image/*', 'video/mp4']"
+      uploadUrl="/api/upload"
+      :multiple="false"
+    />
+    <!-- <FileUpload v-bind="config" /> -->
   </div>
   <div>
     <h2 class="mb-12 font-muoto-medium">Fonts</h2>
@@ -135,10 +141,10 @@ import IconDownload from '../components/icons/Download.vue';
 import IconUpload from '../components/icons/Upload.vue';
 import IconEdit from '../components/icons/Edit.vue';
 
-const config = {
-  maxSize: 10 * 1024 * 1024, // 10MB
-  allowedTypes: ['image/*'],
-  uploadUrl: '/api/upload',
-  multiple: true
-}
+// const config = {
+//   maxSize: 250 * 1024 * 1024, // 250MB
+//   allowedTypes: ['image/*', 'video/mp4'],
+//   uploadUrl: '/api/upload',
+//   multiple: true
+// }
 </script>
