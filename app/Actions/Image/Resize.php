@@ -8,10 +8,10 @@ class Resize
   private const MAX_WIDTH = 1200;
   private const MAX_HEIGHT = 1200;
 
-  public function execute(string $imagePath)
+  public function execute(string $sourcePath, string $destinationPath): array
   {
-    // Load the image
-    $image = Image::load($imagePath);
+    // Load the image from the source path
+    $image = Image::load($sourcePath);
 
     // Get original dimensions
     $width = $image->getWidth();
@@ -25,13 +25,13 @@ class Resize
       $image->height(self::MAX_HEIGHT)->fit(Fit::Contain);
     }
 
-    // Save the resized image
-    $image->save($imagePath);
+    // Save the resized image to the destination path
+    $image->save($destinationPath);
 
     return [
-      'path' => $imagePath,
+      'path' => $destinationPath,
       'width' => $image->getWidth(),
-      'height' => $image->getHeight()
+      'height' => $image->getHeight(),
     ];
   }
 }

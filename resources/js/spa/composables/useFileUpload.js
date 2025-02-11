@@ -73,7 +73,7 @@ export function useFileUpload(options = {}) {
     hasError.value = false
 
     const formData = new FormData()
-    files.forEach(file => formData.append('files', file))
+    files.forEach(file => formData.append('files[]', file))
 
     try {
       const response = await axios.post(uploadUrl, formData, {
@@ -83,7 +83,9 @@ export function useFileUpload(options = {}) {
         onUploadProgress: (event) => {
           uploadProgress.value = Math.round((event.loaded * 100) / event.total)
         }
-      })
+      });
+
+      console.log(response.data);
 
       uploadedFiles.value = [...uploadedFiles.value, ...files]
       return response.data;
