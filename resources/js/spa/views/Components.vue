@@ -1,7 +1,7 @@
 <template>
 <div class="flex flex-col gap-y-32">
   <div class="mt-30">
-    <h2>Icons</h2>
+    <h2 class="font-muoto-medium">Icons</h2>
     <div class="flex flex-wrap items-center gap-12">
       <IconLogo />
       <IconChevronRight variant="tiny" />
@@ -19,11 +19,16 @@
       <IconHeart variant="outline" />
       <IconPlus variant="small" />
       <IconPlus variant="small-bold" />
+      <IconPlus variant="rounded" class="text-graphite" />
       <IconSettings />
       <IconSettings variant="tiny" />
       <IconImage />
       <IconImage variant="missing" />
       <IconMagnifier />
+      <IconEye variant="enabled" />
+      <IconEye variant="disabled" />
+      <IconRadio />
+      <IconRadio variant="checked" />
       <IconInfo />
       <IconInfo variant="active" />
       <IconProfile />
@@ -39,11 +44,11 @@
     </div>
   </div>
   <div>
-    <h2 class="mb-12">Image upload</h2>
+    <h2 class="mb-12 font-muoto-medium">Image upload</h2>
     <FileUpload v-bind="config" />
   </div>
   <div>
-    <h2 class="mb-12">Fonts</h2>
+    <h2 class="mb-12 font-muoto-medium">Fonts</h2>
     <p class="font-otto-bold">ABCOtto bold [font-otto-bold]</p>
     <p class="font-otto-regular">ABCOtto regular [font-otto-regular]</p>
     <p class="font-muoto-regular">Muoto regular [font-muoto-regular]</p>
@@ -51,7 +56,7 @@
     <p class="font-muoto-italic">Muoto italic [font-muoto-italic]</p>
   </div>
   <div>
-    <h2 class="mb-12">Color swatches</h2>
+    <h2 class="mb-12 font-muoto-medium">Color swatches</h2>
     <div class="flex flex-col gap-12">
       <div class="flex items-center gap-x-8">
         <span class="rounded-full block size-12 leading-none bg-graphite"></span>
@@ -107,8 +112,6 @@
 </template>
 
 <script setup>
-import { useMainStore } from '../store';
-import { storeToRefs } from 'pinia';
 import ImageUpload from '../components/ImageUpload.vue';
 import FileUpload from '../components/FileUpload.vue';
 import IconLogo from '../components/icons/Logo.vue';
@@ -118,6 +121,8 @@ import IconChevronUp from '../components/icons/ChevronUp.vue';
 import IconChevronDown from '../components/icons/ChevronDown.vue';
 import IconCross from '../components/icons/Cross.vue';
 import IconHeart from '../components/icons/Heart.vue';
+import IconRadio from '../components/icons/Radio.vue';
+import IconEye from '../components/icons/Eye.vue';
 import IconPlus from '../components/icons/Plus.vue';
 import IconSettings from '../components/icons/Settings.vue';
 import IconList from '../components/icons/List.vue';
@@ -130,14 +135,10 @@ import IconDownload from '../components/icons/Download.vue';
 import IconUpload from '../components/icons/Upload.vue';
 import IconEdit from '../components/icons/Edit.vue';
 
-const store = useMainStore();
-const { count } = storeToRefs(store);
-
 const config = {
   maxSize: 10 * 1024 * 1024, // 10MB
   allowedTypes: ['image/*'],
   uploadUrl: '/api/upload',
   multiple: true
 }
-const increment = store.increment;
 </script>
