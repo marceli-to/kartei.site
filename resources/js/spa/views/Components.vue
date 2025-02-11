@@ -1,42 +1,51 @@
 <template>
-  <h1>Playground</h1>
-  <p>Count: {{ count }}</p>
-  <button @click="increment">Increment</button>
-  <FileUpload v-bind="config" />
-  <div class="flex items-center gap-x-10 mt-30">
-    <IconLogo />
-    <IconChevronLeft variant="small" />
-    <IconChevronLeft variant="large" />
-    <IconChevronRight variant="tiny" />
-    <IconChevronRight variant="small" />
-    <IconChevronRight variant="large" />
-    <IconChevronUp />
-    <IconChevronDown />
-    <IconCross variant="large" />
-    <IconCross variant="small" />
-    <IconCross variant="small-bold" />
-    <IconCross variant="tiny" />
-    <IconHeart variant="fill" />
-    <IconHeart variant="outline" />
-    <IconPlus variant="small" />
-    <IconPlus variant="small-bold" />
-    <IconSettings />
-    <IconSettings variant="tiny" />
-    <IconImage />
-    <IconImage variant="missing" />
-    <IconMagnifier />
-    <IconInfo />
-    <IconInfo variant="active" />
-    <IconProfile />
-    <IconProfile variant="active" />
-    <IconEdit />
-    <IconCross variant="square" />
-    <IconList variant="square" />
-    <IconPlus variant="square" />
-    <IconRefresh variant="square" />
-    <IconImage variant="square" />
-    <IconUpload variant="square" />
-    <IconDownload />
+<div class="flex flex-col gap-y-32">
+  <div class="mt-30">
+    <h2>Icons</h2>
+    <div class="flex flex-wrap items-center gap-12">
+      <IconLogo />
+      <IconChevronRight variant="tiny" />
+      <IconChevronLeft variant="small" />
+      <IconChevronRight variant="small" />
+      <IconChevronLeft variant="large" />
+      <IconChevronRight variant="large" />
+      <IconChevronUp />
+      <IconChevronDown />
+      <IconCross variant="large" />
+      <IconCross variant="small" />
+      <IconCross variant="small-bold" />
+      <IconCross variant="tiny" />
+      <IconHeart variant="fill" />
+      <IconHeart variant="outline" />
+      <IconPlus variant="small" />
+      <IconPlus variant="small-bold" />
+      <IconSettings />
+      <IconSettings variant="tiny" />
+      <IconImage />
+      <IconImage variant="missing" />
+      <IconMagnifier />
+      <IconInfo />
+      <IconInfo variant="active" />
+      <IconProfile />
+      <IconProfile variant="active" />
+      <IconEdit />
+      <IconCross variant="square" />
+      <IconList variant="square" />
+      <IconPlus variant="square" />
+      <IconRefresh variant="square" />
+      <IconImage variant="square" />
+      <IconUpload variant="square" />
+      <IconDownload />
+    </div>
+  </div>
+  <div>
+    <h2 class="mb-12">Image upload</h2>
+    <FileUpload v-bind="config" />
+  </div>
+  <div>
+    <h2 class="mb-12">Fonts</h2>
+    <p class="font-otto-bold">ABCOtto bold</p>
+  </div>
 </div>
 </template>
 

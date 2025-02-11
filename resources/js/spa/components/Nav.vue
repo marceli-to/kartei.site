@@ -11,7 +11,7 @@
         <router-link to="/archiv/benutzer">Users</router-link>
       </li>
       <li>
-        <router-link to="/archiv/playground">Playground</router-link>
+        <router-link to="/archiv/components">Components</router-link>
       </li>
     </ul>
     <ul>

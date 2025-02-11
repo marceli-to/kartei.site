@@ -32,7 +32,8 @@ export default {
       },
 
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        'otto-bold': ['ABCOtto-Bold', ...defaultTheme.fontFamily.sans],
+        'otto-regular': ['ABCOtto-Regular', ...defaultTheme.fontFamily.sans],
       },
 
       fontSize: {

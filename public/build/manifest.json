@@ -1,18 +1,34 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-74f25747.css",
+    "file": "assets/app-6e02b8ef.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
+  "resources/fonts/ABCOtto-Bold.woff": {
+    "file": "assets/ABCOtto-Bold-8b4219a1.woff",
+    "src": "resources/fonts/ABCOtto-Bold.woff"
+  },
+  "resources/fonts/ABCOtto-Bold.woff2": {
+    "file": "assets/ABCOtto-Bold-3c5a8890.woff2",
+    "src": "resources/fonts/ABCOtto-Bold.woff2"
+  },
+  "resources/fonts/ABCOtto-Regular.woff": {
+    "file": "assets/ABCOtto-Regular-658f1764.woff",
+    "src": "resources/fonts/ABCOtto-Regular.woff"
+  },
+  "resources/fonts/ABCOtto-Regular.woff2": {
+    "file": "assets/ABCOtto-Regular-c7806061.woff2",
+    "src": "resources/fonts/ABCOtto-Regular.woff2"
+  },
   "resources/js/app.css": {
-    "file": "assets/app-62e5cdd6.css",
+    "file": "assets/app-0111522e.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "css": [
-      "assets/app-62e5cdd6.css"
+      "assets/app-0111522e.css"
     ],
-    "file": "assets/app-448fd290.js",
+    "file": "assets/app-3d10c222.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

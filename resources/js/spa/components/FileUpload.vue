@@ -161,8 +161,7 @@ const formatFileSize = (bytes) => {
 <style scoped>
 .file-upload {
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 400px;
 }
 
 .upload-area {

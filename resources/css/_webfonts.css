@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'ABCOtto-Bold';
+  src: url('fonts/ABCOtto-Bold.woff2') format('woff2'), url('fonts/ABCOtto-Bold.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABCOtto-Regular';
+  src: url('fonts/ABCOtto-Regular.woff2') format('woff2'), url('fonts/ABCOtto-Regular.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
