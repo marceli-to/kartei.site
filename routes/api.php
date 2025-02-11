@@ -2,15 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Api\DummyController;
-use App\Http\Controllers\Api\FileUploadController;
+use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
-
 use App\Http\Resources\UserResource;
-
-use App\Models\Archive;
-use App\Models\Record;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-  Route::post('/upload', [FileUploadController::class, 'store']);
+  Route::post('/upload', [UploadController::class, 'store']);
   Route::get('/archives', [ArchiveController::class, 'get']);
 });
