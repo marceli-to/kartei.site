@@ -17,9 +17,9 @@
   </template>
   <template v-if="variant === 'square'">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
-      <path d="M0 0V20H20V0H0ZM0.5 0.5H19.5V19.5H0.5V0.5Z" fill="currentColor"/>
-      <path d="M7.88464 10.3846L9.03845 12.2308L11.1539 8.84619L15 15H5L7.88464 10.3846Z" fill="currentColor"/>
-      <path d="M6.73077 7.30774C7.36804 7.30774 7.88464 6.79113 7.88464 6.15387C7.88464 5.51661 7.36804 5 6.73077 5C6.09351 5 5.5769 5.51661 5.5769 6.15387C5.5769 6.79113 6.09351 7.30774 6.73077 7.30774Z" fill="currentColor"/>
+      <path d="M0 0V20H20V0H0ZM0.5 0.5H19.5V19.5H0.5V0.5Z" fill="black"/>
+      <path d="M7.88464 10.3846L9.03845 12.2308L11.1539 8.84619L15 15H5L7.88464 10.3846Z" fill="black"/>
+      <path d="M6.73077 7.30774C7.36804 7.30774 7.88464 6.79113 7.88464 6.15387C7.88464 5.51661 7.36804 5 6.73077 5C6.09351 5 5.5769 5.51661 5.5769 6.15387C5.5769 6.79113 6.09351 7.30774 6.73077 7.30774Z" fill="black"/>
     </svg>
   </template>
 </template>
@@ -32,7 +32,7 @@ const props = defineProps({
   },
   class: {
     type: String,
-    default: ''
+    default: 'text-graphite'
   }
 });
 </script>

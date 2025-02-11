@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'ABCOtto-Bold';
   src: url('fonts/ABCOtto-Bold.woff2') format('woff2'), url('fonts/ABCOtto-Bold.woff') format('woff');
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
@@ -9,7 +9,31 @@
 @font-face {
   font-family: 'ABCOtto-Regular';
   src: url('fonts/ABCOtto-Regular.woff2') format('woff2'), url('fonts/ABCOtto-Regular.woff') format('woff');
-  font-weight: 500;
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Muoto-Regular';
+  src: url('fonts/Muoto-Regular.woff2') format('woff2'), url('fonts/Muoto-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Muoto-Medium';
+  src: url('fonts/Muoto-Medium.woff2') format('woff2'), url('fonts/Muoto-Medium.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Muoto-Italic';
+  src: url('fonts/Muoto-Italic.woff2') format('woff2'), url('fonts/Muoto-Italic.woff') format('woff');
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }

@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-6e02b8ef.css",
+    "file": "assets/app-7aebaf27.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -20,6 +20,30 @@
     "file": "assets/ABCOtto-Regular-c7806061.woff2",
     "src": "resources/fonts/ABCOtto-Regular.woff2"
   },
+  "resources/fonts/Muoto-Italic.woff": {
+    "file": "assets/Muoto-Italic-0e8ba698.woff",
+    "src": "resources/fonts/Muoto-Italic.woff"
+  },
+  "resources/fonts/Muoto-Italic.woff2": {
+    "file": "assets/Muoto-Italic-e225fbe7.woff2",
+    "src": "resources/fonts/Muoto-Italic.woff2"
+  },
+  "resources/fonts/Muoto-Medium.woff": {
+    "file": "assets/Muoto-Medium-a59623b9.woff",
+    "src": "resources/fonts/Muoto-Medium.woff"
+  },
+  "resources/fonts/Muoto-Medium.woff2": {
+    "file": "assets/Muoto-Medium-0fdf1c46.woff2",
+    "src": "resources/fonts/Muoto-Medium.woff2"
+  },
+  "resources/fonts/Muoto-Regular.woff": {
+    "file": "assets/Muoto-Regular-4a7fb7ef.woff",
+    "src": "resources/fonts/Muoto-Regular.woff"
+  },
+  "resources/fonts/Muoto-Regular.woff2": {
+    "file": "assets/Muoto-Regular-040b3615.woff2",
+    "src": "resources/fonts/Muoto-Regular.woff2"
+  },
   "resources/js/app.css": {
     "file": "assets/app-0111522e.css",
     "src": "resources/js/app.css"
@@ -28,7 +52,7 @@
     "css": [
       "assets/app-0111522e.css"
     ],
-    "file": "assets/app-3d10c222.js",
+    "file": "assets/app-2a8e77f3.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

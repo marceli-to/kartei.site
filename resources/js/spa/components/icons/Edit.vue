@@ -7,7 +7,7 @@
 const props = defineProps({
   class: {
     type: String,
-    default: ''
+    default: 'text-graphite'
   }
 });
 </script>

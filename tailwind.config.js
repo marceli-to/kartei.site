@@ -34,6 +34,9 @@ export default {
       fontFamily: {
         'otto-bold': ['ABCOtto-Bold', ...defaultTheme.fontFamily.sans],
         'otto-regular': ['ABCOtto-Regular', ...defaultTheme.fontFamily.sans],
+        'muoto-regular': ['Muoto-Regular', ...defaultTheme.fontFamily.sans],
+        'muoto-medium': ['Muoto-Medium', ...defaultTheme.fontFamily.sans],
+        'muoto-italic': ['Muoto-italic', ...defaultTheme.fontFamily.sans],
       },
 
       fontSize: {
