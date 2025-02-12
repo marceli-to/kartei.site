@@ -8,7 +8,7 @@ use App\Actions\Image\Resize as ResizeImageAction;
 
 class Store
 {
-  protected string $storagePath = 'uploads/temp';
+  protected string $storagePath = 'temp';
 
   public function execute(Request $request): array
   {

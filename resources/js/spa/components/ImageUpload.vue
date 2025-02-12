@@ -4,7 +4,7 @@
       ref="dropZone"
       class="border border-graphite aspect-square flex items-center justify-center w-full h-full relative cursor-pointer outline-none transition duration-200 ease-in-out"
       :class="{
-        'bg-snow': isDragging,
+        'border-lime !text-lime': isDragging,
         'bg-flame': hasError,
         'bg-snow': isUploading,
         '': isUploaded
@@ -39,7 +39,7 @@
       </div>
 
       <div v-else>
-        <IconImage />
+        <IconImage :class="{ 'text-lime': isDragging, 'bg-flame': hasError }" />
       </div>
     </div>
 
