@@ -8,7 +8,12 @@ class UploadController extends Controller
 {
   public function store(StoreUploadRequest $request)
   {
-    $files = (new StoreImageAction())->execute($request);
-    return response()->json($files);
+    try {
+      $files = (new StoreImageAction())->execute($request);
+      return response()->json(['files' => $files]);
+    } 
+    catch (\Exception $e) {
+      throw $e;
+    }
   }
 }

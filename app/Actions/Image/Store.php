@@ -3,49 +3,46 @@ namespace App\Actions\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Actions\Image\Resize as ResizeImageAction;
 
 class Store
 {
+  protected string $storagePath = 'uploads/temp';
+
   public function execute(Request $request): array
   {
     if (!$request->hasFile('files')) {
-      throw new \Exception('No files uploaded', 400);
+      throw new HttpException(400, 'No files uploaded');
     }
 
-    $uploadedFiles = [];
-    $files = $request->file('files');
+    return $this->processFiles($request->file('files'));
+  }
 
-    // Handle both single and multiple file uploads
+  protected function processFiles($files): array
+  {
     if (!is_array($files)) {
       $files = [$files];
     }
+    return array_values(array_filter(array_map(fn($file) => $this->validateAndProcessFile($file), $files)));
+  }
 
-    foreach ($files as $file) {
-      if (!$file->isValid()) {
-        continue;
-      }
-      $uploadedFiles[] = $this->processFile($file);
-    }
-
-      return $uploadedFiles;
+  protected function validateAndProcessFile($file): ?array
+  {
+    return $file->isValid() ? $this->processFile($file) : null;
   }
 
   protected function processFile($file): array
   {
-    $originalName = $file->getClientOriginalName();
+    $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    $cleanName = $this->sanitizeFilename($baseName);
+    $uniqueId = now()->timestamp . '_' . Str::random(5);
     $extension = $file->getClientOriginalExtension();
-    $cleanName = $this->sanitizeFilename(pathinfo($originalName, PATHINFO_FILENAME));
-    $uniqueId = Str::random(8);
 
-    // Generate filenames for original and resized versions
     $originalFilename = $this->generateFilename($cleanName, $uniqueId, $extension, '_original');
     $resizedFilename = $this->generateFilename($cleanName, $uniqueId, $extension, '_resized');
 
-    // Store the original file
     $originalPath = $this->storeFile($file, $originalFilename);
-
-    // Create a resized version of the original file
     $resizedPath = $this->resizeAndStoreFile($originalPath, $resizedFilename);
 
     return [
@@ -54,31 +51,29 @@ class Store
     ];
   }
 
-  protected function generateFilename($cleanName, $uniqueId, $extension, $suffix = ''): string
+  protected function generateFilename(string $cleanName, string $uniqueId, string $extension, string $suffix = ''): string
   {
-    return $cleanName . '_' . $uniqueId . $suffix . '.' . $extension;
+    return "{$cleanName}_{$uniqueId}{$suffix}.{$extension}";
   }
 
-  protected function storeFile($file, $filename): string
+  protected function storeFile($file, string $filename): string
   {
-    return $file->storeAs('temp', $filename, 'public');
+    return $file->storeAs($this->storagePath, $filename, 'public');
   }
 
-  protected function resizeAndStoreFile($originalPath, $resizedFilename): string
+  protected function resizeAndStoreFile(string $originalPath, string $resizedFilename): string
   {
-    // Define the path for the resized file
-    $resizedPath = 'temp/' . $resizedFilename;
+    $resizedPath = "$this->storagePath/$resizedFilename";
 
-    // Resize the original file and save it to the resized path
     (new ResizeImageAction())->execute(
-      Storage::disk('public')->path($originalPath), // Source path (original file)
-      Storage::disk('public')->path($resizedPath)  // Destination path (resized file)
+      Storage::disk('public')->path($originalPath),
+      Storage::disk('public')->path($resizedPath)
     );
 
     return $resizedPath;
   }
 
-  protected function getFileDetails($file, $filename, $path): array
+  protected function getFileDetails($file, string $filename, string $path): array
   {
     return [
       'original_name' => $file->getClientOriginalName(),
@@ -88,25 +83,8 @@ class Store
     ];
   }
 
-  protected function sanitizeFilename($filename): string
+  protected function sanitizeFilename(string $filename): string
   {
-    // Convert to lowercase
-    $clean = strtolower($filename);
-
-    // Replace spaces and special characters with dashes
-    $clean = preg_replace('/[^a-z0-9]/', '-', $clean);
-
-    // Remove multiple consecutive dashes
-    $clean = preg_replace('/-+/', '-', $clean);
-
-    // Remove leading and trailing dashes
-    $clean = trim($clean, '-');
-
-    // Ensure we have at least one character
-    if (empty($clean)) {
-      $clean = 'file';
-    }
-
-    return $clean;
+    return Str::slug($filename, '-');
   }
 }
