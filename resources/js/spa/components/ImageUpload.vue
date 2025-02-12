@@ -43,25 +43,19 @@
       </div>
     </div>
 
-    <div v-if="uploadedFiles.length">
-      <ul>
-        <li 
-          v-for="file in uploadedFiles" 
-          :key="file.name"
-          class="file-item"
-        >
-          <span class="file-name">{{ file.name }}</span>
-          <span class="">{{ file.path }}</span>
-          <span class="file-size">{{ formatFileSize(file.size) }}</span>
-        </li>
-      </ul>
-    </div>
+    <!-- <ImageList 
+      :images="uploadedFiles" 
+      :editable="true" 
+      @delete="handleDeleteImage"
+    /> -->
+
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useFileUpload } from '@/composables/useFileUpload';
+import ImageList from '@/components/ImageList.vue';
 import IconImage from '@/components/icons/Image.vue';
 
 const props = defineProps({
@@ -80,7 +74,11 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     default: true
-  }
+  },
+  existingImages: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const {
@@ -101,7 +99,14 @@ const {
   allowedTypes: props.allowedTypes,
   uploadUrl: props.uploadUrl,
   multiple: props.multiple
-})
+});
+
+// Combine existing images with uploaded files
+uploadedFiles.value = [...props.existingImages, ...uploadedFiles.value];
+
+const handleDeleteImage = (index) => {
+  uploadedFiles.value.splice(index, 1);
+};
 
 // Computed display of maximum size
 const maxSizeMB = computed(() => props.maxSize / (1024 * 1024))

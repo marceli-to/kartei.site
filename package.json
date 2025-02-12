@@ -27,6 +27,7 @@
         "alpinejs": "^3.13.0",
         "pinia": "^2.3.1",
         "vue": "^3.2.36",
-        "vue-router": "^4.0.13"
+        "vue-router": "^4.0.13",
+        "vuedraggable": "^4.1.0"
     }
 }

@@ -8,7 +8,7 @@ class Resize
   private const MAX_WIDTH = 1200;
   private const MAX_HEIGHT = 1200;
 
-  public function execute(string $sourcePath, string $destinationPath): Image
+  public function execute(string $sourcePath, string $destinationPath): array
   {
     // Load the image from the source path
     $image = Image::load($sourcePath);
@@ -27,7 +27,27 @@ class Resize
       }
     }
 
-    // Save the resized image to the destination path
-    return $image->save($destinationPath);
+    $image->save($destinationPath);
+
+    $newWidth = $image->getWidth();
+    $newHeight = $image->getHeight();
+    
+    return [
+      'path' => $destinationPath,
+      'width' => $newWidth,
+      'height' => $newHeight,
+      'aspect_ratio' => $this->determineAspectRatio($newWidth, $newHeight),
+    ];
+  }
+
+  protected function determineAspectRatio(int $width, int $height): string
+  {
+    if ($width > $height) {
+      return 'landscape';
+    }
+    elseif ($width < $height) {
+      return 'portrait';
+    }
+    return 'square';
   }
 }

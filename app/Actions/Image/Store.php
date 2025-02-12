@@ -43,14 +43,14 @@ class Store
     $resizedFilename = $this->generateFilename($cleanName, $uniqueId, $extension, '_resized');
 
     $originalPath = $this->storeFile($file, $originalFilename);
-    $resizedPath = $this->resizeAndStoreFile($originalPath, $resizedFilename);
+    $resizedImageData = $this->resizeAndStoreFile($originalPath, $resizedFilename);
 
     return [
       'original' => $this->getFileDetails($file, $originalFilename, $originalPath),
-      'resized' => $this->getFileDetails($file, $resizedFilename, $resizedPath),
+      'resized' => $this->getFileDetails($file, $resizedFilename, $resizedImageData['url']) + $resizedImageData,
     ];
   }
-
+  
   protected function generateFilename(string $cleanName, string $uniqueId, string $extension, string $suffix = ''): string
   {
     return "{$cleanName}_{$uniqueId}{$suffix}.{$extension}";
@@ -61,16 +61,19 @@ class Store
     return $file->storeAs($this->storagePath, $filename, 'public');
   }
 
-  protected function resizeAndStoreFile(string $originalPath, string $resizedFilename): string
+  protected function resizeAndStoreFile(string $originalPath, string $resizedFilename): array
   {
     $resizedPath = "$this->storagePath/$resizedFilename";
 
-    (new ResizeImageAction())->execute(
+    $resizedImageData = (new ResizeImageAction())->execute(
       Storage::disk('public')->path($originalPath),
       Storage::disk('public')->path($resizedPath)
     );
 
-    return $resizedPath;
+    // Ensure we return the correct public URL
+    $resizedImageData['url'] = Storage::url($resizedPath);
+
+    return $resizedImageData;
   }
 
   protected function getFileDetails($file, string $filename, string $path): array
@@ -78,7 +81,7 @@ class Store
     return [
       'original_name' => $file->getClientOriginalName(),
       'name' => $filename,
-      'path' => Storage::url($path),
+      'url' => $path,
       'mime_type' => $file->getMimeType(),
     ];
   }
