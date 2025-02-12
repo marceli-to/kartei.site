@@ -11,7 +11,16 @@
         <router-link to="/archiv/benutzer">Users</router-link>
       </li>
       <li>
-        <router-link to="/archiv/components">Components</router-link>
+        <router-link to="/archiv/icons">Icons</router-link>
+      </li>
+      <li>
+        <router-link to="/archiv/fonts">Fonts</router-link>
+      </li>
+      <li>
+        <router-link to="/archiv/colors">Colors</router-link>
+      </li>
+      <li>
+        <router-link to="/archiv/elements">Elements</router-link>
       </li>
     </ul>
     <ul>
