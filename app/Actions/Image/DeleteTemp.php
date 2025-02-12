@@ -4,26 +4,27 @@ use Illuminate\Support\Facades\Storage;
 
 class DeleteTemp
 {
-  public function execute($name)
-  {
+  private const TEMP_DIRECTORY = 'temp/';
 
+  public function execute(string $name): bool
+  {
     $images = [
       $name,
-      str_replace('_resized', '_original', $name),
+      str_replace('_resized', '_original', $name)
     ];
 
-    foreach ($images as $image)
-    {
-      try {
-        $imagePath = 'temp/' . $image;
+    try {
+      foreach ($images as $image) {
+        $imagePath = self::TEMP_DIRECTORY . $image;
         if (Storage::disk('public')->exists($imagePath)) {
           Storage::disk('public')->delete($imagePath);
         }
-      } 
-      catch (\Exception $e) {
-        \Log::error('Failed to delete image: ' . $e->getMessage());
-        return false;
       }
+      return true;
+    } 
+    catch (\Exception $e) {
+      \Log::error('Failed to delete image: ' . $e->getMessage());
+      return false;
     }
   }
 }
