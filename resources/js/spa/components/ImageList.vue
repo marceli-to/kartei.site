@@ -9,7 +9,7 @@
     >
       <template #item="{ element, index }">
         <figure
-          class="col-span-6 border border-graphite p-20 aspect-square relative"
+          class="col-span-6 border border-graphite p-20 aspect-square relative bg-white cursor-move"
         >
           <div class="absolute inset-0 m-20 flex justify-center items-center">
             <img
@@ -18,15 +18,14 @@
               class="max-w-full max-h-full object-contain"
             />
           </div>
-          <!-- Delete button (if editable)
           <button
             v-if="editable"
-            @click="deleteImage(index)"
-            class="absolute top-8 right-8 text-red-500 hover:text-red-700"
+            @click="deleteImage(element.resized.name, index)"
+            class="absolute top-0 right-0 p-8 hover:bg-snow"
           >
-            Delete
+            <IconCross variant="small" />
           </button>
-          -->
+         
         </figure>
       </template>
     </draggable>
@@ -35,7 +34,9 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import axios from 'axios';
 import draggable from 'vuedraggable';
+import IconCross from '@/components/icons/Cross.vue';
 
 const props = defineProps({
   images: {
@@ -67,9 +68,27 @@ const onDragEnd = () => {
 };
 
 // Delete an image
-const deleteImage = (index) => {
-  localImages.value.splice(index, 1);
-  emit('delete', index);
-  emit('update:images', localImages.value);
+const deleteImage = async (imageName, index) => {
+  try {
+    // Call the delete API
+    await axios.delete(`/api/upload/temp/${imageName}`);
+
+    // Remove the image from the local list
+    localImages.value.splice(index, 1);
+
+    // Emit the updated list to the parent
+    emit('update:images', localImages.value);
+
+    // Emit the delete event
+    emit('delete', index);
+  } catch (error) {
+    console.error('Failed to delete image:', error);
+  }
 };
 </script>
+
+<style scoped>
+.sortable-ghost {
+  @apply bg-graphite/10
+}
+</style>

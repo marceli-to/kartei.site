@@ -84,8 +84,7 @@ export function useFileUpload(options = {}) {
           uploadProgress.value = Math.round((event.loaded * 100) / event.total)
         }
       });
-      // uploadedFiles.value = [...uploadedFiles.value, ...files]
-      uploadedFiles.value = [...uploadedFiles.value, ...response.data.files];
+      uploadedFiles.value = [...response.data.files, ...uploadedFiles.value];
       return response.data;
     } 
     catch (error) {

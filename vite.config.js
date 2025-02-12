@@ -12,6 +12,12 @@ export default defineConfig({
       '@': resolve('resources/js/spa'),
     }
   },
+  server: {
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': 'https://kartei.site.test'
+    }
+  },
   plugins: [
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.js'],
