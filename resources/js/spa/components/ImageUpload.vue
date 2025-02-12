@@ -43,11 +43,11 @@
       </div>
     </div>
 
-    <!-- <ImageList 
+    <ImageList 
       :images="uploadedFiles" 
       :editable="true" 
       @delete="handleDeleteImage"
-    /> -->
+    />
 
   </div>
 </template>
