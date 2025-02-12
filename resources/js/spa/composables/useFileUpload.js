@@ -90,7 +90,7 @@ export function useFileUpload(options = {}) {
     catch (error) {
       hasError.value = true
       retryQueue.value = [...retryQueue.value, ...files]
-      throw error
+      console.error(error);
     } 
     finally {
       isUploading.value = false

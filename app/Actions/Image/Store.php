@@ -12,10 +12,6 @@ class Store
 
   public function execute(Request $request): array
   {
-    if (!$request->hasFile('files')) {
-      throw new HttpException(400, 'No files uploaded');
-    }
-
     return $this->processFiles($request->file('files'));
   }
 
