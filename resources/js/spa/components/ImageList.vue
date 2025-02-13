@@ -1,16 +1,12 @@
 <template>
   <div v-if="images.length" class="mt-24">
-    <!-- Use vuedraggable for the list -->
     <draggable
       v-model="localImages"
       item-key="index"
       class="grid grid-cols-12 gap-24"
-      @end="onDragEnd"
-    >
+      @end="onDragEnd">
       <template #item="{ element, index }">
-        <figure
-          class="col-span-6 border border-graphite p-20 aspect-square relative bg-white cursor-move"
-        >
+        <figure class="col-span-6 border border-graphite p-20 aspect-square relative bg-white cursor-move">
           <div class="absolute inset-0 m-20 flex justify-center items-center">
             <img
               :src="element.resized.url"
@@ -24,8 +20,7 @@
             class="absolute top-0 right-0 p-8 hover:bg-snow"
           >
             <IconCross variant="small" />
-          </button>
-         
+          </button> 
         </figure>
       </template>
     </draggable>
@@ -81,7 +76,8 @@ const deleteImage = async (imageName, index) => {
 
     // Emit the delete event
     emit('delete', index);
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Failed to delete image:', error);
   }
 };

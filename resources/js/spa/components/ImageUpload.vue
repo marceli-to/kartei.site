@@ -2,7 +2,7 @@
   <div>
     <div
       ref="dropZone"
-      class="border border-graphite aspect-square flex items-center justify-center w-full h-full relative cursor-pointer outline-none transition duration-200 ease-in-out"
+      class="border border-graphite aspect-square flex items-center justify-center w-full h-full relative cursor-pointer outline-none transition duration-200 ease-in-out group"
       :class="{
         'border-lime !text-lime': isDragging,
         'border-flame': hasError,
@@ -38,8 +38,11 @@
         <div class="text-xs mt-4 ml-4 leading-none">{{ uploadProgress }}%</div>
       </div>
 
-      <div v-else>
+      <div v-else class="flex flex-col items-center">
         <IconImage :class="{ 'text-lime': isDragging, 'text-flame': hasError }" />
+        <div class="text-sm mt-8 opacity-0 group-hover:opacity-100 transition-all duration-200">
+          Click or drag & drop to upload an image
+        </div>
       </div>
     </div>
 
