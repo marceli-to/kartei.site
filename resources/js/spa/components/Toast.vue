@@ -1,9 +1,16 @@
 <template>
-  <div v-if="toasts.length" class="toasts" :class="position">
-    <div v-for="toast in toasts" :key="toast.id" :class="['toast', toast.type]">
+  <div 
+    v-if="toasts.length" 
+    class="toasts" 
+    :class="position">
+    <a 
+      href="javascript:;" 
+      :class="['toast', toast.type]"
+      @click="removeToast(toast.id)"
+      title="Meldung verbergen"
+      v-for="toast in toasts" :key="toast.id">
       {{ toast.message }}
-      <button @click="removeToast(toast.id)">&times;</button>
-    </div>
+    </a>
   </div>
 </template>
 
@@ -11,37 +18,22 @@
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useToastStore } from '@/store/toast';
+import IconCross from '@/components/icons/Cross.vue';
 
 const toastStore = useToastStore();
 const { toasts } = storeToRefs(toastStore);
 const { removeToast } = toastStore;
 
-const position = computed(() => toasts.value.length ? toasts.value[0].position : 'top-right');
+const position = computed(() => toasts.value.length ? toasts.value[0].position : 'top-left');
 </script>
 
 <style scoped>
 .toasts {
-  @apply fixed z-[9999] text-sm;
+  @apply fixed z-[9999] text-sm w-full text-black font-muoto-medium top-0 left-0;
 }
 
-.toasts.top-right {
-  @apply top-10 right-10;
- }
-
-.toasts.top-left {
-  @apply top-10 left-10;
- }
-
-.toasts.bottom-right {
-  @apply bottom-10 right-10;
- }
-
-.toasts.bottom-left {
-  @apply bottom-10 left-10;
- }
-
 .toast {
-  @apply bg-graphite text-white py-4 px-8 mb-4 flex justify-between items-center
+  @apply bg-graphite text-center min-h-32 flex items-center justify-center max-w-[1600px] mx-auto
 }
 
 .toast.success { 
@@ -55,4 +47,21 @@ const position = computed(() => toasts.value.length ? toasts.value[0].position :
 .toast.info { 
   @apply bg-ice;
  }
+/* .toasts.top-right {
+  @apply top-10 right-10;
+ }
+
+.toasts.top-left {
+  @apply top-0 left-0;
+ }
+
+.toasts.bottom-right {
+  @apply bottom-10 right-10;
+ }
+
+.toasts.bottom-left {
+  @apply bottom-10 left-10;
+ } */
+
+
 </style>

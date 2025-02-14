@@ -22,17 +22,17 @@
     <h2 class="mb-12 font-muoto-medium">Toasts</h2>
     <div class="flex gap-x-8">
       <button 
-        @click="toast.addToast('This is a success message!', 'success')"
+        @click="toast.show('This is a success message!', 'success')"
         class="bg-lime text-white px-8 py-2 text-sm">
         Success
       </button>
       <button 
-        @click="toast.addToast('This is an error message!', 'error')"
+        @click="toast.show('This is an error message!', 'error')"
         class="bg-flame text-white px-8 py-2 text-sm">
         Error
       </button>
       <button 
-        @click="toast.addToast('This is a warning message!', 'info')"
+        @click="toast.show('This is a warning message!', 'info')"
         class="bg-ice text-white px-8 py-2 text-sm">
         Info
       </button>
