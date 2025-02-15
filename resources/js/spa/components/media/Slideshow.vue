@@ -13,9 +13,10 @@
     >
 
       <swiper-slide v-for="slide in slides">
-        <div class="absolute inset-0 m-40 flex justify-center items-center">
-          <img :src="slide" :alt="'Slide'" class="max-w-full max-h-full object-contain" />
-        </div>
+        <Image 
+          :src="slide" 
+          :alt="'Slide'" 
+          :spacing="'m-40'" />
       </swiper-slide>
 
     </swiper>
@@ -36,6 +37,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
+import Image from '@/components/media/Image.vue';
 
 const props = defineProps({
   slides: {

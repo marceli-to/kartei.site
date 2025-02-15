@@ -58,7 +58,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useFileUpload } from '@/composables/useFileUpload';
-import ImageList from '@/components/ImageList.vue';
+import ImageList from '@/components/media/ImageList.vue';
 import IconImage from '@/components/icons/Image.vue';
 
 const props = defineProps({

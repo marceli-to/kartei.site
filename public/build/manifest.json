@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-503263ba.css",
+    "file": "assets/app-0cac7b00.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -45,14 +45,14 @@
     "src": "resources/fonts/Muoto-Regular.woff2"
   },
   "resources/js/app.css": {
-    "file": "assets/app-7e1f9da6.css",
+    "file": "assets/app-6fe3a574.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "css": [
-      "assets/app-7e1f9da6.css"
+      "assets/app-6fe3a574.css"
     ],
-    "file": "assets/app-8b7149f9.js",
+    "file": "assets/app-e8ee2e58.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

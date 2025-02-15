@@ -6,22 +6,18 @@
       class="grid grid-cols-12 gap-24"
       @end="onDragEnd">
       <template #item="{ element, index }">
-        <figure class="col-span-6 border border-graphite p-20 aspect-square relative bg-white cursor-move">
-          <div class="absolute inset-0 m-20 flex justify-center items-center">
-            <img
-              :src="element.resized.url"
-              :alt="element.resized.original_name"
-              class="max-w-full max-h-full object-contain"
-            />
-          </div>
-          <button
-            v-if="editable"
+        <ImageCard class="col-span-6 cursor-move">
+          <Image
+            :src="element.resized.url"
+            :alt="element.resized.original_name" />
+
+          <button v-if="editable"
             @click="deleteImage(element.resized.name, index)"
-            class="absolute top-0 right-0 p-8 hover:bg-snow"
-          >
+            class="absolute top-0 right-0 p-8 hover:bg-snow">
             <IconCross variant="small" />
           </button> 
-        </figure>
+
+        </ImageCard>
       </template>
     </draggable>
   </div>
@@ -32,6 +28,8 @@ import { ref, watch } from 'vue';
 import axios from 'axios';
 import draggable from 'vuedraggable';
 import IconCross from '@/components/icons/Cross.vue';
+import ImageCard from '@/components/media/ImageCard.vue';
+import Image from '@/components/media/Image.vue';
 
 const props = defineProps({
   images: {

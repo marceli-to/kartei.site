@@ -20,6 +20,12 @@
           ]" 
         />
       </div>
+      <div>
+        <h2 class="mb-12 font-muoto-medium">Single Image</h2>
+        <ImageCard>
+          <Image src="https://placehold.co/600x900" alt="Image" />
+        </ImageCard>
+      </div>
     </div>
     <div class="col-span-4">
       <h2 class="mb-12 font-muoto-medium">Buttons</h2>
@@ -132,8 +138,10 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
-import ImageUpload from '@/components/ImageUpload.vue';
-import Slideshow from '@/components/Slideshow.vue';
+import ImageUpload from '@/components/media/ImageUpload.vue';
+import ImageCard from '@/components/media/ImageCard.vue';
+import Image from '@/components/media/Image.vue';
+import Slideshow from '@/components/media/Slideshow.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
