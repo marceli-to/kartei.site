@@ -129,7 +129,7 @@ const resolveIconComponent = computed(() => {
 
 const baseClasses = 'min-h-default flex justify-between w-full font-muoto-regular text-md text-black hover:bg-ice hover:border-black transition-all';
 
-const defaultBorderClasses = 'border border-graphite px-8';
+const defaultBorderClasses = 'border-y border-graphite pr-8';
 
 const contentClasses = computed(() => {
   if (props.icon?.position === 'center') {

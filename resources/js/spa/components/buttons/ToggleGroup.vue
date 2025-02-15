@@ -14,9 +14,9 @@
       />
       <span 
         :class="[
-          defaultBorderClasses,
+          borderClasses,
           classes,
-          modelValue.includes(option.value) ? activeClasses : '',
+          modelValue.includes(option.value) ? activeClass : '',
         ]"
       >
         {{ option.label }}
@@ -52,15 +52,17 @@ const props = defineProps({
     type: String,
     default: 'min-h-default w-full flex items-center justify-center font-muoto-regular text-md text-graphite hover:text-black transition-all user-select-none cursor-pointer px-8'
   },
-  activeClasses: {
+  borderClasses: {
+    type: String,
+    default: 'border border-graphite'
+  },
+  activeClass: {
     type: String,
     default: 'bg-ice border-black !text-black'
   }
 });
 
 const emit = defineEmits(['update:modelValue']);
-
-const defaultBorderClasses = 'border border-graphite';
 
 const updateValue = (value) => {
   const newValue = [...props.modelValue];

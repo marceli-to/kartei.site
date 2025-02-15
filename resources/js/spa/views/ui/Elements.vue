@@ -45,14 +45,15 @@
           <h3 class="mb-8 font-muoto-regular">Button (box, icon right)</h3>
           <Action 
             label="Erstellen" 
+            classes="border pl-8" 
             :icon="{ name: 'Plus', position: 'right' }"
-            borderClasses="border pl-8" 
             />
         </div>
         <div>
           <h3 class="mb-8 font-muoto-regular">Button (box, icon left)</h3>
           <Action 
-            label="Erstellen" 
+            label="Erstellen"
+            classes="border pl-8" 
             :icon="{ name: 'Plus', position: 'left' }" />
         </div>
         <div>
@@ -98,12 +99,27 @@
             name="sections"
             :options="sections" />
 
-            <template v-if="selectedSections.length">
-              <div class="bg-snow p-8 mt-12">
-                <h3 class="mb-4 font-muoto-regular">Selection</h3>
-                {{ selectedSections }}
-              </div>
-            </template>
+          <template v-if="selectedSections.length">
+            <div class="bg-snow p-8 mt-12">
+              <h3 class="mb-4 font-muoto-regular">Selection</h3>
+              {{ selectedSections }}
+            </div>
+          </template>
+        </div>
+        <div>
+          <h3 class="mb-8 font-muoto-regular">Radio Group</h3>
+          <RadioGroup
+            v-model="selectedSubscription"
+            name="subscription"
+            :options="subscriptions"
+            class="!border-red-400" />
+
+          <template v-if="selectedSubscription">
+            <div class="bg-snow p-8 mt-12">
+              <h3 class="mb-4 font-muoto-regular">Selection</h3>
+              {{ selectedSubscription }}
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -147,6 +163,7 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import Action from '@/components/buttons/Action.vue';
 import ToggleGroup from '@/components/buttons/ToggleGroup.vue';
+import RadioGroup from '@/components/buttons/RadioGroup.vue';
 import { useToastStore } from '@/store/toast';
 const toast = useToastStore();
 
@@ -166,6 +183,13 @@ const sections = [
   { value: 'users', label: 'Benutzer/innen' },
   { value: 'export', label: 'Export' },
   { value: 'share', label: 'Teilen' }
+];
+
+const selectedSubscription = ref('small');
+const subscriptions = [
+  { value: 'small', label: 'Small' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'professional', label: 'Professional' }
 ];
 
 
