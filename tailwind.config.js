@@ -17,7 +17,7 @@ export default {
       },
 
       minHeight: {
-        'default': '2.25rem',
+        'default': '2rem',
         'slim': '1.5rem',
       },
 
