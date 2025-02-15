@@ -16,6 +16,11 @@ export default {
         'xs': '440px',
       },
 
+      minHeight: {
+        'default': '2.25rem',
+        'slim': '1.5rem',
+      },
+
       colors: {
         'graphite': '#78786E',
         'ash': '#96968C',
