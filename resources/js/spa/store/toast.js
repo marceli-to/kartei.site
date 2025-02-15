@@ -4,9 +4,9 @@ import { ref } from 'vue';
 export const useToastStore = defineStore('toast', () => {
   const toasts = ref([]);
 
-  const show = (message, type = 'info', duration = 3000, position = 'top-right') => {
+  const show = (message, type = 'info', duration = 3000) => {
     const id = Date.now();
-    toasts.value.push({ id, message, type, position });
+    toasts.value.push({ id, message, type });
 
     if (duration > 0) {
       setTimeout(() => removeToast(id), duration);

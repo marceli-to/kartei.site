@@ -22,6 +22,11 @@
     <h2 class="mb-12 font-muoto-medium">Toasts</h2>
     <div class="flex gap-x-8">
       <button 
+        @click="showToast()"
+        class="bg-graphite text-white px-8 py-2 text-sm">
+        Show toast from script
+      </button>
+      <button 
         @click="toast.show('This is a success message!', 'success')"
         class="bg-lime text-white px-8 py-2 text-sm">
         Success
@@ -48,4 +53,8 @@ const toast = useToastStore();
 
 onMounted(() => {
 })
+
+function showToast() {
+  toast.show('This is a success message!', 'info')
+}
 </script>

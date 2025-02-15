@@ -1,8 +1,7 @@
 <template>
   <div 
     v-if="toasts.length" 
-    class="toasts" 
-    :class="position">
+    class="toasts">
     <a 
       href="javascript:;" 
       :class="['toast', toast.type]"
@@ -16,15 +15,12 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
 import { useToastStore } from '@/store/toast';
-import IconCross from '@/components/icons/Cross.vue';
 
 const toastStore = useToastStore();
 const { toasts } = storeToRefs(toastStore);
 const { removeToast } = toastStore;
 
-const position = computed(() => toasts.value.length ? toasts.value[0].position : 'top-left');
 </script>
 
 <style scoped>
@@ -47,21 +43,4 @@ const position = computed(() => toasts.value.length ? toasts.value[0].position :
 .toast.info { 
   @apply bg-ice;
  }
-/* .toasts.top-right {
-  @apply top-10 right-10;
- }
-
-.toasts.top-left {
-  @apply top-0 left-0;
- }
-
-.toasts.bottom-right {
-  @apply bottom-10 right-10;
- }
-
-.toasts.bottom-left {
-  @apply bottom-10 left-10;
- } */
-
-
 </style>
