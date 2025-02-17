@@ -252,8 +252,8 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import Action from '@/components/buttons/Action.vue';
-import ToggleGroup from '@/components/buttons/ToggleGroup.vue';
-import RadioGroup from '@/components/buttons/RadioGroup.vue';
+import ToggleGroup from '@/components/fields/ToggleGroup.vue';
+import RadioGroup from '@/components/fields/RadioGroup.vue';
 
 import InputGroup from '@/components/fields/Group.vue';
 import InputLabel from '@/components/fields/Label.vue';
