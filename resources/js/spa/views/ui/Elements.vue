@@ -93,12 +93,13 @@
             :icon="{ name: 'Plus', position: 'center' }" />
         </div>
         <div>
-          <h3 class="mb-8 font-muoto-regular">Toggle Group</h3>
-          <ToggleGroup
+          <h3 class="mb-8 font-muoto-regular">Select Buttons (multiple)</h3>
+          <InputSelectButtons
             v-model="selectedSections"
+            :multiple="true"
             name="sections"
+            wrapperClasses="grid grid-cols-2 gap-8"
             :options="sections" />
-
           <template v-if="selectedSections.length">
             <div class="bg-snow p-8 mt-12">
               <h3 class="mb-4 font-muoto-regular">Selection</h3>
@@ -107,13 +108,26 @@
           </template>
         </div>
         <div>
+          <h3 class="mb-8 font-muoto-regular">Select Buttons (single)</h3>
+          <InputSelectButtons
+            v-model="selectedSection"
+            name="sections"
+            wrapperClasses="flex flex-col gap-y-8"
+            :options="sections" />
+          <template v-if="selectedSection">
+            <div class="bg-snow p-8 mt-12">
+              <h3 class="mb-4 font-muoto-regular">Selection</h3>
+              {{ selectedSection }}
+            </div>
+          </template>
+        </div>
+        <div>
           <h3 class="mb-8 font-muoto-regular">Radio Group</h3>
-          <RadioGroup
+          <InputRadioGroup
             v-model="selectedSubscription"
             name="subscription"
             :options="subscriptions"
             class="!border-red-400" />
-
           <template v-if="selectedSubscription">
             <div class="bg-snow p-8 mt-12">
               <h3 class="mb-4 font-muoto-regular">Selection</h3>
@@ -252,9 +266,8 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import Action from '@/components/buttons/Action.vue';
-import ToggleGroup from '@/components/fields/ToggleGroup.vue';
-import RadioGroup from '@/components/fields/RadioGroup.vue';
-
+import InputSelectButtons from '@/components/fields/SelectButtons.vue';
+import InputRadioGroup from '@/components/fields/RadioGroup.vue';
 import InputGroup from '@/components/fields/Group.vue';
 import InputLabel from '@/components/fields/Label.vue';
 import InputText from '@/components/fields/Text.vue';
@@ -300,7 +313,8 @@ const errors = ref({
   country: null
 });
 
-const selectedSections = ref([]);
+const selectedSection = ref('basic');
+const selectedSections = ref(['basic', 'structure']);
 const sections = [
   { value: 'basic', label: 'Basisinformationen' },
   { value: 'structure', label: 'Struktur' },

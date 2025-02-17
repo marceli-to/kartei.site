@@ -1,14 +1,14 @@
 <template>
-  <fieldset class="grid grid-cols-2 gap-8">
+  <fieldset :class="wrapperClasses">
     <label 
       v-for="option in options" 
       :key="option.value" 
       class="relative">
       <input
-        type="checkbox"
+        :type="multiple ? 'checkbox' : 'radio'"
         :name="name"
         :value="option.value"
-        :checked="modelValue.includes(option.value)"
+        :checked="isChecked(option.value)"
         @change="updateValue(option.value)"
         class="peer sr-only"
       />
@@ -16,7 +16,7 @@
         :class="[
           borderClasses,
           classes,
-          modelValue.includes(option.value) ? activeClass : '',
+          isChecked(option.value) ? activeClass : '',
         ]"
       >
         {{ option.label }}
@@ -26,11 +26,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
 const props = defineProps({
   modelValue: {
-    type: Array,
+    type: [Array, String, Number],
     required: true
   },
   name: {
@@ -48,9 +46,17 @@ const props = defineProps({
       );
     }
   },
+  multiple: {
+    type: Boolean,
+    default: false
+  },
   classes: {
     type: String,
-    default: 'min-h-default w-full flex items-center justify-center font-muoto-regular text-md text-graphite hover:text-black transition-all select-none cursor-pointer px-8'
+    default: 'min-h-default w-full flex items-center font-muoto-regular text-md text-graphite hover:text-black transition-all select-none cursor-pointer px-8'
+  },
+  wrapperClasses: {
+    type: String,
+    default: ''
   },
   borderClasses: {
     type: String,
@@ -64,16 +70,27 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
+const isChecked = (value) => {
+  return props.multiple 
+    ? props.modelValue.includes(value) // For multiple selections
+    : props.modelValue === value; // For single selection
+};
+
 const updateValue = (value) => {
-  const newValue = [...props.modelValue];
-  const index = newValue.indexOf(value);
-  
-  if (index === -1) {
-    newValue.push(value);
-  } else {
-    newValue.splice(index, 1);
+  if (props.multiple) {
+    const newValue = [...props.modelValue];
+    const index = newValue.indexOf(value);
+    
+    if (index === -1) {
+      newValue.push(value);
+    } 
+    else {
+      newValue.splice(index, 1);
+    }
+    emit('update:modelValue', newValue);
+  } 
+  else {
+    emit('update:modelValue', value);
   }
-  
-  emit('update:modelValue', newValue);
 };
 </script>
