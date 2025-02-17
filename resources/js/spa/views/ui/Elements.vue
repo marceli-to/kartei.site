@@ -199,23 +199,49 @@
           />
         </InputGroup>
       </div>
+
+      <div class="flex flex-col gap-y-24 mt-32 w-full">
+        <InputGroup>
+          <InputLabel label="Passwort" id="password_test" required />
+          <div  class="flex flex-col gap-y-8">
+            <InputPassword
+              id="password_test"
+              v-model="form.password"
+              :error="errors.password"
+              @update:error="errors.password = $event"
+              :placeholder="errors.password ? errors.password : 'Passwort'"
+              aria-label="Passwort" />
+            <InputPassword
+              id="password_confirmation"
+              v-model="form.password_confirmation"
+              :error="errors.password_confirmation"
+              @update:error="errors.password_confirmation = $event"
+              :placeholder="errors.password_confirmation ? errors.password_confirmation : 'Passwort wiederholen'"
+              aria-label="Passwort wiederholen" />
+            <ButtonAuth label="Passwort speichern" />
+            <div class="text-sm font-muoto-italic text-graphite pl-8">
+              Das Passwort muss mindestens 8 Zeichen umfassen sowie Gross- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.
+            </div>
+          </div>
+        </InputGroup>
+      </div>
       
       <div class="flex flex-col gap-y-24 mt-32 w-full" data-disabled>
         <InputGroup>
-          <InputLabel label="Bezeichnung / Firma" id="company" required />
+          <InputLabel label="Bezeichnung / Firma" id="company_disabled" required />
           <InputText
             v-model="form.company"
-            id="company"
+            id="company_disabled"
             :error="errors.company"
             @update:error="errors.company = $event"
             :placeholder="errors.company ? errors.company : 'Bezeichnung / Firma'"
             aria-label="Bezeichnung / Firma" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Adresszusatz" id="address_suffix" />
+          <InputLabel label="Adresszusatz" id="address_suffix_disabled" />
           <InputText
             v-model="form.address_suffix"
-            id="address_suffix"
+            id="address_suffix_disabled"
             :error="errors.address_suffix"
             @update:error="errors.address_suffix = $event"
             :placeholder="errors.address_suffix ? errors.address_suffix : 'Adresszusatz'"
@@ -294,6 +320,7 @@ import InputRadioGroup from '@/components/fields/RadioGroup.vue';
 import InputGroup from '@/components/fields/Group.vue';
 import InputLabel from '@/components/fields/Label.vue';
 import InputText from '@/components/fields/Text.vue';
+import InputPassword from '@/components/fields/Password.vue';
 import InputSelect from '@/components/fields/Select.vue';
 
 import { useToastStore } from '@/store/toast';
@@ -309,6 +336,7 @@ function showToast(message = '', type = 'info') {
 const form = ref({
   email: '',
   password: '',
+  password_confirmation: '',
   firstname: '',
   company: '',
   address_suffix: '',
@@ -318,15 +346,10 @@ const form = ref({
   country: 'switzerland'
 });
 
-const countries = [
-  { value: 'switzerland', label: 'Schweiz' },
-  { value: 'germany', label: 'Deutschland' },
-  { value: 'austria', label: 'Österreich' }
-];
-
 const errors = ref({
   email: null,
   password: null,
+  password_confirmation: null,
   firstname: 'Vorname fehlt',
   company: null,
   address_suffix: null,
@@ -335,6 +358,12 @@ const errors = ref({
   city: 'Ort fehlt',
   country: null
 });
+
+const countries = [
+  { value: 'switzerland', label: 'Schweiz' },
+  { value: 'germany', label: 'Deutschland' },
+  { value: 'austria', label: 'Österreich' }
+];
 
 const selectedSection = ref('basic');
 const selectedSections = ref(['basic', 'structure']);

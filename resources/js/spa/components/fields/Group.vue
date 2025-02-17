@@ -1,14 +1,5 @@
 <template>
-  <div :class="classes">
+  <div>
     <slot />
   </div>
 </template>
-
-<script setup>
-const props = defineProps({
-  classes: {
-    type: String,
-    default: ''
-  }
-});
-</script>
