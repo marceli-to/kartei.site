@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  [data-disabled] {
+    @apply opacity-20 [&>*]:pointer-events-none [&>*]:select-none transition-all;
+  }
+}
+
 * {
   font-variant-ligatures: none;
 }

@@ -23,7 +23,7 @@
       <div>
         <h2 class="mb-12 font-muoto-medium">Single Image</h2>
         <ImageCard>
-          <Image src="https://placehold.co/600x900" alt="Image" />
+          <Image src="https://placehold.co/600x900" alt="Image" :spacing="'m-40'" />
         </ImageCard>
       </div>
     </div>
@@ -46,8 +46,7 @@
           <Action 
             label="Erstellen" 
             classes="border pl-8" 
-            :icon="{ name: 'Plus', position: 'right' }"
-            />
+            :icon="{ name: 'Plus', position: 'right' }" />
         </div>
         <div>
           <h3 class="mb-8 font-muoto-regular">Button (box, icon left)</h3>
@@ -200,6 +199,30 @@
           />
         </InputGroup>
       </div>
+      
+      <div class="flex flex-col gap-y-24 mt-32 w-full" data-disabled>
+        <InputGroup>
+          <InputLabel label="Bezeichnung / Firma" id="company" required />
+          <InputText
+            v-model="form.company"
+            id="company"
+            :error="errors.company"
+            @update:error="errors.company = $event"
+            :placeholder="errors.company ? errors.company : 'Bezeichnung / Firma'"
+            aria-label="Bezeichnung / Firma" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Adresszusatz" id="address_suffix" />
+          <InputText
+            v-model="form.address_suffix"
+            id="address_suffix"
+            :error="errors.address_suffix"
+            @update:error="errors.address_suffix = $event"
+            :placeholder="errors.address_suffix ? errors.address_suffix : 'Adresszusatz'"
+            aria-label="Adresszusatz" />
+        </InputGroup>
+      </div>
+
       <div class="flex flex-col gap-y-24 mt-48 w-full">
         <h2 class="font-muoto-medium">Form fields auth</h2>
         <div>
@@ -331,6 +354,4 @@ const subscriptions = [
   { value: 'medium', label: 'Medium' },
   { value: 'professional', label: 'Professional' }
 ];
-
-
 </script>
