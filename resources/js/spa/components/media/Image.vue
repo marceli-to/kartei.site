@@ -2,7 +2,7 @@
   <div :class="[classes, spacing]">
     <img
       :src="src"
-      :alt="name"
+      :alt="alt"
       :width="width"
       :height="height"
       class="max-w-full max-h-full object-contain"

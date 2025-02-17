@@ -124,6 +124,96 @@
       </div>
     </div>
     <div class="col-span-4">
+      <h2 class="mb-12 font-muoto-medium">Form fields</h2>
+      <div class="flex flex-col gap-y-24 w-full">
+        <InputGroup>
+          <InputLabel label="Bezeichnung / Firma" id="company" required />
+          <InputText
+            v-model="form.company"
+            id="company"
+            :error="errors.company"
+            @update:error="errors.company = $event"
+            :placeholder="errors.company ? errors.company : 'Bezeichnung / Firma'"
+            aria-label="Bezeichnung / Firma" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Adresszusatz" id="address_suffix" />
+          <InputText
+            v-model="form.address_suffix"
+            id="address_suffix"
+            :error="errors.address_suffix"
+            @update:error="errors.address_suffix = $event"
+            :placeholder="errors.address_suffix ? errors.address_suffix : 'Adresszusatz'"
+            aria-label="Adresszusatz" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Hausnummer" id="street_number" />
+          <InputText
+            v-model="form.street_number"
+            id="street_number"
+            :error="errors.street_number"
+            @update:error="errors.street_number = $event"
+            :placeholder="errors.street_number ? errors.street_number : 'Hausnummer'"
+            aria-label="Hausnummer" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="PLZ" id="zip" required />
+          <InputText
+            v-model="form.zip"
+            id="zip"
+            :error="errors.zip"
+            @update:error="errors.zip = $event"
+            :placeholder="errors.zip ? errors.zip : 'PLZ'"
+            aria-label="PLZ" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Ort" id="city" required />
+          <InputText
+            v-model="form.city"
+            id="city"
+            :error="errors.city"
+            @update:error="errors.city = $event"
+            :placeholder="errors.city ? errors.city : 'Ort'"
+            aria-label="Ort" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Land" id="country" required />
+          <InputSelect
+            id="country"
+            v-model="form.country"
+            :options="countries"
+            :error="errors.country"
+          />
+        </InputGroup>
+      </div>
+      <div class="flex flex-col gap-y-24 mt-48 w-full">
+        <h2 class="font-muoto-medium">Form fields auth</h2>
+        <div>
+          <InputLabel label="Anmelden" class="mb-4 font-muoto-medium" />
+          <InputGroup class="flex flex-col gap-y-8">
+            <InputText
+              id="email"
+              v-model="form.email"
+              :error="errors.email"
+              @update:error="errors.email = $event"
+              :placeholder="errors.email ? errors.email : 'E-Mail'"
+              aria-label="E-Mail"
+              :classes="'bg-white !border-graphite !px-8 font-muoto-medium placeholder:!text-graphite'" />
+            <InputText
+              id="password"
+              type="password"
+              v-model="form.password"
+              :error="errors.password"
+              @update:error="errors.password = $event"
+              :placeholder="errors.password ? errors.password : 'Passwort'"
+              aria-label="Passwort"
+              :classes="'bg-white !border-graphite !px-8 font-muoto-medium placeholder:!text-graphite'" />
+              <ButtonAuth label="Anmelden" />
+          </InputGroup>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-4">
       <div>
         <h2 class="mb-12 font-muoto-medium">Toasts</h2>
         <div class="flex gap-x-8">
@@ -164,6 +254,12 @@ import ButtonAuth from '@/components/buttons/Auth.vue';
 import Action from '@/components/buttons/Action.vue';
 import ToggleGroup from '@/components/buttons/ToggleGroup.vue';
 import RadioGroup from '@/components/buttons/RadioGroup.vue';
+
+import InputGroup from '@/components/fields/Group.vue';
+import InputLabel from '@/components/fields/Label.vue';
+import InputText from '@/components/fields/Text.vue';
+import InputSelect from '@/components/fields/Select.vue';
+
 import { useToastStore } from '@/store/toast';
 const toast = useToastStore();
 
@@ -173,6 +269,36 @@ onMounted(() => {
 function showToast(message = '', type = 'info') {
   toast.show(message, type)
 }
+
+const form = ref({
+  email: '',
+  password: '',
+  firstname: '',
+  company: '',
+  address_suffix: '',
+  street_number: '',
+  zip: '',
+  city: '',
+  country: 'switzerland'
+});
+
+const countries = [
+  { value: 'switzerland', label: 'Schweiz' },
+  { value: 'germany', label: 'Deutschland' },
+  { value: 'austria', label: 'Österreich' }
+];
+
+const errors = ref({
+  email: null,
+  password: null,
+  firstname: 'Vorname fehlt',
+  company: null,
+  address_suffix: null,
+  street_number: null,
+  zip: null,
+  city: 'Ort fehlt',
+  country: null
+});
 
 const selectedSections = ref([]);
 const sections = [

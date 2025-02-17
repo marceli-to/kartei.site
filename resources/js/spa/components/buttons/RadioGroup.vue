@@ -50,7 +50,7 @@ defineProps({
   },
   labelClasses: {
     type: String,
-    default: 'font-muoto-regular text-md'
+    default: 'font-muoto-regular text-md select-none'
   }
 });
 

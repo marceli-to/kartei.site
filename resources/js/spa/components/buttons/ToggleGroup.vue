@@ -50,7 +50,7 @@ const props = defineProps({
   },
   classes: {
     type: String,
-    default: 'min-h-default w-full flex items-center justify-center font-muoto-regular text-md text-graphite hover:text-black transition-all user-select-none cursor-pointer px-8'
+    default: 'min-h-default w-full flex items-center justify-center font-muoto-regular text-md text-graphite hover:text-black transition-all select-none cursor-pointer px-8'
   },
   borderClasses: {
     type: String,
