@@ -45,14 +45,14 @@
     "src": "resources/fonts/Muoto-Regular.woff2"
   },
   "resources/js/app.css": {
-    "file": "assets/app-6fe3a574.css",
+    "file": "assets/app-a16210cc.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "css": [
-      "assets/app-6fe3a574.css"
+      "assets/app-a16210cc.css"
     ],
-    "file": "assets/app-c2f90f60.js",
+    "file": "assets/app-afc8c865.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

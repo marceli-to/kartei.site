@@ -30,6 +30,8 @@ import draggable from 'vuedraggable';
 import IconCross from '@/components/icons/Cross.vue';
 import ImageCard from '@/components/media/ImageCard.vue';
 import Image from '@/components/media/Image.vue';
+import { useToastStore } from '@/store/toast';
+const toast = useToastStore();
 
 const props = defineProps({
   images: {
@@ -74,6 +76,8 @@ const deleteImage = async (imageName, index) => {
 
     // Emit the delete event
     emit('delete', index);
+
+    toast.show('Image deleted successfully!', 'success')
   } 
   catch (error) {
     console.error('Failed to delete image:', error);
