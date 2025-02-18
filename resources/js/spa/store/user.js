@@ -21,7 +21,6 @@ export const useUserStore = defineStore('user', {
       try {
         const { data } = await axios.get('/api/user');
         this.user = data.user;
-        console.log(this.user);
         this.permissions = data.permissions;
         this.roles = data.roles;
       } 

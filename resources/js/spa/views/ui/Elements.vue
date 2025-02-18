@@ -276,7 +276,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-4">
+    <div class="col-span-4 flex flex-col gap-y-24">
       <div>
         <h2 class="mb-12 font-muoto-medium">Toasts</h2>
         <div class="flex gap-x-8">
@@ -302,6 +302,17 @@
           </button>
         </div>
       </div>
+      <div>
+        <h2 class="mb-12 font-muoto-medium">Dialogs</h2>
+        <div class="flex gap-x-8">
+          <a 
+            href="javascript:;" 
+            @click="showDialog"
+            class="bg-graphite text-white px-8 py-2 text-sm">
+            Show dialog
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -323,14 +334,34 @@ import InputText from '@/components/fields/Text.vue';
 import InputPassword from '@/components/fields/Password.vue';
 import InputSelect from '@/components/fields/Select.vue';
 
+import DialogDummyContent from '@/components/DialogDummyContent.vue';
+
 import { useToastStore } from '@/store/toast';
 const toast = useToastStore();
+
+import { useDialogStore } from '@/store/dialog';
+const dialogStore = useDialogStore();
 
 onMounted(() => {
 })
 
 function showToast(message = '', type = 'info') {
   toast.show(message, type)
+}
+
+function showDialog() {
+  dialogStore.show({
+    title: 'Möchten Sie die Karte 1.1.0002 / SBF_MA_AB wirklich löschen?',
+    component: DialogDummyContent,
+    confirmLabel: 'Löschen',
+    cancelLabel: 'Abbrechen',
+    onConfirm: () => {
+      // console.log('Save clicked');
+    },
+    onCancel: () => {
+      // console.log('Cancel clicked');
+    }
+  });
 }
 
 const form = ref({
