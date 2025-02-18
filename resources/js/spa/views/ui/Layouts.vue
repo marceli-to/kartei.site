@@ -1,19 +1,25 @@
 <template>
   <div class="flex flex-grow w-full overflow-hidden mt-64 relative gap-x-8">
-    <!-- Title of previous section -->
-    <h1 class="flex-shrink-0 absolute left-0 top-0 w-2/12 flex justify-between bg-blue-100">
-      {{ previousSectionTitle }}
-        <a 
-          href="javascript:;"
-          @click.prevent="prev"
-          title="Prev Section"
-          class="">
-          <IconChevronLeft variant="small" />
-        </a>
-    </h1> 
 
     <!-- Navbar -->
     <nav class="w-2/12 bg-gray-300 sticky left-0 mt-48 min-h-full z-50">
+
+      <!-- Name of previous section -->
+      <template v-if="activeIndex > 0">
+        <div class="absolute left-0 -top-48 w-full flex items-center justify-between bg-white">
+          <h1 class="opacity-20">
+            {{ previousSectionName }}
+          </h1>
+          <a 
+            href="javascript:;"
+            @click.prevent="prev"
+            title="Prev Section"
+            class="opacity-20">
+            <IconChevronLeft variant="small" />
+          </a>
+        </div>
+      </template>
+
       <ul>
         <li v-for="(item, index) in sections" :key="index" 
             @click="activeIndex = index"
@@ -54,9 +60,7 @@
         <div class="flex flex-grow min-h-full px-8 pt-22">
           <div 
             class="flex-grow bg-gray-200 min-h-full"
-            :class="{
-              'opacity-20 transition-all duration-none': activeIndex !== index,
-            }">
+            :class="{ 'opacity-20 transition-all duration-none': activeIndex !== index }">
             test
           </div>
         </div>
@@ -91,7 +95,7 @@ const computedOffsets = computed(() => {
 })
 
 // New computed property for previous section name
-const previousSectionTitle = computed(() => {
+const previousSectionName = computed(() => {
   return activeIndex.value > 0 ? sections.value[activeIndex.value - 1].name : ''
 })
 
