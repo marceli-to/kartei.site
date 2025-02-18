@@ -1,7 +1,8 @@
 <x-layout.app>
 @section('content')
-  <x-layout.inner>
-    <div id="app"></div>
-  </x-layout.inner>
+  <div  
+    class="w-full max-w-page mx-auto flex flex-col flex-1"
+    id="app">
+  </div>
 @endsection
 </x-layout.app>

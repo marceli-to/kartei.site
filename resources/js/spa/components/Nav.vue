@@ -22,6 +22,11 @@
       <li>
         <router-link to="/archiv/elements">Elements</router-link>
       </li>
+      <li>
+        <router-link :to="{ name: 'layouts' }">
+          Layouts
+        </router-link>
+      </li>
     </ul>
     <ul>
       <li>
