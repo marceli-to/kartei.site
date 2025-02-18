@@ -31,7 +31,7 @@
 import { ref } from 'vue';
 import IconEye from '@/components/icons/Eye.vue';
 
-const type = ref('text');
+const type = ref('password');
 
 const props = defineProps({
   modelValue: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-12 gap-48 mt-32">
+  <div class="grid grid-cols-12 gap-48 mt-32 pb-32">
     <div class="col-span-4 flex flex-col gap-y-30">
       <div>
         <h2 class="mb-12 font-muoto-medium">Image Upload</h2>
