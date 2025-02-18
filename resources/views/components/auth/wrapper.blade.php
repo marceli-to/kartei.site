@@ -1,3 +1,3 @@
-<div class="w-full bg-white p-16">
+<div class="w-full max-w-sm mt-108">
   {{ $slot }}
 </div>

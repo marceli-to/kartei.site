@@ -1,6 +1,5 @@
-<x-layout.head class="bg-gray-50" />
+<x-layout.head />
 <x-layout.header />
-<x-layout.main class="w-full max-w-md mx-auto">
+<x-layout.main>
   {{ $slot }}
 </x-layout.main>
-<x-layout.footer />

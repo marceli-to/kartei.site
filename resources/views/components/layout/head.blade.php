@@ -21,4 +21,4 @@
 @vite('resources/css/app.css')
 @livewireStyles
 </head>
-<body class="antialiased font-muoto-regular text-md leading-[1.4] flex flex-col min-h-screen p-32 pb-0">
+<body class="antialiased font-muoto-regular text-md leading-[1.4] @if (!Route::is('auth.*')) flex flex-col min-h-screen @endif px-32">
