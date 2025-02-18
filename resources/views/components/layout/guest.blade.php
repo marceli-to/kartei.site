@@ -3,3 +3,4 @@
 <x-layout.main>
   {{ $slot }}
 </x-layout.main>
+<x-layout.footer />

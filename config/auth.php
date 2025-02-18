@@ -96,6 +96,8 @@ return [
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
+            'reset' => 'auth.password.reset',  // This needs to match your new route name
+
         ],
     ],
 
