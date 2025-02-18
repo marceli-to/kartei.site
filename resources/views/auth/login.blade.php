@@ -1,5 +1,8 @@
 <x-layout.guest>
-  <x-auth.toast :status="$errors->any() ? 'Es ist ein Fehler aufgetreten – bitte Überprüfen Sie ihre Angaben.' : null" />
+  
+  @if ($errors->any())
+    <x-auth.toast status="Es ist ein Fehler aufgetreten." type="error" />
+  @endif
 
   <x-auth.wrapper>
   
