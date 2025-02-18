@@ -1,3 +1,3 @@
-<div class="w-full max-w-sm mt-108">
+<div class="w-full max-w-sm">
   {{ $slot }}
 </div>

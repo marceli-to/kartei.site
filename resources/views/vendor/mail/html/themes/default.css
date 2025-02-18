@@ -10,7 +10,8 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 body {
   -webkit-text-size-adjust: none;
   background-color: #ffffff;
-  color: #376C1B;
+  color: #000000;
+  font-size: 14px;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -21,12 +22,12 @@ p,
 ul,
 ol,
 blockquote {
-  line-height: 1.4;
+  line-height: 1.35;
   text-align: left;
 }
 
 a {
-  color: #376C1B;
+  color: #000000;
 }
 
 a img {
@@ -36,8 +37,8 @@ a img {
 /* Typography */
 
 h1 {
-  color: #376C1B;
-  font-size: 16px;
+  color: #000000;
+  font-size: 14px !important;
   font-weight: 500;
   margin-top: 0;
   margin-bottom: 0;
@@ -45,9 +46,8 @@ h1 {
 }
 
 p {
-  font-size: 13px;
-  line-height: 1.3em;
-  margin-top: 0;
+  font-size: 14px;
+  margin: 16px 0 !important;
   text-align: left;
 }
 
@@ -84,7 +84,7 @@ strong, b {
 
 .header {
   background-color: #ffffff;
-  color: #376C1B;
+  color: #000000;
   padding: 40px 0 20px 40px;
   text-align: left;
 }
@@ -137,19 +137,19 @@ table.header__content {
 
 /* Tables */
 
-.table table {
+table {
   -premailer-cellpadding: 0;
   -premailer-cellspacing: 0;
   -premailer-width: 100%;
-  margin: 30px auto;
+  margin: 0 auto;
   width: 100%;
 }
 
-.table thead {
+thead {
   display: none !important;
 }
 
-.table th {
+th {
   border-bottom: none;
   margin: 0;
   padding-bottom: 8px;
@@ -157,12 +157,17 @@ table.header__content {
   text-align: left;
 }
 
-.table td {
-  color: #376C1B;
+td {
+  color: #000000;
   font-size: 14px;
   line-height: 1.2;
   margin: 0;
   padding: 6px 0;
+  text-align: left !important;
+}
+
+table.action td {
+  padding: 0 !important;
 }
 
 .content-cell {
@@ -211,15 +216,14 @@ table.header__content {
   padding-bottom: 30px;
 }
 
-.btn-primary {
-  background-color: #376C1B;
-  border-radius: 500px;
-  color: #ffffff;
+.button-primary {
+  background-color: #fff;
+  color: #000 !important;
+  border: 1px solid #000;
   display: inline-block;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 14px;
   line-height: 1;
-  padding: 12px 24px;
+  padding: 4px 4px;
   text-align: center;
   text-decoration: none;
 }

@@ -4,6 +4,10 @@
     <x-auth.toast status="Es ist ein Fehler aufgetreten." type="error" />
   @endif
 
+  @if (session('status'))
+    <x-auth.toast :status="session('status')" type="success" />
+  @endif
+
   <x-auth.wrapper>
   
     <form 
@@ -13,21 +17,24 @@
       @csrf
 
       <x-auth.input-label>
-        Anmelden
+        {{ __('Anmelden') }}
       </x-auth.input-label>
+
       <x-auth.text-input 
         type="email" 
         name="email" 
         :value="old('email')"
         data-error="{{ $errors->has('email') ? 'true' : null }}"
-        placeholder="E-Mail"
+        placeholder="{{ __('E-Mail') }}"
+        required
         autocomplete="email" />
 
       <x-auth.text-input 
         type="password"
         name="password"
-        placeholder="Passwort"
+        placeholder="{{ __('Passwort') }}"
         data-error="{{ $errors->has('password') ? 'true' : null }}"
+        required
         autocomplete="current-password" />
 
       <x-auth.primary-button>
@@ -49,6 +56,7 @@
         @endif
 
       </div>
+
     </form>
   
   </x-auth.wrapper>
