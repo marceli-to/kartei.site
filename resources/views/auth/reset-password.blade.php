@@ -1,4 +1,5 @@
-<x-layout.guest>
+<x-layout.guest class="mt-108 flex justify-center">
+@section('content')
 
   @if ($errors->any())
     <x-auth.toast status="Es ist ein Fehler aufgetreten." type="error" />
@@ -58,4 +59,6 @@
 
     </form>
   </x-auth.wrapper>
+
+@endSection
 </x-layout.guest>

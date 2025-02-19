@@ -1,7 +1,7 @@
 <header>
   <x-layout.inner class="min-h-80 flex items-center border-b border-b-black">
-    @if (Route::is('auth.*'))
-      <div class="w-full flex justify-between">
+    <div class="w-full flex items-center justify-between">
+      @if (Route::is('auth.*'))
         <a 
           href="{{ route('page.home') }}"
           title="Startseite">
@@ -13,15 +13,13 @@
           class="block">
           <x-icons.cross />
         </a>
-      </div>
-    @else
-      <div class="w-full flex justify-between">
+      @else
         <a 
           href="{{ route('page.home') }}"
           title="Startseite">
           <x-icons.logo />
         </a>
-      </div>
-    @endif
+      @endif
+    </div>
   </x-layout.inner>
 </header>

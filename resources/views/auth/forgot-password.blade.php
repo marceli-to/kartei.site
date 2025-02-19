@@ -1,5 +1,5 @@
-
-<x-layout.guest>
+<x-layout.guest class="mt-108 flex justify-center">
+@section('content')
   
   @if (session('status'))
     <x-auth.toast :status="session('status')" type="success" />
@@ -45,5 +45,5 @@
     </form>
   
   </x-auth.wrapper>
-
+@endsection
 </x-layout.guest>

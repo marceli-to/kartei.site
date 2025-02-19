@@ -72,7 +72,7 @@
           <h3 class="mb-8 font-muoto-regular">Router Link (y-only, icon right)</h3>
           <Action 
             label="Benutzer/innen"
-            :to="{ name: 'Users' }"
+            :to="{ name: 'users' }"
             :icon="{ name: 'ChevronRight' }" />
         </div>
         <div>

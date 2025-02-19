@@ -55,6 +55,14 @@ export default {
         'steel': '#8C8C8C',
       },
 
+      zIndex: {
+        '60': 60,
+        '70': 70,
+        '80': 80,
+        '90': 90,
+        '100': 100,
+      },
+
       fontFamily: {
         'otto-bold': ['ABCOtto-Bold', ...defaultTheme.fontFamily.sans],
         'otto-regular': ['ABCOtto-Regular', ...defaultTheme.fontFamily.sans],

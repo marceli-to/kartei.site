@@ -9,9 +9,9 @@ import Colors from '@/views/ui/Colors.vue';
 import Layouts from '@/views/ui/Layouts.vue';
 
 const routes = [
-  { path: '/archiv', name: 'Home', component: Home },
-  { path: '/archiv/benutzer', name: 'Users', component: Users },
-  { path: '/archiv/karteien', name: 'Archives', component: Archives },
+  { path: '/archiv', name: 'home', component: Home },
+  { path: '/archiv/benutzer', name: 'users', component: Users },
+  { path: '/archiv/karteien', name: 'archives', component: Archives },
 
   // ui/dev stuff
   { path: '/archiv/icons', name: 'icons', component: Icons },
