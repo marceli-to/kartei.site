@@ -39,7 +39,7 @@ a img {
 h1 {
   color: #000000;
   font-size: 14px !important;
-  font-weight: 500;
+  font-weight: 400;
   margin-top: 0;
   margin-bottom: 0;
   text-align: left;
@@ -85,7 +85,7 @@ strong, b {
 .header {
   background-color: #ffffff;
   color: #000000;
-  padding: 40px 0 20px 40px;
+  padding: 40px 0 0 40px;
   text-align: left;
 }
 
@@ -222,8 +222,9 @@ table.action td {
   border: 1px solid #000;
   display: inline-block;
   font-size: 14px;
+  font-weight: 500;
   line-height: 1;
-  padding: 4px 4px;
+  padding: 4px 8px;
   text-align: center;
   text-decoration: none;
 }

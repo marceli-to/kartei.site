@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -20,7 +19,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+      return view('auth.register');
     }
 
     /**
@@ -30,22 +29,27 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+      $request->validate([
+        'firstname' => ['required', 'string', 'max:255'],
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+      ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+      $user = User::create([
+        'firstname' => $request->firstname,
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+      ]);
 
-        event(new Registered($user));
+      // Assign role
+      $user->assignRole('Admin');
 
-        Auth::login($user);
+      event(new Registered($user));
 
-        return redirect(RouteServiceProvider::HOME);
+      Auth::login($user);
+
+      return redirect(RouteServiceProvider::HOME);
     }
 }

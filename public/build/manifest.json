@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-8f309ec6.css",
+    "file": "assets/app-3930a6a2.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -44,16 +44,21 @@
     "file": "assets/Muoto-Regular-040b3615.woff2",
     "src": "resources/fonts/Muoto-Regular.woff2"
   },
-  "resources/js/app.css": {
-    "file": "assets/app-779565c8.css",
-    "src": "resources/js/app.css"
-  },
   "resources/js/app.js": {
-    "css": [
-      "assets/app-779565c8.css"
-    ],
-    "file": "assets/app-496cf876.js",
+    "file": "assets/app-e508ae40.js",
     "isEntry": true,
     "src": "resources/js/app.js"
+  },
+  "resources/js/spa.css": {
+    "file": "assets/spa-779565c8.css",
+    "src": "resources/js/spa.css"
+  },
+  "resources/js/spa.js": {
+    "css": [
+      "assets/spa-779565c8.css"
+    ],
+    "file": "assets/spa-50de81e3.js",
+    "isEntry": true,
+    "src": "resources/js/spa.js"
   }
 }
