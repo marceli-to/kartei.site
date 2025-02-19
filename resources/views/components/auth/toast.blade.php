@@ -8,7 +8,7 @@
   @endif
   x-on:click="show = false"
   x-show="show"
-  class="fixed z-[9999] text-sm w-full text-white font-muoto-medium top-80 left-0 px-32 cursor-pointer"
+  class="fixed z-[9999] text-sm w-full text-white font-muoto-medium top-80 left-0 px-16 cursor-pointer"
   data-toast>
   <div
     @class([

@@ -14,6 +14,7 @@ export default {
 
       screens: {
         'xs': '440px',
+        '3xl': '100rem',
       },
 
       minHeight: {

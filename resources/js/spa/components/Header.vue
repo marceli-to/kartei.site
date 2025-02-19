@@ -12,7 +12,9 @@
           <a href="">
             <IconProfile />
           </a>
-          <button @click="menuRef.toggle()">
+          <button 
+            class="w-28 h-24 flex items-center justify-center"
+            @click="menuRef.toggle()">
             <IconCross v-if="menuRef?.isOpen" />
             <IconBurger v-else />
           </button>
