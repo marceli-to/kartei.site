@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Resources\UserResource;
 
 /*
@@ -22,9 +23,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
   return new UserResource($request->user());
 });
 
+
+
 Route::middleware('auth:sanctum')->group(function () {
+  // Uploads
   Route::post('/upload', [UploadController::class, 'store']);
   Route::delete('/upload/temp/{name}', [UploadController::class, 'destroyTemp']);
   Route::delete('/upload/{uuid}', [UploadController::class, 'destroy']);
+
+  // Users
+  Route::get('/users', [UserController::class, 'get']);
+  Route::put('/user', [UserController::class, 'update']);
+  Route::delete('/user', [UserController::class, 'destroy']);
+
+  // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);
 });

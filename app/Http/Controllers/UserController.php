@@ -13,7 +13,6 @@ class UserController extends Controller
   {
     // get current user
     $user = Auth::user();
-
     $user->givePermissionTo('edit records');
     dd($user->permissions);
   }
