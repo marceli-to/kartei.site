@@ -1,6 +1,6 @@
 <header>
-  <x-layout.inner class="min-h-80 flex items-center border-b border-b-black">
-    <div class="w-full flex items-center justify-between">
+  <x-layout.inner class="min-h-80 flex border-b border-b-black">
+    <div class="w-full flex justify-between mt-25">
       @if (Route::is('auth.*'))
         <a 
           href="{{ route('page.home') }}"
