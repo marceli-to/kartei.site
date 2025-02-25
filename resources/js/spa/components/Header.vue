@@ -10,12 +10,12 @@
         </router-link>
         <div class="flex justify-end gap-x-48">
           <a href="" class="mt-20 group">
-            <IconInfo class="group-hover:hidden" />
-            <IconInfo variant="active" class="hidden group-hover:block" />
+            <IconInfo classes="group-hover:hidden" />
+            <IconInfo variant="active" classes="hidden group-hover:block" />
           </a>
           <a href="" class="mt-20 group">
-            <IconProfile class="group-hover:hidden" />
-            <IconProfile variant="active" class="hidden group-hover:block" />
+            <IconProfile classes="group-hover:hidden" />
+            <IconProfile variant="active" classes="hidden group-hover:block" />
           </a>
           <button 
             class="w-28 h-24 mt-33 flex items-center justify-center"
