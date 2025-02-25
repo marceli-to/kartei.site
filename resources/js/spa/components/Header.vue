@@ -27,11 +27,8 @@
       </div>
     </div>
   </header>
-  <SidebarMenu 
-    :is-open="sidebar.isOpen.value" 
-    @toggle="sidebar.toggle" />
+  <SidebarMenu :is-open="sidebar.isOpen.value" @toggle="sidebar.toggle" />
 </template>
-
 <script setup>
 import IconLogo from '@/components/icons/Logo.vue';
 import IconInfo from '@/components/icons/Info.vue';
