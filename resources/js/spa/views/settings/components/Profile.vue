@@ -1,5 +1,7 @@
-<template>
-  <div class="px-8 relative w-full flex flex-col justify-between pb-16 h-full -top-24">
+<template v-if="!isLoading">
+  <div 
+    class="px-8 relative w-full flex flex-col justify-between pb-16 h-full -top-24"
+    >
     <div class="flex flex-col gap-y-20">
       <InputGroup>
         <InputLabel label="Vorname" id="firstname" required />
@@ -41,20 +43,43 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { getUser } from '@/services/api';
 import InputGroup from '@/components/fields/Group.vue';
 import InputLabel from '@/components/fields/Label.vue';
 import InputText from '@/components/fields/Text.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 
+const isLoading = ref(false);
+
 const form = ref({
   firstname: '',
   name: '',
+  email: '',
 });
 
 const errors = ref({
   firstname: null,
   name: null,
+  email: null,
 });
+
+onMounted(async () => {
+  try {
+    isLoading.value = true;
+    const userData = await getUser();
+    console.log(userData);
+    if (userData.user) {
+      form.value.firstname = userData.user.firstname;
+      form.value.name = userData.user.name;
+      form.value.email = userData.user.email;
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoading.value = false;
+  }
+});
+
 </script>
