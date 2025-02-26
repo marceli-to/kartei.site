@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getArchives } from '@/services/api';
+import { getArchives } from '@/services/api/archive';
 import { useUserStore } from '@/store/user';
 const userStore = useUserStore();
 const archives = ref([]);

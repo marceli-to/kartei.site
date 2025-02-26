@@ -63,8 +63,8 @@
           <div 
             class="flex-grow min-h-full border-r border-r-graphite relative"
             :class="{ 
-              'opacity-20 transition-all duration-none': activeIndex < index,
-              'opacity-0 transition-all duration-none': activeIndex > index
+              'opacity-20 pointer-events-none transition-all duration-none': activeIndex < index,
+              'opacity-0 pointer-events-none transition-all duration-none': activeIndex > index
             }">
             <slot :name="`section-${index}`">
               No content provided for section {{ item.name }}

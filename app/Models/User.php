@@ -48,4 +48,15 @@ class User extends Authenticatable implements MustVerifyEmail
   {
     return $this->belongsToMany(Archive::class);
   }
+
+  public function address(): \Illuminate\Database\Eloquent\Relations\MorphOne
+  {
+    return $this->morphOne(Address::class, 'addressable')->where('is_billing', false);
+  }
+
+  public function billingAddress(): \Illuminate\Database\Eloquent\Relations\MorphOne
+  {
+    return $this->morphOne(Address::class, 'addressable')->where('is_billing', true);
+  }
+
 }

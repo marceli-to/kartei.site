@@ -22,4 +22,15 @@ class Company extends Model
   public function subscription(): \Illuminate\Database\Eloquent\Relations\BelongsTo
   {
     return $this->belongsTo(Subscription::class);
-  }}
+  }
+
+  public function address(): \Illuminate\Database\Eloquent\Relations\MorphOne
+  {
+    return $this->morphOne(Address::class, 'addressable')->where('is_billing', false);
+  }
+
+  public function billingAddress(): \Illuminate\Database\Eloquent\Relations\MorphOne
+  {
+    return $this->morphOne(Address::class, 'addressable')->where('is_billing', true);
+  }
+}

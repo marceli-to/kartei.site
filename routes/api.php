@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Resources\UserResource;
 
 /*
@@ -37,6 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/user/password', [UserController::class, 'password']);
   Route::delete('/user', [UserController::class, 'destroy']);
 
+  // User addresses
+  Route::get('/user/address', [UserAddressController::class, 'address']);
+  Route::put('/user/address', [UserAddressController::class, 'updateAddress']);
+  Route::get('/user/billing-address', [UserAddressController::class, 'billingAddress']);
+  Route::put('/user/billing-address', [UserAddressController::class, 'updateBillingAddress']);
+  
   // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);
 });
