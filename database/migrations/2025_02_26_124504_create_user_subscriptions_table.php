@@ -13,9 +13,11 @@ return new class extends Migration
     {
       Schema::create('user_subscriptions', function (Blueprint $table) {
         $table->id();
+        $table->uuid('uuid')->unique();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('subscription_plan_id')->constrained();
         $table->enum('payment_interval', ['monthly', 'yearly']);
+        $table->enum('payment_method', ['card']);
         $table->timestamp('starts_at');
         $table->timestamp('ends_at')->nullable();
         $table->softDeletes();

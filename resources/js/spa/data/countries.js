@@ -1,11 +1,7 @@
-// countries.js
 export const countries = [
-  // Priority countries for Switzerland-based application
   { value: 'Schweiz', label: 'Schweiz' },
   { value: 'Deutschland', label: 'Deutschland' },
   { value: 'Österreich', label: 'Österreich' },
-  
-  // All other countries in alphabetical order
   { value: 'Afghanistan', label: 'Afghanistan' },
   { value: 'Ägypten', label: 'Ägypten' },
   { value: 'Albanien', label: 'Albanien' },

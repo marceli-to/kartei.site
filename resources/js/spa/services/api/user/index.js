@@ -34,3 +34,13 @@ export const updateUserBillingAddress = async (addressData) => {
   const response = await axios.put(`/api/user/billing-address`, addressData);
   return response.data;
 };
+
+export const getUserSubscription = async () => {
+  const response = await axios.get('/api/user/subscription');
+  return response.data;
+}
+
+export const updateUserSubscription = async (subscriptionData) => {
+  const response = await axios.put(`/api/user/subscription`, subscriptionData);
+  return response.data;
+}

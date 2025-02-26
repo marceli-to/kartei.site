@@ -2,15 +2,19 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasUuid;
 
 class UserSubscription extends Model
 {
   use SoftDeletes;
+  use HasUuid;
 
   protected $fillable = [
+    'uuid',
     'user_id', 
     'subscription_plan_id', 
     'payment_interval', 
+    'payment_method',
     'starts_at', 
     'ends_at'
   ];
