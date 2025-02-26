@@ -16,13 +16,7 @@ class Company extends Model
     'street_number',
     'zip',
     'city',
-    'subscription_id',
   ];
-
-  public function subscription(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-  {
-    return $this->belongsTo(Subscription::class);
-  }
 
   public function address(): \Illuminate\Database\Eloquent\Relations\MorphOne
   {

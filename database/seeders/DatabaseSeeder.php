@@ -5,6 +5,8 @@ use Database\Seeders\ArchiveSeeder;
 use Database\Seeders\CompanySeeder;
 use Database\Seeders\PermissionSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\SubscriptionPlanSeeder;
+use Database\Seeders\AddressSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -19,6 +21,8 @@ class DatabaseSeeder extends Seeder
       ArchiveSeeder::class,
       CompanySeeder::class,
       PermissionSeeder::class,
+      SubscriptionPlanSeeder::class,
+      AddressSeeder::class
     ]);
 
   }

@@ -125,8 +125,21 @@
           <InputRadioGroup
             v-model="selectedSubscription"
             name="subscription"
+            :options="subscriptions" />
+          <template v-if="selectedSubscription">
+            <div class="bg-snow p-8 mt-12">
+              <h3 class="mb-4 font-muoto-regular">Selection</h3>
+              {{ selectedSubscription }}
+            </div>
+          </template>
+        </div>
+        <div>
+          <h3 class="mb-8 font-muoto-regular">Radio Group (reduced)</h3>
+          <InputRadioGroup
+            v-model="selectedSubscription"
+            name="subscription"
             :options="subscriptions"
-            class="!border-red-400" />
+            variant="reduced" />
           <template v-if="selectedSubscription">
             <div class="bg-snow p-8 mt-12">
               <h3 class="mb-4 font-muoto-regular">Selection</h3>

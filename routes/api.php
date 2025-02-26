@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
+use App\Http\Controllers\Api\SubscriptionPlanController;
 use App\Http\Resources\UserResource;
 
 /*
@@ -43,6 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('/user/address', [UserAddressController::class, 'update']);
   Route::get('/user/billing-address', [UserAddressController::class, 'findBilling']);
   Route::put('/user/billing-address', [UserAddressController::class, 'updateBilling']);
+
+  // Subscription Plans
+  Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 
   // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);

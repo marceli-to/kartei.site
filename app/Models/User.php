@@ -59,4 +59,14 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->morphOne(Address::class, 'addressable')->where('is_billing', true);
   }
 
+  public function subscription(): \Illuminate\Database\Eloquent\Relations\HasOne
+  {
+    return $this->hasOne(UserSubscription::class);
+  }
+
+  public function hasActiveSubscription(): bool
+  {
+    return $this->subscription->deleted_at === NULL && ($this->subscription->ends_at === null || $this->subscription->ends_at > now());
+  }
+
 }

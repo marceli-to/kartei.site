@@ -1,7 +1,10 @@
 <template>
-  <fieldset class="flex flex-col gap-y-8">
+  <fieldset :class="{
+    'flex flex-col gap-y-8': variant === 'default',
+    'flex flex-col first-of-type:border-t first-of-type:border-t-graphite': variant === 'reduced',
+    }">
     <label 
-      :class="classes"
+      :class="computedClasses"
       v-for="option in options" 
       :key="option.value">
       <span :class="labelClasses">{{ option.label }}</span>
@@ -23,8 +26,9 @@
 
 <script setup>
 import IconRadio from '@/components/icons/Radio.vue';
+import { computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: [String, Number],
     required: true
@@ -44,14 +48,27 @@ defineProps({
       );
     }
   },
+  variant: {
+    type: String,
+    default: 'default',
+    validator: (value) => ['default', 'reduced'].includes(value)
+  },
   classes: {
     type: String,
-    default: 'min-h-default border-y border-graphite pr-8 flex items-center justify-between cursor-pointer group'
+    default: ''
   },
   labelClasses: {
     type: String,
     default: 'font-muoto-regular text-md select-none'
   }
+});
+
+const computedClasses = computed(() => {
+  const baseClasses = 'min-h-default pr-8 flex items-center justify-between cursor-pointer group';
+  const variantClasses = props.variant === 'default' 
+    ? 'border-y border-graphite' 
+    : 'border-b border-graphite';
+  return `${baseClasses} ${variantClasses} ${props.classes}`;
 });
 
 defineEmits(['update:modelValue']);

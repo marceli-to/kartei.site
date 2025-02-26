@@ -19,7 +19,6 @@ return new class extends Migration
       $table->string('street_number')->nullable();
       $table->string('zip');
       $table->string('city');
-      $table->foreignId('subscription_id')->nullable()->constrained()->nullOnDelete();
       $table->timestamps();
       $table->softDeletes();
     });
