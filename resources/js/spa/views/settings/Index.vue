@@ -5,19 +5,19 @@
     @section-change="handleSectionChange">
     
     <template #section-0>
-      <ProfileComponent />
+      <ProfileComponent :isActive="activeIndex === 0" />
     </template>
     
     <template #section-1>
-      <AddressComponent />
+      <AddressComponent :isActive="activeIndex === 1" />
     </template>
 
     <template #section-2>
-      <InvoiceAddressComponent />
+      <BillingAddressComponent :isActive="activeIndex === 2" />
     </template>
 
     <template #section-3>
-      <SubscriptionComponent />
+      <SubscriptionComponent :isActive="activeIndex === 3" />
     </template>
 
   </SlidingSections>
@@ -28,7 +28,7 @@ import { ref } from 'vue';
 import SlidingSections from '@/components/SlidingSections.vue';
 import ProfileComponent from '@/views/settings/components/Profile.vue';
 import AddressComponent from '@/views/settings/components/Address.vue';
-import InvoiceAddressComponent from '@/views/settings/components/InvoiceAddress.vue';
+import BillingAddressComponent from '@/views/settings/components/BillingAddress.vue';
 import SubscriptionComponent from '@/views/settings/components/Subscription.vue';
 
 const sections = ref([
@@ -38,7 +38,10 @@ const sections = ref([
   { name: "Abonnement", width: 25, class: "w-3/12" },
 ]);
 
+const activeIndex = ref(0);
+
 function handleSectionChange(newIndex) {
   console.log(`Active section changed to: ${sections.value[newIndex].name}`);
+  activeIndex.value = newIndex;
 }
 </script>

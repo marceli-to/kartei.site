@@ -6,7 +6,6 @@
 
     <div class="flex flex-col gap-y-48">
 
-      <!-- Address -->
       <div class="flex flex-col gap-y-20">
         <InputGroup>
           <InputLabel label="Bezeichnung / Firma" id="company" />
@@ -81,9 +80,8 @@
     </div>
 
     <!-- Actions -->
-    <div>
+    <div v-if="isActive">
       <ButtonGroup>
-        <ButtonPrimary label="Abbrechen" type="button" />
         <ButtonPrimary label="Speichern" />
       </ButtonGroup>
     </div>
@@ -103,10 +101,16 @@ import { countries } from '@/data/countries';
 import { useToastStore } from '@/store/toast';
 const toast = useToastStore();
 
+defineProps({
+  isActive: {
+    type: Boolean,
+    default: false
+  }
+});
+
 const isLoading = ref(false);
 
 const form = ref({
-  uuid: null,
   name: '',
   byline: '',
   street: '',
@@ -159,6 +163,7 @@ const handleSubmit = async () => {
   }
   finally {
     isLoading.value = false;
+    toast.show('Adresse erfolgreich geändert.', 'success');
   }
 };
 

@@ -8,22 +8,31 @@ use Illuminate\Http\Request;
 
 class UserAddressController extends Controller
 {
-  public function address(Request $request)
+  public function find(Request $request)
   {
     return new UserAddressResource(auth()->user()->address);
   }
 
-  public function billingAddress(Request $request)
+  public function findBilling(Request $request)
   {
-    return new UserAddressResource(auth()->user()->billing_address);
+    return new UserAddressResource(auth()->user()->billingAddress);
   }
 
-  public function updateAddress(UpdateRequest $request)
+  public function update(UpdateRequest $request)
   {
     $user = (new UpdateUserAddressAction())->execute(
       $request->all(), 
       auth()->user(),
       false
+    );
+  }
+
+  public function updateBilling(UpdateRequest $request)
+  {
+    $user = (new UpdateUserAddressAction())->execute(
+      $request->all(), 
+      auth()->user(),
+      true
     );
   }
 }

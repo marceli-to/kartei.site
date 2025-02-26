@@ -88,9 +88,8 @@
     </div>
 
     <!-- Actions -->
-    <div>
+    <div v-if="isActive">
       <ButtonGroup>
-        <ButtonPrimary label="Abbrechen" type="button" />
         <ButtonPrimary label="Speichern" />
       </ButtonGroup>
     </div>
@@ -109,6 +108,13 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import { useToastStore } from '@/store/toast';
 const toast = useToastStore();
+
+defineProps({
+  isActive: {
+    type: Boolean,
+    default: false
+  }
+});
 
 const isLoading = ref(false);
 

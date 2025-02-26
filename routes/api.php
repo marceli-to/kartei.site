@@ -39,11 +39,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::delete('/user', [UserController::class, 'destroy']);
 
   // User addresses
-  Route::get('/user/address', [UserAddressController::class, 'address']);
-  Route::put('/user/address', [UserAddressController::class, 'updateAddress']);
-  Route::get('/user/billing-address', [UserAddressController::class, 'billingAddress']);
-  Route::put('/user/billing-address', [UserAddressController::class, 'updateBillingAddress']);
-  
+  Route::get('/user/address', [UserAddressController::class, 'find']);
+  Route::put('/user/address', [UserAddressController::class, 'update']);
+  Route::get('/user/billing-address', [UserAddressController::class, 'findBilling']);
+  Route::put('/user/billing-address', [UserAddressController::class, 'updateBilling']);
+
   // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);
 });
