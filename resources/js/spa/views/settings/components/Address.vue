@@ -98,7 +98,7 @@ import InputSelect from '@/components/fields/Select.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import { countries } from '@/data/countries';
-import { useToastStore } from '@/store/toast';
+import { useToastStore } from '@/stores/toast';
 const toast = useToastStore();
 
 defineProps({

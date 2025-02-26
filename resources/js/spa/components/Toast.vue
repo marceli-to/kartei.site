@@ -20,7 +20,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
-import { useToastStore } from '@/store/toast';
+import { useToastStore } from '@/stores/toast';
 const toastStore = useToastStore();
 const { toasts } = storeToRefs(toastStore);
 const { removeToast } = toastStore;

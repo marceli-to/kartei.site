@@ -7,6 +7,6 @@ class Get
 {
   public function execute(User $user)
   {
-    return $user->subscription->with('plan')->first();
+    return $user->subscription?->with('plan')->first();
   }
 }

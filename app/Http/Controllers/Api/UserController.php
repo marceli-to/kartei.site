@@ -31,7 +31,7 @@ class UserController extends Controller
       $request->all(), 
       auth()->user()
     );
-    return response()->json([], 200);
+    return response()->noContent();
   }
 
   public function destroy(User $user): JsonResponse

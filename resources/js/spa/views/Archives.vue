@@ -20,7 +20,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getArchives } from '@/services/api/archive';
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/stores/user';
 const userStore = useUserStore();
 const archives = ref([]);
 const isLoading = ref(true);

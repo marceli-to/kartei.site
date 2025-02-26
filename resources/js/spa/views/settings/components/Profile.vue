@@ -106,7 +106,7 @@ import InputPassword from '@/components/fields/Password.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
-import { useToastStore } from '@/store/toast';
+import { useToastStore } from '@/stores/toast';
 const toast = useToastStore();
 
 defineProps({

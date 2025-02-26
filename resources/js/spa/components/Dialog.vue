@@ -90,7 +90,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
-import { useDialogStore } from '@/store/dialog';
+import { useDialogStore } from '@/stores/dialog';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import IconCross from '@/components/icons/Cross.vue';

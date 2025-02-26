@@ -9,10 +9,19 @@
           <IconLogo />
         </router-link>
         <div class="flex justify-end gap-x-48">
-          <a href="" class="mt-20 group">
-            <IconInfo classes="group-hover:hidden" />
-            <IconInfo variant="active" classes="hidden group-hover:block" />
+          <a 
+            href="javascript:;" 
+            class="mt-20 group"
+            @click="infoIcon.toggle">
+            <template v-if="infoIcon.isActive">
+              <IconInfo variant="active" classes="text-ice" />
+            </template>
+            <template v-else>
+              <IconInfo classes="group-hover:hidden" />
+              <IconInfo variant="active" classes="hidden group-hover:block" />
+            </template>
           </a>
+
           <a href="" class="mt-20 group">
             <IconProfile classes="group-hover:hidden" />
             <IconProfile variant="active" classes="hidden group-hover:block" />
@@ -36,6 +45,11 @@ import IconProfile from '@/components/icons/Profile.vue';
 import IconBurger from '@/components/icons/Burger.vue';
 import IconCross from '@/components/icons/Cross.vue';
 import SidebarMenu from '@/components/menu/Sidebar.vue';
-import { useToggleSidebar } from '@/composables/useToggleSidebar'
+
+import { useToggleSidebar } from '@/composables/useToggleSidebar';
 const sidebar = useToggleSidebar();
+
+import { useInfoIconStore } from '@/components/infobox/stores/info';
+const infoIcon = useInfoIconStore();
+
 </script>

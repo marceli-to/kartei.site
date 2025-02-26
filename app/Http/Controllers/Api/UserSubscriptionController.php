@@ -12,6 +12,9 @@ class UserSubscriptionController extends Controller
   public function find(Request $request)
   {
     $subscription = (new GetUserSubscriptionAction())->execute(auth()->user());
+    if (!$subscription) {
+      return response()->noContent();
+    }
     return new UserSubscriptionResource($subscription);
   }
 

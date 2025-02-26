@@ -23,6 +23,7 @@ class Update
         'subscription_plan_id' => $plan->id,
         'payment_interval' => $data['payment_interval'],
         'payment_method' => $data['payment_method'],
+        'starts_at' => now(),
       ]
     );
     

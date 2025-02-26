@@ -349,10 +349,10 @@ import InputSelect from '@/components/fields/Select.vue';
 
 import DialogDummyContent from '@/components/DialogDummyContent.vue';
 
-import { useToastStore } from '@/store/toast';
+import { useToastStore } from '@/stores/toast';
 const toast = useToastStore();
 
-import { useDialogStore } from '@/store/dialog';
+import { useDialogStore } from '@/stores/dialog';
 const dialogStore = useDialogStore();
 
 onMounted(() => {

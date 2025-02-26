@@ -41,7 +41,7 @@
 <script setup>
 import { ref } from 'vue'
 import IconSettings from '@/components/icons/Settings.vue';
-import { useUserStore } from '@/store/user'
+import { useUserStore } from '@/stores/user'
 const userStore = useUserStore();
 
 const hasMenu = ref(false);

@@ -12,7 +12,7 @@ import Toast from '@/components/Toast.vue';
 import Dialog from '@/components/Dialog.vue';
 import Header from '@/components/Header.vue';
 import { onMounted } from 'vue';
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
 
 onMounted(() => {

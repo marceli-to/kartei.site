@@ -24,7 +24,6 @@ export const useDialogStore = defineStore('dialog', () => {
 
   const hide = () => {
     isVisible.value = false;
-    // Reset content after animation completes
     setTimeout(() => {
       content.value = {
         title: '',
