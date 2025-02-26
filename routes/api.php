@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
   // Users
   Route::get('/users', [UserController::class, 'get']);
   Route::put('/user', [UserController::class, 'update']);
+  Route::post('/user/password', [UserController::class, 'password']);
   Route::delete('/user', [UserController::class, 'destroy']);
 
   // Archives

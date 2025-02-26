@@ -23,7 +23,7 @@ export default {
       },
       
       maxWidth: {
-        'page': '100rem',
+        'page': '125rem',
       },
 
       width: {

@@ -1,13 +1,13 @@
 <template>
   <div 
     v-if="toasts.length" 
-    class="fixed z-[9999] text-sm w-full text-black font-muoto-medium top-0 left-0">
+    class="fixed z-[9999] text-sm w-full text-black font-muoto-medium top-0 left-0 px-16">
     <a 
       href="javascript:;" 
       :class="[
-        'bg-graphite text-center min-h-32 flex items-center justify-center max-w-[1600px] mx-auto',
+        'bg-graphite text-center min-h-32 flex items-center justify-center max-page ml-auto',
         { '!bg-lime': toast.type === 'success' },
-        { '!bg-flame': toast.type === 'error' },
+        { '!bg-flame text-white': toast.type === 'error' },
         { '!bg-ice': toast.type === 'info' },
       ]"
       @click="removeToast(toast.id)"

@@ -4,13 +4,15 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Actions\User\Update as UpdateUserAction;
+use App\Actions\User\UpdatePassword as UpdatePasswordAction;
 
 class UserController extends Controller
 {
-  public function update(UserUpdateRequest $request): JsonResponse
+  public function update(UpdateRequest $request): JsonResponse
   {
     $user = (new UpdateUserAction())->execute(
       $request->all(), 
@@ -23,7 +25,16 @@ class UserController extends Controller
     ]);
   }
 
-  public function destroy(string $id): JsonResponse
+  public function password(UpdatePasswordRequest $request): JsonResponse
+  {
+    (new UpdatePasswordAction())->execute(
+      $request->all(), 
+      auth()->user()
+    );
+    return response()->json([], 200);
+  }
+
+  public function destroy(User $user): JsonResponse
   {
   }
 }

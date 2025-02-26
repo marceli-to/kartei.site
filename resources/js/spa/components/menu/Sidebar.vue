@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="fixed top-12 right-0 3xl:right-[calc((100%_-_100rem)/2)] z-80 bg-snow pt-174 w-full max-w-[16rem] h-[calc(100dvh_-_0.75rem)] transition-opacity duration-300"
+    class="fixed top-12 right-0 z-80 bg-snow pt-174 w-full max-w-[16rem] h-[calc(100dvh_-_0.75rem)] transition-opacity duration-300"
     :class="{ 'opacity-100 visible': isOpen, 'opacity-0 invisible pointer-events-none': !isOpen }">
     <ul class="mx-16 border-t border-t-black">
       <li>
