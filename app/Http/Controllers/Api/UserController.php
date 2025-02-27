@@ -9,6 +9,9 @@ use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Actions\User\Update as UpdateUserAction;
 use App\Actions\User\UpdatePassword as UpdatePasswordAction;
+use App\Actions\User\Delete as DeleteUserAction;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -34,7 +37,12 @@ class UserController extends Controller
     return response()->noContent();
   }
 
-  public function destroy(User $user): JsonResponse
+  public function destroy(Request $request)
   {
+    (new DeleteUserAction())->execute(auth()->user());
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return response()->noContent();
   }
 }

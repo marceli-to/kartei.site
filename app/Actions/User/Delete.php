@@ -4,7 +4,7 @@ use App\Models\User;
 
 class Delete
 {
-  public function execute(User $user): Bool
+  public function execute(User $user): bool
   {
     // remove roles
     $user->roles()->detach();

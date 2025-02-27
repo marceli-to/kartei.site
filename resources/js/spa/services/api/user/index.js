@@ -44,3 +44,8 @@ export const updateUserSubscription = async (subscriptionData) => {
   const response = await axios.put(`/api/user/subscription`, subscriptionData);
   return response.data;
 }
+
+export const deleteUser = async () => {
+  const response = await axios.delete(`/api/user`);
+  return response.data;
+}
