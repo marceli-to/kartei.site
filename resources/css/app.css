@@ -13,3 +13,7 @@
 * {
   font-variant-ligatures: none;
 }
+
+p:not(:last-of-type) {
+  @apply mb-16;
+}

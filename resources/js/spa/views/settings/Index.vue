@@ -20,6 +20,10 @@
       <SubscriptionComponent :isActive="activeIndex === 3" />
     </template>
 
+    <template #section-4>
+      <AccountDeleteComponent :isActive="activeIndex === 4" />
+    </template>
+
   </SlidingSections>
 </template>
 
@@ -30,12 +34,14 @@ import ProfileComponent from '@/views/settings/components/Profile.vue';
 import AddressComponent from '@/views/settings/components/Address.vue';
 import BillingAddressComponent from '@/views/settings/components/BillingAddress.vue';
 import SubscriptionComponent from '@/views/settings/components/Subscription.vue';
+import AccountDeleteComponent from '@/views/settings/components/AccountDelete.vue';
 
 const sections = ref([
   { name: "Profil", width: 25, class: "w-3/12" },
   { name: "Adresse", width: 25, class: "w-3/12" },
   { name: "Rechnungsadresse", width: 25, class: "w-3/12" },
   { name: "Abonnement", width: 25, class: "w-3/12" },
+  { name: "Löschen", width: 25, class: "w-3/12" }
 ]);
 
 const activeIndex = ref(0);

@@ -15,30 +15,27 @@
       >
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/80"></div>
-
         <!-- Dialog -->
         <div class="flex min-h-full items-center justify-center p-4 relative">
           <div
-            class="relative w-full max-w-3xl transform overflow-hidden bg-white p-24 text-left shadow-xl transition-all"
+            :class="[
+              'relative w-full transform overflow-hidden bg-white p-24 text-left shadow-xl transition-all',
+              getSizeClass(content.size)
+            ]"
             @click.stop>
-
             <a 
               href="javascript:;" 
               class="absolute right-24 top-24"
               @click="isVisible = false">
               <IconCross variant="small-bold" />
             </a>
-
-            <div class="flex flex-col gap-y-24 max-w-lg mx-auto">
-
+            <div class="flex flex-col gap-y-24 mx-auto">
               <!-- Title -->
               <h3 v-if="content.title" class="font-muoto-medium">
                 {{ content.title }}
               </h3>
-
               <!-- Content -->
               <div>
-
                 <!-- Simple message -->
                 <p v-if="content.message">
                   {{ content.message }}
@@ -56,10 +53,8 @@
                 <!-- Default slot -->
                 <slot></slot>
                 <!-- ! Default slot -->
-
               </div>
               <!-- ! Content -->
-
               <!-- Actions -->
               <div>
                 <slot name="actions">
@@ -81,7 +76,6 @@
             </div>
             
           </div>
-
         </div>
       </div>
     </Transition>
@@ -98,6 +92,19 @@ import IconCross from '@/components/icons/Cross.vue';
 const dialogStore = useDialogStore();
 const { isVisible, content } = storeToRefs(dialogStore);
 const { hide } = dialogStore;
+
+const getSizeClass = (size) => {
+  switch (size) {
+    case 'small':
+      return 'max-w-sm';
+    case 'medium':
+      return 'max-w-md';
+    case 'large':
+      return 'max-w-4xl';
+    default:
+      return 'max-w-2xl';
+  }
+};
 
 const handleConfirm = () => {
   if (content.value.onConfirm) {

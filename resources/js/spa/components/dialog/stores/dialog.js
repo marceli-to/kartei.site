@@ -10,7 +10,8 @@ export const useDialogStore = defineStore('dialog', () => {
     onConfirm: null,
     onCancel: null,
     component: null,
-    props: null
+    props: null,
+    size: 'medium' // Default size
   });
 
   const show = (dialogContent) => {
@@ -32,7 +33,8 @@ export const useDialogStore = defineStore('dialog', () => {
         onConfirm: null,
         onCancel: null,
         component: null,
-        props: null
+        props: null,
+        size: 'medium' // Reset to default size
       };
     }, 300);
   };
