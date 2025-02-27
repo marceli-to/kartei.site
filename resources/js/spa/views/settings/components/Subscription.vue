@@ -1,74 +1,76 @@
 <template>
-  <form 
-    @submit.prevent="handleSubmit"
-    class="px-8 relative w-full flex flex-col justify-between pb-16 h-full -top-24"
-    v-if="!isLoading">
+  <Slide :pull="true">
+    <form 
+      @submit.prevent="handleSubmit"
+      class="w-full h-full flex flex-col justify-between"
+      v-if="!isLoading">
 
-    <template v-if="(!hasSubscription && isActive) || infoBox.isActive">
-      <InfoBox class="pb-24">
-        <InfoSubscription />
-      </InfoBox>
-    </template>
+      <!-- Info box -->
+      <template v-if="(!hasSubscription && isActive) || infoBox.isActive">
+        <InfoBox class="pb-24">
+          <InfoSubscription />
+        </InfoBox>
+      </template>
 
-    <!-- Subscription -->
-    <div class="flex flex-col gap-y-20">
-      <InputGroup>
-        <InputLabel label="Lizenz" id="subscription" required />
-        <InputRadioGroup
-          v-model="form.subscription"
-          name="subscription"
-          :options="subscriptions"
-          variant="reduced" />
-      </InputGroup>
-      <InputGroup>
-        <InputLabel label="Abrechnung" id="payment_interval" required />
-        <InputRadioGroup
-          v-model="form.payment_interval"
-          name="payment_interval"
-          :options="payment_intervals"
-          variant="reduced" />
-      </InputGroup>
-      <InputGroup>
-        <InputLabel label="Zahlungsart" id="payment_method" required />
-        <InputRadioGroup
-          v-model="form.payment_method"
-          name="payment_method"
-          :options="[{
-            'label': 'Kreditkarte',
-            'value': 'card'
-          }]"
-          variant="reduced" />
-      </InputGroup>
-    </div>
-    <div>
-      <div class="font-muoto-medium text-flame border border-flame p-8 text-center">
-        To do: implement payment with stripe
+      <!-- Form elements -->
+      <div class="flex flex-col gap-y-20">
+        <InputGroup>
+          <InputLabel label="Lizenz" id="subscription" required />
+          <InputRadioGroup
+            v-model="form.subscription"
+            name="subscription"
+            :options="subscriptions"
+            variant="reduced" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Abrechnung" id="payment_interval" required />
+          <InputRadioGroup
+            v-model="form.payment_interval"
+            name="payment_interval"
+            :options="payment_intervals"
+            variant="reduced" />
+        </InputGroup>
+        <InputGroup>
+          <InputLabel label="Zahlungsart" id="payment_method" required />
+          <InputRadioGroup
+            v-model="form.payment_method"
+            name="payment_method"
+            :options="[{
+              'label': 'Kreditkarte',
+              'value': 'card'
+            }]"
+            variant="reduced" />
+        </InputGroup>
       </div>
-    </div>
-    <!-- Actions -->
-    <div v-if="isActive">
-      <ButtonGroup>
-        <ButtonPrimary label="Speichern" />
-      </ButtonGroup>
-    </div>
-  </form>
+      <div>
+        <div class="font-muoto-medium text-flame border border-flame p-8 text-center">
+          To do: implement payment with stripe
+        </div>
+      </div>
+      <!-- Actions -->
+      <div v-if="isActive">
+        <ButtonGroup>
+          <ButtonPrimary label="Speichern" />
+        </ButtonGroup>
+      </div>
+    </form>
+  </Slide>
 </template>
 <script setup>
 import { ref, toRef, onMounted, watch } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
 import { getUserSubscription, updateUserSubscription } from '@/services/api/user';
+import { payment_intervals } from '@/data/payment_intervals';
+import { useToastStore } from '@/components/toast/stores/toast';
+import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputRadioGroup from '@/components/forms/RadioGroup.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-
-import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoSubscription from '@/views/settings/components/SubscriptionInfo.vue';
-
-import { payment_intervals } from '@/data/payment_intervals';
-import { useToastStore } from '@/components/toast/stores/toast';
+import Slide from '@/components/slider/Slide.vue';
 
 const toast = useToastStore();
 

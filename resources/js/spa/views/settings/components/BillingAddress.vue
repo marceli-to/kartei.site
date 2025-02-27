@@ -1,104 +1,109 @@
 <template>
-  <form 
-    @submit.prevent="handleSubmit"
-    class="px-8 relative w-full flex flex-col justify-between pb-16 h-full -top-24"
-    v-if="!isLoading">
+  <Slide :pull="true">
+    <form 
+      @submit.prevent="handleSubmit"
+      class="w-full h-full flex flex-col justify-between"
+      v-if="!isLoading">
 
-    <div class="flex flex-col gap-y-48">
+      <!-- Form elements -->
+      <div class="flex flex-col gap-y-48">
 
-      <div class="flex flex-col gap-y-20">
-        <InputGroup>
-          <InputLabel label="Bezeichnung / Firma" id="billing_company" />
-          <InputText
-            v-model="form.billing_company"
-            id="billing_company"
-            :error="errors.billing_company"
-            @update:error="errors.billing_company = $event"
-            :placeholder="errors.billing_company ? errors.billing_company : 'Bezeichnung / Firma'"
-            aria-label="Bezeichnung / Firma" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Adresszusatz" id="billing_byline" />
-          <InputText
-            v-model="form.billing_byline"
-            id="billing_byline"
-            :error="errors.billing_byline"
-            @update:error="errors.billing_byline = $event"
-            :placeholder="errors.billing_byline ? errors.billing_byline : 'Adresszusatz'"
-            aria-label="Adresszusatz" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Strasse" id="billing_street" required />
-          <InputText
-            v-model="form.billing_street"
-            id="billing_street"
-            :error="errors.billing_street"
-            @update:error="errors.billing_street = $event"
-            :placeholder="errors.billing_street ? errors.billing_street : 'Strasse'"
-            aria-label="Strasse" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Hausnummer" id="billing_street_number" />
-          <InputText
-            v-model="form.billing_street_number"
-            id="billing_street_number"
-            :error="errors.billing_street_number"
-            @update:error="errors.billing_street_number = $event"
-            :placeholder="errors.billing_street_number ? errors.billing_street_number : 'Hausnummer'"
-            aria-label="Hausnummer" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="PLZ" id="billing_zip" required />
-          <InputText
-            v-model="form.billing_zip"
-            id="billing_zip"
-            :error="errors.billing_zip"
-            @update:error="errors.billing_zip = $event"
-            :placeholder="errors.billing_zip ? errors.billing_zip : 'PLZ'"
-            aria-label="PLZ" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Ort" id="billing_city" required />
-          <InputText
-            v-model="form.billing_city"
-            id="billing_city"
-            :error="errors.billing_city"
-            @update:error="errors.billing_city = $event"
-            :placeholder="errors.billing_city ? errors.billing_city : 'Ort'"
-            aria-label="Ort" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Land" id="billing_country" required />
-          <InputSelect
-            id="billing_country"
-            v-model="form.billing_country"
-            :options="countries"
-            :error="errors.billing_country"
-          />
-        </InputGroup>
+        <div class="flex flex-col gap-y-20">
+          <InputGroup>
+            <InputLabel label="Bezeichnung / Firma" id="billing_company" />
+            <InputText
+              v-model="form.billing_company"
+              id="billing_company"
+              :error="errors.billing_company"
+              @update:error="errors.billing_company = $event"
+              :placeholder="errors.billing_company ? errors.billing_company : 'Bezeichnung / Firma'"
+              aria-label="Bezeichnung / Firma" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Adresszusatz" id="billing_byline" />
+            <InputText
+              v-model="form.billing_byline"
+              id="billing_byline"
+              :error="errors.billing_byline"
+              @update:error="errors.billing_byline = $event"
+              :placeholder="errors.billing_byline ? errors.billing_byline : 'Adresszusatz'"
+              aria-label="Adresszusatz" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Strasse" id="billing_street" required />
+            <InputText
+              v-model="form.billing_street"
+              id="billing_street"
+              :error="errors.billing_street"
+              @update:error="errors.billing_street = $event"
+              :placeholder="errors.billing_street ? errors.billing_street : 'Strasse'"
+              aria-label="Strasse" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Hausnummer" id="billing_street_number" />
+            <InputText
+              v-model="form.billing_street_number"
+              id="billing_street_number"
+              :error="errors.billing_street_number"
+              @update:error="errors.billing_street_number = $event"
+              :placeholder="errors.billing_street_number ? errors.billing_street_number : 'Hausnummer'"
+              aria-label="Hausnummer" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="PLZ" id="billing_zip" required />
+            <InputText
+              v-model="form.billing_zip"
+              id="billing_zip"
+              :error="errors.billing_zip"
+              @update:error="errors.billing_zip = $event"
+              :placeholder="errors.billing_zip ? errors.billing_zip : 'PLZ'"
+              aria-label="PLZ" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Ort" id="billing_city" required />
+            <InputText
+              v-model="form.billing_city"
+              id="billing_city"
+              :error="errors.billing_city"
+              @update:error="errors.billing_city = $event"
+              :placeholder="errors.billing_city ? errors.billing_city : 'Ort'"
+              aria-label="Ort" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Land" id="billing_country" required />
+            <InputSelect
+              id="billing_country"
+              v-model="form.billing_country"
+              :options="countries"
+              :error="errors.billing_country"
+            />
+          </InputGroup>
+        </div>
       </div>
-    </div>
 
-    <!-- Actions -->
-    <div v-if="isActive">
-      <ButtonGroup>
-        <ButtonPrimary label="Speichern" />
-      </ButtonGroup>
-    </div>
+      <!-- Actions -->
+      <div v-if="isActive">
+        <ButtonGroup>
+          <ButtonPrimary label="Speichern" />
+        </ButtonGroup>
+      </div>
 
-  </form>
+    </form>
+  </Slide>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUserBillingAddress, updateUserBillingAddress } from '@/services/api/user';
+import { countries } from '@/data/countries';
+import { useToastStore } from '@/components/toast/stores/toast';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputSelect from '@/components/forms/Select.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-import { countries } from '@/data/countries';
-import { useToastStore } from '@/components/toast/stores/toast';
+import Slide from '@/components/slider/Slide.vue';
+
 const toast = useToastStore();
 
 defineProps({

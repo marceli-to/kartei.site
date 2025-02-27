@@ -1,104 +1,109 @@
 <template>
-  <form 
-    @submit.prevent="handleSubmit"
-    class="px-8 relative w-full flex flex-col justify-between pb-16 h-full -top-24"
-    v-if="!isLoading">
+  <Slide :pull="true">
+    <form 
+      @submit.prevent="handleSubmit"
+      class="w-full h-full flex flex-col justify-between"
+      v-if="!isLoading">
 
-    <div class="flex flex-col gap-y-48">
+      <!-- Form elements -->
+      <div class="flex flex-col gap-y-48">
 
-      <div class="flex flex-col gap-y-20">
-        <InputGroup>
-          <InputLabel label="Bezeichnung / Firma" id="company" />
-          <InputText
-            v-model="form.company"
-            id="company"
-            :error="errors.company"
-            @update:error="errors.company = $event"
-            :placeholder="errors.company ? errors.company : 'Bezeichnung / Firma'"
-            aria-label="Bezeichnung / Firma" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Adresszusatz" id="byline" />
-          <InputText
-            v-model="form.byline"
-            id="byline"
-            :error="errors.byline"
-            @update:error="errors.byline = $event"
-            :placeholder="errors.byline ? errors.nbylineame : 'Adresszusatz'"
-            aria-label="Adresszusatz" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Strasse" id="street" required />
-          <InputText
-            v-model="form.street"
-            id="street"
-            :error="errors.street"
-            @update:error="errors.street = $event"
-            :placeholder="errors.street ? errors.street : 'Strasse'"
-            aria-label="Strasse" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Hausnummer" id="street_number" />
-          <InputText
-            v-model="form.street_number"
-            id="street_number"
-            :error="errors.street_number"
-            @update:error="errors.street_number = $event"
-            :placeholder="errors.street_number ? errors.street_number : 'Hausnummer'"
-            aria-label="Hausnummer" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="PLZ" id="zip" required />
-          <InputText
-            v-model="form.zip"
-            id="zip"
-            :error="errors.zip"
-            @update:error="errors.zip = $event"
-            :placeholder="errors.zip ? errors.zip : 'PLZ'"
-            aria-label="PLZ" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Ort" id="city" required />
-          <InputText
-            v-model="form.city"
-            id="city"
-            :error="errors.city"
-            @update:error="errors.city = $event"
-            :placeholder="errors.city ? errors.city : 'Ort'"
-            aria-label="Ort" />
-        </InputGroup>
-        <InputGroup>
-          <InputLabel label="Land" id="country" required />
-          <InputSelect
-            id="country"
-            v-model="form.country"
-            :options="countries"
-            :error="errors.country"
-          />
-        </InputGroup>
+        <div class="flex flex-col gap-y-20">
+          <InputGroup>
+            <InputLabel label="Bezeichnung / Firma" id="company" />
+            <InputText
+              v-model="form.company"
+              id="company"
+              :error="errors.company"
+              @update:error="errors.company = $event"
+              :placeholder="errors.company ? errors.company : 'Bezeichnung / Firma'"
+              aria-label="Bezeichnung / Firma" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Adresszusatz" id="byline" />
+            <InputText
+              v-model="form.byline"
+              id="byline"
+              :error="errors.byline"
+              @update:error="errors.byline = $event"
+              :placeholder="errors.byline ? errors.nbylineame : 'Adresszusatz'"
+              aria-label="Adresszusatz" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Strasse" id="street" required />
+            <InputText
+              v-model="form.street"
+              id="street"
+              :error="errors.street"
+              @update:error="errors.street = $event"
+              :placeholder="errors.street ? errors.street : 'Strasse'"
+              aria-label="Strasse" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Hausnummer" id="street_number" />
+            <InputText
+              v-model="form.street_number"
+              id="street_number"
+              :error="errors.street_number"
+              @update:error="errors.street_number = $event"
+              :placeholder="errors.street_number ? errors.street_number : 'Hausnummer'"
+              aria-label="Hausnummer" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="PLZ" id="zip" required />
+            <InputText
+              v-model="form.zip"
+              id="zip"
+              :error="errors.zip"
+              @update:error="errors.zip = $event"
+              :placeholder="errors.zip ? errors.zip : 'PLZ'"
+              aria-label="PLZ" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Ort" id="city" required />
+            <InputText
+              v-model="form.city"
+              id="city"
+              :error="errors.city"
+              @update:error="errors.city = $event"
+              :placeholder="errors.city ? errors.city : 'Ort'"
+              aria-label="Ort" />
+          </InputGroup>
+          <InputGroup>
+            <InputLabel label="Land" id="country" required />
+            <InputSelect
+              id="country"
+              v-model="form.country"
+              :options="countries"
+              :error="errors.country"
+            />
+          </InputGroup>
+        </div>
       </div>
-    </div>
 
-    <!-- Actions -->
-    <div v-if="isActive">
-      <ButtonGroup>
-        <ButtonPrimary label="Speichern" />
-      </ButtonGroup>
-    </div>
+      <!-- Actions -->
+      <div v-if="isActive">
+        <ButtonGroup>
+          <ButtonPrimary label="Speichern" />
+        </ButtonGroup>
+      </div>
 
-  </form>
+    </form>
+  </Slide>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUserAddress, updateUserAddress } from '@/services/api/user';
+import { countries } from '@/data/countries';
+import { useToastStore } from '@/components/toast/stores/toast';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputSelect from '@/components/forms/Select.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-import { countries } from '@/data/countries';
-import { useToastStore } from '@/components/toast/stores/toast';
+import Slide from '@/components/slider/Slide.vue';
+
 const toast = useToastStore();
 
 defineProps({

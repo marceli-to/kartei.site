@@ -1,27 +1,27 @@
 <template>
-  <SlidingSections 
-    :sections="availableSections" 
+  <SliderContainer 
+    :slides="slides" 
     :initialActiveIndex="0"
-    @section-change="handleSectionChange">
-  </SlidingSections>
+    @slide-change="handleSlideChange">
+  </SliderContainer>
 </template>
 
 <script setup>
 import { ref, computed, markRaw } from 'vue';
-import SlidingSections from '@/components/layout/SlidingSections.vue';
+import { useUserStore } from '@/stores/user';
+import SliderContainer from '@/components/slider/Container.vue';
 import ProfileComponent from '@/views/settings/components/Profile.vue';
 import AddressComponent from '@/views/settings/components/Address.vue';
 import BillingAddressComponent from '@/views/settings/components/BillingAddress.vue';
 import SubscriptionComponent from '@/views/settings/components/Subscription.vue';
 import ThemeComponent from '@/views/settings/components/Theme.vue';
 import AccountDeleteComponent from '@/views/settings/components/AccountDelete.vue';
-import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const activeIndex = ref(0);
 
-// Define all possible sections with their permissions and components
-const allSections = [
+// Define all possible slides with their permissions and components
+const allSlides = [
   { 
     id: 'profile', 
     name: "Profil", 
@@ -73,13 +73,13 @@ const allSections = [
 ];
 
 // Filter sections based on permissions
-const availableSections = computed(() => {
-  return allSections.filter(section => userStore.can(section.permission));
+const slides = computed(() => {
+  return allSlides.filter(section => userStore.can(section.permission));
 });
 
-function handleSectionChange(newIndex) {
-  if (newIndex >= 0 && newIndex < availableSections.value.length) {
-    console.log(`Active section changed to: ${availableSections.value[newIndex].name}`);
+function handleSlideChange(newIndex) {
+  if (newIndex >= 0 && newIndex < slides.value.length) {
+    console.log(`Active slide changed to: ${slides.value[newIndex].name}`);
     activeIndex.value = newIndex;
   }
 }

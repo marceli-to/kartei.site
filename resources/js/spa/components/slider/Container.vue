@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-grow w-full overflow-hidden mt-48 relative">
 
-    <nav class="w-2/12 sticky left-0 mt-58 min-h-full z-50 border-r border-r-graphite bg-white dark:bg-black">
-
-      <template v-if="activeIndex > 0">
+    <Navigation>
+      <template #title
+        v-if="activeIndex > 0">
         <div class="absolute left-0 -top-60 w-full flex items-center justify-between bg-white dark:bg-black">
           <h1 class="opacity-20 font-muoto-medium">
             {{ previousSectionName }}
@@ -17,27 +17,28 @@
           </a>
         </div>
       </template>
-
-      <ul>
-        <li 
-          v-for="(item, index) in sections" :key="index" 
-          class="min-h-default flex items-center border-b border-b-graphite first-of-type:border-t first-of-type:border-t-graphite mr-8">
-          <a 
-            href="javascript:;"
-            @click="activeIndex = index"
-            class="block w-full"
-            :class="{ 'font-muoto-medium': activeIndex === index }">
-            {{ item.name }}
-          </a>
-        </li>
-      </ul>
-    </nav>
+      <template #navigation>
+        <ul>
+          <li 
+            v-for="(item, index) in slides" :key="index" 
+            class="min-h-default flex items-center border-b border-b-graphite first-of-type:border-t first-of-type:border-t-graphite mr-8">
+            <a 
+              href="javascript:;"
+              @click="activeIndex = index"
+              class="block w-full"
+              :class="{ 'font-muoto-medium': activeIndex === index }">
+              {{ item.name }}
+            </a>
+          </li>
+        </ul>
+      </template>
+    </Navigation>
     
     <div 
       class="flex flex-grow transition-transform duration-300 w-full relative z-40" 
       :style="{ transform: `translateX(-${computedOffsets[activeIndex]}%)` }">
       <section 
-        v-for="(item, index) in sections" 
+        v-for="(item, index) in slides" 
         :key="index" 
         :class="item.class"
         class="shrink-0">
@@ -49,7 +50,7 @@
             'opacity-0 transition-all duration-none': activeIndex > index
           }">
           <span>{{ item.name }}</span>
-          <template v-if="index >= activeIndex && index < sections.length - 1">
+          <template v-if="index >= activeIndex && index < slides.length - 1">
             <a 
               href="javascript:;"
               @click.prevent="next"
@@ -66,9 +67,7 @@
               'opacity-20 pointer-events-none transition-all duration-none': activeIndex < index,
               'opacity-0 pointer-events-none transition-all duration-none': activeIndex > index
             }">
-            <!-- Check if there's a component property, if so render it directly -->
             <component v-if="item.component" :is="item.component" :isActive="activeIndex === index" />
-            <!-- Fall back to slots if no component provided (for backward compatibility) -->
             <slot v-else :name="`section-${index}`">
               No content provided for section {{ item.name }}
             </slot>
@@ -83,9 +82,10 @@
 import { ref, computed, watch } from 'vue';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
+import Navigation from '@/components/slider/Navigation.vue';
 
 const props = defineProps({
-  sections: {
+  slides: {
     type: Array,
     default: () => []
   },
@@ -95,30 +95,30 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['section-change']);
+const emit = defineEmits(['slide-change']);
 
 const activeIndex = ref(props.initialActiveIndex);
 
 watch(activeIndex, (newIndex) => {
-  emit('section-change', newIndex);
+  emit('slide-change', newIndex);
 });
 
 const computedOffsets = computed(() => {
   const offsets = [];
   let sum = 0;
-  props.sections.forEach((section) => {
+  props.slides.forEach((slide) => {
     offsets.push(sum);
-    sum += section.width;
+    sum += slide.width;
   });
   return offsets;
 });
 
 const previousSectionName = computed(() => {
-  return activeIndex.value > 0 ? props.sections[activeIndex.value - 1].name : '';
+  return activeIndex.value > 0 ? props.slides[activeIndex.value - 1].name : '';
 });
 
 function next() {
-  if (activeIndex.value < props.sections.length - 1) {
+  if (activeIndex.value < props.slides.length - 1) {
     activeIndex.value++;
   }
 }
