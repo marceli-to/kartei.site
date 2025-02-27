@@ -1,5 +1,5 @@
 <template>
-  <div v-if="infoIcon.isActive" class="absolute w-8/12 -right-8 translate-x-full top-24 bg-ice p-8 text-sm">
+  <div v-if="infoIcon.isActive" class="absolute top-24 -right-8 z-[100] translate-x-full  w-8/12 bg-ice p-8 text-sm">
     <div class="relative">
       <a 
         href=""

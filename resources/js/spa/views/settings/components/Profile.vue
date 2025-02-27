@@ -4,6 +4,12 @@
     class="px-8 relative w-full flex flex-col justify-between pb-16 h-full -top-24"
     v-if="!isLoading">
 
+    <template v-if="infoBox.isActive">
+      <InfoBox>
+        <InfoProfile />
+      </InfoBox>
+    </template>
+
     <div class="flex flex-col gap-y-48">
 
       <!-- Personal details -->
@@ -97,19 +103,23 @@
   </form>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, toRef } from 'vue';
 import { getUser, updateUser, updatePassword } from '@/services/api/user';
-import InputGroup from '@/components/fields/Group.vue';
-import InputLabel from '@/components/fields/Label.vue';
-import InputText from '@/components/fields/Text.vue';
-import InputPassword from '@/components/fields/Password.vue';
+import InputGroup from '@/components/forms/Group.vue';
+import InputLabel from '@/components/forms/Label.vue';
+import InputText from '@/components/forms/Text.vue';
+import InputPassword from '@/components/forms/Password.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
-import { useToastStore } from '@/stores/toast';
+import { useToastStore } from '@/components/toast/stores/toast';
 const toast = useToastStore();
 
-defineProps({
+import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
+import InfoBox from '@/components/infobox/InfoBox.vue';
+import InfoProfile from '@/views/settings/components/ProfileInfo.vue';
+
+const props = defineProps({
   isActive: {
     type: Boolean,
     default: false
@@ -117,6 +127,12 @@ defineProps({
 });
 
 const isLoading = ref(false);
+const hasInfo = ref(true);
+
+const infoBox = useInfoBox({
+  isActive: toRef(props, 'isActive'),
+  condition: hasInfo
+});
 
 const form = ref({
   uuid: null,

@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import SlidingSections from '@/components/SlidingSections.vue';
+import SlidingSections from '@/components/layout/SlidingSections.vue';
 import ProfileComponent from '@/views/settings/components/Profile.vue';
 import AddressComponent from '@/views/settings/components/Address.vue';
 import BillingAddressComponent from '@/views/settings/components/BillingAddress.vue';

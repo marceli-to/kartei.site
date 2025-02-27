@@ -57,18 +57,18 @@
 import { ref, toRef, onMounted, watch } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
 import { getUserSubscription, updateUserSubscription } from '@/services/api/user';
-import InputGroup from '@/components/fields/Group.vue';
-import InputLabel from '@/components/fields/Label.vue';
-import InputRadioGroup from '@/components/fields/RadioGroup.vue';
+import InputGroup from '@/components/forms/Group.vue';
+import InputLabel from '@/components/forms/Label.vue';
+import InputRadioGroup from '@/components/forms/RadioGroup.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
-import InfoBox from '@/components/infobox/Box.vue';
-import InfoSubscription from '@/views/settings/components/info/Subscription.vue';
+import InfoBox from '@/components/infobox/InfoBox.vue';
+import InfoSubscription from '@/views/settings/components/SubscriptionInfo.vue';
 
 import { payment_intervals } from '@/data/payment_intervals';
-import { useToastStore } from '@/stores/toast';
+import { useToastStore } from '@/components/toast/stores/toast';
 
 const toast = useToastStore();
 
@@ -82,15 +82,16 @@ const props = defineProps({
 const isLoading = ref(false);
 const subscriptions = ref([]);
 const hasSubscription = ref(false);
-const form = ref({
-  subscription: '',
-  payment_interval: '',
-  payment_method: 'card'
-});
 
 const infoBox = useInfoBox({
   isActive: toRef(props, 'isActive'),
   condition: hasSubscription
+});
+
+const form = ref({
+  subscription: '',
+  payment_interval: '',
+  payment_method: 'card'
 });
 
 onMounted(async () => {

@@ -339,20 +339,20 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import Action from '@/components/buttons/Action.vue';
-import InputSelectButtons from '@/components/fields/SelectButtons.vue';
-import InputRadioGroup from '@/components/fields/RadioGroup.vue';
-import InputGroup from '@/components/fields/Group.vue';
-import InputLabel from '@/components/fields/Label.vue';
-import InputText from '@/components/fields/Text.vue';
-import InputPassword from '@/components/fields/Password.vue';
-import InputSelect from '@/components/fields/Select.vue';
+import InputSelectButtons from '@/components/forms/SelectButtons.vue';
+import InputRadioGroup from '@/components/forms/RadioGroup.vue';
+import InputGroup from '@/components/forms/Group.vue';
+import InputLabel from '@/components/forms/Label.vue';
+import InputText from '@/components/forms/Text.vue';
+import InputPassword from '@/components/forms/Password.vue';
+import InputSelect from '@/components/forms/Select.vue';
 
-import DialogDummyContent from '@/components/DialogDummyContent.vue';
+import DialogContentExample from '@/components/dialog/ContentExample.vue';
 
-import { useToastStore } from '@/stores/toast';
+import { useToastStore } from '@/components/toast/stores/toast';
 const toast = useToastStore();
 
-import { useDialogStore } from '@/stores/dialog';
+import { useDialogStore } from '@/components/dialog/stores/dialog';
 const dialogStore = useDialogStore();
 
 onMounted(() => {
@@ -365,7 +365,7 @@ function showToast(message = '', type = 'info') {
 function showDialog() {
   dialogStore.show({
     title: 'Möchten Sie die Karte 1.1.0002 / SBF_MA_AB wirklich löschen?',
-    component: DialogDummyContent,
+    component: DialogContentExample,
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
     onConfirm: () => {

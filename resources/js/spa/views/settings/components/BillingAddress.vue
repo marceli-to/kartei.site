@@ -91,14 +91,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUserBillingAddress, updateUserBillingAddress } from '@/services/api/user';
-import InputGroup from '@/components/fields/Group.vue';
-import InputLabel from '@/components/fields/Label.vue';
-import InputText from '@/components/fields/Text.vue';
-import InputSelect from '@/components/fields/Select.vue';
+import InputGroup from '@/components/forms/Group.vue';
+import InputLabel from '@/components/forms/Label.vue';
+import InputText from '@/components/forms/Text.vue';
+import InputSelect from '@/components/forms/Select.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import { countries } from '@/data/countries';
-import { useToastStore } from '@/stores/toast';
+import { useToastStore } from '@/components/toast/stores/toast';
 const toast = useToastStore();
 
 defineProps({

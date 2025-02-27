@@ -8,9 +8,9 @@
 
 <script setup>
 import User from '@/components/User.vue';
-import Toast from '@/components/Toast.vue';
-import Dialog from '@/components/Dialog.vue';
-import Header from '@/components/Header.vue';
+import Toast from '@/components/toast/Toast.vue';
+import Dialog from '@/components/dialog/Dialog.vue';
+import Header from '@/components/layout/Header.vue';
 import { onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
 const userStore = useUserStore()
