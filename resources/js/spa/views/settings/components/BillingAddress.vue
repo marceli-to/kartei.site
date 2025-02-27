@@ -163,6 +163,7 @@ const handleSubmit = async () => {
       country: form.value.billing_country
     }
     const response = await updateUserBillingAddress(data);
+    toast.show('Rechnungsadresse erfolgreich geändert.', 'success');
   } 
   catch (error) {
     errors.value = {
@@ -178,7 +179,6 @@ const handleSubmit = async () => {
   }
   finally {
     isLoading.value = false;
-    toast.show('Rechnungsadresse erfolgreich geändert.', 'success');
   }
 };
 

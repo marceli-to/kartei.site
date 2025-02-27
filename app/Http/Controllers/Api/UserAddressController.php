@@ -28,7 +28,9 @@ class UserAddressController extends Controller
 
   public function update(UpdateRequest $request): UserAddressResource
   {
-    auth()->user()->address ? $this->authorize('update', auth()->user()->address) : $this->authorize('create', Address::class);
+    auth()->user()->address ? 
+      $this->authorize('update', auth()->user()->address) : 
+      $this->authorize('create', Address::class);
 
     $user = (new UpdateUserAddressAction())->execute(
       $request->all(), 
@@ -41,6 +43,10 @@ class UserAddressController extends Controller
 
   public function updateBilling(UpdateRequest $request): UserAddressResource
   {
+    auth()->user()->address ? 
+      $this->authorize('update', auth()->user()->address) : 
+      $this->authorize('create', Address::class);
+
     $user = (new UpdateUserAddressAction())->execute(
       $request->all(), 
       auth()->user(),
