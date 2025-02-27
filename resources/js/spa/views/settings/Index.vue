@@ -13,6 +13,7 @@ import ProfileComponent from '@/views/settings/components/Profile.vue';
 import AddressComponent from '@/views/settings/components/Address.vue';
 import BillingAddressComponent from '@/views/settings/components/BillingAddress.vue';
 import SubscriptionComponent from '@/views/settings/components/Subscription.vue';
+import ThemeComponent from '@/views/settings/components/Theme.vue';
 import AccountDeleteComponent from '@/views/settings/components/AccountDelete.vue';
 import { useUserStore } from '@/stores/user';
 
@@ -52,6 +53,14 @@ const allSections = [
     class: "w-3/12", 
     permission: 'edit.subscription',
     component: markRaw(SubscriptionComponent)
+  },
+  { 
+    id: 'theme', 
+    name: "Erscheinungsbild", 
+    width: 25, 
+    class: "w-3/12", 
+    permission: 'use.themes',
+    component: markRaw(ThemeComponent)
   },
   { 
     id: 'deleteAccount', 
