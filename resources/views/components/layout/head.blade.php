@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" class="bg-white scroll-smooth overflow-y-scroll dark {{ $class ?? ''}}">
+<html lang="de" class="bg-white scroll-smooth overflow-y-scroll {{ $class ?? ''}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

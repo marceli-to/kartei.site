@@ -52,6 +52,9 @@ class PermissionSeeder extends Seeder
       'use.exports',
       'use.sharing',
       'use.themes',
+      'edit.address',
+      'edit.profile',
+      'delete.account',
       'view.archives',
       'view.records',
     ];

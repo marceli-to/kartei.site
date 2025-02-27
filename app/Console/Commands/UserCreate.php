@@ -17,7 +17,7 @@ class UserCreate extends Command
       'firstname' => $this->ask('Enter firstname') ?? $faker->firstName,
       'name' => $this->ask('Enter lastname') ?? $faker->lastName,
       'email' => $this->ask('Enter email') ?? $faker->unique()->safeEmail,
-      'password' => env('FAKE_USER_PASSWORD'),
+      'password' => config('fakedata.user_password'),
       'email_verified_at' => now()->toDateTimeString(),
     ];
 

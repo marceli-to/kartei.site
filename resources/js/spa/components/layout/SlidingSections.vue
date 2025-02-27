@@ -66,7 +66,10 @@
               'opacity-20 pointer-events-none transition-all duration-none': activeIndex < index,
               'opacity-0 pointer-events-none transition-all duration-none': activeIndex > index
             }">
-            <slot :name="`section-${index}`">
+            <!-- Check if there's a component property, if so render it directly -->
+            <component v-if="item.component" :is="item.component" :isActive="activeIndex === index" />
+            <!-- Fall back to slots if no component provided (for backward compatibility) -->
+            <slot v-else :name="`section-${index}`">
               No content provided for section {{ item.name }}
             </slot>
           </div>
