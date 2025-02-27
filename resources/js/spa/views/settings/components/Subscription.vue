@@ -128,7 +128,7 @@ const handleSubmit = async () => {
     isLoading.value = true;
     await updateUserSubscription(form.value);
     hasSubscription.value = true;
-    toast.show('Abonnement erfolgreich geändert.', 'success');
+    toast.show('Abonnement erfolgreich gespeichert.', 'success');
   } 
   catch (error) {
     toast.show('Fehler beim Ändern des Abonnements.', 'error');

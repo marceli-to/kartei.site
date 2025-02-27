@@ -47,14 +47,13 @@ async function handleDeleteUser() {
   try {
     await deleteUser();
     dialogStore.hide();
+    toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in ein paar Sekunden weitergeleitet.', 'success');
   } 
   catch (err) {
     console.log(err);
   } 
   finally {
     isDeleting.value = false;
-    dialogStore.hide();
-    toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in ein paar Sekunden weitergeleitet.', 'success');
 
     setTimeout(() => {
       window.location.href = redirectAfterDeletion;

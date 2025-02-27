@@ -5,6 +5,10 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 
 use App\Models\Archive;
 use App\Policies\ArchivePolicy;
+
+use App\Models\Address;
+use App\Policies\AddressPolicy;
+
 // use App\Models\Record;
 // use App\Policies\RecordPolicy;
 
@@ -18,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
   protected $policies = [
     Archive::class => ArchivePolicy::class,
     //Record::class => RecordPolicy::class,
+    Address::class => AddressPolicy::class,
   ];
 
   /**

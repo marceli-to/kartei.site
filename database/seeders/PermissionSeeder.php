@@ -46,14 +46,14 @@ class PermissionSeeder extends Seeder
       'guard_name' => 'web'
     ]);
 
-    // create global permissions
+    // create global permissions for all roles
     $globalPermissions = [
       'use.favorites',
       'use.exports',
       'use.sharing',
       'use.themes',
-      'edit.address',
       'edit.profile',
+      'edit.theme',
       'delete.account',
       'view.archives',
       'view.records',
@@ -72,5 +72,10 @@ class PermissionSeeder extends Seeder
       $archivistRole->givePermissionTo($p);
       $viewerRole->givePermissionTo($p);
     }
+
+    // create permissions per role
+    // $archivistPermissions = [];
+    // $managerPermissions = [];
+    // $adminPermissions = [];
   }
 }

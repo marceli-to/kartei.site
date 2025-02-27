@@ -148,6 +148,7 @@ const handleSubmit = async () => {
   try {
     isLoading.value = true;
     const response = await updateUserAddress(form.value);
+    toast.show('Adresse erfolgreich gespeichert.', 'success');
   } 
   catch (error) {
     errors.value = {
@@ -163,7 +164,6 @@ const handleSubmit = async () => {
   }
   finally {
     isLoading.value = false;
-    toast.show('Adresse erfolgreich geändert.', 'success');
   }
 };
 
