@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-grow w-full overflow-hidden mt-48 relative">
 
-    <nav class="w-2/12 sticky left-0 mt-58 min-h-full z-50 border-r border-r-graphite bg-white">
+    <nav class="w-2/12 sticky left-0 mt-58 min-h-full z-50 border-r border-r-graphite bg-white dark:bg-black">
 
       <template v-if="activeIndex > 0">
-        <div class="absolute left-0 -top-60 w-full flex items-center justify-between bg-white">
+        <div class="absolute left-0 -top-60 w-full flex items-center justify-between bg-white dark:bg-black">
           <h1 class="opacity-20 font-muoto-medium">
             {{ previousSectionName }}
           </h1>

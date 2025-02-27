@@ -13,7 +13,7 @@
     <form 
       method="POST" 
       action="{{ route('auth.login') }}" 
-      class="bg-white flex flex-col gap-y-8 w-full">
+      class="flex flex-col gap-y-8 w-full">
       @csrf
 
       <x-auth.input-label>
@@ -26,16 +26,14 @@
         :value="old('email')"
         data-error="{{ $errors->has('email') ? 'true' : null }}"
         placeholder="{{ __('E-Mail') }}"
-        required
-        autocomplete="email" />
+        required />
 
       <x-auth.text-input 
         type="password"
         name="password"
         placeholder="{{ __('Passwort') }}"
         data-error="{{ $errors->has('password') ? 'true' : null }}"
-        required
-        autocomplete="current-password" />
+        required />
 
       <x-auth.primary-button>
         {{ __('Login') }}

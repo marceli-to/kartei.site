@@ -10,7 +10,7 @@
         <ButtonPrimary 
           label="Konto löschen" 
           @click="showDialog"
-          class="bg-white text-flame hover:bg-flame hover:text-white border-flame border"
+          class="bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border"
           :disabled="isDeleting" />
       </ButtonGroup>
     </div>
@@ -38,6 +38,9 @@ const props = defineProps({
   }
 });
 
+const redirectAfterDeletion = '/auf-wiedersehen';
+const redirectDelay = 2000;
+
 async function handleDeleteUser() {
   isDeleting.value = true;
   
@@ -51,11 +54,11 @@ async function handleDeleteUser() {
   finally {
     isDeleting.value = false;
     dialogStore.hide();
-    toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in kürze weitergeleitet.', 'success');
+    toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in ein paar Sekunden weitergeleitet.', 'success');
 
     setTimeout(() => {
-      window.location.href = '/';
-    }, 2000);
+      window.location.href = redirectAfterDeletion;
+    }, redirectDelay);
 
   }
 }

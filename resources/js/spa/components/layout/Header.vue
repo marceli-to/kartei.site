@@ -1,12 +1,12 @@
 <template>
   <header class="relative z-90">
-    <div class="min-h-80 flex border-b border-b-black">
+    <div class="min-h-80 flex border-b border-b-black dark:border-b-white">
       <div class="w-full flex justify-between leading-none">
         <router-link 
           :to="{ name: 'home' }" 
           class="mt-25" 
           @click="sidebar.hide">
-          <IconLogo />
+          <IconLogo class="text-black dark:text-white" />
         </router-link>
         <div class="flex justify-end gap-x-48">
           <a 

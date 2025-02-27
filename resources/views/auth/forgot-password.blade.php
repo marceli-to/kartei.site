@@ -18,7 +18,7 @@
     <form 
       method="POST" 
       action="{{ route('auth.password.email') }}"
-      class="bg-white flex flex-col gap-y-8 w-full">
+      class="flex flex-col gap-y-8 w-full">
       @csrf
 
       <x-auth.text-input 

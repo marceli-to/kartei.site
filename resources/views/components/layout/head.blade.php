@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" class="bg-white scroll-smooth overflow-y-scroll {{ $class ?? ''}}">
+<html lang="de" class="bg-white scroll-smooth overflow-y-scroll dark {{ $class ?? ''}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,4 +21,4 @@
 @vite('resources/css/app.css')
 @livewireStyles
 </head>
-<body class="antialiased font-muoto-regular text-md leading-[1.4] flex flex-col min-h-screen px-16">
+<body class="antialiased font-muoto-regular text-md leading-[1.4] flex flex-col min-h-screen px-16 text-black dark:text-white bg-white dark:bg-black">

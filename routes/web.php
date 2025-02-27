@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 Route::get('/user', [UserController::class, 'index']);
 
 Route::view('/', 'home')->name('page.home');
+Route::view('/auf-wiedersehen', 'goodbye')->name('page.goodbye');
 
 Route::get('/archiv/{any?}', function () {
   return view('archive');

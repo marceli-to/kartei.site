@@ -41,7 +41,7 @@ const sections = ref([
   { name: "Adresse", width: 25, class: "w-3/12" },
   { name: "Rechnungsadresse", width: 25, class: "w-3/12" },
   { name: "Abonnement", width: 25, class: "w-3/12" },
-  { name: "Löschen", width: 25, class: "w-3/12" }
+  { name: "Löschen", width: 40.66667, class: "w-5/12" }
 ]);
 
 const activeIndex = ref(0);

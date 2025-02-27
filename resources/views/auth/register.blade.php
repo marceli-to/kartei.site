@@ -14,7 +14,7 @@
     <form 
       method="POST" 
       action="{{ route('auth.register') }}"
-      class="bg-white flex flex-col gap-y-8 w-full">
+      class="flex flex-col gap-y-8 w-full">
       
       @csrf
 

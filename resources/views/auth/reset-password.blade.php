@@ -10,7 +10,7 @@
     <form 
       method="POST" 
       action="{{ route('auth.password.store') }}"
-      class="bg-white flex flex-col gap-y-8 w-full">
+      class="flex flex-col gap-y-8 w-full">
       @csrf
 
       <!-- Password Reset Token -->
