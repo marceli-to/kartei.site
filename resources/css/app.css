@@ -10,6 +10,53 @@
   }
 }
 
+/* Theme Styles */
+@layer base {
+  /* Default theme variables (fallback) */
+  :root {
+    --theme-color: theme('colors.ice');
+    --theme-color-hover: theme('colors.ice' / 80%);
+  }
+
+  /* Theme-specific variables */
+  [data-color-theme="ice"] {
+    --theme-color: theme('colors.ice');
+    --theme-color-hover: theme('colors.ice' / 80%);
+  }
+
+  [data-color-theme="candy"] {
+    --theme-color: theme('colors.candy');
+    --theme-color-hover: theme('colors.candy' / 80%);
+  }
+
+  [data-color-theme="lemon"] {
+    --theme-color: theme('colors.lemon');
+    --theme-color-hover: theme('colors.lemon' / 80%);
+  }
+
+  [data-color-theme="lime"] {
+    --theme-color: theme('colors.lime');
+    --theme-color-hover: theme('colors.lime' / 80%);
+  }
+
+  /* Apply theme color to elements that should use the theme color */
+  .theme-color {
+    @apply bg-[var(--theme-color)];
+  }
+
+  .theme-color-text {
+    @apply text-[var(--theme-color)];
+  }
+
+  .theme-color-border {
+    @apply border-[var(--theme-color)];
+  }
+
+  .theme-color-hover:hover {
+    @apply bg-[var(--theme-color-hover)];
+  }
+}
+
 * {
   font-variant-ligatures: none;
 }

@@ -52,7 +52,7 @@ const props = defineProps({
   },
   classes: {
     type: String,
-    default: 'min-h-default w-full flex items-center font-muoto-regular text-md text-graphite hover:text-black transition-all select-none cursor-pointer px-8'
+    default: 'min-h-default w-full flex items-center font-muoto-regular text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8'
   },
   wrapperClasses: {
     type: String,
@@ -64,7 +64,7 @@ const props = defineProps({
   },
   activeClass: {
     type: String,
-    default: 'bg-ice border-black !text-black'
+    default: 'theme-color border-black !text-black'
   },
   labelClasses: {
     type: String,

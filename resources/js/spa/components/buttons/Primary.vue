@@ -20,7 +20,7 @@ const props = defineProps({
   },
   classes: {
     type: String,
-    default: 'border border-pebble min-h-default font-muoto-regular text-md text-graphite w-full flex items-center justify-center !ring-0 !outline-none hover:bg-ice hover:text-black transition-all'
+    default: 'border border-pebble min-h-default font-muoto-regular text-md text-graphite w-full flex items-center justify-center !ring-0 !outline-none hover:text-black transition-all hover:theme-color'
   },
   disabled: {
     type: Boolean,

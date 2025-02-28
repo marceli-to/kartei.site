@@ -3,7 +3,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 export default {
 
-  darkMode: 'selector',
+  darkMode: ['selector', '[data-color-scheme="dark"]'],
 
   content: [
     "./resources/**/*.blade.php",
@@ -342,4 +342,3 @@ export default {
     require('@tailwindcss/forms'),
   ],
 }
-
