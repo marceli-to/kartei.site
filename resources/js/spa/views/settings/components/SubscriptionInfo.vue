@@ -21,7 +21,15 @@
       <li>Basispreis: Fr. 50.00 / Monat</li>
       <li>Fr. 12.00 / Benutzer / in + Monat</li>
     </ul>
-    <p class="ml-16 my-24">Für individuelle Unternehmens- lösungen kontaktieren Sie uns: lösungen@kartei.site</p>
+    <p class="ml-16 my-24">
+      Für individuelle Unternehmens- lösungen kontaktieren Sie uns: 
+      <a 
+        href="mailto:lösungen@kartei.site"
+        title="Kontaktieren Sie uns"
+        class="underline underline-offset-2 hover:no-underline">
+        lösungen@kartei.site
+      </a>
+    </p>
     <div>
       <a href="" class="flex gap-x-8 items-center font-muoto-medium">
         <IconChevronRight variant="tiny" />

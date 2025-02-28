@@ -123,7 +123,8 @@ const handleCancel = () => {
 const handleBackdropClick = () => {
   if (content.value.onCancel) {
     handleCancel();
-  } else {
+  } 
+  else {
     hide();
   }
 };

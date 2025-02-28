@@ -84,7 +84,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" />
+          <ButtonPrimary label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
 
@@ -114,6 +114,7 @@ defineProps({
 });
 
 const isLoading = ref(false);
+const isSaving = ref(false);
 
 const form = ref({
   billing_company: '',
@@ -157,7 +158,7 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
   try {
-    isLoading.value = true;
+    isSaving.value = true;
     const data = {
       company: form.value.billing_company,
       byline: form.value.billing_byline,
@@ -183,7 +184,7 @@ const handleSubmit = async () => {
     toast.show('Fehler beim Speichern der Rechnungsadresse.', 'error');
   }
   finally {
-    isLoading.value = false;
+    isSaving.value = false;
   }
 };
 

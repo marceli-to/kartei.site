@@ -8,9 +8,6 @@
     </ul>
   </div>
 </template>
-<script setup>
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
-</script>
 <style scoped>
   ul {
     @apply list-none;

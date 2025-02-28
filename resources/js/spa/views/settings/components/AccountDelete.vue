@@ -1,11 +1,14 @@
 <template>
   <Slide class="-top-4 pb-40">
     <div class="w-full h-full flex flex-col justify-between">
+      <!-- Content -->
       <div>
         <p>Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
         <p>Ihre Abonnement läuft noch bis zum <strong>{{ new Date().toLocaleDateString() }}</strong></p>
         <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
       </div>
+
+      <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
           <ButtonPrimary 
@@ -51,17 +54,17 @@ async function handleDeleteUser() {
     await deleteUser();
     dialogStore.hide();
     toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in ein paar Sekunden weitergeleitet.', 'success');
-  } 
-  catch (err) {
-    console.log(err);
-  } 
-  finally {
-    isDeleting.value = false;
-
+    
     setTimeout(() => {
       window.location.href = redirectAfterDeletion;
     }, redirectDelay);
-
+  } 
+  catch (err) {
+    console.log(err);
+    toast.show('Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.', 'error');
+  } 
+  finally {
+    isDeleting.value = false;
   }
 }
 
@@ -77,8 +80,6 @@ function showDialog() {
       handleDeleteUser();
     },
     onCancel: () => {
-      // Reset any errors when canceling
-      // error.value = null;
     }
   });
 }

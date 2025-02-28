@@ -84,7 +84,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" />
+          <ButtonPrimary label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
 
@@ -114,6 +114,7 @@ defineProps({
 });
 
 const isLoading = ref(false);
+const isSaving = ref(false);
 
 const form = ref({
   name: '',
@@ -151,7 +152,7 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
   try {
-    isLoading.value = true;
+    isSaving.value = true;
     const response = await updateUserAddress(form.value);
     toast.show('Adresse erfolgreich gespeichert.', 'success');
   } 
@@ -168,7 +169,7 @@ const handleSubmit = async () => {
     toast.show('Fehler beim Speichern des Adressen.', 'error');
   }
   finally {
-    isLoading.value = false;
+    isSaving.value = false;
   }
 };
 

@@ -99,7 +99,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" />
+          <ButtonPrimary label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
 
@@ -132,6 +132,7 @@ const props = defineProps({
 });
 
 const isLoading = ref(false);
+const isSaving = ref(false);
 const hasInfo = ref(true);
 
 const infoBox = useInfoBox({
@@ -181,7 +182,7 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
   try {
-    isLoading.value = true;
+    isSaving.value = true;
     const userData = await updateUser(form.value);
     if (userData.email_changed) {
       toast.show('E-Mail-Adresse wurde geändert, wir haben einen neuen Verifizierungslink geschickt.', 'success');
@@ -198,7 +199,7 @@ const handleSubmit = async () => {
     };
   }
   finally {
-    isLoading.value = false;
+    isSaving.value = false;
   }
 };
 

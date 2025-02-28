@@ -47,10 +47,11 @@
           To do: implement payment with stripe
         </div>
       </div>
+      
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" />
+          <ButtonPrimary label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
     </form>
@@ -82,6 +83,8 @@ const props = defineProps({
 });
 
 const isLoading = ref(false);
+const isSaving = ref(false);
+
 const subscriptions = ref([]);
 const hasSubscription = ref(false);
 
@@ -127,7 +130,7 @@ onMounted(async () => {
 
 const handleSubmit = async () => {
   try {
-    isLoading.value = true;
+    isSaving.value = true;
     await updateUserSubscription(form.value);
     hasSubscription.value = true;
     toast.show('Abonnement erfolgreich gespeichert.', 'success');
@@ -136,7 +139,7 @@ const handleSubmit = async () => {
     toast.show('Fehler beim Ändern des Abonnements.', 'error');
   }
   finally {
-    isLoading.value = false;
+    isSaving.value = false;
   }
 }
 </script>
