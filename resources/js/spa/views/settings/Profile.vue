@@ -119,7 +119,7 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
-import InfoProfile from '@/views/settings/components/ProfileInfo.vue';
+import InfoProfile from '@/views/settings/partials/ProfileInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const toast = useToastStore();

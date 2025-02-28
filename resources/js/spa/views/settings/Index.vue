@@ -10,12 +10,12 @@
 import { ref, computed, markRaw } from 'vue';
 import { useUserStore } from '@/stores/user';
 import SliderContainer from '@/components/slider/Container.vue';
-import ProfileComponent from '@/views/settings/components/Profile.vue';
-import AddressComponent from '@/views/settings/components/Address.vue';
-import BillingAddressComponent from '@/views/settings/components/BillingAddress.vue';
-import SubscriptionComponent from '@/views/settings/components/Subscription.vue';
-import ThemeComponent from '@/views/settings/components/Theme.vue';
-import AccountDeleteComponent from '@/views/settings/components/AccountDelete.vue';
+import ProfileComponent from '@/views/settings/Profile.vue';
+import AddressComponent from '@/views/settings/Address.vue';
+import BillingAddressComponent from '@/views/settings/BillingAddress.vue';
+import SubscriptionComponent from '@/views/settings/Subscription.vue';
+import ThemeComponent from '@/views/settings/Theme.vue';
+import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 
 const userStore = useUserStore();
 const activeIndex = ref(0);

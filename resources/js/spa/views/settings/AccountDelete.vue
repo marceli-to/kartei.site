@@ -28,7 +28,7 @@ import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useToastStore } from '@/components/toast/stores/toast';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-import AccountDeleteDialog from '@/views/settings/components/AccountDeleteDialog.vue';
+import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const dialogStore = useDialogStore();

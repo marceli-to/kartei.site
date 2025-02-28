@@ -6,7 +6,7 @@
       v-if="!isLoading">
 
       <!-- Info box -->
-      <template v-if="(!hasSubscription && isActive) || infoBox.isActive">
+      <template v-if="(!hasSubscription && isActive) || (infoBox.isActive && isActive)">
         <InfoBox class="pb-24">
           <InfoSubscription />
         </InfoBox>
@@ -70,7 +70,7 @@ import InputRadioGroup from '@/components/forms/RadioGroup.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
-import InfoSubscription from '@/views/settings/components/SubscriptionInfo.vue';
+import InfoSubscription from '@/views/settings/partials/SubscriptionInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const toast = useToastStore();
