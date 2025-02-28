@@ -14,7 +14,7 @@
             class="mt-20 group"
             @click="infoIcon.toggle">
             <template v-if="infoIcon.isActive">
-              <IconInfo variant="active" classes="text-ice" />
+              <IconInfo variant="active" classes="theme-color-text" />
             </template>
             <template v-else>
               <IconInfo classes="group-hover:hidden" />
