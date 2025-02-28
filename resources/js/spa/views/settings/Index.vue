@@ -79,7 +79,7 @@ const slides = computed(() => {
 
 function handleSlideChange(newIndex) {
   if (newIndex >= 0 && newIndex < slides.value.length) {
-    console.log(`Active slide changed to: ${slides.value[newIndex].name}`);
+    // console.log(`Active slide changed to: ${slides.value[newIndex].name}`);
     activeIndex.value = newIndex;
   }
 }

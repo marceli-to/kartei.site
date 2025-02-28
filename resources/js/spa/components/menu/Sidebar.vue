@@ -1,8 +1,8 @@
 <template>
   <nav
-    class="fixed top-12 right-0 z-80 bg-snow pt-174 w-full max-w-[16rem] h-[calc(100dvh_-_0.75rem)] transition-opacity duration-300"
+    class="fixed top-12 right-0 z-80 bg-snow dark:bg-graphite pt-174 w-full max-w-[16rem] h-[calc(100dvh_-_0.75rem)]"
     :class="{ 'opacity-100 visible': isOpen, 'opacity-0 invisible pointer-events-none': !isOpen }">
-    <ul class="mx-16 border-t border-t-black">
+    <ul class="mx-16 border-t border-t-black dark:border-t-white">
       <li>
         <a href="">Meine Karteien</a>
       </li>
@@ -10,7 +10,7 @@
         <router-link
           :to="{ name: 'settings' }"
           @click="$emit('toggle')"
-          :class="{ 'text-graphite': $route.name === 'settings' }">
+          :class="{ 'text-graphite dark:text-black': $route.name === 'settings' }">
           Einstellungen
         </router-link>
       </li>
@@ -55,6 +55,6 @@ defineEmits(['toggle']);
 </script>
 <style scoped>
 nav a {
-  @apply font-muoto-medium leading-none w-full py-16 border-b border-b-black flex items-center hover:text-graphite transition-all;
+  @apply font-muoto-medium leading-none w-full py-16 border-b border-b-black dark:border-b-white flex items-center hover:text-graphite dark:hover:text-black transition-all;
 }
 </style>

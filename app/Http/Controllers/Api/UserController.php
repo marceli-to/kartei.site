@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserPermissionResource;
 use App\Actions\User\Update as UpdateUserAction;
 use App\Actions\User\UpdatePassword as UpdatePasswordAction;
 use App\Actions\User\Delete as DeleteUserAction;
@@ -15,6 +16,16 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+  public function find(Request $request): UserResource
+  {
+    return new UserResource($request->user());
+  }
+
+  public function permissions(Request $request): UserPermissionResource
+  {
+    return new UserPermissionResource($request->user());
+  }
+
   public function update(UpdateRequest $request): JsonResponse
   {
     $user = (new UpdateUserAction())->execute(

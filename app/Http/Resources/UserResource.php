@@ -10,20 +10,10 @@ class UserResource extends JsonResource
   public function toArray(Request $request): array
   {
     return [
-      'user' => [
-        'uuid' => $this->uuid,
-        'firstname' => $this->firstname,
-        'name' => $this->name,
-        'email' => $this->email,
-      ],
-      'roles' => RoleResource::collection($this->roles),
-      'permissions' => $this->getPermissionsViaRoles()
-        ->merge($this->permissions)
-        ->map(fn($permission) => [
-          'name' => $permission->name
-        ])
-        ->unique('name')
-        ->values(),
+      'uuid' => $this->uuid,
+      'firstname' => $this->firstname,
+      'name' => $this->name,
+      'email' => $this->email,
     ];
   }
 }

@@ -3,7 +3,7 @@
     <label 
       v-for="option in options" 
       :key="option.value" 
-      class="relative">
+      :class="labelClasses">
       <input
         :type="multiple ? 'checkbox' : 'radio'"
         :name="name"
@@ -16,7 +16,7 @@
         :class="[
           borderClasses,
           classes,
-          isChecked(option.value) ? activeClass : '',
+          isChecked(option.value) ? getActiveClass(option.value) : '',
         ]"
       >
         {{ option.label }}
@@ -24,8 +24,8 @@
     </label>
   </fieldset>
 </template>
-
 <script setup>
+
 const props = defineProps({
   modelValue: {
     type: [Array, String, Number],
@@ -65,6 +65,14 @@ const props = defineProps({
   activeClass: {
     type: String,
     default: 'bg-ice border-black !text-black'
+  },
+  labelClasses: {
+    type: String,
+    default: 'relative'
+  },
+  valueActiveClassMap: {
+    type: Object,
+    default: () => ({})
   }
 });
 
@@ -92,5 +100,13 @@ const updateValue = (value) => {
   else {
     emit('update:modelValue', value);
   }
+};
+
+const getActiveClass = (value) => {
+  // If there's a specific active class for this value, use it
+  if (props.valueActiveClassMap && props.valueActiveClassMap[value]) {
+    return props.valueActiveClassMap[value];
+  }
+  return props.activeClass;
 };
 </script>

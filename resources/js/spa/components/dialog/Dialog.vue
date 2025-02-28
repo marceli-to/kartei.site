@@ -19,7 +19,7 @@
         <div class="flex min-h-full items-center justify-center p-4 relative">
           <div
             :class="[
-              'relative w-full transform overflow-hidden bg-white dark:bg-black p-24 text-left shadow-xl transition-all',
+              'relative w-full transform overflow-hidden bg-white dark:text-black p-24 text-left shadow-xl transition-all',
               getSizeClass(content.size)
             ]"
             @click.stop>

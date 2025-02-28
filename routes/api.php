@@ -8,9 +8,8 @@ use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
+use App\Http\Controllers\Api\UserThemeController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
-
-use App\Http\Resources\UserResource;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,13 +22,9 @@ use App\Http\Resources\UserResource;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-  return new UserResource($request->user());
-});
-
-
 
 Route::middleware('auth:sanctum')->group(function () {
+
   // Uploads
   Route::post('/upload', [UploadController::class, 'store']);
   Route::delete('/upload/temp/{name}', [UploadController::class, 'destroyTemp']);
@@ -37,7 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Users
   Route::get('/users', [UserController::class, 'get']);
-  Route::put('/user', [UserController::class, 'update']);
+  Route::get('/user/profile', [UserController::class, 'find']);
+  Route::put('/user/profile', [UserController::class, 'update']);
+  Route::get('/user/permissions', [UserController::class, 'permissions']);
   Route::post('/user/password', [UserController::class, 'password']);
   Route::delete('/user', [UserController::class, 'destroy']);
 
@@ -51,9 +48,14 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/user/subscription', [UserSubscriptionController::class, 'find']);
   Route::put('/user/subscription', [UserSubscriptionController::class, 'update']);
 
+  // User theme
+  Route::get('/user/theme', [UserThemeController::class, 'find']);
+  Route::put('/user/theme', [UserThemeController::class, 'update']);
+
   // Subscription Plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 
   // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);
+  
 });

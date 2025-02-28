@@ -108,7 +108,7 @@
 </template>
 <script setup>
 import { ref, onMounted, toRef } from 'vue';
-import { getUser, updateUser, updatePassword } from '@/services/api/user';
+import { getUserProfile, updateUserProfile, updatePassword } from '@/services/api/user';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import InputGroup from '@/components/forms/Group.vue';
@@ -164,12 +164,12 @@ const authErrors = ref([]);
 onMounted(async () => {
   try {
     isLoading.value = true;
-    const userData = await getUser();
-    if (userData.user) {
-      form.value.uuid = userData.user.uuid;
-      form.value.firstname = userData.user.firstname;
-      form.value.name = userData.user.name;
-      form.value.email = userData.user.email;
+    const userData = await getUserProfile();
+    if (userData) {
+      form.value.uuid = userData.uuid;
+      form.value.firstname = userData.firstname;
+      form.value.name = userData.name;
+      form.value.email = userData.email;
     }
   } 
   catch (error) {
@@ -183,7 +183,7 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
-    const userData = await updateUser(form.value);
+    const userData = await updateUserProfile(form.value);
     if (userData.email_changed) {
       toast.show('E-Mail-Adresse wurde geändert, wir haben einen neuen Verifizierungslink geschickt.', 'success');
     }

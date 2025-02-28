@@ -14,7 +14,7 @@
           <ButtonPrimary 
             label="Konto löschen" 
             @click="showDialog"
-            class="bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border"
+            :classes="'bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border'"
             :disabled="isDeleting" />
         </ButtonGroup>
       </div>
