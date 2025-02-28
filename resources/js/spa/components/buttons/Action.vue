@@ -127,7 +127,7 @@ const resolveIconComponent = computed(() => {
   return icons[props.icon.name.toLowerCase()] || null;
 });
 
-const baseClasses = 'min-h-default flex justify-between w-full font-muoto-regular text-md text-black hover:bg-ice hover:border-black transition-all';
+const baseClasses = 'min-h-default flex justify-between w-full font-muoto-regular text-md text-black hover:theme-color hover:border-black transition-all';
 
 const defaultBorderClasses = 'border-y border-graphite pr-8';
 
