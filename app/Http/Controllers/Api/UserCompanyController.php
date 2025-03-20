@@ -8,6 +8,7 @@ use App\Http\Requests\UserCompany\UpdateRequest;
 use App\Actions\UserCompany\Get as GetUserCompanyAction;
 use App\Actions\UserCompany\Create as CreateUserCompanyAction;
 use App\Actions\UserCompany\Update as UpdateUserCompanyAction;
+use App\Actions\UserCompany\Delete as DeleteUserCompanyAction;
 use App\Models\Company;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -32,5 +33,12 @@ class UserCompanyController extends Controller
     $this->authorize('update', $company);
     $company = (new UpdateUserCompanyAction())->execute($company, $request->all());
     return new UserCompanyResource($company);
+  }
+
+  public function destroy(Company $company)
+  {
+    $this->authorize('delete', $company);
+    (new DeleteUserCompanyAction())->execute($company);
+    return response()->noContent();
   }
 }

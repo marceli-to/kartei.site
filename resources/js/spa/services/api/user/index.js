@@ -79,3 +79,8 @@ export const updateUserCompany = async (companyData) => {
   const response = await axios.put(`/api/user/company/${companyData.uuid}`, companyData);
   return response.data;
 }
+
+export const deleteUserCompany = async (uuid) => {
+  const response = await axios.delete(`/api/user/company/${uuid}`);
+  return response.data;
+}

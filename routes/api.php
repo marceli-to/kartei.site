@@ -57,7 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/user/companies', [UserCompanyController::class, 'get']);
   Route::post('/user/company', [UserCompanyController::class, 'create']);
   Route::put('/user/company/{company:uuid}', [UserCompanyController::class, 'update']);
-
+  Route::delete('/user/company/{company:uuid}', [UserCompanyController::class, 'destroy']);
+  
   // Subscription Plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 

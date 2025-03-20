@@ -1,7 +1,10 @@
 <template>
   <button 
     :type="type" 
-    :class="classes" 
+    :class="[
+      classes,
+      variant === 'danger' && 'hover:bg-flame hover:text-white'
+    ]" 
     :disabled="disabled"
     :aria-label="label">
     {{ label }}
@@ -9,6 +12,8 @@
   </button>
 </template>
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
   type: {
     type: String,
@@ -29,6 +34,12 @@ const props = defineProps({
   submitting: {
     type: Boolean,
     default: true
+  },
+  variant: {
+    type: String,
+    default: 'default',
+    validator: (value) => ['default', 'danger'].includes(value)
   }
 });
+
 </script>

@@ -8,6 +8,7 @@
     <template v-else-if="isUpdating">
       <UpdateCompany 
         :company="company"
+        @delete="handleCompanyDeleted"
         @success="handleCompanyUpdated" 
         @cancel="isUpdating = false" />
     </template>
@@ -68,8 +69,6 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['show-company']);
-
 const search = ref('');
 const companies = ref([]);
 const company = ref(null);
@@ -120,6 +119,12 @@ const handleCompanyUpdated = (company) => {
   toast.show('Firma erfolgreich aktualisiert.', 'success');
   isUpdating.value = false;
 };  
+
+const handleCompanyDeleted = (uuid) => {
+  companies.value = companies.value.filter(c => c.uuid !== uuid);
+  toast.show('Firma erfolgreich gelöscht.', 'success');
+  isUpdating.value = false;
+};
 
 onMounted(async () => {
   try {
