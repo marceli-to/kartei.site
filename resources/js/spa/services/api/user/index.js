@@ -64,3 +64,18 @@ export const updateUserTheme = async (themeData) => {
   const response = await axios.put('/api/user/theme', themeData);
   return response.data;
 }
+
+export const getUserCompanies = async () => {
+  const response = await axios.get('/api/user/companies');
+  return response.data;
+}
+
+export const createUserCompany = async (companyData) => {
+  const response = await axios.post('/api/user/company', companyData);
+  return response.data;
+}
+
+export const updateUserCompany = async (companyData) => {
+  const response = await axios.put(`/api/user/company/${companyData.uuid}`, companyData);
+  return response.data;
+}

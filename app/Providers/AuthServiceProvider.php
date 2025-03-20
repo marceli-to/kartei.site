@@ -2,12 +2,13 @@
 namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-
 use App\Models\Archive;
 use App\Policies\ArchivePolicy;
-
 use App\Models\Address;
 use App\Policies\AddressPolicy;
+use App\Models\Company;
+use App\Policies\CompanyPolicy;
+
 
 // use App\Models\Record;
 // use App\Policies\RecordPolicy;
@@ -21,8 +22,11 @@ class AuthServiceProvider extends ServiceProvider
    */
   protected $policies = [
     Archive::class => ArchivePolicy::class,
-    //Record::class => RecordPolicy::class,
     Address::class => AddressPolicy::class,
+    Company::class => CompanyPolicy::class,
+
+    //Record::class => RecordPolicy::class,
+
   ];
 
   /**

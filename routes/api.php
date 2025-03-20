@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
 use App\Http\Controllers\Api\UserThemeController;
+use App\Http\Controllers\Api\UserCompanyController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
 
 /*
@@ -51,6 +52,11 @@ Route::middleware('auth:sanctum')->group(function () {
   // User theme
   Route::get('/user/theme', [UserThemeController::class, 'find']);
   Route::put('/user/theme', [UserThemeController::class, 'update']);
+
+  // User companies
+  Route::get('/user/companies', [UserCompanyController::class, 'get']);
+  Route::post('/user/company', [UserCompanyController::class, 'create']);
+  Route::put('/user/company/{company:uuid}', [UserCompanyController::class, 'update']);
 
   // Subscription Plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);

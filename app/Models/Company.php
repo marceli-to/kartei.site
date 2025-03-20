@@ -3,6 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasUuid;
+use App\Models\User;
 
 class Company extends Model
 {
@@ -16,7 +17,13 @@ class Company extends Model
     'street_number',
     'zip',
     'city',
+    'country',
   ];
+
+  public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+  {
+    return $this->belongsToMany(User::class);
+  }
 
   public function address(): \Illuminate\Database\Eloquent\Relations\MorphOne
   {

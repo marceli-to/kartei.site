@@ -1,4 +1,9 @@
 <?php
+namespace App\Policies;
+use App\Models\Archive;
+use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
 class ArchivePolicy
 {
   use HandlesAuthorization;

@@ -17,6 +17,17 @@ class CompanySeeder extends Seeder
       'street_number' => '39',
       'zip' => '8045',
       'city' => 'Zürich',
+      'country' => 'Schweiz',
+    ]);
+
+    // create another company
+    Company::create([
+      'name' => 'Acme Corp',
+      'street' => 'Stauffacherstrasse',
+      'street_number' => '9a',
+      'zip' => '8002',
+      'city' => 'Zürich',
+      'country' => 'Schweiz',
     ]);
   }
 }
