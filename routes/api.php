@@ -59,10 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('/user/company/{company:uuid}', [UserCompanyController::class, 'update']);
   Route::delete('/user/company/{company:uuid}', [UserCompanyController::class, 'destroy']);
   
-  // Subscription Plans
+  // Subscription plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 
   // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);
+  Route::get('/user/{userId}/archives', [ArchiveController::class, 'getByUser']);
   
 });

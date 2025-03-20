@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Archive;
 use App\Http\Resources\ArchiveResource;
 use App\Actions\Archive\Get as GetArchiveAction;
+use App\Models\User;
 
 class ArchiveController extends Controller
 {
@@ -15,6 +16,20 @@ class ArchiveController extends Controller
       ArchiveResource::collection(
         (new GetArchiveAction())->execute()
       )
+    );
+  }
+
+  /**
+   * Get archives by user ID
+   *
+   * @param string $userId
+   * @return JsonResponse
+   */
+  public function getByUser(string $userId): JsonResponse
+  {
+    $user = User::where('uuid', $userId)->firstOrFail();
+    return response()->json(
+      ArchiveResource::collection($user->archives)
     );
   }
 

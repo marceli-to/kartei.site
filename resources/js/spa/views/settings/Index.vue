@@ -14,6 +14,7 @@ import ProfileComponent from '@/views/settings/Profile.vue';
 import AddressComponent from '@/views/settings/Address.vue';
 import BillingAddressComponent from '@/views/settings/BillingAddress.vue';
 import CompnayComponent from '@/views/settings/Company.vue';
+import UserComponent from '@/views/settings/User.vue';
 import SubscriptionComponent from '@/views/settings/Subscription.vue';
 import ThemeComponent from '@/views/settings/Theme.vue';
 import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
@@ -62,6 +63,14 @@ const allSlides = [
     class: "w-3/12", 
     permission: 'edit.company',
     component: markRaw(CompnayComponent)
+  },
+  { 
+    id: 'user', 
+    name: "Benutzer", 
+    width: 25, 
+    class: "w-3/12", 
+    permission: 'edit.user',
+    component: markRaw(UserComponent)
   },
   { 
     id: 'theme', 
