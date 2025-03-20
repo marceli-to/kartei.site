@@ -17,6 +17,7 @@ PHP (Laravel), Javascript (VueJs), CSS (Tailwindcss)
 Archive for art. Each archive has 1 or more artworks, each artwork has 1 or more images. There is one admin user per archive, multiple archives per admin user are possible. Other roles (editors, viewers) are available.
 
 ## Database Schema
+```sql
 CREATE TABLE `addresses` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -404,7 +405,6 @@ ALTER TABLE `users`
 ALTER TABLE `user_subscriptions`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
-
 ALTER TABLE `archives`
   ADD CONSTRAINT `archives_company_id_foreign` FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`) ON DELETE SET NULL;
 
@@ -445,3 +445,4 @@ ALTER TABLE `user_subscriptions`
   ADD CONSTRAINT `user_subscriptions_subscription_plan_id_foreign` FOREIGN KEY (`subscription_plan_id`) REFERENCES `subscription_plans` (`id`),
   ADD CONSTRAINT `user_subscriptions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
+```
