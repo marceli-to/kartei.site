@@ -12,12 +12,23 @@
         props.classes,
       ]"
     >
-    <Magnifier class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+    <template v-if="modelValue">
+      <a 
+        href="javascript:;"
+        @click.prevent="$emit('update:modelValue', '')"
+        title="Suchfeld leeren">
+        <IconCross variant="small" class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+      </a>
+    </template>
+    <template v-else>
+      <IconMagnifier class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+    </template>
   </div>
 </template>
 
 <script setup>
-import Magnifier from '@/components/icons/Magnifier.vue';
+import IconMagnifier from '@/components/icons/Magnifier.vue';
+import IconCross from '@/components/icons/Cross.vue';
 
 const props = defineProps({
   modelValue: {

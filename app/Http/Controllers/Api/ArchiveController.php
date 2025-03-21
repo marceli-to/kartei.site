@@ -10,6 +10,11 @@ use App\Models\User;
 
 class ArchiveController extends Controller
 {
+  /**
+   * Get archives based on authenticated user's role
+   *
+   * @return JsonResponse
+   */
   public function get(): JsonResponse
   {
     return response()->json(
@@ -20,40 +25,45 @@ class ArchiveController extends Controller
   }
 
   /**
-   * Get archives by user ID
+   * Get all archives (Super Admin only)
+   *
+   * @return JsonResponse
+   */
+  public function getAll(): JsonResponse
+  {
+    return response()->json(
+      ArchiveResource::collection(
+        (new GetArchiveAction())->execute(['all' => true])
+      )
+    );
+  }
+
+  /**
+   * Get archives for the authenticated admin
+   *
+   * @return JsonResponse
+   */
+  public function getByAdmin(): JsonResponse
+  {
+    return response()->json(
+      ArchiveResource::collection(
+        (new GetArchiveAction())->execute(['admin' => true])
+      )
+    );
+  }
+
+  /**
+   * Get archives for a specific user
    *
    * @param string $userId
    * @return JsonResponse
    */
   public function getByUser(string $userId): JsonResponse
   {
-    $user = User::where('uuid', $userId)->firstOrFail();
     return response()->json(
-      ArchiveResource::collection($user->archives)
+      ArchiveResource::collection(
+        (new GetArchiveAction())->execute(['user_id' => $userId])
+      )
     );
-  }
-
-  public function create(): JsonResponse
-  {
-  }
-
-  public function store(Request $request): JsonResponse
-  {
-  }
-
-  public function show(string $id): JsonResponse
-  {
-  }
-
-  public function edit(string $id): JsonResponse
-  {
-  }
-
-  public function update(Request $request, string $id): JsonResponse
-  {
-  }
-
-  public function destroy(string $id): JsonResponse
-  {
   }
 }

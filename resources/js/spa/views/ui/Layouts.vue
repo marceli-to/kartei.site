@@ -40,7 +40,7 @@
           class="ml-8 opacity-1 flex justify-between items-center font-muoto-medium"
           :class="{
             'transition-none delay-300': activeIndex === index, 
-            'opacity-20': activeIndex !== index,
+            'opacity-20 select-none': activeIndex !== index,
             'opacity-0 transition-all duration-none': activeIndex > index
           }">
           <span>{{ item.name }}</span>

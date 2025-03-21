@@ -8,7 +8,7 @@ use Database\Seeders\PermissionSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\SubscriptionPlanSeeder;
 use Database\Seeders\AddressSeeder;
-
+use Database\Seeders\ArchiveUserSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
       CompanyUserSeeder::class,
       PermissionSeeder::class,
       SubscriptionPlanSeeder::class,
-      AddressSeeder::class
+      AddressSeeder::class,
+      ArchiveUserSeeder::class
     ]);
 
   }

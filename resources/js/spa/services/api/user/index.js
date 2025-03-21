@@ -84,3 +84,9 @@ export const deleteUserCompany = async (uuid) => {
   const response = await axios.delete(`/api/user/company/${uuid}`);
   return response.data;
 }
+
+export const getRelatedUsers = async () => {
+  const response = await axios.get('/api/user/related');
+  return response.data;
+}
+  

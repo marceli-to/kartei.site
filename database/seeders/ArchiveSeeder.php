@@ -29,13 +29,5 @@ class ArchiveSeeder extends Seeder
     {
       Archive::create($archive);
     }
-
-    // Get all archives
-    $archives = Archive::all();
-
-    // Get first user and attach archives
-    $user = User::first();
-    $user->archives()->attach($archives);
-
   }
 }

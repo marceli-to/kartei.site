@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasUuid;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
+use \App\Models\ArchiveUser;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -69,6 +70,18 @@ class User extends Authenticatable implements MustVerifyEmail
   public function subscription(): \Illuminate\Database\Eloquent\Relations\HasOne
   {
     return $this->hasOne(UserSubscription::class);
+  }
+
+  public function related()
+  {
+    return $this->hasManyThrough(
+      User::class,
+      ArchiveUser::class, // You'd need to create this pivot model
+      'added_by', // Foreign key on pivot table
+      'id', // Foreign key on users table
+      'id', // Local key on admin's user record
+      'user_id' // Local key on pivot table
+    );
   }
 
   public function hasActiveSubscription(): bool
