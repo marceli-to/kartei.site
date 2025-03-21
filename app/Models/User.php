@@ -72,7 +72,7 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->hasOne(UserSubscription::class);
   }
 
-  public function related()
+  public function relatedUsers(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
   {
     return $this->hasManyThrough(
       User::class,

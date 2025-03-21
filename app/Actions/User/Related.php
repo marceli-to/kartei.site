@@ -7,6 +7,6 @@ class Related
 {
   public function execute(User $user)
   {
-    return $user->related()->distinct()->get();
+    return $user->relatedUsers()->distinct()->get();
   }
 }
