@@ -31,7 +31,7 @@ class ArchiveUserSeeder extends Seeder
     $viewer->roles()->attach(Role::where('name', 'Viewer')->first());
 
     // Add viewer to all archives
-    $viewer->archives()->attach($archives, ['added_by' => $user->id, 'added_at' => now()]);
+    $viewer->archives()->attach($archives, ['role_id' => Role::where('name', 'Viewer')->first()->id, 'added_by' => $user->id, 'added_at' => now()]);
 
     // Create a user with role 'Archivist'
     $archivist = User::create([
@@ -46,7 +46,7 @@ class ArchiveUserSeeder extends Seeder
     $archivist->roles()->attach(Role::where('name', 'Archivist')->first());
 
     // Add editor to all archives
-    $archivist->archives()->attach($archives, ['added_by' => $user->id, 'added_at' => now()]);
+    $archivist->archives()->attach($archives, ['role_id' => Role::where('name', 'Archivist')->first()->id, 'added_by' => $user->id, 'added_at' => now()]);
 
     // Create another user with role 'Viewer'
     $viewer2 = User::create([
@@ -61,6 +61,6 @@ class ArchiveUserSeeder extends Seeder
     $viewer2->roles()->attach(Role::where('name', 'Viewer')->first());
 
     // Add viewer2 to all archives
-    $viewer2->archives()->attach($archives, ['added_by' => $user->id, 'added_at' => now()]);
+    $viewer2->archives()->attach($archives, ['role_id' => Role::where('name', 'Viewer')->first()->id, 'added_by' => $user->id, 'added_at' => now()]);
   }
 }

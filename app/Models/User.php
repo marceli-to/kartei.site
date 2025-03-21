@@ -81,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
       'id', // Foreign key on users table
       'id', // Local key on admin's user record
       'user_id' // Local key on pivot table
-    );
+    )->with('roles');
   }
 
   public function hasActiveSubscription(): bool
