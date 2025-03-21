@@ -19,7 +19,6 @@
         <div>
           <InputSearch
             v-model="search"
-            id="search"
             placeholder="Suche"
             aria-label="Suche" />
         </div>
