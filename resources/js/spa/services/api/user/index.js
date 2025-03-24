@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+export const createUser = async (userData) => {
+  const response = await axios.post('/api/user', userData);
+  return response.data;
+};
+
 export const getUserPermissions = async () => {
   const response = await axios.get('/api/user/permissions');
   return response.data;

@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\User\StoreRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserRelatedResource;
 use App\Http\Resources\UserPermissionResource;
 use App\Actions\User\Update as UpdateUserAction;
 use App\Actions\User\UpdatePassword as UpdatePasswordAction;
+use App\Actions\User\Create as CreateUserAction;
 use App\Actions\User\Delete as DeleteUserAction;
 use App\Actions\User\Related as RelatedAction;
+use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +25,18 @@ class UserController extends Controller
   public function find(Request $request): UserResource
   {
     return new UserResource($request->user());
+  }
+
+  public function create(StoreRequest $request): UserResource
+  {
+    return new UserResource(
+      (new CreateUserAction())->execute(
+        array_merge(
+          ['password' => config('user.welcome_password')],
+          $request->all()
+        )
+      )
+    );
   }
 
   public function related(Request $request): AnonymousResourceCollection

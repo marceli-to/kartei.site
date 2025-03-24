@@ -1,60 +1,68 @@
 <template>
-  <Slide :pull="false">
+  <Slide :pull="isCreating || isUpdating">
+    <template v-if="isCreating">
+      <CreateUser 
+        :archives="selectedArchives"
+        @success="handleUserCreated" 
+        @cancel="isCreating = false" />
+    </template>
+    <template v-else>
+      <div class="flex flex-col gap-y-48">
 
-    <div class="flex flex-col gap-y-48">
-
-      <!-- User list with search-->
-      <div class="flex flex-col gap-y-32" v-if="!isLoading">
-        <div>
-          <InputSearch
-            v-model="search"
-            placeholder="Suche"
-            aria-label="Suche" />
-        </div>
-        <div>
-          <div v-for="(users, role) in groupedUsers" :key="role" class="mb-24">
-            <h3 class="text-sm mb-4 block">{{ role }}</h3>
-            <div class="flex flex-col gap-y-8">
-              <Action 
-                v-for="user in users" 
-                :key="user.uuid"
-                :label="`${user.firstname} ${user.name}`"
-                :icon="{ name: 'ChevronRight' }" />
+        <!-- User list with search-->
+        <div class="flex flex-col gap-y-32" v-if="!isLoading">
+          <div>
+            <InputSearch
+              v-model="search"
+              placeholder="Suche"
+              aria-label="Suche" />
+          </div>
+          <div>
+            <div v-for="(users, role) in groupedUsers" :key="role" class="mb-24">
+              <h3 class="text-sm mb-4 block">{{ role }}</h3>
+              <div class="flex flex-col gap-y-8">
+                <Action 
+                  v-for="user in users" 
+                  :key="user.uuid"
+                  :label="`${user.firstname} ${user.name}`"
+                  :icon="{ name: 'ChevronRight' }" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- // User list with search-->
-      
-      <!-- Archive selection -->
-      <div>
-        <div class="flex flex-col gap-y-32">
-          <div>
-            <h3 class="text-sm mb-4 block">
-              <template v-if="selectedArchives.length == 0">
-                Kartei/en auswählen
-              </template>
-              <template v-else>
-                Benutzer/in hinzufügen
-              </template>
-            </h3>
-            <InputSelectButtons
-              v-model="selectedArchives"
-              :multiple="true"
-              name="archives"
-              wrapperClasses="flex flex-col gap-y-8"
-              :options="archives" />            
-          </div>
-          <div>
-            <Action 
-              label="Benutzer/in" 
-              :icon="{ name: 'Plus', position: 'center' }"
-              :disabled="selectedArchives.length == 0 ? true : false" />
+        <!-- // User list with search-->
+        
+        <!-- Archive selection -->
+        <div>
+          <div class="flex flex-col gap-y-32">
+            <div>
+              <h3 class="text-sm mb-4 block">
+                <template v-if="selectedArchives.length == 0">
+                  Kartei/en auswählen
+                </template>
+                <template v-else>
+                  Benutzer/in hinzufügen
+                </template>
+              </h3>
+              <InputSelectButtons
+                v-model="selectedArchives"
+                :multiple="true"
+                name="archives"
+                wrapperClasses="flex flex-col gap-y-8"
+                :options="archives" />            
+            </div>
+            <div>
+              <Action 
+                label="Benutzer/in" 
+                :icon="{ name: 'Plus', position: 'center' }"
+                :disabled="selectedArchives.length == 0 ? true : false"
+                @click="isCreating = true" />
+            </div>
           </div>
         </div>
+        <!-- // Archive selection -->
       </div>
-      <!-- // Archive selection -->
-    </div>
+    </template>
   </Slide>
 </template>
 <script setup>
@@ -65,12 +73,15 @@ import Slide from '@/components/slider/Slide.vue';
 import InputSearch from '@/components/forms/Search.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import Action from '@/components/buttons/Action.vue';
+import CreateUser from '@/views/settings/partials/CreateUser.vue';
 
 const archives = ref([]);
 const relatedUsers = ref([]);
 const search = ref('');
 const selectedArchives = ref([]);
 const isLoading = ref(true);
+const isCreating = ref(false);
+const isUpdating = ref(false);
 
 onMounted(async () => {
   try {
@@ -133,5 +144,13 @@ const groupedUsers = computed(() => {
   
   return grouped;
 });
+
+const handleUserCreated = () => {
+  isCreating.value = false;
+};
+
+const handleUserUpdated = () => {
+  isUpdating.value = false;
+};
 
 </script>

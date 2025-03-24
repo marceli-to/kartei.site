@@ -1,7 +1,6 @@
 <template>
   <div class="relative">
     <input
-      :id="id"
       :type="type"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"

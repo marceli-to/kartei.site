@@ -16,7 +16,7 @@ class PermissionCreate extends Command
       'guard_name' => $this->ask('Enter guard name') ?? 'web'
     ];
 
-    $role = (new CreatePermissionAction())->execute($data);
-    $this->info('Permission created: ' . $role->name);
+    $permission = (new CreatePermissionAction())->execute($data);
+    $this->info('Permission created: ' . $permission->name);
   }
 }

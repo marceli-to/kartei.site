@@ -14,7 +14,7 @@ use App\Http\Controllers\UserController;
 */
 
 // TestController
-Route::get('/user', [UserController::class, 'index']);
+Route::get('/permissions', [UserController::class, 'index']);
 
 Route::view('/', 'home')->name('page.home');
 Route::view('/auf-wiedersehen', 'goodbye')->name('page.goodbye');

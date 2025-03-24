@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
 use App\Http\Controllers\Api\UserThemeController;
 use App\Http\Controllers\Api\UserCompanyController;
+use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
 
 /*
@@ -34,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
   // Users
   Route::get('/users', [UserController::class, 'get']);
   Route::get('/user/related', [UserController::class, 'related']);
+  Route::post('/user', [UserController::class, 'create']);
   Route::get('/user/profile', [UserController::class, 'find']);
   Route::put('/user/profile', [UserController::class, 'update']);
   Route::get('/user/permissions', [UserController::class, 'permissions']);
@@ -68,5 +71,10 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archives/admin', [ArchiveController::class, 'getByAdmin']);
   Route::get('/archives/user/{userId}', [ArchiveController::class, 'getByUser']);
   Route::get('/archives/all', [ArchiveController::class, 'getAll']);
+
+  // Permissions and roles
+  Route::get('/permissions', [PermissionController::class, 'get']);
+  Route::get('/roles', [RoleController::class, 'get']);
+
   
 });
