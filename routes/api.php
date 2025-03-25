@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\UserSubscriptionController;
 use App\Http\Controllers\Api\UserThemeController;
 use App\Http\Controllers\Api\UserCompanyController;
 use App\Http\Controllers\Api\UserPermissionController;
+use App\Http\Controllers\Api\UserInviteController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
@@ -66,11 +67,12 @@ Route::middleware('auth:sanctum')->group(function () {
   // User permissions
   Route::get('/user/permissions', [UserPermissionController::class, 'get']);
   Route::put('/user/permissions/{user:uuid}', [UserPermissionController::class, 'store']);
-  
+
+  // User invite
+  Route::post('/user/invite/{user:uuid}', [UserInviteController::class, 'invite']);
 
   // User routes (dynamic)
   Route::get('/user/{user:uuid}', [UserController::class, 'find']);
-  // Route::put('/user/{uuid}/permissions', [UserController::class, 'updatePermissions']);
 
   // Subscription plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);

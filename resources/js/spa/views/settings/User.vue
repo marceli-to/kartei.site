@@ -1,22 +1,34 @@
 <template>
   <Slide :pull="isCreating || isUpdating || isSettingPermissions">
+
     <template v-if="isCreating">
       <CreateUser 
         :archives="selectedArchives"
         @success="(userData) => handleUserCreated(userData)" 
         @cancel="isCreating = false" />
     </template>
+
     <template v-else-if="isUpdating">
 
     </template>
+
     <template v-else-if="isSettingPermissions">
       <CreateUserPermissions 
         :user="createdUser"
         :selectedArchives="selectedArchives"
         @success="handleUserPermissionsUpdated"
-        @cancel="isSettingPermissions = false"
+        @cancel="isSettingPermissions = false; selectedArchives = []"
         v-if="createdUser" />
     </template>
+
+    <template v-else-if="isNotifyingUser">
+      <InviteUser 
+        :user="createdUser"
+        :selectedArchives="selectedArchives"
+        @success="handleUserNotified"
+        @cancel="isNotifyingUser = false; selectedArchives = []" />
+    </template>
+
     <template v-else>
       <div class="flex flex-col gap-y-48">
 
@@ -74,6 +86,7 @@
         <!-- // Archive selection -->
       </div>
     </template>
+
   </Slide>
 </template>
 <script setup>
@@ -86,6 +99,7 @@ import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import Action from '@/components/buttons/Action.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
 import CreateUserPermissions from '@/views/settings/partials/CreateUserPermissions.vue';
+import InviteUser from '@/views/settings/partials/InviteUser.vue';
 
 const archives = ref([]);
 const relatedUsers = ref([]);
@@ -96,6 +110,7 @@ const isLoading = ref(true);
 const isCreating = ref(false);
 const isUpdating = ref(false);
 const isSettingPermissions = ref(false);
+const isNotifyingUser = ref(false);
 
 onMounted(async () => {
   try {
@@ -170,6 +185,14 @@ const handleUserUpdated = () => {
 
 const handleUserPermissionsUpdated = () => {
   isSettingPermissions.value = false;
+  isNotifyingUser.value = true;
+};
+
+const handleUserNotified = () => {
+  isNotifyingUser.value = false;
+  isCreating.value = false;
+  createdUser.value = null;
+  selectedArchives.value = [];
 };
 
 </script>
