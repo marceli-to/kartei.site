@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
@@ -15,8 +14,6 @@ use App\Actions\User\UpdatePassword as UpdatePasswordAction;
 use App\Actions\User\Create as CreateUserAction;
 use App\Actions\User\Delete as DeleteUserAction;
 use App\Actions\User\Related as RelatedAction;
-use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,11 +41,6 @@ class UserController extends Controller
     return UserRelatedResource::collection(
       (new RelatedAction())->execute($request->user())
     );
-  }
-
-  public function permissions(Request $request): UserPermissionResource
-  {
-    return new UserPermissionResource($request->user());
   }
 
   public function update(UpdateRequest $request): JsonResponse
@@ -81,4 +73,5 @@ class UserController extends Controller
     $request->session()->regenerateToken();
     return response()->noContent();
   }
+
 }

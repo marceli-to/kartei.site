@@ -3,7 +3,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\Archive;
-use App\Actions\ArchiveUser\Attach as ArchiveUserAttachAction;
+use App\Actions\ArchiveUser\Sync as ArchiveUserSyncAction;
 
 class ArchiveUserAttach extends Command
 {
@@ -22,7 +22,7 @@ class ArchiveUserAttach extends Command
     $choice = $this->choice('Which archive do you want to add this user to?', $archives);
     $archiveIds = array_search($choice, $archives);
 
-    $archive_user = (new ArchiveUserAttachAction())->execute($user, [$archiveIds]);
+    $archive_user = (new ArchiveUserSyncAction())->execute($user, [$archiveIds]);
     $this->info('Attached user ' . $user->email. ' to archive(s) ' . implode(', ', [$archiveIds]));
   }
 }

@@ -94,4 +94,8 @@ export const getRelatedUsers = async () => {
   const response = await axios.get('/api/user/related');
   return response.data;
 }
-  
+
+export const storePermissions = async (user, formData) => {
+  const response = await axios.put(`/api/user/permissions/${user.uuid}`, formData);
+  return response.data;
+};  

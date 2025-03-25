@@ -5,8 +5,8 @@ use Spatie\Permission\Models\Role;
 
 class Assign
 {
-  public function execute(User $user, Role $role): array
+  public function execute(User $user, $roleId): array
   {
-    return $user->roles()->syncWithoutDetaching([$role->id]);
+    return $user->roles()->syncWithoutDetaching([$roleId]);
   }
 }

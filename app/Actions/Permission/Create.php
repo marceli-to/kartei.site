@@ -8,7 +8,8 @@ class Create
   {
     return Permission::create([
       'name' => $data['name'],
-      'guard_name' => $data['guard_name'] ?? 'web'
+      'guard_name' => $data['guard_name'] ?? 'web',
+      'publish' => $data['publish'] ?? false
     ]);
   }
 }

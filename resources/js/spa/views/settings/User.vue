@@ -1,10 +1,21 @@
 <template>
-  <Slide :pull="isCreating || isUpdating">
+  <Slide :pull="isCreating || isUpdating || isSettingPermissions">
     <template v-if="isCreating">
       <CreateUser 
         :archives="selectedArchives"
-        @success="handleUserCreated" 
+        @success="(userData) => handleUserCreated(userData)" 
         @cancel="isCreating = false" />
+    </template>
+    <template v-else-if="isUpdating">
+
+    </template>
+    <template v-else-if="isSettingPermissions">
+      <CreateUserPermissions 
+        :user="createdUser"
+        :selectedArchives="selectedArchives"
+        @success="handleUserPermissionsUpdated"
+        @cancel="isSettingPermissions = false"
+        v-if="createdUser" />
     </template>
     <template v-else>
       <div class="flex flex-col gap-y-48">
@@ -74,14 +85,17 @@ import InputSearch from '@/components/forms/Search.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import Action from '@/components/buttons/Action.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
+import CreateUserPermissions from '@/views/settings/partials/CreateUserPermissions.vue';
 
 const archives = ref([]);
 const relatedUsers = ref([]);
+const createdUser = ref(null);
 const search = ref('');
 const selectedArchives = ref([]);
 const isLoading = ref(true);
 const isCreating = ref(false);
 const isUpdating = ref(false);
+const isSettingPermissions = ref(false);
 
 onMounted(async () => {
   try {
@@ -89,10 +103,9 @@ onMounted(async () => {
     const archivesResponse = await getArchivesByAdmin();
 
     archives.value = archivesResponse.map(archive => ({
-      value: archive.uuid, // Use appropriate unique identifier
-      label: archive.title // Use appropriate display field
+      value: archive.uuid,
+      label: archive.title
     }));
-
 
     const relatedUsersResponse = await getRelatedUsers();
     relatedUsers.value = relatedUsersResponse.data || [];
@@ -145,12 +158,18 @@ const groupedUsers = computed(() => {
   return grouped;
 });
 
-const handleUserCreated = () => {
+const handleUserCreated = (userData) => {
+  createdUser.value = userData;
+  isSettingPermissions.value = true;
   isCreating.value = false;
 };
 
 const handleUserUpdated = () => {
   isUpdating.value = false;
+};
+
+const handleUserPermissionsUpdated = () => {
+  isSettingPermissions.value = false;
 };
 
 </script>

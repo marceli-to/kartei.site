@@ -29,7 +29,6 @@ const allSlides = [
     name: "Profil", 
     width: 25, 
     class: "w-3/12", 
-    permission: 'edit.profile',
     component: markRaw(ProfileComponent)
   },
   { 
@@ -45,7 +44,7 @@ const allSlides = [
     name: "Rechnungsadresse", 
     width: 25, 
     class: "w-3/12", 
-    permission: 'edit.billing-address',
+    permission: 'edit.address',
     component: markRaw(BillingAddressComponent)
   },
   { 
@@ -61,7 +60,7 @@ const allSlides = [
     name: "Kundinnen/Kunden", 
     width: 25, 
     class: "w-3/12", 
-    permission: 'edit.company',
+    permission: 'edit.clients',
     component: markRaw(CompnayComponent)
   },
   { 
@@ -69,7 +68,7 @@ const allSlides = [
     name: "Benutzer", 
     width: 25, 
     class: "w-3/12", 
-    permission: 'edit.user',
+    permission: 'edit.users',
     component: markRaw(UserComponent)
   },
   { 
@@ -77,7 +76,6 @@ const allSlides = [
     name: "Erscheinungsbild", 
     width: 25, 
     class: "w-3/12", 
-    permission: 'use.themes',
     component: markRaw(ThemeComponent)
   },
   { 
@@ -85,14 +83,15 @@ const allSlides = [
     name: "Löschen", 
     width: 25, 
     class: "w-3/12", 
-    permission: 'delete.account',
     component: markRaw(AccountDeleteComponent)
   }
 ];
 
 // Filter sections based on permissions
 const slides = computed(() => {
-  return allSlides.filter(section => userStore.can(section.permission));
+  return allSlides.filter(section => 
+    !section.permission || userStore.can(section.permission)
+  );
 });
 
 function handleSlideChange(newIndex) {

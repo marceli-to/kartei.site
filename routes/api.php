@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
 use App\Http\Controllers\Api\UserThemeController;
 use App\Http\Controllers\Api\UserCompanyController;
+use App\Http\Controllers\Api\UserPermissionController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
@@ -39,7 +40,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/user', [UserController::class, 'create']);
   Route::get('/user/profile', [UserController::class, 'find']);
   Route::put('/user/profile', [UserController::class, 'update']);
-  Route::get('/user/permissions', [UserController::class, 'permissions']);
   Route::post('/user/password', [UserController::class, 'password']);
   Route::delete('/user', [UserController::class, 'destroy']);
 
@@ -62,7 +62,16 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/user/company', [UserCompanyController::class, 'create']);
   Route::put('/user/company/{company:uuid}', [UserCompanyController::class, 'update']);
   Route::delete('/user/company/{company:uuid}', [UserCompanyController::class, 'destroy']);
+
+  // User permissions
+  Route::get('/user/permissions', [UserPermissionController::class, 'get']);
+  Route::put('/user/permissions/{user:uuid}', [UserPermissionController::class, 'store']);
   
+
+  // User routes (dynamic)
+  Route::get('/user/{user:uuid}', [UserController::class, 'find']);
+  // Route::put('/user/{uuid}/permissions', [UserController::class, 'updatePermissions']);
+
   // Subscription plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 
@@ -74,7 +83,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Permissions and roles
   Route::get('/permissions', [PermissionController::class, 'get']);
+  Route::get('/permissions/role/{role}', [PermissionController::class, 'getByRole']);
+  Route::get('/permissions/user/{user}', [PermissionController::class, 'getByUser']);
   Route::get('/roles', [RoleController::class, 'get']);
+  Route::get('/roles/permissions', [RoleController::class, 'getWithPermissions']);
 
   
 });

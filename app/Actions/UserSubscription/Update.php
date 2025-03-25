@@ -8,7 +8,6 @@ class Update
 {
   public function execute(array $data, User $user): UserSubscription
   {
-
     $plan = SubscriptionPlan::where('uuid', $data['subscription'])->first();
 
     if (!$plan) {

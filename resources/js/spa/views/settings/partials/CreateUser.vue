@@ -84,7 +84,7 @@ const submit = async () => {
       archives: props.archives
     };
     const response = await createUser(userData);
-    emit('success', response.data);
+    emit('success', response);
   }
   catch (error) {
     errors.value = {

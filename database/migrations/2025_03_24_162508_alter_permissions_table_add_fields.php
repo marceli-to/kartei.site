@@ -16,7 +16,7 @@ return new class extends Migration
         $table->string('group_key')->nullable()->after('display_name');
         $table->string('group_name')->nullable()->after('group_key');
         $table->integer('order')->default(0)->after('group_name');
-        $table->boolean('visible')->default(1)->after('order');
+        $table->boolean('publish')->default(1)->after('order');
       });
     }
 

@@ -23,7 +23,7 @@ class UserAssignRole extends Command
     $roleId = array_search($choice, $roles);
     $role = Role::find($roleId);
 
-    (new AssignRoleAction())->execute($user, $role);
+    (new AssignRoleAction())->execute($user, $role->id);
     $this->info('Role ' . $role->name . ' assigned to user ' . $user->email);
   }
 }
