@@ -1,10 +1,5 @@
 import axios from 'axios';
 
-export const createUser = async (userData) => {
-  const response = await axios.post('/api/user', userData);
-  return response.data;
-};
-
 export const getUserPermissions = async () => {
   const response = await axios.get('/api/user/permissions');
   return response.data;
@@ -87,11 +82,6 @@ export const updateUserCompany = async (companyData) => {
 
 export const deleteUserCompany = async (uuid) => {
   const response = await axios.delete(`/api/user/company/${uuid}`);
-  return response.data;
-}
-
-export const getRelatedUsers = async () => {
-  const response = await axios.get('/api/user/related');
   return response.data;
 }
 

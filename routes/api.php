@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
+use App\Http\Controllers\Api\ArchiveUserController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
@@ -37,8 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Users
   Route::get('/users', [UserController::class, 'get']);
-  Route::get('/user/related', [UserController::class, 'related']);
-  Route::post('/user', [UserController::class, 'create']);
   Route::get('/user/profile', [UserController::class, 'find']);
   Route::put('/user/profile', [UserController::class, 'update']);
   Route::post('/user/password', [UserController::class, 'password']);
@@ -82,6 +81,13 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archives/admin', [ArchiveController::class, 'getByAdmin']);
   Route::get('/archives/user/{userId}', [ArchiveController::class, 'getByUser']);
   Route::get('/archives/all', [ArchiveController::class, 'getAll']);
+
+  // Archive User
+  Route::post('/archive/user', [ArchiveUserController::class, 'create']);
+  Route::get('/archive/user/related', [ArchiveUserController::class, 'related']);
+  Route::get('/archive/user/{uuid}', [ArchiveUserController::class, 'find']);
+  Route::put('/archive/user/{uuid}', [ArchiveUserController::class, 'update']);
+  Route::delete('/archive/user/{uuid}', [ArchiveUserController::class, 'destroy']);
 
   // Permissions and roles
   Route::get('/permissions', [PermissionController::class, 'get']);

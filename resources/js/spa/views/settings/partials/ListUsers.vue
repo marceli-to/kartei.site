@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { getRelatedUsers } from '@/services/api/user';
+import { getRelatedUsers } from '@/services/api/archiveUser';
 import InputSearch from '@/components/forms/Search.vue';
 import Action from '@/components/buttons/Action.vue';
 

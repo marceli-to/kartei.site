@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { createUser } from '@/services/api/user';
+import { createUser } from '@/services/api/archiveUser';
 import { useToastStore } from '@/components/toast/stores/toast';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
