@@ -105,6 +105,8 @@ const permissionsCard = ref([]);
 const permissionsCardEdit = ref([]);
 const permissionsByRole = ref([]);
 
+const defaultRole = 3;
+
 // Archive permissions map to track permissions for each archive
 const archivePermissionsMap = ref({});
 
@@ -116,7 +118,7 @@ const props = defineProps({
 });
 
 const form = ref({
-  role: 3, // Manager as default
+  role: defaultRole,
   selectedPermissions: []
 });
 
@@ -174,7 +176,7 @@ const fetchArchives = async () => {
     // We'll set them when the archive is selected
     archives.value.forEach(archive => {
       archivePermissionsMap.value[archive.uuid] = {
-        role: 3,
+        role: defaultRole,
         selectedPermissions: []
       };
     });
@@ -211,7 +213,7 @@ const handleArchivesChange = () => {
       form.value.selectedPermissions = [...archivePermissionsMap.value[firstArchive].selectedPermissions];
     } else {
       // If permissions differ or any archive has empty permissions, set default role and apply role permissions
-      form.value.role = 3; // Manager as default
+      form.value.role = defaultRole; // Manager as default
       
       // Trigger role change to load default permissions for this role
       setTimeout(() => {
@@ -220,7 +222,7 @@ const handleArchivesChange = () => {
     }
   } else {
     // No archives selected, reset form
-    form.value.role = 3;
+    form.value.role = defaultRole;
     form.value.selectedPermissions = [];
   }
 };

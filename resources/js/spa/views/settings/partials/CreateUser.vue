@@ -57,9 +57,9 @@ const emit = defineEmits(['success', 'cancel']);
 const isSaving = ref(false);
 
 const form = ref({
-  firstname: '',
-  name: '',
-  email: '',
+  firstname: 'Miyu',
+  name: 'Morf',
+  email: 'Miyu.Morf@kartei.site',
 });
 
 const errors = ref({
