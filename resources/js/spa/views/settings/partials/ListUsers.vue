@@ -6,17 +6,17 @@
         placeholder="Suche"
         aria-label="Suche" />
     </div>
-    <div>
-      <div v-for="(users, role) in groupedUsers" :key="role" class="mb-24">
-        <h3 class="text-sm mb-4 block">{{ role || 'Andere' }}</h3>
-        <div class="flex flex-col gap-y-8">
-          <Action 
-            v-for="user in users" 
-            :key="user.uuid"
-            :label="`${user.firstname} ${user.name}`"
-            :icon="{ name: 'ChevronRight' }"
-            @click="$emit('user-selected', user)" />
-        </div>
+    <div v-for="(users, role) in groupedUsers" :key="role" class="mb-24">
+      <h3 class="text-sm mb-4 block">
+        {{ role || 'Andere' }}
+      </h3>
+      <div class="flex flex-col gap-y-8">
+        <Action 
+          v-for="user in users" 
+          :key="user.uuid"
+          :label="`${user.firstname} ${user.name}`"
+          :icon="{ name: 'ChevronRight' }"
+          @click="$emit('user-selected', user)" />
       </div>
     </div>
   </div>
@@ -41,6 +41,7 @@ const fetchUsers = async () => {
     isLoading.value = true;
     const response = await getRelatedUsers();
     users.value = response.data || [];
+    console.log(users.value);
   } catch (error) {
     console.error('Failed to fetch users:', error);
   } finally {

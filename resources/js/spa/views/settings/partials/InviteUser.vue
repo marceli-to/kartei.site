@@ -1,15 +1,9 @@
 <template>
   <div class="w-full h-full flex flex-col justify-between pb-16">
     <div>
-
-      <ButtonAuth 
-        label="Einladungslink versenden"
-        @click="send" 
-        :disabled="isSending" />
-
-      <p class="text-sm p-8">Mit Abschicken des Einladungslinks erhält [user.firstname] [user.lastname] Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
+      <ButtonAuth label="Einladungslink versenden" @click="send" :disabled="isSending" />
+      <p class="text-sm p-8 mt-8">Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
     </div>
-
     <ButtonGroup>
       <ButtonPrimary 
         @click="$emit('cancel')" 
@@ -46,7 +40,7 @@ const send = async () => {
   try {
     isSending.value = true;
     await sendInvitation(props.user, props.selectedArchives);
-    toast.show('Einladungslink wurde versandt.', 'success');
+    toast.show('Einladungslink wurde versendet.', 'success');
     emit('success');
   } 
   catch (error) {
