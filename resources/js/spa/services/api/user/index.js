@@ -21,7 +21,7 @@ export const updateUserProfile = async (userData) => {
 };
 
 export const updatePassword = async (passwordData) => {
-  const response = await axios.post('api/user/password', passwordData);
+  const response = await axios.post('/api/user/password', passwordData);
   return response.data;
 };
 
@@ -104,4 +104,3 @@ export const sendInvitation = async (user, archives) => {
   const response = await axios.post(`/api/user/invite/${user.uuid}`, { archives });
   return response.data;
 };
-  
