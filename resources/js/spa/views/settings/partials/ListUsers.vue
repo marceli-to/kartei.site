@@ -53,7 +53,6 @@ const fetchUsers = async () => {
     isLoading.value = true;
     const response = await getRelatedUsers();
     users.value = response.data || [];
-    console.log(users.value);
   } catch (error) {
     console.error('Failed to fetch users:', error);
   } finally {

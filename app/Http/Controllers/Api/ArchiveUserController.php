@@ -10,9 +10,16 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\UserRelatedResource;
 use App\Actions\User\Create as CreateUserAction;
 use App\Actions\User\Related as RelatedAction;
+use App\Models\User;
 
 class ArchiveUserController extends Controller
 {
+
+  public function find(Request $request, User $user): UserResource
+  {
+    return new UserResource($user);
+  }
+  
   public function create(StoreRequest $request): UserResource
   {
     return new UserResource(
@@ -23,6 +30,12 @@ class ArchiveUserController extends Controller
         )
       )
     );
+  }
+
+  public function update(StoreRequest $request, User $user): UserResource
+  {
+    $user->update($request->all());
+    return new UserResource($user);
   }
 
   public function related(Request $request): AnonymousResourceCollection
