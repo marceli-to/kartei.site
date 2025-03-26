@@ -17,5 +17,13 @@ class UserSeeder extends Seeder
       'password' => \Hash::make('7aq31rr23'),
       'email_verified_at' => '2025-01-22 18:11:24'
     ]);
+
+    User::create([
+      'firstname' => 'Benedikt',
+      'name' => 'Flüeler',
+      'email' => 'bf@wbg.ch',
+      'password' => \Hash::make('9xv42tt45'),
+      'email_verified_at' => '2025-01-22 18:11:24'
+    ]);
   }
 }
