@@ -122,7 +122,7 @@ const submit = async () => {
     };
     
     const userData = { ...form.value };
-    const response = await updateUser(props.userId, userData);
+    const response = await updateUser(props.uuid, userData);
     
     toast.show('Benutzer/in erfolgreich aktualisiert.', 'success');
     emit('success', response);
