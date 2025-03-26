@@ -21,4 +21,4 @@ INSTALL.txt
 /composer.phar
 /.nova
 /composer.lock
-/public/media/luppmenpark.mp4
+/public/.htaccess
