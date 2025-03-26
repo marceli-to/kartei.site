@@ -6,20 +6,21 @@
         placeholder="Suche"
         aria-label="Suche" />
     </div>
-    <div v-for="(users, role) in groupedUsers" :key="role" class="mb-24">
-      <h3 class="text-sm mb-4 block">
-        {{ role || 'Andere' }}
-      </h3>
-      <div class="flex flex-col gap-y-8">
-        <Action 
-          v-for="user in users" 
-          :key="user.uuid"
-          :label="`${user.firstname} ${user.name}`"
-          :icon="{ name: 'ChevronRight' }"
-          @click="$emit('user-selected', user)" />
+    <div class="flex flex-col gap-y-20">
+      <div v-for="(users, role) in groupedUsers" :key="role">
+        <h3 class="text-sm mb-4 block">
+          {{ role || 'Andere' }}
+        </h3>
+        <div class="flex flex-col gap-y-8">
+          <Action 
+            v-for="user in users" 
+            :key="user.uuid"
+            :label="`${user.firstname} ${user.name}`"
+            :icon="{ name: 'ChevronRight' }"
+            @click="$emit('user-selected', user)" />
+        </div>
       </div>
     </div>
-    
     <!-- Add user button -->
     <div>
       <Action 
