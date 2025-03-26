@@ -12,12 +12,13 @@ class ArchiveUserSeeder extends Seeder
    */
   public function run(): void
   {
-    $user = User::first();
+    $users = User::all();
     $archives = Archive::all();
 
     // Add user to all archives
-    $user->archives()->attach($archives);
-
+    foreach ($user as $user) {
+      $user->archives()->attach($archives);
+    }
     // Create a user with role 'Viewer'
     // $viewer = User::create([
     //   'firstname' => 'Gabi',
