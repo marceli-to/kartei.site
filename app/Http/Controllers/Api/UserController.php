@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
@@ -56,7 +57,7 @@ class UserController extends Controller
     ]);
   }
 
-  public function password(UpdatePasswordRequest $request): JsonResponse
+  public function password(UpdatePasswordRequest $request): Response
   {
     (new UpdatePasswordAction())->execute(
       $request->all(), 
@@ -65,7 +66,7 @@ class UserController extends Controller
     return response()->noContent();
   }
 
-  public function destroy(Request $request)
+  public function destroy(Request $request): Response
   {
     (new DeleteUserAction())->execute(auth()->user());
     Auth::guard('web')->logout();

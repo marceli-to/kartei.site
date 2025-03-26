@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Requests\UserSubscription\UpdateRequest;
 use App\Http\Resources\UserSubscriptionResource;
 use App\Actions\UserSubscription\Get as GetUserSubscriptionAction;
@@ -18,7 +19,7 @@ class UserSubscriptionController extends Controller
     return new UserSubscriptionResource($subscription);
   }
 
-  public function update(UpdateRequest $request)
+  public function update(UpdateRequest $request): Response
   {
     (new UpdateUserSubscriptionAction())->execute(
       $request->all(),
