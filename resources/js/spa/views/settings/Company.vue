@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { getUserCompanies } from '@/services/api/user';
 import Slide from '@/components/slider/Slide.vue';
@@ -135,6 +135,13 @@ onMounted(async () => {
   } 
   finally {
     isLoading.value = false;
+  }
+});
+
+watch(() => props.isActive, (isActive) => {
+  if (isActive) {
+    isCreating.value = false;
+    isUpdating.value = false;
   }
 });
 </script>

@@ -43,7 +43,7 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
 import UpdateUser from '@/views/settings/partials/UpdateUser.vue';
@@ -55,6 +55,13 @@ const userListRef = ref(null);
 const createdUser = ref(null);
 const selectedUser = ref(null);
 const viewState = ref('listing');
+
+const props = defineProps({
+  isActive: {
+    type: Boolean,
+    default: false
+  }
+});
 
 const handleUserSelected = (user) => {
   selectedUser.value = user;
@@ -106,4 +113,11 @@ const resetView = () => {
     userListRef.value.resetSearch();
   }
 };
+
+// Watch for when this slide becomes active
+watch(() => props.isActive, (isActive) => {
+  if (isActive) {
+    resetView();
+  }
+});
 </script>
