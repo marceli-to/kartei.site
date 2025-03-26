@@ -1,46 +1,52 @@
 <template>
   <form 
     @submit.prevent="submit" 
-    class="w-full h-full flex flex-col justify-between" 
+    class="w-full h-full flex flex-col gap-y-32 justify-between" 
     v-if="!isLoading">
-    <div class="flex flex-col gap-y-20">
-      <InputGroup>
-        <InputLabel label="Vorname" id="firstname" required />
-        <InputText 
-          v-model="form.firstname" 
-          id="firstname" 
-          :error="errors.firstname" 
-          @update:error="errors.firstname = $event" 
-          :placeholder="errors.firstname ? errors.firstname : 'Vorname'" 
-          required 
-        />
-      </InputGroup>
+    <div class="flex flex-col gap-y-32">
+      <div class="flex flex-col gap-y-20">
+        <InputGroup>
+          <InputLabel label="Vorname" id="firstname" required />
+          <InputText 
+            v-model="form.firstname" 
+            id="firstname" 
+            :error="errors.firstname" 
+            @update:error="errors.firstname = $event" 
+            :placeholder="errors.firstname ? errors.firstname : 'Vorname'" 
+            required 
+          />
+        </InputGroup>
 
-      <InputGroup>
-        <InputLabel label="Nachname" id="name" required />
-        <InputText 
-          v-model="form.name" 
-          id="name" 
-          :error="errors.name" 
-          @update:error="errors.name = $event" 
-          :placeholder="errors.name ? errors.name : 'Nachname'" 
-          required 
-        />
-      </InputGroup>
+        <InputGroup>
+          <InputLabel label="Nachname" id="name" required />
+          <InputText 
+            v-model="form.name" 
+            id="name" 
+            :error="errors.name" 
+            @update:error="errors.name = $event" 
+            :placeholder="errors.name ? errors.name : 'Nachname'" 
+            required 
+          />
+        </InputGroup>
 
-      <InputGroup>
-        <InputLabel label="E-Mail" id="email" required />
-        <InputText 
-          v-model="form.email" 
-          id="email" 
-          :error="errors.email" 
-          @update:error="errors.email = $event" 
-          :placeholder="errors.email ? errors.email : 'E-Mail'" 
-          required 
-        />
-      </InputGroup>
+        <InputGroup>
+          <InputLabel label="E-Mail" id="email" required />
+          <InputText 
+            v-model="form.email" 
+            id="email" 
+            :error="errors.email" 
+            @update:error="errors.email = $event" 
+            :placeholder="errors.email ? errors.email : 'E-Mail'" 
+            required 
+          />
+        </InputGroup>
+      </div>
+      <Action 
+        type="button"
+        label="Rechte"
+        :icon="{ name: 'ChevronRight' }"
+        @click="$emit('user-selected-permissions', userData)" />
     </div>
-
     <ButtonGroup>
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
       <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
@@ -57,19 +63,21 @@ import InputText from '@/components/forms/Text.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
+import Action from '@/components/buttons/Action.vue';
 
 const props = defineProps({
-  userId: {
+  uuid: {
     type: [String, Number],
     required: true
   }
 });
 
 const toast = useToastStore();
-const emit = defineEmits(['success', 'cancel']);
+const emit = defineEmits(['success', 'cancel', 'user-selected-permissions']);
 
 const isLoading = ref(true);
 const isSaving = ref(false);
+const userData = ref('');
 
 const form = ref({
   firstname: '',
@@ -86,13 +94,13 @@ const errors = ref({
 onMounted(async () => {
   try {
     isLoading.value = true;
-    const userData = await findUser(props.userId);
+    userData.value = await findUser(props.uuid);
     
     // Populate form with user data
     form.value = {
-      firstname: userData.firstname || '',
-      name: userData.name || '',
-      email: userData.email || '',
+      firstname: userData.value.firstname || '',
+      name: userData.value.name || '',
+      email: userData.value.email || '',
     };
   } catch (error) {
     console.error('Failed to fetch user data:', error);

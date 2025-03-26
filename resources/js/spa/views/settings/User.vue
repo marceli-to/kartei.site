@@ -9,15 +9,16 @@
 
     <template v-if="viewState === 'updating'">
       <UpdateUser 
-        :userId="selectedUser.uuid"
+        :uuid="selectedUser.uuid"
         @success="handleUserUpdated"
+        @user-selected-permissions="handleUserSelectedPermissions"
         @cancel="resetView()" />
     </template>
 
-    <template v-if="viewState === 'settingPermissions'">
+    <template v-if="viewState === 'createPermissions'">
       <CreateUserPermissions 
         :user="createdUser"
-        @success="handleUserPermissionsUpdated"
+        @success="handleUserPermissionsCreated"
         @cancel="resetView()" />
     </template>
 
@@ -62,7 +63,7 @@ const handleUserSelected = (user) => {
 
 const handleUserCreated = (userData) => {
   createdUser.value = userData;
-  viewState.value = 'settingPermissions';
+  viewState.value = 'createPermissions';
 };
 
 const handleUserUpdated = () => {
@@ -70,9 +71,14 @@ const handleUserUpdated = () => {
   refreshUserList();
 };
 
-const handleUserPermissionsUpdated = () => {
+const handleUserPermissionsCreated = () => {
   viewState.value = 'notifying';
 };
+
+const handleUserSelectedPermissions = (user) => {
+  console.log(user);
+  viewState.value = 'listing';
+};  
 
 const handleUserNotified = () => {
   resetView();
