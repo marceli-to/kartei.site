@@ -4,19 +4,20 @@
     class="w-full h-full flex flex-col justify-between"
     v-if="!isLoading">
     <div class="flex flex-col gap-y-20">
-      <!-- Archive Selection -->
       <InputGroup>
-        <InputLabel label="Kartei" id="archive_selection" />
-        <InputSelect
+        <InputLabel :label="archiveOptions.length > 1 ? 'Kartei/en' : 'Kartei'" id="archive_selection" />
+        <InputSelectButtons
           id="archive_selection"
-          v-model="selectedArchive"
+          v-model="selectedArchives"
+          :multiple="true"
+          name="archive_selection"
+          wrapperClasses="flex flex-col gap-y-8"
           :options="archiveOptions"
-          placeholder="Kartei auswählen"
-          @change="handleArchiveChange"
+          @change="handleArchivesChange"
         />
       </InputGroup>
 
-      <div v-if="selectedArchive" class="flex flex-col gap-y-20">
+      <div :class="{'opacity-20 select-none pointer-events-none': selectedArchives.length === 0}" class="flex flex-col gap-y-20">
         <InputGroup>
           <InputLabel label="Rechte" id="role" />
           <InputSelect
@@ -74,7 +75,7 @@
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
+      <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving || selectedArchives.length === 0" />
     </ButtonGroup>
   </form>
 </template>
@@ -96,7 +97,7 @@ const toast = useToastStore();
 const roles = ref([]);
 const permissions = ref([]);
 const archives = ref([]);
-const selectedArchive = ref('');
+const selectedArchives = ref([]);
 
 const permissionsArchive = ref([]);
 const permissionsArchiveEdit = ref([]);
@@ -148,11 +149,11 @@ onMounted(async () => {
     
     // Select the first archive by default if available
     if (archives.value.length > 0) {
-      selectedArchive.value = archives.value[0].uuid;
+      selectedArchives.value = [archives.value[0].uuid];
       // Make sure to set default permissions for the Manager role
       setTimeout(() => {
         handleRoleChange();
-        handleArchiveChange();
+        handleArchivesChange();
       }, 0);
     }
   }
@@ -182,35 +183,67 @@ const fetchArchives = async () => {
   }
 };
 
-const handleArchiveChange = () => {
-  if (selectedArchive.value) {
-    // Load permissions for the selected archive if they exist
-    if (archivePermissionsMap.value[selectedArchive.value] && 
-        archivePermissionsMap.value[selectedArchive.value].selectedPermissions.length > 0) {
-      // Archive already has permissions set
-      form.value.role = archivePermissionsMap.value[selectedArchive.value].role;
-      form.value.selectedPermissions = [...archivePermissionsMap.value[selectedArchive.value].selectedPermissions];
+const handleArchivesChange = () => {
+  if (selectedArchives.value.length > 0) {
+    // Check if the newly selected archives have different permissions
+    const firstArchive = selectedArchives.value[0];
+    
+    // Check if any selected archive has empty permissions
+    const hasEmptyPermissions = selectedArchives.value.some(archiveId => {
+      const archivePermissions = archivePermissionsMap.value[archiveId];
+      return !archivePermissions.selectedPermissions || 
+             archivePermissions.selectedPermissions.length === 0;
+    });
+    
+    // Check if all selected archives have the same permissions
+    const samePermissions = selectedArchives.value.every(archiveId => {
+      const archivePermissions = archivePermissionsMap.value[archiveId];
+      const firstArchivePermissions = archivePermissionsMap.value[firstArchive];
+      
+      // Check if permissions are the same (role and selectedPermissions)
+      return archivePermissions.role === firstArchivePermissions.role && 
+             arraysEqual(archivePermissions.selectedPermissions, firstArchivePermissions.selectedPermissions);
+    });
+    
+    if (samePermissions && !hasEmptyPermissions) {
+      // If all selected archives have the same permissions, use those
+      form.value.role = archivePermissionsMap.value[firstArchive].role;
+      form.value.selectedPermissions = [...archivePermissionsMap.value[firstArchive].selectedPermissions];
     } else {
-      // Set default role and permissions for this archive
+      // If permissions differ or any archive has empty permissions, set default role and apply role permissions
       form.value.role = 3; // Manager as default
       
-      // Find the role and set its permissions
+      // Trigger role change to load default permissions for this role
       setTimeout(() => {
         handleRoleChange();
       }, 0);
     }
+  } else {
+    // No archives selected, reset form
+    form.value.role = 3;
+    form.value.selectedPermissions = [];
   }
+};
+
+// Helper function to compare arrays
+const arraysEqual = (a, b) => {
+  if (a.length !== b.length) return false;
+  const sortedA = [...a].sort();
+  const sortedB = [...b].sort();
+  return sortedA.every((val, idx) => val === sortedB[idx]);
 };
 
 // Helper method to save current selections to the map
 const saveCurrentPermissionsToMap = () => {
-  const previousArchive = selectedArchive.value;
-  if (previousArchive && archivePermissionsMap.value[previousArchive]) {
-    archivePermissionsMap.value[previousArchive] = {
-      role: form.value.role,
-      selectedPermissions: [...form.value.selectedPermissions]
-    };
-  }
+  // Save the current permissions to all selected archives
+  selectedArchives.value.forEach(archiveId => {
+    if (archivePermissionsMap.value[archiveId]) {
+      archivePermissionsMap.value[archiveId] = {
+        role: form.value.role,
+        selectedPermissions: [...form.value.selectedPermissions]
+      };
+    }
+  });
 };
 
 const submit = async () => {
@@ -310,17 +343,6 @@ const fetchRolesWithPermissions = async () => {
 };
 
 const handleRoleChange = () => {
-  // First save the current permissions if we're changing from one role to another
-  if (selectedArchive.value) {
-    const previousRole = archivePermissionsMap.value[selectedArchive.value]?.role;
-    
-    // If we had a previous role and it's different from the current one,
-    // save the permissions for that role
-    if (previousRole && previousRole !== form.value.role) {
-      saveCurrentPermissionsToMap();
-    }
-  }
-  
   let role = null;
   for (const key in permissionsByRole.value) {
     if (permissionsByRole.value[key].id == form.value.role) {
@@ -336,12 +358,17 @@ const handleRoleChange = () => {
   // Set the selected permissions in the form
   form.value.selectedPermissions = permissionIds;
   
-  // Save to the map if archive is selected
-  if (selectedArchive.value) {
-    archivePermissionsMap.value[selectedArchive.value] = {
-      role: form.value.role,
-      selectedPermissions: [...form.value.selectedPermissions]
-    };
+  // Save to the map if archives are selected
+  if (selectedArchives.value.length > 0) {
+    // Update permissions for all selected archives
+    selectedArchives.value.forEach(archiveId => {
+      if (archivePermissionsMap.value[archiveId]) {
+        archivePermissionsMap.value[archiveId] = {
+          role: form.value.role,
+          selectedPermissions: [...permissionIds]
+        };
+      }
+    });
   }
 };
 </script>
