@@ -1,7 +1,6 @@
 <template>
   <Slide :pull="true">
-    <form 
-      @submit.prevent="handleSubmit"
+    <div 
       class="w-full h-full flex flex-col justify-between"
       v-if="!isLoading">
 
@@ -14,7 +13,8 @@
             name="color_scheme"
             wrapperClasses="w-full flex gap-x-8"
             labelClasses="w-full"
-            :options="colorSchemes" />
+            :options="colorSchemes"
+            @update:modelValue="saveThemeChanges" />
         </InputGroup>
         <InputGroup>
           <InputLabel label="Auszeichnungsfarbe" />
@@ -22,28 +22,19 @@
             v-model="theme.color_theme"
             name="color_theme"
             wrapperClasses="w-full grid grid-cols-2 gap-8"
-            :options="colorThemes" />
+            :options="colorThemes"
+            @update:modelValue="saveThemeChanges" />
         </InputGroup>
       </div>
-
-      <!-- Actions -->
-      <div v-if="isActive">
-        <ButtonGroup>
-          <ButtonPrimary label="Speichern" />
-        </ButtonGroup>
-      </div>
-
-    </form>
+    </div>
   </Slide>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useTheme } from '@/composables/useTheme';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
-import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const props = defineProps({
@@ -64,11 +55,14 @@ const {
   saveTheme 
 } = useTheme();
 
+// Function to save theme changes
+const saveThemeChanges = async () => {
+  if (!isSaving.value) {
+    await saveTheme();
+  }
+};
+
 onMounted(() => {
   fetchTheme();
 });
-
-const handleSubmit = async () => {
-  await saveTheme();
-};
 </script>
