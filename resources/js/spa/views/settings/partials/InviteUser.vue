@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { sendInvitation } from '@/services/api/user';
 import ButtonAuth from '@/components/buttons/Auth.vue';
@@ -20,26 +20,26 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 
 const toast = useToastStore();
+const archivePermissionsMap = inject('archivePermissionsMap', {});
 
 const props = defineProps({
   user: {
     type: Object,
     required: true
-  },
-  selectedArchives: {
-    type: Array,
-    required: true
   }
 });
 
 const emit = defineEmits(['success', 'cancel']);
-
 const isSending = ref(false);
 
 const send = async () => {
   try {
     isSending.value = true;
-    await sendInvitation(props.user, props.selectedArchives);
+    // Get archive IDs from the permissions map
+    const archiveIds = Object.keys(archivePermissionsMap);
+    
+    // Send invitation with only the archives we've assigned permissions to
+    await sendInvitation(props.user, archiveIds);
     toast.show('Einladungslink wurde versendet.', 'success');
     emit('success');
   } 
@@ -51,5 +51,4 @@ const send = async () => {
     isSending.value = false;
   }
 };
-
 </script>

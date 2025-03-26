@@ -51,13 +51,6 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
 
-const props = defineProps({
-  archives: {
-    type: Array,
-    required: true
-  }
-});
-
 const toast = useToastStore();
 const emit = defineEmits(['success', 'cancel']);
 
@@ -67,7 +60,6 @@ const form = ref({
   firstname: '',
   name: '',
   email: '',
-  archives: props.archives
 });
 
 const errors = ref({
@@ -80,10 +72,10 @@ const submit = async () => {
   try {
     isSaving.value = true;
     const userData = {
-      ...form.value,
-      archives: props.archives
+      ...form.value
     };
     const response = await createUser(userData);
+    toast.show('Benutzer/in erfolgreich erstellt.', 'success');
     emit('success', response);
   }
   catch (error) {

@@ -20,25 +20,28 @@ class UserPermissionController extends Controller
 
   public function store(Request $request, User $user)
   {
-    (new AssignRoleAction())->execute($user, $request->role);
+    // Get the permissions data from the request
+    $permissions = $request->permissions;
     
-    (new StoreUserPermissionAction())->execute($user, [
-        'archives' => $request->archives,
-        'selectedPermissions' => $request->selectedPermissions
-      ]
-    );
-
-    foreach($request->archives as $archive)
-    {
-      $archive = (new FindArchiveAction())->execute($archive, true);
-
+    // Process each archive's permissions separately
+    foreach ($permissions as $permission) {
+      // Set role for this archive
+      (new AssignRoleAction())->execute($user, $permission['role']);
+      
+      // Store permissions for this archive
+      (new StoreUserPermissionAction())->execute($user, [
+        'archive' => $permission['archive'],
+        'selectedPermissions' => $permission['selectedPermissions']
+      ]);
+      
+      // Find and attach archive to user
+      $archive = (new FindArchiveAction())->execute($permission['archive'], true);
+      
       if ($archive) {
-        (new AttachArchiveUserAction())->execute($user, $request->role, [$archive]);
+        (new AttachArchiveUserAction())->execute($user, $permission['role'], $archive);
       }
-
     }
-
+    
     return new UserResource($user);
   }
-
 }

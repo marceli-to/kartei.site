@@ -19,6 +19,14 @@
           @click="$emit('user-selected', user)" />
       </div>
     </div>
+    
+    <!-- Add user button -->
+    <div>
+      <Action 
+        label="Benutzer/in" 
+        :icon="{ name: 'Plus', position: 'center' }"
+        @click="$emit('create-user')" />
+    </div>
   </div>
 </template>
 
@@ -31,6 +39,9 @@ import Action from '@/components/buttons/Action.vue';
 const users = ref([]);
 const searchQuery = ref('');
 const isLoading = ref(true);
+
+// Emits
+const emit = defineEmits(['user-selected', 'create-user']);
 
 onMounted(async () => {
   await fetchUsers();

@@ -9,29 +9,52 @@ class Store
 {
   public function execute(User $user, array $data)
   {
-    // Loop over all archives
-    foreach($data['archives'] as $archive)
+    // Find the archive by uuid
+    $archive = (new FindArchiveAction())->execute($data['archive'], true);
+    
+    if (!$archive) {
+      return;
+    }
+    
+    // First, remove any existing permissions for this archive
+    $this->removeExistingPermissions($user, $archive);
+    
+    // Loop over all selected permissions
+    foreach($data['selectedPermissions'] as $permissionId)
     {
-      // Find the archive by uuid
-      $archive = (new FindArchiveAction())->execute($archive, true);
+      // Find the permission
+      $permission = (new FindPermissionAction())->execute($permissionId);
       
-      // Loop over all permissions
-      foreach($data['selectedPermissions'] as $permission)
-      {
-        // Find the permission
-        $permission = (new FindPermissionAction())->execute($permission);
-        
-        // Create the permission
-        $userPermission = (new CreatePermissionAction())->execute([
-          'name' => $permission->name . '.' . $archive->id,
-          'guard_name' => 'web',
-          'publish' => false
-        ]);
-        
-        // Assign the permission to the user
-        $user->givePermissionTo($userPermission);
+      if (!$permission) {
+        continue;
+      }
+      
+      // Create the permission
+      $userPermission = (new CreatePermissionAction())->execute([
+        'name' => $permission->name . '.' . $archive->id,
+        'guard_name' => 'web',
+        'publish' => false
+      ]);
+      
+      // Assign the permission to the user
+      $user->givePermissionTo($userPermission);
+    }
+  }
+  
+  /**
+   * Remove existing permissions for the given archive
+   */
+  private function removeExistingPermissions(User $user, $archive)
+  {
+    // Get all permissions for the user
+    $userPermissions = $user->getAllPermissions();
+    
+    foreach ($userPermissions as $permission) {
+      // Check if this permission is for the current archive
+      if (str_ends_with($permission->name, '.' . $archive->id)) {
+        // Revoke this permission
+        $user->revokePermissionTo($permission);
       }
     }
   }
 }
-
