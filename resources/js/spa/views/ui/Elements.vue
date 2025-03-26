@@ -33,8 +33,8 @@
         <div>
           <h3 class="mb-8 font-muoto-regular">Primary</h3>
           <ButtonGroup>
-            <ButtonPrimary label="Abbrechen" type="button" />
             <ButtonPrimary label="Speichern" />
+            <ButtonPrimary label="Abbrechen" type="button" />
           </ButtonGroup>
         </div>
         <div>

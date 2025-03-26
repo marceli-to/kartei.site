@@ -74,7 +74,6 @@
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
     </ButtonGroup>
   </form>

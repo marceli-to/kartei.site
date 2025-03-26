@@ -60,15 +60,15 @@
                 <slot name="actions">
                   <ButtonGroup>
                     <ButtonPrimary 
-                      :label="content.cancelLabel || 'Abbrechen'" 
-                      type="button"
-                      @click="handleCancel"
-                      v-if="content.onCancel" />
-                    <ButtonPrimary 
                       :label="content.confirmLabel || 'Speichern'"
                       type="button"
                       @click="handleConfirm"
                       v-if="content.onConfirm" />
+                    <ButtonPrimary 
+                      :label="content.cancelLabel || 'Abbrechen'" 
+                      type="button"
+                      @click="handleCancel"
+                      v-if="content.onCancel" />
                   </ButtonGroup>
                 </slot>
               </div>

@@ -35,8 +35,8 @@
       </InputGroup>
     </div>
     <ButtonGroup>
-      <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
+      <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
   </form>
 </template>
