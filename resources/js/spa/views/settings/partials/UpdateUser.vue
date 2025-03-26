@@ -41,11 +41,14 @@
           />
         </InputGroup>
       </div>
+      <div class="flex flex-col gap-y-20">
       <Action 
         type="button"
         label="Rechte"
         :icon="{ name: 'ChevronRight' }"
         @click="$emit('user-selected-permissions', userData)" />
+        <ButtonPrimary label="Löschen" variant="danger" type="button" @click.prevent="showDeleteDialog" />
+      </div>
     </div>
     <ButtonGroup>
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
@@ -56,8 +59,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { findUser, updateUser } from '@/services/api/archiveUser';
+import { findUser, updateUser, deleteUser } from '@/services/api/archiveUser';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useDialogStore } from '@/components/dialog/stores/dialog';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
@@ -65,15 +69,21 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
 
+const toast = useToastStore();
+const dialogStore = useDialogStore();
+const emit = defineEmits([
+  'success', 
+  'cancel', 
+  'user-selected-permissions', 
+  'user-deleted'
+]);
+
 const props = defineProps({
   uuid: {
     type: [String, Number],
     required: true
   }
 });
-
-const toast = useToastStore();
-const emit = defineEmits(['success', 'cancel', 'user-selected-permissions']);
 
 const isLoading = ref(true);
 const isSaving = ref(false);
@@ -137,5 +147,23 @@ const submit = async () => {
   } finally {
     isSaving.value = false;
   }
+};
+
+const showDeleteDialog = () => {
+  dialogStore.show({
+    title: `Möchten Sie den Benutzer/in "${form.value.firstname} ${form.value.name}" wirklich löschen?`,
+    confirmLabel: 'Löschen',
+    cancelLabel: 'Abbrechen',
+    onConfirm: () => {
+      handleDelete();
+    },
+    onCancel: () => {
+    }
+  });
+};
+
+const handleDelete = () => {
+  deleteUser(props.uuid);
+  emit('user-deleted', props.uuid);
 };
 </script>

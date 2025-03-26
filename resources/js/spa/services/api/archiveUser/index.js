@@ -10,6 +10,11 @@ export const createUser = async (userData) => {
   return response.data;
 };
 
+export const deleteUser = async (uuid) => {
+  const response = await axios.delete(`/api/archive/user/${uuid}`);
+  return response.data;
+};
+
 export const updateUser = async (uuid, userData) => {
   const response = await axios.put(`/api/archive/user/${uuid}`, userData);
   return response.data;

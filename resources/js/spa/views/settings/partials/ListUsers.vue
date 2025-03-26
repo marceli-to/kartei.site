@@ -29,44 +29,41 @@
         @click="$emit('create-user')" />
     </div>
   </div>
+  <div v-else class="flex justify-center items-center h-64">
+    <!-- Loading state -->
+    <p>Lade Benutzer...</p>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { getRelatedUsers } from '@/services/api/archiveUser';
+import { ref, computed } from 'vue';
 import InputSearch from '@/components/forms/Search.vue';
 import Action from '@/components/buttons/Action.vue';
 
-const users = ref([]);
 const searchQuery = ref('');
-const isLoading = ref(true);
+
+// Props from parent
+const props = defineProps({
+  users: {
+    type: Array,
+    default: () => []
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
+  }
+});
 
 // Emits
 const emit = defineEmits(['user-selected', 'create-user']);
 
-onMounted(async () => {
-  await fetchUsers();
-});
-
-const fetchUsers = async () => {
-  try {
-    isLoading.value = true;
-    const response = await getRelatedUsers();
-    users.value = response.data || [];
-  } catch (error) {
-    console.error('Failed to fetch users:', error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
 const filteredUsers = computed(() => {
-  if (!users.value || !Array.isArray(users.value)) return [];
+  if (!props.users || !Array.isArray(props.users)) return [];
   
-  if (!searchQuery.value) return users.value;
+  if (!searchQuery.value) return props.users;
   
   const searchTerm = searchQuery.value.toLowerCase().trim();
-  return users.value.filter(user => 
+  return props.users.filter(user => 
     user.firstname?.toLowerCase().includes(searchTerm) ||
     user.name?.toLowerCase().includes(searchTerm) ||
     user.email?.toLowerCase().includes(searchTerm)
@@ -96,7 +93,6 @@ const groupedUsers = computed(() => {
 
 // Expose necessary methods to parent component
 defineExpose({
-  fetchUsers,
   resetSearch: () => { searchQuery.value = ''; }
 });
 </script>

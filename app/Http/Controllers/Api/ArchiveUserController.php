@@ -9,6 +9,8 @@ use App\Http\Requests\User\StoreRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserRelatedResource;
 use App\Actions\User\Create as CreateUserAction;
+use App\Actions\User\Update as UpdateUserAction;
+use App\Actions\User\Delete as DeleteUserAction;
 use App\Actions\User\Related as RelatedAction;
 use App\Models\User;
 
@@ -34,7 +36,7 @@ class ArchiveUserController extends Controller
 
   public function update(StoreRequest $request, User $user): UserResource
   {
-    $user->update($request->all());
+    (new UpdateUserAction())->execute($request->all(), $user);
     return new UserResource($user);
   }
 
@@ -45,5 +47,10 @@ class ArchiveUserController extends Controller
     );
   }
 
+  public function destroy(Request $request, User $user): Response
+  {
+    (new DeleteUserAction())->execute($user);
+    return response()->noContent();
+  }
 
 }

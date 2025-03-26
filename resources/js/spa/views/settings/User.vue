@@ -11,6 +11,7 @@
       <UpdateUser 
         :uuid="selectedUser.uuid"
         @success="handleUserUpdated"
+        @user-deleted="handleUserDeleted"
         @user-selected-permissions="handleUserSelectedPermissions"
         @cancel="resetView()" />
     </template>
@@ -22,6 +23,13 @@
         @cancel="resetView()" />
     </template>
 
+    <template v-if="viewState === 'updatePermissions'">
+      <!-- <UpdateUserPermissions 
+        :user="selectedUser"
+        @success="handleUserPermissionsUpdated"
+        @cancel="resetView()" /> -->
+    </template>
+
     <template v-if="viewState === 'notifying'">
       <InviteUser 
         :user="createdUser"
@@ -30,20 +38,20 @@
     </template>
 
     <template v-if="viewState === 'listing'">
-      <div class="flex flex-col gap-y-48">
-        <!-- User list with search-->
-        <ListUsers 
-          ref="userListRef"
-          @user-selected="handleUserSelected"
-          @create-user="viewState = 'creating'" />
-        <!-- // User list with search-->
-      </div>
+      <ListUsers 
+        ref="userListRef"
+        :users="users"
+        :isLoading="isLoadingUsers"
+        @user-selected="handleUserSelected"
+        @create-user="viewState = 'creating'" />
     </template>
 
   </Slide>
 </template>
+
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { getRelatedUsers } from '@/services/api/archiveUser';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
 import UpdateUser from '@/views/settings/partials/UpdateUser.vue';
@@ -55,12 +63,32 @@ const userListRef = ref(null);
 const createdUser = ref(null);
 const selectedUser = ref(null);
 const viewState = ref('listing');
+const users = ref([]);
+const isLoadingUsers = ref(false);
 
 const props = defineProps({
   isActive: {
     type: Boolean,
     default: false
   }
+});
+
+// Fetch users from API
+const fetchUsers = async () => {
+  try {
+    isLoadingUsers.value = true;
+    const response = await getRelatedUsers();
+    users.value = response.data || [];
+  } catch (error) {
+    console.error('Failed to fetch users:', error);
+  } finally {
+    isLoadingUsers.value = false;
+  }
+};
+
+// Load users when component mounts
+onMounted(() => {
+  fetchUsers();
 });
 
 const handleUserSelected = (user) => {
@@ -75,7 +103,7 @@ const handleUserCreated = (userData) => {
 
 const handleUserUpdated = () => {
   resetView();
-  refreshUserList();
+  fetchUsers(); // Refresh user list
 };
 
 const handleUserPermissionsCreated = () => {
@@ -83,19 +111,22 @@ const handleUserPermissionsCreated = () => {
 };
 
 const handleUserSelectedPermissions = (user) => {
-  console.log(user);
-  viewState.value = 'listing';
-};  
+  selectedUser.value = user;
+  viewState.value = 'updatePermissions';
+}; 
+
+const handleUserDeleted = () => {
+  resetView();
+  fetchUsers(); // Refresh user list
+};
 
 const handleUserNotified = () => {
   resetView();
-  refreshUserList();
+  fetchUsers(); // Refresh user list
 };
 
 const refreshUserList = () => {
-  if (userListRef.value) {
-    userListRef.value.fetchUsers();
-  }
+  fetchUsers(); // Simplified - directly fetch users
 };
 
 const resetView = () => {
@@ -118,6 +149,7 @@ const resetView = () => {
 watch(() => props.isActive, (isActive) => {
   if (isActive) {
     resetView();
+    fetchUsers(); // Refresh users when slide becomes active
   }
 });
 </script>

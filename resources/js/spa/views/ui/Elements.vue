@@ -369,10 +369,8 @@ function showDialog() {
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
     onConfirm: () => {
-      // console.log('Save clicked');
     },
     onCancel: () => {
-      // console.log('Cancel clicked');
     }
   });
 }

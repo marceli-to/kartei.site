@@ -1,18 +1,18 @@
 <template>
-  <Slide :pull="isCreating || isUpdating">
-    <template v-if="isCreating">
+  <Slide :pull="viewState !== 'listing'">
+    <template v-if="viewState === 'creating'">
       <CreateCompany 
         @success="handleCompanyCreated" 
-        @cancel="isCreating = false" />
+        @cancel="resetView()" />
     </template>
-    <template v-else-if="isUpdating">
+    <template v-else-if="viewState === 'updating'">
       <UpdateCompany 
-        :company="company"
+        :company="selectedCompany"
         @delete="handleCompanyDeleted"
         @success="handleCompanyUpdated" 
-        @cancel="isUpdating = false" />
+        @cancel="resetView()" />
     </template>
-    <template v-else>
+    <template v-else-if="viewState === 'listing'">
       <div 
         class="flex flex-col gap-y-32" 
         v-if="!isLoading">
@@ -26,7 +26,7 @@
           <Action 
             label="Kunde/Kundin" 
             :icon="{ name: 'Plus', position: 'center' }"
-            @click="isCreating = true" />
+            @click="viewState = 'creating'" />
         </div>
         <div>
           <Sort 
@@ -70,11 +70,10 @@ const props = defineProps({
 
 const search = ref('');
 const companies = ref([]);
-const company = ref(null);
+const selectedCompany = ref(null);
 const isAscending = ref(true);
-const isCreating = ref(false);
-const isUpdating = ref(false);
 const isLoading = ref(true);
+const viewState = ref('listing');
 
 const filteredCompanies = computed(() => {
   if (!companies.value) return [];
@@ -102,27 +101,35 @@ const sort = () => {
   isAscending.value = !isAscending.value;
 };
 
-const showCompany = (selectedCompany) => {
-  company.value = selectedCompany;
-  isUpdating.value = true;
+const showCompany = (company) => {
+  selectedCompany.value = company;
+  viewState.value = 'updating';
 };
 
 const handleCompanyCreated = (company) => {
   companies.value.push(company);
   toast.show('Firma erfolgreich erstellt.', 'success');
-  isCreating.value = false;
+  resetView();
 };
 
 const handleCompanyUpdated = (company) => {
   companies.value = companies.value.map(c => c.uuid === company.uuid ? company : c);
   toast.show('Firma erfolgreich aktualisiert.', 'success');
-  isUpdating.value = false;
+  resetView();
 };  
 
 const handleCompanyDeleted = (uuid) => {
   companies.value = companies.value.filter(c => c.uuid !== uuid);
   toast.show('Firma erfolgreich gelöscht.', 'success');
-  isUpdating.value = false;
+  resetView();
+};
+
+const resetView = () => {
+  viewState.value = 'listing';
+  // Reset company when going back to listing only if needed
+  if (viewState.value !== 'updating') {
+    selectedCompany.value = null;
+  }
 };
 
 onMounted(async () => {
@@ -140,8 +147,7 @@ onMounted(async () => {
 
 watch(() => props.isActive, (isActive) => {
   if (isActive) {
-    isCreating.value = false;
-    isUpdating.value = false;
+    resetView();
   }
 });
 </script>
