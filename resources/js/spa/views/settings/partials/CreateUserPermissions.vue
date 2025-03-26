@@ -216,10 +216,34 @@ const saveCurrentPermissionsToMap = () => {
 
 const submit = async () => {
   try {
-    isSaving.value = true;
-    
     // Save current archive permissions to the map
     saveCurrentPermissionsToMap();
+    
+    // Check if permissions are set for all archives
+    let missingPermissions = false;
+    const archivesWithMissingPermissions = [];
+    
+    for (const archiveId in archivePermissionsMap.value) {
+      // Check if role is selected and permissions are set
+      if (!archivePermissionsMap.value[archiveId].role || 
+          !archivePermissionsMap.value[archiveId].selectedPermissions || 
+          archivePermissionsMap.value[archiveId].selectedPermissions.length === 0) {
+        missingPermissions = true;
+        
+        // Find archive name for more helpful error message
+        const archiveName = archives.value.find(a => a.uuid === archiveId)?.title || archiveId;
+        archivesWithMissingPermissions.push(archiveName);
+      }
+    }
+    
+    // If any archive is missing permissions, show toast and exit
+    if (missingPermissions) {
+      toast.show('Bitte Rollen/Berechtigungen für alle Karteien wählen.', 'error');
+      return;
+    }
+    
+    // If all validations pass, proceed with saving
+    isSaving.value = true;
     
     // Prepare data for submission - one archive at a time
     const permissionsToSubmit = [];
