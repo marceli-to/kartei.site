@@ -7,7 +7,7 @@
         @click="send" 
         :disabled="isSending" />
 
-      <p class="text-xs p-8">Mit Abschicken des Einladungslinks erhält [user.firstname] [user.lastname] Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
+      <p class="text-sm p-8">Mit Abschicken des Einladungslinks erhält [user.firstname] [user.lastname] Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
     </div>
 
     <ButtonGroup>

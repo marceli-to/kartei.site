@@ -1,58 +1,39 @@
 <template>
-  <Slide :pull="isCreating || isUpdating || isSettingPermissions">
+  <Slide :pull="viewState !== 'listing' && viewState !== 'notifying'">
 
-    <template v-if="isCreating">
+    <template v-if="viewState === 'creating'">
       <CreateUser 
         :archives="selectedArchives"
         @success="(userData) => handleUserCreated(userData)" 
-        @cancel="isCreating = false" />
+        @cancel="resetView()" />
     </template>
 
-    <template v-else-if="isUpdating">
-
+    <template v-if="viewState === 'updating'">
     </template>
 
-    <template v-else-if="isSettingPermissions">
+    <template v-if="viewState === 'settingPermissions'">
       <CreateUserPermissions 
         :user="createdUser"
         :selectedArchives="selectedArchives"
         @success="handleUserPermissionsUpdated"
-        @cancel="isSettingPermissions = false; selectedArchives = []"
-        v-if="createdUser" />
+        @cancel="resetView()" />
     </template>
 
-    <template v-else-if="isNotifyingUser">
+    <template v-if="viewState === 'notifying'">
       <InviteUser 
         :user="createdUser"
         :selectedArchives="selectedArchives"
         @success="handleUserNotified"
-        @cancel="isNotifyingUser = false; selectedArchives = []" />
+        @cancel="resetView()" />
     </template>
 
-    <template v-else>
+    <template v-if="viewState === 'listing'">
       <div class="flex flex-col gap-y-48">
 
         <!-- User list with search-->
-        <div class="flex flex-col gap-y-32" v-if="!isLoading">
-          <div>
-            <InputSearch
-              v-model="search"
-              placeholder="Suche"
-              aria-label="Suche" />
-          </div>
-          <div>
-            <div v-for="(users, role) in groupedUsers" :key="role" class="mb-24">
-              <h3 class="text-sm mb-4 block">{{ role }}</h3>
-              <div class="flex flex-col gap-y-8">
-                <Action 
-                  v-for="user in users" 
-                  :key="user.uuid"
-                  :label="`${user.firstname} ${user.name}`"
-                  :icon="{ name: 'ChevronRight' }" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <ListUsers 
+          ref="userListRef"
+          @user-selected="handleUserSelected" />
         <!-- // User list with search-->
         
         <!-- Archive selection -->
@@ -78,8 +59,8 @@
               <Action 
                 label="Benutzer/in" 
                 :icon="{ name: 'Plus', position: 'center' }"
-                :disabled="selectedArchives.length == 0 ? true : false"
-                @click="isCreating = true" />
+                :disabled="selectedArchives.length == 0"
+                @click="viewState = 'creating'" />
             </div>
           </div>
         </div>
@@ -90,109 +71,79 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getArchivesByAdmin } from '@/services/api/archive';
-import { getRelatedUsers } from '@/services/api/user';
 import Slide from '@/components/slider/Slide.vue';
-import InputSearch from '@/components/forms/Search.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import Action from '@/components/buttons/Action.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
 import CreateUserPermissions from '@/views/settings/partials/CreateUserPermissions.vue';
 import InviteUser from '@/views/settings/partials/InviteUser.vue';
+import ListUsers from '@/views/settings/partials/ListUsers.vue';
 
 const archives = ref([]);
-const relatedUsers = ref([]);
-const createdUser = ref(null);
-const search = ref('');
 const selectedArchives = ref([]);
+const userListRef = ref(null);
+const createdUser = ref(null);
+const viewState = ref('listing');
 const isLoading = ref(true);
-const isCreating = ref(false);
-const isUpdating = ref(false);
-const isSettingPermissions = ref(false);
-const isNotifyingUser = ref(false);
 
 onMounted(async () => {
   try {
     isLoading.value = true;
     const archivesResponse = await getArchivesByAdmin();
-
     archives.value = archivesResponse.map(archive => ({
       value: archive.uuid,
       label: archive.title
     }));
-
-    const relatedUsersResponse = await getRelatedUsers();
-    relatedUsers.value = relatedUsersResponse.data || [];
   }
   catch (error) {
-    console.error(error);
+    console.error('Failed to fetch archives:', error);
   } 
   finally {
     isLoading.value = false;
   }
 });
 
-const filteredRelatedUsers = computed(() => {
-  if (!relatedUsers.value || !Array.isArray(relatedUsers.value)) return [];
-  
-  let result = [...relatedUsers.value];
-  
-  if (search.value) {
-    const searchTerm = search.value.toLowerCase().trim();
-    result = result.filter(user => 
-      user.firstname?.toLowerCase().includes(searchTerm) ||
-      user.name?.toLowerCase().includes(searchTerm) ||
-      user.email?.toLowerCase().includes(searchTerm)
-    );
-  }
-  
-  return result;
-});
-
-const groupedUsers = computed(() => {
-  const users = filteredRelatedUsers.value;
-  if (!users.length) return {};
-  
-  // Group users by role
-  const grouped = users.reduce((acc, user) => {
-    // Get the role name, default to 'Other' if no role
-    const role = user.role;
-    
-    // Initialize the role group if it doesn't exist
-    if (!acc[role]) {
-      acc[role] = [];
-    }
-    
-    // Add the user to the appropriate role group
-    acc[role].push(user);
-    
-    return acc;
-  }, {});
-  
-  return grouped;
-});
+const handleUserSelected = (user) => {
+  console.log('User selected:', user);
+};
 
 const handleUserCreated = (userData) => {
   createdUser.value = userData;
-  isSettingPermissions.value = true;
-  isCreating.value = false;
-};
-
-const handleUserUpdated = () => {
-  isUpdating.value = false;
+  viewState.value = 'settingPermissions';
 };
 
 const handleUserPermissionsUpdated = () => {
-  isSettingPermissions.value = false;
-  isNotifyingUser.value = true;
+  viewState.value = 'notifying';
 };
 
 const handleUserNotified = () => {
-  isNotifyingUser.value = false;
-  isCreating.value = false;
-  createdUser.value = null;
-  selectedArchives.value = [];
+  resetView();
+  refreshUserList();
 };
 
+const refreshUserList = () => {
+  if (userListRef.value) {
+    userListRef.value.fetchUsers();
+  }
+};
+
+const resetView = () => {
+  const previousState = viewState.value;
+  viewState.value = 'listing';
+  selectedArchives.value = [];
+  
+  if (previousState !== 'updating') {
+    createdUser.value = null;
+  }
+  
+  if (previousState === 'notifying') {
+    selectedArchives.value = [];
+  }
+  
+  if (userListRef.value) {
+    userListRef.value.resetSearch();
+  }
+};
 </script>

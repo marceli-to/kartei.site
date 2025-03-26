@@ -21,6 +21,7 @@ class UserPermissionController extends Controller
   public function store(Request $request, User $user)
   {
     (new AssignRoleAction())->execute($user, $request->role);
+    
     (new StoreUserPermissionAction())->execute($user, [
         'archives' => $request->archives,
         'selectedPermissions' => $request->selectedPermissions
@@ -30,7 +31,11 @@ class UserPermissionController extends Controller
     foreach($request->archives as $archive)
     {
       $archive = (new FindArchiveAction())->execute($archive, true);
-      (new AttachArchiveUserAction())->execute($user, $request->role, [$archive]);
+
+      if ($archive) {
+        (new AttachArchiveUserAction())->execute($user, $request->role, [$archive]);
+      }
+
     }
 
     return new UserResource($user);
