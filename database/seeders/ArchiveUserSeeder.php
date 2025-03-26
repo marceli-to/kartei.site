@@ -16,7 +16,7 @@ class ArchiveUserSeeder extends Seeder
     $archives = Archive::all();
 
     // Add user to all archives
-    foreach ($user as $user) {
+    foreach ($users as $user) {
       $user->archives()->attach($archives);
     }
     // Create a user with role 'Viewer'
