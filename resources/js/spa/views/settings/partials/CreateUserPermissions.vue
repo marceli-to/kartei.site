@@ -432,11 +432,12 @@ async function submit() {
     // Reset currentArchiveId after successful save
     currentArchiveId.value = null;
     toast.show('Berechtigungen wurden gespeichert.', 'success');
-    emit('success');
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Failed to save permissions:', error);
     toast.show('Fehler beim Speichern der Berechtigungen.', 'error');
-  } finally {
+  } 
+  finally {
     isSaving.value = false;
   }
 }
