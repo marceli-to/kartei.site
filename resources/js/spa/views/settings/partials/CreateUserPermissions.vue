@@ -649,11 +649,13 @@ async function fetchRolesWithPermissions() {
     // Ensure permissionsByRole is always an object
     if (permissionsByRoleResponse && typeof permissionsByRoleResponse === 'object') {
       permissionsByRole.value = permissionsByRoleResponse;
-    } else {
+    } 
+    else {
       console.warn('Unexpected roles with permissions response structure:', permissionsByRoleResponse);
       permissionsByRole.value = {}; // Fallback to empty object
     }
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Failed to fetch roles with permissions:', error);
     permissionsByRole.value = {}; // Ensure it's always an object even on error
     throw error;
@@ -688,7 +690,8 @@ watch(selectedArchiveId, (newArchiveId) => {
       if (role && role.permissions) {
         const permissionIds = role.permissions.map(p => p.id);
         archivePermissions.value[newArchiveId].selectedPermissions = permissionIds;
-      } else {
+      } 
+      else {
         console.warn('Role not found or has no permissions:', DEFAULT_ROLE);
       }
     }
