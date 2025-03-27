@@ -12,7 +12,7 @@ class UserInviteController extends Controller
   {
     (new Invite())->execute(
       $user, 
-      $request->archives
+      $request->archive
     );
     return response()->noContent();
   }

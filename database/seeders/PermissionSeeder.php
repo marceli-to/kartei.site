@@ -63,7 +63,7 @@ class PermissionSeeder extends Seeder
       ],
       [
         'name' => 'edit.archive',
-        'display_name' => 'Erstellen',
+        'display_name' => 'Bearbeiten',
         'group_key' => 'archive',
         'group_name' => 'Kartei',
         'order' => 2,

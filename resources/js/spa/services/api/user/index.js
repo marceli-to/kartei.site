@@ -90,7 +90,7 @@ export const storePermissions = async (user, formData) => {
   return response.data;
 };  
 
-export const sendInvitation = async (user, archives) => {
-  const response = await axios.post(`/api/user/invite/${user.uuid}`, { archives });
+export const sendInvitation = async (user, archive) => {
+  const response = await axios.post(`/api/user/invite/${user.uuid}`, archive);
   return response.data;
 };
