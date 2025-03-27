@@ -13,13 +13,14 @@
               name="archive_selection"
               wrapperClasses="flex flex-col gap-y-8"
               :options="archiveOptionsWithDisabled"
-              @update:modelValue="handleArchiveChange"
+              @change="handleArchiveChange"
             >
               <template #icon="{ option }">
                 <IconCheckmark v-if="savedArchives.includes(option.value)" />
               </template>
             </InputSelectButtons>
       </InputGroup>
+
       <div :class="{'opacity-20 select-none pointer-events-none': !selectedArchive}" class="flex flex-col gap-y-20">
         <template v-if="!savedArchives.includes(selectedArchive)">
           <InputGroup>
@@ -32,6 +33,7 @@
               @change="handleRoleChange"
             />
           </InputGroup>
+
           <InputGroup v-if="permissionsArchive.length > 0">
             <InputLabel label="Kartei" id="archive" />
             <InputSelectButtons
@@ -42,6 +44,7 @@
               wrapperClasses="grid grid-cols-2 gap-8"
               :options="permissionsArchive" />
           </InputGroup>
+
           <InputGroup v-if="permissionsArchiveEdit.length > 0">
             <InputLabel label="Bearbeiten" id="archive_edit" />
             <InputSelectButtons
@@ -52,6 +55,7 @@
               wrapperClasses="grid grid-cols-2 gap-8"
               :options="permissionsArchiveEdit" />
           </InputGroup>
+
           <InputGroup v-if="permissionsCard.length > 0">
             <InputLabel label="Karten" id="card" />
             <InputSelectButtons
@@ -62,6 +66,7 @@
               wrapperClasses="grid grid-cols-2 gap-8"
               :options="permissionsCard" />
           </InputGroup>
+
           <InputGroup v-if="permissionsCardEdit.length > 0">
             <InputLabel label="Bearbeiten" id="card_edit" />
             <InputSelectButtons
@@ -114,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, provide, watch, nextTick } from 'vue';
+import { ref, onMounted, computed, provide, watch, inject } from 'vue';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { getRoles, getRolesWithPermissions } from '@/services/api/role';
@@ -135,15 +140,17 @@ const dialogStore = useDialogStore();
 const roles = ref([]);
 const permissions = ref([]);
 const archives = ref([]);
-const selectedArchive = ref('');
+const selectedArchive = ref(0);
 const savedArchives = ref([]);
 const invitationSent = ref({});
+
 const permissionsArchive = ref([]);
 const permissionsArchiveEdit = ref([]);
 const permissionsCard = ref([]);
 const permissionsCardEdit = ref([]);
 const permissionsByRole = ref({});
-const DEFAULT_ROLE = 5; // Manager role
+
+const DEFAULT_ROLE = 3; // Manager role
 
 // Archive permissions map to track permissions for each archive
 const archivePermissionsMap = ref({});
@@ -174,10 +181,9 @@ const isLoading = ref(true);
 const isSaving = ref(false);
 const isSending = ref(false);
 
-const emit = defineEmits(['finish', 'cancel', 'success']);
+const emit = defineEmits(['finish', 'cancel']);
 
-const previousSelectedArchive = ref(null); // Add this to track the previous archive selection
-
+// Options with disabled state for saved archives
 const archiveOptionsWithDisabled = computed(() => {
   return archives.value.map(archive => ({
     value: archive.uuid,
@@ -218,6 +224,9 @@ watch(() => [form.value.role, form.value.selectedPermissions], () => {
     hasUnsavedChanges.value = hasChanges.value;
   }
 }, { deep: true });
+
+// Provide the permissions map to child components
+provide('archivePermissionsMap', archivePermissionsMap);
 
 onMounted(async () => {
   try {
@@ -295,49 +304,15 @@ const applyExistingPermissions = () => {
 };
 
 const confirmDiscardChanges = () => {
-  return new Promise((resolve) => {
-    dialogStore.show({
-      title: 'Ungespeicherte Änderungen',
-      text: 'Du hast ungespeicherte Änderungen. Möchtest du diese verwerfen?',
-      confirmLabel: 'Verwerfen',
-      cancelLabel: 'Abbrechen',
-      size: 'small',
-      onConfirm: () => {
-        resolve(true);
-      },
-      onCancel: () => {
-        resolve(false);
-      }
-    });
-  });
+  return confirm('Du hast ungespeicherte Änderungen. Möchtest du diese verwerfen?');
 };
 
-const handleArchiveChange = async (newArchiveId) => {
-  // Store the current archive ID before change
-  const previousArchiveId = previousSelectedArchive.value;
-  
-  // Update the previous archive ID for next time
-  previousSelectedArchive.value = newArchiveId;
-  
-  // If the new archive is the same as the current one, do nothing
-  if (newArchiveId === previousArchiveId) {
-    handleRoleChange();
-    return;
-  };
-  
+const handleArchiveChange = (newArchiveId) => {
   // Check if there are unsaved changes
-  if (previousArchiveId && hasChanges.value) {
-    // Show confirmation dialog
-    const shouldDiscard = await confirmDiscardChanges();
-    
-    if (!shouldDiscard) {
-      // User clicked "Abbrechen" (Cancel)
-      // Prevent the archive selection from changing
-      nextTick(() => {
-        // Manually reset the selected archive to the previous value
-        selectedArchive.value = previousArchiveId;
-        previousSelectedArchive.value = previousArchiveId;
-      });
+  if (selectedArchive.value && hasUnsavedChanges.value) {
+    if (!confirmDiscardChanges()) {
+      // User cancelled, revert selection
+      selectedArchive.value = selectedArchive.value;
       return;
     }
   }
@@ -428,7 +403,7 @@ const submit = async () => {
     }];
     
     // Submit permissions for the selected archive
-    await storePermissions(props.user.id, { permissions: permissionsToSubmit });
+    await storePermissions(props.user, { permissions: permissionsToSubmit });
     
     // Mark archive as saved
     if (!savedArchives.value.includes(archiveId)) {
@@ -476,7 +451,7 @@ const send = async () => {
     }
     
     // Send invitation with just the current archive
-    await sendInvitation(props.user.id, [archiveId]);
+    await sendInvitation(props.user, [archiveId]);
     
     // Mark this archive as having invitation sent
     invitationSent.value[archiveId] = true;
@@ -499,7 +474,7 @@ const finish = () => {
 const fetchRoles = async () => {
   try {
     const rolesResponse = await getRoles();
-    roles.value = Object.values(rolesResponse.data || {}).map(role => ({
+    roles.value = Object.values(rolesResponse.data).map(role => ({
       value: role.id,
       label: role.name
     }));
@@ -513,34 +488,26 @@ const fetchPermissions = async () => {
   try {
     const permissionsResponse = await getPermissions();
     permissions.value = permissionsResponse;
-    
-    if (permissions.value && permissions.value.archive) {
-      permissionsArchive.value = permissions.value.archive.map(p => ({
-        value: p.id,
-        label: p.display_name
-      }));
-    }
-    
-    if (permissions.value && permissions.value.archive_edit) {
-      permissionsArchiveEdit.value = permissions.value.archive_edit.map(p => ({
-        value: p.id,
-        label: p.display_name
-      }));
-    }
-    
-    if (permissions.value && permissions.value.card) {
-      permissionsCard.value = permissions.value.card.map(p => ({
-        value: p.id,
-        label: p.display_name
-      }));
-    }
-    
-    if (permissions.value && permissions.value.card_edit) {
-      permissionsCardEdit.value = permissions.value.card_edit.map(p => ({
-        value: p.id,
-        label: p.display_name
-      }));
-    }
+
+    permissionsArchive.value = permissions.value.archive.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
+
+    permissionsArchiveEdit.value = permissions.value.archive_edit.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
+
+    permissionsCard.value = permissions.value.card.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
+
+    permissionsCardEdit.value = permissions.value.card_edit.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
   } catch (error) {
     console.error('Failed to fetch permissions:', error);
     throw error;
@@ -574,6 +541,4 @@ const handleRoleChange = () => {
   // Set the selected permissions in the form
   form.value.selectedPermissions = permissionIds;
 };
-
-provide('archivePermissionsMap', archivePermissionsMap);
 </script>

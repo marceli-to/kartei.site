@@ -13,7 +13,7 @@
               name="archive_selection"
               wrapperClasses="flex flex-col gap-y-8"
               :options="archiveOptionsWithDisabled"
-              @update:modelValue="handleArchiveChange"
+              @change="handleArchiveChange"
             >
               <template #icon="{ option }">
                 <IconCheckmark v-if="savedArchives.includes(option.value)" />
@@ -135,7 +135,7 @@ const dialogStore = useDialogStore();
 const roles = ref([]);
 const permissions = ref([]);
 const archives = ref([]);
-const selectedArchive = ref('');
+const selectedArchive = ref(0);
 const savedArchives = ref([]);
 const invitationSent = ref({});
 const permissionsArchive = ref([]);
@@ -176,8 +176,7 @@ const isSending = ref(false);
 
 const emit = defineEmits(['finish', 'cancel', 'success']);
 
-const previousSelectedArchive = ref(null); // Add this to track the previous archive selection
-
+// Options with disabled state for saved archives
 const archiveOptionsWithDisabled = computed(() => {
   return archives.value.map(archive => ({
     value: archive.uuid,
@@ -218,6 +217,9 @@ watch(() => [form.value.role, form.value.selectedPermissions], () => {
     hasUnsavedChanges.value = hasChanges.value;
   }
 }, { deep: true });
+
+// Provide the permissions map to child components
+provide('archivePermissionsMap', archivePermissionsMap);
 
 onMounted(async () => {
   try {
@@ -314,29 +316,21 @@ const confirmDiscardChanges = () => {
 
 const handleArchiveChange = async (newArchiveId) => {
   // Store the current archive ID before change
-  const previousArchiveId = previousSelectedArchive.value;
-  
-  // Update the previous archive ID for next time
-  previousSelectedArchive.value = newArchiveId;
-  
-  // If the new archive is the same as the current one, do nothing
-  if (newArchiveId === previousArchiveId) {
-    handleRoleChange();
-    return;
-  };
+  const previousArchiveId = selectedArchive.value;
   
   // Check if there are unsaved changes
-  if (previousArchiveId && hasChanges.value) {
+  if (previousArchiveId && hasUnsavedChanges.value) {
+    // Temporarily set the new ID for UI rendering
+    selectedArchive.value = newArchiveId;
+    
     // Show confirmation dialog
     const shouldDiscard = await confirmDiscardChanges();
     
     if (!shouldDiscard) {
-      // User clicked "Abbrechen" (Cancel)
-      // Prevent the archive selection from changing
+      console.log('User cancelled, revert selection back to previous value');
+      // User cancelled, revert selection back to previous value
       nextTick(() => {
-        // Manually reset the selected archive to the previous value
         selectedArchive.value = previousArchiveId;
-        previousSelectedArchive.value = previousArchiveId;
       });
       return;
     }
@@ -575,5 +569,4 @@ const handleRoleChange = () => {
   form.value.selectedPermissions = permissionIds;
 };
 
-provide('archivePermissionsMap', archivePermissionsMap);
 </script>
