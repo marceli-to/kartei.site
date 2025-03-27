@@ -108,9 +108,6 @@
       </template>
     </ButtonGroup>
   </form>
-  <div v-else class="flex justify-center items-center h-full">
-    <span class="text-gray-500">Laden...</span>
-  </div>
 </template>
 
 <script setup>
@@ -434,7 +431,6 @@ async function submit() {
     
     // Reset currentArchiveId after successful save
     currentArchiveId.value = null;
-    
     toast.show('Berechtigungen wurden gespeichert.', 'success');
     emit('success');
   } catch (error) {
