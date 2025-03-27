@@ -30,13 +30,6 @@
         @cancel="resetView()" /> -->
     </template>
 
-    <template v-if="viewState === 'notifying'">
-      <InviteUser 
-        :user="createdUser"
-        @success="handleUserNotified"
-        @cancel="resetView()" />
-    </template>
-
     <template v-if="viewState === 'listing'">
       <ListUsers 
         ref="userListRef"
@@ -56,7 +49,6 @@ import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
 import UpdateUser from '@/views/settings/partials/UpdateUser.vue';
 import CreateUserPermissions from '@/views/settings/partials/CreateUserPermissions.vue';
-import InviteUser from '@/views/settings/partials/InviteUser.vue';
 import ListUsers from '@/views/settings/partials/ListUsers.vue';
 
 const userListRef = ref(null);
@@ -103,11 +95,12 @@ const handleUserCreated = (userData) => {
 
 const handleUserUpdated = () => {
   resetView();
-  fetchUsers(); // Refresh user list
+  fetchUsers();
 };
 
 const handleUserPermissionsCreated = () => {
-  viewState.value = 'notifying';
+  resetView();
+  fetchUsers();
 };
 
 const handleUserSelectedPermissions = (user) => {
@@ -117,16 +110,7 @@ const handleUserSelectedPermissions = (user) => {
 
 const handleUserDeleted = () => {
   resetView();
-  fetchUsers(); // Refresh user list
-};
-
-const handleUserNotified = () => {
-  resetView();
-  fetchUsers(); // Refresh user list
-};
-
-const refreshUserList = () => {
-  fetchUsers(); // Simplified - directly fetch users
+  fetchUsers();
 };
 
 const resetView = () => {

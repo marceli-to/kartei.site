@@ -19,6 +19,7 @@
       <IconPlus variant="small" />
       <IconPlus variant="small-bold" />
       <IconPlus variant="rounded" class="text-graphite" />
+      <IconCheckmark />
       <IconSettings />
       <IconSettings variant="tiny" />
       <IconImage />
@@ -65,4 +66,5 @@ import IconProfile from '@/components/icons/Profile.vue';
 import IconDownload from '@/components/icons/Download.vue';
 import IconUpload from '@/components/icons/Upload.vue';
 import IconEdit from '@/components/icons/Edit.vue';
+import IconCheckmark from '@/components/icons/Checkmark.vue';
 </script>

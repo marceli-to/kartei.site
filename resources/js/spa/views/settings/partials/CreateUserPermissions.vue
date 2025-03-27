@@ -5,86 +5,125 @@
     v-if="!isLoading">
     <div class="flex flex-col gap-y-20">
       <InputGroup>
-        <InputLabel :label="archiveOptions.length > 1 ? 'Kartei/en' : 'Kartei'" id="archive_selection" />
-        <InputSelectButtons
-          id="archive_selection"
-          v-model="selectedArchives"
-          :multiple="true"
-          name="archive_selection"
-          wrapperClasses="flex flex-col gap-y-8"
-          :options="archiveOptions"
-          @change="handleArchivesChange"
-        />
+        <InputLabel label="Kartei" id="archive_selection" />
+          <InputSelectButtons
+              id="archive_selection"
+              v-model="selectedArchive"
+              :multiple="false"
+              name="archive_selection"
+              wrapperClasses="flex flex-col gap-y-8"
+              :options="archiveOptionsWithDisabled"
+              @change="handleArchiveChange"
+            >
+              <template #icon="{ option }">
+                <IconCheckmark v-if="savedArchives.includes(option.value)" />
+              </template>
+            </InputSelectButtons>
       </InputGroup>
 
-      <div :class="{'opacity-20 select-none pointer-events-none': selectedArchives.length === 0}" class="flex flex-col gap-y-20">
-        <InputGroup>
-          <InputLabel label="Rechte" id="role" />
-          <InputSelect
-            id="role"
-            v-model="form.role"
-            :options="roles"
-            :error="errors.role"
-            @change="handleRoleChange"
-          />
-        </InputGroup>
+      <div :class="{'opacity-20 select-none pointer-events-none': !selectedArchive}" class="flex flex-col gap-y-20">
+        <template v-if="!savedArchives.includes(selectedArchive)">
+          <InputGroup>
+            <InputLabel label="Rechte" id="role" />
+            <InputSelect
+              id="role"
+              v-model="form.role"
+              :options="roles"
+              :error="errors.role"
+              @change="handleRoleChange"
+            />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel label="Kartei" id="archive" />
-          <InputSelectButtons
-            id="archive"
-            v-model="form.selectedPermissions"
-            :multiple="true"
-            name="permissions"
-            wrapperClasses="grid grid-cols-2 gap-8"
-            :options="permissionsArchive" />
-        </InputGroup>
+          <InputGroup v-if="permissionsArchive.length > 0">
+            <InputLabel label="Kartei" id="archive" />
+            <InputSelectButtons
+              id="archive"
+              v-model="form.selectedPermissions"
+              :multiple="true"
+              name="permissions"
+              wrapperClasses="grid grid-cols-2 gap-8"
+              :options="permissionsArchive" />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel label="Bearbeiten" id="archive_edit" />
-          <InputSelectButtons
-            id="archive_edit"
-            v-model="form.selectedPermissions"
-            :multiple="true"
-            name="permissions"
-            wrapperClasses="grid grid-cols-2 gap-8"
-            :options="permissionsArchiveEdit" />
-        </InputGroup>
+          <InputGroup v-if="permissionsArchiveEdit.length > 0">
+            <InputLabel label="Bearbeiten" id="archive_edit" />
+            <InputSelectButtons
+              id="archive_edit"
+              v-model="form.selectedPermissions"
+              :multiple="true"
+              name="permissions"
+              wrapperClasses="grid grid-cols-2 gap-8"
+              :options="permissionsArchiveEdit" />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel label="Karten" id="card" />
-          <InputSelectButtons
-            id="card"
-            v-model="form.selectedPermissions"
-            :multiple="true"
-            name="permissions"
-            wrapperClasses="grid grid-cols-2 gap-8"
-            :options="permissionsCard" />
-        </InputGroup>
+          <InputGroup v-if="permissionsCard.length > 0">
+            <InputLabel label="Karten" id="card" />
+            <InputSelectButtons
+              id="card"
+              v-model="form.selectedPermissions"
+              :multiple="true"
+              name="permissions"
+              wrapperClasses="grid grid-cols-2 gap-8"
+              :options="permissionsCard" />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel label="Bearbeiten" id="card_edit" />
-          <InputSelectButtons
-            id="card_edit"
-            v-model="form.selectedPermissions"
-            :multiple="true"
-            name="permissions"
-            wrapperClasses="grid grid-cols-2 gap-8"
-            :options="permissionsCardEdit" />
-        </InputGroup>
+          <InputGroup v-if="permissionsCardEdit.length > 0">
+            <InputLabel label="Bearbeiten" id="card_edit" />
+            <InputSelectButtons
+              id="card_edit"
+              v-model="form.selectedPermissions"
+              :multiple="true"
+              name="permissions"
+              wrapperClasses="grid grid-cols-2 gap-8"
+              :options="permissionsCardEdit" />
+          </InputGroup>
+        </template>
+        <template v-else>
+          <div v-if="!invitationSent[selectedArchive]">
+            <ButtonAuth label="Einladungslink versenden" @click="send" :disabled="isSending" />
+            <p class="text-sm p-8 mt-8">Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
+          </div>
+          <div v-else>
+            <template v-if="hasUnhandledArchives">
+              <p class="text-sm p-8 mt-8">
+                Einladungslink wurde versendet. Sie können Berechtigungen für weitere Karteien setzen oder den Prozess abschliessen.
+              </p>
+            </template>
+            <template v-else>
+              <p class="text-sm p-8 mt-8">
+                Einladungslink wurde versendet.
+              </p>
+            </template>
+          </div>
+        </template>
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving || selectedArchives.length === 0" />
+      <ButtonPrimary 
+        v-if="!savedArchives.includes(selectedArchive)" 
+        type="submit" 
+        label="Speichern" 
+        :disabled="isSaving || !selectedArchive || !hasChanges" 
+        :loading="isSaving" />
+      <template v-else>
+        <ButtonPrimary 
+          @click="$emit('success')" 
+          label="Abschliessen" 
+          :disabled="isSending" />
+      </template>
     </ButtonGroup>
   </form>
+  <div v-else class="flex justify-center items-center h-full">
+    <span class="text-gray-500">Laden...</span>
+  </div>
 </template>
+
 <script setup>
-import { ref, onMounted, computed, provide } from 'vue';
+import { ref, onMounted, computed, provide, watch, inject } from 'vue';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { getRoles, getRolesWithPermissions } from '@/services/api/role';
 import { getPermissions } from '@/services/api/permission';
-import { storePermissions } from '@/services/api/user';
+import { storePermissions, sendInvitation } from '@/services/api/user';
 import { getArchivesByAdmin } from '@/services/api/archive';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -92,33 +131,43 @@ import InputSelect from '@/components/forms/Select.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
+import ButtonAuth from '@/components/buttons/Auth.vue';
+import IconCheckmark from '@/components/icons/Checkmark.vue';
 
 const toast = useToastStore();
 const roles = ref([]);
 const permissions = ref([]);
 const archives = ref([]);
-const selectedArchives = ref([]);
+const selectedArchive = ref(0);
+const savedArchives = ref([]);
+const invitationSent = ref({});
 
 const permissionsArchive = ref([]);
 const permissionsArchiveEdit = ref([]);
 const permissionsCard = ref([]);
 const permissionsCardEdit = ref([]);
-const permissionsByRole = ref([]);
+const permissionsByRole = ref({});
 
-const defaultRole = 3;
+const DEFAULT_ROLE = 3; // Manager role
 
 // Archive permissions map to track permissions for each archive
 const archivePermissionsMap = ref({});
+const originalPermissionsMap = ref({});
+const hasUnsavedChanges = ref(false);
 
 const props = defineProps({
   user: {
     type: Object,
     required: true
+  },
+  existingPermissions: {
+    type: Array,
+    default: () => []
   }
 });
 
 const form = ref({
-  role: defaultRole,
+  role: DEFAULT_ROLE,
   selectedPermissions: []
 });
 
@@ -128,8 +177,9 @@ const errors = ref({
 
 const isLoading = ref(true);
 const isSaving = ref(false);
+const isSending = ref(false);
 
-const emit = defineEmits(['success', 'cancel']);
+const emit = defineEmits(['finish', 'cancel']);
 
 const archiveOptions = computed(() => {
   return archives.value.map(archive => ({
@@ -138,29 +188,67 @@ const archiveOptions = computed(() => {
   }));
 });
 
+// Options with disabled state for saved archives
+const archiveOptionsWithDisabled = computed(() => {
+  return archives.value.map(archive => ({
+    value: archive.uuid,
+    label: archive.title,
+    disabled: savedArchives.value.includes(archive.uuid)
+  }));
+});
+
+// Check if there are any unhandled archives left
+const hasUnhandledArchives = computed(() => {
+  return archives.value.some(archive => !savedArchives.value.includes(archive.uuid));
+});
+
+// Computed property to check if there are changes
+const hasChanges = computed(() => {
+  if (!selectedArchive.value) return false;
+  
+  const original = originalPermissionsMap.value[selectedArchive.value] || {
+    role: DEFAULT_ROLE,
+    selectedPermissions: []
+  };
+  
+  const current = {
+    role: form.value.role,
+    selectedPermissions: form.value.selectedPermissions
+  };
+  
+  // Check if role changed
+  if (original.role !== current.role) return true;
+  
+  // Check if permissions changed
+  return !arraysEqual(original.selectedPermissions, current.selectedPermissions);
+});
+
+// Watch for changes to mark unsaved changes
+watch(() => [form.value.role, form.value.selectedPermissions], () => {
+  if (selectedArchive.value) {
+    hasUnsavedChanges.value = hasChanges.value;
+  }
+}, { deep: true });
+
 // Provide the permissions map to child components
 provide('archivePermissionsMap', archivePermissionsMap);
 
 onMounted(async () => {
   try {
     isLoading.value = true;
-    await fetchArchives();
-    await fetchRoles();
-    await fetchPermissions();
-    await fetchRolesWithPermissions();
+    await Promise.all([
+      fetchArchives(),
+      fetchRoles(),
+      fetchPermissions(),
+      fetchRolesWithPermissions()
+    ]);
     
-    // Select the first archive by default if available
-    if (archives.value.length > 0) {
-      selectedArchives.value = [archives.value[0].uuid];
-      // Make sure to set default permissions for the Manager role
-      setTimeout(() => {
-        handleRoleChange();
-        handleArchivesChange();
-      }, 0);
-    }
+    // Apply existing permissions if provided
+    applyExistingPermissions();
   }
   catch (error) {
-    console.error(error);
+    console.error('Error initializing component:', error);
+    toast.show('Fehler beim Laden der Daten.', 'error');
   } 
   finally {
     isLoading.value = false;
@@ -172,132 +260,178 @@ const fetchArchives = async () => {
     const archivesResponse = await getArchivesByAdmin();
     archives.value = archivesResponse;
     
-    // Initialize permissions map for each archive but don't set any default permissions yet
-    // We'll set them when the archive is selected
+    // Initialize permissions map for each archive
     archives.value.forEach(archive => {
       archivePermissionsMap.value[archive.uuid] = {
-        role: defaultRole,
+        role: DEFAULT_ROLE,
+        selectedPermissions: []
+      };
+      
+      // Initialize original permissions map for tracking changes
+      originalPermissionsMap.value[archive.uuid] = {
+        role: DEFAULT_ROLE,
         selectedPermissions: []
       };
     });
   } catch (error) {
     console.error('Failed to fetch archives:', error);
+    throw error;
   }
 };
 
-const handleArchivesChange = () => {
-  if (selectedArchives.value.length > 0) {
-    // Check if the newly selected archives have different permissions
-    const firstArchive = selectedArchives.value[0];
+// Apply existing permissions if available
+const applyExistingPermissions = () => {
+  if (props.existingPermissions && props.existingPermissions.length > 0) {
+    // Track which archives already have permissions
+    const archivesWithPermissions = [];
     
-    // Check if any selected archive has empty permissions
-    const hasEmptyPermissions = selectedArchives.value.some(archiveId => {
-      const archivePermissions = archivePermissionsMap.value[archiveId];
-      return !archivePermissions.selectedPermissions || 
-             archivePermissions.selectedPermissions.length === 0;
+    props.existingPermissions.forEach(perm => {
+      if (perm.archive && archivePermissionsMap.value[perm.archive]) {
+        const permissions = {
+          role: perm.role || DEFAULT_ROLE,
+          selectedPermissions: perm.selectedPermissions || []
+        };
+        
+        // Set current permissions
+        archivePermissionsMap.value[perm.archive] = {...permissions};
+        
+        // Set original permissions for change tracking
+        originalPermissionsMap.value[perm.archive] = {...permissions};
+        
+        // Mark as saved
+        archivesWithPermissions.push(perm.archive);
+      }
     });
     
-    // Check if all selected archives have the same permissions
-    const samePermissions = selectedArchives.value.every(archiveId => {
-      const archivePermissions = archivePermissionsMap.value[archiveId];
-      const firstArchivePermissions = archivePermissionsMap.value[firstArchive];
-      
-      // Check if permissions are the same (role and selectedPermissions)
-      return archivePermissions.role === firstArchivePermissions.role && 
-             arraysEqual(archivePermissions.selectedPermissions, firstArchivePermissions.selectedPermissions);
-    });
+    // Add to saved archives
+    savedArchives.value = [...archivesWithPermissions];
+  }
+};
+
+const confirmDiscardChanges = () => {
+  return confirm('Du hast ungespeicherte Änderungen. Möchtest du diese verwerfen?');
+};
+
+const handleArchiveChange = (newArchiveId) => {
+  // Check if there are unsaved changes
+  if (selectedArchive.value && hasUnsavedChanges.value) {
+    if (!confirmDiscardChanges()) {
+      // User cancelled, revert selection
+      selectedArchive.value = selectedArchive.value;
+      return;
+    }
+  }
+  
+  // Reset unsaved changes flag
+  hasUnsavedChanges.value = false;
+  
+  if (newArchiveId) {
+    // Load the permissions for the selected archive
+    const archivePermissions = archivePermissionsMap.value[newArchiveId];
     
-    if (samePermissions && !hasEmptyPermissions) {
-      // If all selected archives have the same permissions, use those
-      form.value.role = archivePermissionsMap.value[firstArchive].role;
-      form.value.selectedPermissions = [...archivePermissionsMap.value[firstArchive].selectedPermissions];
+    if (archivePermissions) {
+      form.value.role = archivePermissions.role;
+      form.value.selectedPermissions = [...archivePermissions.selectedPermissions];
     } else {
-      // If permissions differ or any archive has empty permissions, set default role and apply role permissions
-      form.value.role = defaultRole; // Manager as default
-      
-      // Trigger role change to load default permissions for this role
-      setTimeout(() => {
-        handleRoleChange();
-      }, 0);
+      // Set defaults if no permissions exist
+      form.value.role = DEFAULT_ROLE;
+      handleRoleChange();
     }
   } else {
-    // No archives selected, reset form
-    form.value.role = defaultRole;
+    // No archive selected, reset form
+    form.value.role = DEFAULT_ROLE;
     form.value.selectedPermissions = [];
   }
 };
 
 // Helper function to compare arrays
 const arraysEqual = (a, b) => {
+  if (!a || !b) return false;
   if (a.length !== b.length) return false;
   const sortedA = [...a].sort();
   const sortedB = [...b].sort();
   return sortedA.every((val, idx) => val === sortedB[idx]);
 };
 
-// Helper method to save current selections to the map
-const saveCurrentPermissionsToMap = () => {
-  // Save the current permissions to all selected archives
-  selectedArchives.value.forEach(archiveId => {
-    if (archivePermissionsMap.value[archiveId]) {
-      archivePermissionsMap.value[archiveId] = {
-        role: form.value.role,
-        selectedPermissions: [...form.value.selectedPermissions]
-      };
-    }
-  });
+// Save current form state to the permissions map
+const saveFormToMap = () => {
+  if (!selectedArchive.value) return;
+  
+  archivePermissionsMap.value[selectedArchive.value] = {
+    role: form.value.role,
+    selectedPermissions: [...form.value.selectedPermissions]
+  };
+};
+
+const validateForm = () => {
+  // Reset errors
+  errors.value = {
+    role: null
+  };
+  
+  // Check if an archive is selected
+  if (!selectedArchive.value) {
+    toast.show('Bitte wähle eine Kartei aus.', 'error');
+    return false;
+  }
+  
+  // Check if permissions are selected
+  if (form.value.selectedPermissions.length === 0) {
+    toast.show('Bitte wähle mindestens eine Berechtigung aus.', 'error');
+    return false;
+  }
+  
+  return true;
 };
 
 const submit = async () => {
   try {
-    // Save current archive permissions to the map
-    saveCurrentPermissionsToMap();
+    // Save current form state to map
+    saveFormToMap();
     
-    // Check if permissions are set for all archives
-    let missingPermissions = false;
-    const archivesWithMissingPermissions = [];
-    
-    for (const archiveId in archivePermissionsMap.value) {
-      // Check if role is selected and permissions are set
-      if (!archivePermissionsMap.value[archiveId].role || 
-          !archivePermissionsMap.value[archiveId].selectedPermissions || 
-          archivePermissionsMap.value[archiveId].selectedPermissions.length === 0) {
-        missingPermissions = true;
-        
-        // Find archive name for more helpful error message
-        const archiveName = archives.value.find(a => a.uuid === archiveId)?.title || archiveId;
-        archivesWithMissingPermissions.push(archiveName);
-      }
-    }
-    
-    // If any archive is missing permissions, show toast and exit
-    if (missingPermissions) {
-      toast.show('Bitte Rollen/Berechtigungen für alle Karteien wählen.', 'error');
+    // Validate form
+    if (!validateForm()) {
       return;
     }
     
     // If all validations pass, proceed with saving
     isSaving.value = true;
     
-    // Prepare data for submission - one archive at a time
-    const permissionsToSubmit = [];
+    const archiveId = selectedArchive.value;
+    const permissions = archivePermissionsMap.value[archiveId];
     
-    for (const archiveId in archivePermissionsMap.value) {
-      permissionsToSubmit.push({
-        archive: archiveId,
-        role: archivePermissionsMap.value[archiveId].role,
-        selectedPermissions: archivePermissionsMap.value[archiveId].selectedPermissions
-      });
+    // Prepare data for submission (just the current archive)
+    const permissionsToSubmit = [{
+      archive: archiveId,
+      role: permissions.role,
+      selectedPermissions: permissions.selectedPermissions
+    }];
+    
+    // Submit permissions for the selected archive
+    const response = await storePermissions(props.user, { permissions: permissionsToSubmit });
+    
+    // Mark archive as saved
+    if (!savedArchives.value.includes(archiveId)) {
+      savedArchives.value.push(archiveId);
     }
     
-    // Submit all archive permissions
-    const response = await storePermissions(props.user, { permissions: permissionsToSubmit });
-    emit('success', response);
+    // Update original permissions for change tracking
+    originalPermissionsMap.value[archiveId] = {
+      role: permissions.role,
+      selectedPermissions: [...permissions.selectedPermissions]
+    };
+    
+    // Reset unsaved changes flag
+    hasUnsavedChanges.value = false;
+    
+    toast.show('Berechtigungen erfolgreich gespeichert.', 'success');
   }
   catch (error) {
-    errors.value = {
-      role: error.response?.data?.errors?.role?.[0]
-    };
+    console.error('Error saving permissions:', error);
+    
+    if (error.response?.data?.errors?.role) {
+      errors.value.role = error.response.data.errors.role[0];
+    }
     
     toast.show('Fehler beim Speichern der Berechtigungen.', 'error');
   }
@@ -306,71 +440,110 @@ const submit = async () => {
   }
 };
 
+// Method for sending invitation link
+const send = async () => {
+  if (isSending.value) return;
+  
+  try {
+    isSending.value = true;
+    
+    // We're now handling one archive at a time
+    const archiveId = selectedArchive.value;
+    
+    if (!archiveId) {
+      toast.show('Keine Kartei ausgewählt.', 'error');
+      return;
+    }
+    
+    // Send invitation with just the current archive
+    await sendInvitation(props.user, [archiveId]);
+    
+    // Mark this archive as having invitation sent
+    invitationSent.value[archiveId] = true;
+    
+    // Only display toast notification (don't emit event)
+    toast.show('Einladungslink wurde versendet.', 'success');
+  } catch (error) {
+    console.error('Error sending invitation:', error);
+    toast.show('Fehler beim Versand des Einladungslinks.', 'error');
+  } finally { 
+    isSending.value = false;
+  }
+};
+
+const finish = () => {
+  // Only emit the finish event when explicitly finished
+  emit('finish');
+};
+
 const fetchRoles = async () => {
-  const rolesResponse = await getRoles();
-  roles.value = Object.values(rolesResponse.data).map(role => ({
-    value: role.id,
-    label: role.name
-  }));
+  try {
+    const rolesResponse = await getRoles();
+    roles.value = Object.values(rolesResponse.data).map(role => ({
+      value: role.id,
+      label: role.name
+    }));
+  } catch (error) {
+    console.error('Failed to fetch roles:', error);
+    throw error;
+  }
 };
 
 const fetchPermissions = async () => {
-  const permissionsResponse = await getPermissions();
-  permissions.value = permissionsResponse;
+  try {
+    const permissionsResponse = await getPermissions();
+    permissions.value = permissionsResponse;
 
-  permissionsArchive.value = permissions.value.archive.map(p => ({
-    value: p.id,
-    label: p.display_name
-  }));
+    permissionsArchive.value = permissions.value.archive.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
 
-  permissionsArchiveEdit.value = permissions.value.archive_edit.map(p => ({
-    value: p.id,
-    label: p.display_name
-  }));
+    permissionsArchiveEdit.value = permissions.value.archive_edit.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
 
-  permissionsCard.value = permissions.value.card.map(p => ({
-    value: p.id,
-    label: p.display_name
-  }));
+    permissionsCard.value = permissions.value.card.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
 
-  permissionsCardEdit.value = permissions.value.card_edit.map(p => ({
-    value: p.id,
-    label: p.display_name
-  }));
+    permissionsCardEdit.value = permissions.value.card_edit.map(p => ({
+      value: p.id,
+      label: p.display_name
+    }));
+  } catch (error) {
+    console.error('Failed to fetch permissions:', error);
+    throw error;
+  }
 };
 
 const fetchRolesWithPermissions = async () => {
-  const permissionsByRoleResponse = await getRolesWithPermissions();
-  permissionsByRole.value = permissionsByRoleResponse;
+  try {
+    const permissionsByRoleResponse = await getRolesWithPermissions();
+    permissionsByRole.value = permissionsByRoleResponse;
+  } catch (error) {
+    console.error('Failed to fetch roles with permissions:', error);
+    throw error;
+  }
 };
 
 const handleRoleChange = () => {
-  let role = null;
-  for (const key in permissionsByRole.value) {
-    if (permissionsByRole.value[key].id == form.value.role) {
-      role = permissionsByRole.value[key];
-      break;
-    }
+  // Find the selected role in permissionsByRole
+  const role = Object.values(permissionsByRole.value)
+    .find(r => r.id == form.value.role);
+  
+  if (!role) {
+    console.warn(`Role with ID ${form.value.role} not found`);
+    return;
   }
   
-  // Extract permissions if the role exists
-  const permissions = role?.permissions || [];
-  const permissionIds = permissions.map(p => p.id);
+  // Extract permissions
+  const rolePermissions = role.permissions || [];
+  const permissionIds = rolePermissions.map(p => p.id);
   
   // Set the selected permissions in the form
   form.value.selectedPermissions = permissionIds;
-  
-  // Save to the map if archives are selected
-  if (selectedArchives.value.length > 0) {
-    // Update permissions for all selected archives
-    selectedArchives.value.forEach(archiveId => {
-      if (archivePermissionsMap.value[archiveId]) {
-        archivePermissionsMap.value[archiveId] = {
-          role: form.value.role,
-          selectedPermissions: [...permissionIds]
-        };
-      }
-    });
-  }
 };
 </script>

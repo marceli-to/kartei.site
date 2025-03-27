@@ -3,10 +3,7 @@
     <label 
       v-for="option in options" 
       :key="option.value" 
-      :class="[
-        labelClasses,
-        option.disabled ? 'pointer-events-none' : ''
-      ]">
+      :class="labelClasses">
       <input
         :type="multiple ? 'checkbox' : 'radio'"
         :name="name"
@@ -20,29 +17,13 @@
           borderClasses,
           classes,
           isChecked(option.value) ? getActiveClass(option.value) : '',
-          option.disabled ? disabledClasses : ''
         ]"
       >
-        <span v-if="option.iconBefore" class="option-icon-before mr-2">
-          <slot 
-            name="iconBefore" 
-            :option="option" 
-            :is-checked="isChecked(option.value)"
-          ></slot>
-        </span>
         {{ option.label }}
-        <span class="option-icon">
-          <slot 
-            name="icon" 
-            :option="option" 
-            :is-checked="isChecked(option.value)"
-          ></slot>
-        </span>
       </span>
     </label>
   </fieldset>
 </template>
-
 <script setup>
 
 const props = defineProps({
@@ -71,7 +52,7 @@ const props = defineProps({
   },
   classes: {
     type: String,
-    default: 'min-h-default w-full flex justify-between items-center font-muoto-regular text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8'
+    default: 'min-h-default w-full flex items-center font-muoto-regular text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8'
   },
   wrapperClasses: {
     type: String,
@@ -89,10 +70,6 @@ const props = defineProps({
     type: String,
     default: 'relative'
   },
-  disabledClasses: {
-    type: String,
-    default: '!bg-white !text-black pointer-events-none'
-  },
   valueActiveClassMap: {
     type: Object,
     default: () => ({})
@@ -108,12 +85,6 @@ const isChecked = (value) => {
 };
 
 const updateValue = (value) => {
-  // Check if the option is disabled before updating
-  const optionItem = props.options.find(opt => opt.value === value);
-  if (optionItem && optionItem.disabled) {
-    return; // Don't update if the option is disabled
-  }
-  
   if (props.multiple) {
     const newValue = [...props.modelValue];
     const index = newValue.indexOf(value);
