@@ -75,7 +75,10 @@
         </template>
         <template v-else>
           <div v-if="isNewlyAddedArchive && !invitationSent[selectedArchiveId]">
-            <ButtonAuth label="Einladungslink versenden" @click="send" :disabled="isSending" />
+            <ButtonAuth 
+              :label="isSending ? 'Wird versendet...' : 'Einladungslink versenden'" 
+              @click="send" 
+              :disabled="isSending" />
             <p class="text-sm p-8 mt-8">Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
           </div>
           <div v-else>
@@ -425,7 +428,7 @@ async function submit() {
       role: currentRole.value,
       permissions: [...currentPermissions.value]
     };
-    selectedArchiveId.value = '';
+    // selectedArchiveId.value = '';
     currentArchiveId.value = null;
     toast.show('Berechtigungen wurden gespeichert.', 'success');
     if (wasNew) {
@@ -448,6 +451,7 @@ async function send() {
     isSending.value = true;
     await sendInvitation(props.user, { archive: selectedArchiveId.value });
     invitationSent.value[selectedArchiveId.value] = true;
+    selectedArchiveId.value = '';
     toast.show('Einladungslink wurde versendet.', 'success');
   } catch (error) {
     console.error('Failed to send invitation:', error);
