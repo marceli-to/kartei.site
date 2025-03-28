@@ -530,7 +530,6 @@ async function fetchUserPermissions() {
   });
 }
 
-
 function applyUserPermissions() {
   Object.entries(userPermissions.value || {}).forEach(([archiveId, permData]) => {
     const role = permData.role || DEFAULT_ROLE;
@@ -553,7 +552,6 @@ function applyUserPermissions() {
     }
   });
 }
-
 
 provide('archivePermissions', archivePermissions);
 </script>
