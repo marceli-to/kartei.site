@@ -16,7 +16,7 @@
             @update:modelValue="selectArchive"
           >
             <template #icon="{ option }">
-              <IconCheckmark v-if="isSaved(option.value)" />
+              <IconCheckmark v-if="isSaved(option.value) || hasPermissions(option.value)" />
             </template>
         </InputSelectButtons>
       </InputGroup>
@@ -197,7 +197,6 @@ const archiveOptions = computed(() => {
   return archives.value.map(archive => ({
     value: archive.uuid,
     label: archive.title,
-    disabled: isSaved(archive.uuid)
   }));
 });
 
@@ -276,6 +275,11 @@ const isNewlyAddedArchive = computed(() => {
 function isSaved(archiveId) {
   if (!archiveId) return false;
   return archivePermissions.value[archiveId]?.isSaved || false;
+}
+
+function hasPermissions(archiveId) {
+  const perms = archivePermissions.value[archiveId]?.selectedPermissions || [];
+  return perms.length > 0;
 }
 
 async function selectArchive(archiveId) {
@@ -421,7 +425,7 @@ async function submit() {
       role: currentRole.value,
       permissions: [...currentPermissions.value]
     };
-
+    selectedArchiveId.value = '';
     currentArchiveId.value = null;
     toast.show('Berechtigungen wurden gespeichert.', 'success');
     if (wasNew) {
