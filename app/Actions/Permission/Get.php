@@ -105,40 +105,101 @@ class Get
    * @param \Illuminate\Database\Eloquent\Collection $permissions The collection of permissions
    * @return \Illuminate\Support\Collection
    */
+  // private function getPermissionsByArchive(Collection $permissions): SupportCollection
+  // {
+  //   $uuidCache = [];
+
+  //   // Step 1: Extract base names and archive IDs
+  //   $permissions->each(function ($permission) {
+  //     $parts = explode('.', $permission->name);
+  //     $permission->archive_id = array_pop($parts);
+  //     $permission->base_name = implode('.', $parts);
+  //   });
+
+  //   // Step 2: Preload all base permissions in a single query
+  //   $baseNames = $permissions->pluck('base_name')->unique()->all();
+  //   $basePermissions = Permission::whereIn('name', $baseNames)->get()->keyBy('name');
+
+  //   // Step 3: Group by archive UUID
+  //   $grouped = $permissions->groupBy(function ($permission) use (&$uuidCache) {
+  //     $archiveId = $permission->archive_id;
+
+  //     if (!isset($uuidCache[$archiveId])) {
+  //       $archive = Archive::find($archiveId);
+  //       $uuidCache[$archiveId] = $archive?->uuid ?? 'unknown';
+  //     }
+  //     return $uuidCache[$archiveId];
+  //   });
+
+  //   // Step 4: Map to clean structure
+  //   return $grouped->map(function ($group) use ($basePermissions) {
+  //     return $group->map(function ($permission) use ($basePermissions) {
+  //       return [
+  //         'id' => $basePermissions[$permission->base_name]->id ?? null,
+  //         'name' => $permission->base_name,
+  //       ];
+  //     })->filter(fn ($perm) => !is_null($perm['id']));
+  //   });
+  // }
+
   private function getPermissionsByArchive(Collection $permissions): SupportCollection
   {
-    $uuidCache = [];
-
-    // Step 1: Extract base names and archive IDs
-    $permissions->each(function ($permission) {
-      $parts = explode('.', $permission->name);
-      $permission->archive_id = array_pop($parts);
-      $permission->base_name = implode('.', $parts);
-    });
-
-    // Step 2: Preload all base permissions in a single query
-    $baseNames = $permissions->pluck('base_name')->unique()->all();
-    $basePermissions = Permission::whereIn('name', $baseNames)->get()->keyBy('name');
-
-    // Step 3: Group by archive UUID
-    $grouped = $permissions->groupBy(function ($permission) use (&$uuidCache) {
-      $archiveId = $permission->archive_id;
-
-      if (!isset($uuidCache[$archiveId])) {
-        $archive = Archive::find($archiveId);
-        $uuidCache[$archiveId] = $archive?->uuid ?? 'unknown';
-      }
-      return $uuidCache[$archiveId];
-    });
-
-    // Step 4: Map to clean structure
-    return $grouped->map(function ($group) use ($basePermissions) {
-      return $group->map(function ($permission) use ($basePermissions) {
-        return [
-          'id' => $basePermissions[$permission->base_name]->id ?? null,
-          'name' => $permission->base_name,
-        ];
-      })->filter(fn ($perm) => !is_null($perm['id']));
-    });
+      $uuidCache = [];
+  
+      // Add archive_id and base_name to each permission
+      $permissions->each(function ($permission) {
+          $parts = explode('.', $permission->name);
+          $permission->archive_id = array_pop($parts);
+          $permission->base_name = implode('.', $parts);
+      });
+  
+      $baseNames = $permissions->pluck('base_name')->unique()->all();
+      $basePermissions = Permission::whereIn('name', $baseNames)->get()->keyBy('name');
+  
+      // Get the user ID from the permission object (they all come from same user context)
+      $userId = optional($permissions->first())->pivot->model_id ?? null;
+      $user = $userId ? User::find($userId) : null;
+  
+      // Group by archive UUID
+      $grouped = $permissions->groupBy(function ($permission) use (&$uuidCache) {
+          $archiveId = $permission->archive_id;
+  
+          if (!isset($uuidCache[$archiveId])) {
+              $archive = Archive::find($archiveId);
+              $uuidCache[$archiveId] = $archive?->uuid ?? 'unknown';
+          }
+  
+          return $uuidCache[$archiveId];
+      });
+  
+      // Final structure
+      return $grouped->map(function ($group) use ($basePermissions, $user) {
+          $archiveId = $group->first()->archive_id;
+  
+          // Get user's role for this archive
+          $role = null;
+          if ($user) {
+              $roleId = $user->archives()->where('archive_id', $archiveId)->first()?->pivot->role_id;
+              $roleModel = $roleId ? \Spatie\Permission\Models\Role::find($roleId) : null;
+              $role = $roleModel ? [
+                  'id' => $roleModel->id,
+                  'name' => $roleModel->name,
+              ] : null;
+          }
+  
+          // Build permission list
+          $permissions = $group->map(function ($permission) use ($basePermissions) {
+              return [
+                  'id' => $basePermissions[$permission->base_name]->id ?? null,
+                  'name' => $permission->base_name,
+              ];
+          })->filter(fn ($perm) => !is_null($perm['id']));
+  
+          return [
+              'role' => $role,
+              'permissions' => $permissions->values(),
+          ];
+      });
   }
+  
 }

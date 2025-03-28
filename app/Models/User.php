@@ -54,7 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
   public function archives(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
   {
-    return $this->belongsToMany(Archive::class);
+    return $this->belongsToMany(Archive::class)->withPivot(['role_id', 'added_by', 'added_at']);
   }
 
   public function address(): \Illuminate\Database\Eloquent\Relations\MorphOne

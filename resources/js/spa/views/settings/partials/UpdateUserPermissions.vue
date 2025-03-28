@@ -496,13 +496,19 @@ async function fetchUserPermissions() {
 
   userPermissions.value = {};
 
-  Object.entries(response || {}).forEach(([archiveId, permsArray]) => {
+  Object.entries(response || {}).forEach(([archiveId, data]) => {
+    const role = data.role?.id || DEFAULT_ROLE;
+    const permissions = Array.isArray(data.permissions)
+      ? data.permissions.map(p => Number(p.id))
+      : [];
+
     userPermissions.value[archiveId] = {
-      role: DEFAULT_ROLE, // Or you can extend the backend to also return role per archive
-      permissions: permsArray.map(p => Number(p.id))
+      role,
+      permissions
     };
   });
 }
+
 
 function applyUserPermissions() {
   Object.entries(userPermissions.value || {}).forEach(([archiveId, permData]) => {
