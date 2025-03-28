@@ -20,7 +20,9 @@
               </template>
           </InputSelectButtons>
       </InputGroup>
-      <div :class="{'opacity-20 select-none pointer-events-none': !selectedArchiveId}" class="flex flex-col gap-y-20">
+      <div 
+        :class="{'opacity-20 select-none pointer-events-none': !selectedArchiveId}" 
+        class="flex flex-col gap-y-20">
         <template v-if="!isSaved(selectedArchiveId)">
           <InputGroup>
             <InputLabel :label="roleLabel" id="role" />
