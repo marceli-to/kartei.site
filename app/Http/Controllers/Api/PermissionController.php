@@ -33,15 +33,15 @@ class PermissionController extends Controller
     return response()->json($permissions);
   }
 
-  public function getByUser(Request $request, string $user): JsonResponse
+  public function getByUser(Request $request, User $user): JsonResponse
   {
-    $permissions = (new GetPermissionAction())->execute([
-      'user' => $user,
-      'publish_only' => true,
-      'ordered' => true,
-      'group_by_key' => false
-    ]);
-
+    $permissions = (new GetPermissionAction())->execute(
+      [
+        'user' => $user->id,
+        'hidden' => true,
+        'group_by_archive_id' => true,
+      ]
+    );
     return response()->json($permissions);
   }
 }

@@ -11,9 +11,6 @@ export const getPermissionsByRole = async (role) => {
 }
 
 export const getPermissionsByUser = async (user) => {
-  const response = await axios.get(`/api/permissions/user/${user}`);
+  const response = await axios.get(`/api/permissions/user/${user.uuid}`);
   return response.data;
 };
-  
-
-  

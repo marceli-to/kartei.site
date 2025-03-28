@@ -21,14 +21,33 @@ class UserController extends Controller
     // dd($adminPermissions);
 
     // by user
-    // $permissionsUser = (new GetPermissionAction())->execute(
-    //   [
-    //     'user' => auth()->user()->id,
-    //     'group_by_key' => true,
-    //     'ordered' => true,
-    //     'publish_only' => true
-    //   ]
-    // );
+    $userId = 3;
+    $permissionsUser = (new GetPermissionAction())->execute(
+      [
+        'user' => $userId,
+        'hidden' => true,
+        'group_by_archive_id' => true,
+        // 'group_by_key' => true,
+        // 'ordered' => true,
+        // 'publish_only' => true
+      ]
+    );
+
+    dd($permissionsUser);
+
+    // filter out the permissions where publish is true
+    // $permissionsUser = $permissionsUser->filter(function ($permission) {
+    //   return !$permission->publish;
+    // });
+
+    foreach ($permissionsUser as $permissionGroup) {
+      echo "Group<br>";
+      foreach ($permissionGroup as $permission) {
+        echo $permission->name . "<br>";
+      }
+    }
+    die();
+    dd($permissionsUser);
 
     // // by role
     // $permissionsRole = (new GetPermissionAction())->execute(

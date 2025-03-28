@@ -24,10 +24,10 @@
     </template>
 
     <template v-if="viewState === 'updatePermissions'">
-      <!-- <UpdateUserPermissions 
+      <UpdateUserPermissions 
         :user="selectedUser"
         @success="handleUserPermissionsUpdated"
-        @cancel="resetView()" /> -->
+        @cancel="resetView()" />
     </template>
 
     <template v-if="viewState === 'listing'">
@@ -49,6 +49,7 @@ import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/settings/partials/CreateUser.vue';
 import UpdateUser from '@/views/settings/partials/UpdateUser.vue';
 import CreateUserPermissions from '@/views/settings/partials/CreateUserPermissions.vue';
+import UpdateUserPermissions from '@/views/settings/partials/UpdateUserPermissions.vue';
 import ListUsers from '@/views/settings/partials/ListUsers.vue';
 
 const userListRef = ref(null);
@@ -107,6 +108,11 @@ const handleUserSelectedPermissions = (user) => {
   selectedUser.value = user;
   viewState.value = 'updatePermissions';
 }; 
+
+const handleUserPermissionsUpdated = () => {
+  resetView();
+  fetchUsers();
+};
 
 const handleUserDeleted = () => {
   resetView();

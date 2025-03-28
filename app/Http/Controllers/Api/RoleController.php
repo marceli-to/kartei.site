@@ -30,6 +30,7 @@ class RoleController extends Controller
         'with_permissions' => true
       ]
     );
+
     return response()->json($roles);
   }
 }

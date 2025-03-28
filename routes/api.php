@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // User permissions
   Route::get('/user/permissions', [UserPermissionController::class, 'get']);
+  Route::get('/user/permissions/{user:uuid}', [UserPermissionController::class, 'getByUser']);
   Route::put('/user/permissions/{user:uuid}', [UserPermissionController::class, 'store']);
 
   // User invite
@@ -92,7 +93,7 @@ Route::middleware('auth:sanctum')->group(function () {
   // Permissions and roles
   Route::get('/permissions', [PermissionController::class, 'get']);
   Route::get('/permissions/role/{role}', [PermissionController::class, 'getByRole']);
-  Route::get('/permissions/user/{user}', [PermissionController::class, 'getByUser']);
+  Route::get('/permissions/user/{user:uuid}', [PermissionController::class, 'getByUser']);
   Route::get('/roles', [RoleController::class, 'get']);
   Route::get('/roles/permissions', [RoleController::class, 'getWithPermissions']);
 

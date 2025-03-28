@@ -7,6 +7,7 @@ use App\Actions\Role\Assign as AssignRoleAction;
 use App\Actions\Archive\Find as FindArchiveAction;
 use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use App\Actions\UserPermission\Store as StoreUserPermissionAction;
+use App\Actions\Permission\Get as GetPermissionAction;
 use App\Http\Resources\UserPermissionResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
