@@ -5,7 +5,7 @@
     <a 
       href="javascript:;" 
       :class="[
-        'bg-graphite text-center min-h-32 flex items-center justify-center max-page ml-auto',
+        'bg-graphite text-center min-h-32 mb-4 flex items-center justify-center max-page ml-auto',
         { '!bg-lime': toast.type === 'success' },
         { '!bg-flame text-white': toast.type === 'error' },
         { '!bg-ice': toast.type === 'info' },
