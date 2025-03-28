@@ -6,19 +6,19 @@
     <div class="flex flex-col gap-y-20">
       <InputGroup>
         <InputLabel label="Kartei" id="archive_selection" />
-          <InputSelectButtons
-              id="archive_selection"
-              v-model="selectedArchiveId"
-              :multiple="false"
-              name="archive_selection"
-              wrapperClasses="flex flex-col gap-y-8"
-              :options="archiveOptions"
-              @update:modelValue="selectArchive"
-            >
-              <template #icon="{ option }">
-                <IconCheckmark v-if="isSaved(option.value)" />
-              </template>
-            </InputSelectButtons>
+        <InputSelectButtons
+            id="archive_selection"
+            v-model="selectedArchiveId"
+            :multiple="false"
+            name="archive_selection"
+            wrapperClasses="flex flex-col gap-y-8"
+            :options="archiveOptions"
+            @update:modelValue="selectArchive"
+          >
+            <template #icon="{ option }">
+              <IconCheckmark v-if="isSaved(option.value)" />
+            </template>
+        </InputSelectButtons>
       </InputGroup>
       <div :class="{'opacity-20 select-none pointer-events-none': !selectedArchiveId}" class="flex flex-col gap-y-20">
         <template v-if="!isSaved(selectedArchiveId)">
