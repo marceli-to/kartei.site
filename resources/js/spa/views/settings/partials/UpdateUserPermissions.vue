@@ -74,7 +74,7 @@
           </InputGroup>
         </template>
         <template v-else>
-          <div v-if="!invitationSent[selectedArchiveId]">
+          <div v-if="isNewlyAddedArchive && !invitationSent[selectedArchiveId]">
             <ButtonAuth label="Einladungslink versenden" @click="send" :disabled="isSending" />
             <p class="text-sm p-8 mt-8">Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
           </div>
@@ -155,6 +155,7 @@ const permissions = ref({});
 const permissionsByRole = ref({});
 const userPermissions = ref({});
 const invitationSent = ref({});
+const newlyAddedArchives = ref({});
 
 // Permission categories
 const permissionsArchive = ref([]);
@@ -267,6 +268,11 @@ const hasUnhandledArchives = computed(() => {
   return archives.value.some(archive => !isSaved(archive.uuid));
 });
 
+const isNewlyAddedArchive = computed(() => {
+  return newlyAddedArchives.value[selectedArchiveId.value] === true;
+});
+
+// Methods
 function isSaved(archiveId) {
   if (!archiveId) return false;
   return archivePermissions.value[archiveId]?.isSaved || false;
@@ -409,6 +415,8 @@ async function submit() {
     archiveData.originalRole = currentRole.value;
     archiveData.originalPermissions = [...currentPermissions.value];
 
+    const wasNew = !userPermissions.value[selectedArchiveId.value]; // 👈 check BEFORE update
+
     userPermissions.value[selectedArchiveId.value] = {
       role: currentRole.value,
       permissions: [...currentPermissions.value]
@@ -416,10 +424,15 @@ async function submit() {
 
     currentArchiveId.value = null;
     toast.show('Berechtigungen wurden gespeichert.', 'success');
-  } catch (error) {
+    if (wasNew) {
+      newlyAddedArchives.value[selectedArchiveId.value] = true; // ✅ set after update
+    }
+  } 
+  catch (error) {
     console.error('Failed to save permissions:', error);
     toast.show('Fehler beim Speichern der Berechtigungen.', 'error');
-  } finally {
+  } 
+  finally {
     isSaving.value = false;
   }
 }
