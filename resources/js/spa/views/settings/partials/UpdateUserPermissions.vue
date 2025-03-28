@@ -115,7 +115,7 @@ import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { getRoles, getRolesWithPermissions } from '@/services/api/role';
 import { getPermissions, getPermissionsByUser } from '@/services/api/permission';
-import { storePermissions, sendInvitation } from '@/services/api/user';
+import { updatePermissions, sendInvitation } from '@/services/api/user';
 import { getArchivesByAdmin } from '@/services/api/archive';
 
 import InputGroup from '@/components/forms/Group.vue';
@@ -380,7 +380,7 @@ async function submit() {
       permissions: currentPermissions.value
     };
 
-    await storePermissions(props.user, data);
+    await updatePermissions(props.user, data);
 
     const archiveData = archivePermissions.value[selectedArchiveId.value];
     archiveData.isSaved = true;

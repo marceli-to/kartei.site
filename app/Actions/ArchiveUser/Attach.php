@@ -1,16 +1,19 @@
 <?php
 namespace App\Actions\ArchiveUser;
 use App\Models\User;
-use App\Models\Archive;
 
 class Attach
 {
-  public function execute(User $user, int $role, Archive $archive): null
+  public function execute(User $user, int $roleId, int $archiveId): null|array
   {
-    return $user->archives()->attach($archive->id, [
-      'role_id' => $role, 
-      'added_by' => auth()->user()->id, 
-      'added_at' => now()
+    // Detach any existing entry for this archive
+    $user->archives()->detach($archiveId);
+
+    // Attach with the new role and metadata
+    return $user->archives()->attach($archiveId, [
+      'role_id' => $roleId,
+      'added_by' => auth()->id(),
+      'added_at' => now(),
     ]);
   }
 }

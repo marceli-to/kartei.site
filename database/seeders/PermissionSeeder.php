@@ -20,11 +20,15 @@ class PermissionSeeder extends Seeder
 
     // assign super admin role to user 'm@marceli.to'
     $user = User::where('email', 'm@marceli.to')->first();
-    $user->roles()->sync([$superAdminRole->id]);
+    if ($user) {
+      $user->roles()->sync([$superAdminRole->id]);
+    }
 
     // assign super admin role to user 'm@marceli.to'
     $user2 = User::where('email', 'bf@wbg.ch')->first();
-    $user2->roles()->sync([$superAdminRole->id]);
+    if ($user2) {
+      $user2->roles()->sync([$superAdminRole->id]);
+    }
 
     // create a role for 'Administrator/in'
     $adminRole = Role::create([

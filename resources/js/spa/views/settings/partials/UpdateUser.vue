@@ -41,12 +41,12 @@
           />
         </InputGroup>
       </div>
-      <div class="flex flex-col gap-y-20">
-      <Action 
-        type="button"
-        label="Rechte"
-        :icon="{ name: 'ChevronRight' }"
-        @click="$emit('user-selected-permissions', userData)" />
+      <div class="flex flex-col gap-y-48">
+        <Action 
+          type="button"
+          label="Rechte"
+          :icon="{ name: 'ChevronRight' }"
+          @click="$emit('user-selected-permissions', userData)" />
         <ButtonPrimary label="Löschen" variant="danger" type="button" @click.prevent="showDeleteDialog" />
       </div>
     </div>

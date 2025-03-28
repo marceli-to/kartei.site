@@ -4,8 +4,18 @@ use App\Models\User;
 
 class Sync
 {
-  public function execute(User $user, array $archives): array
+  public function execute(User $user, int $roleId, int $archiveId): null|array
   {
-    return $user->archives()->syncWithoutDetaching($archives);
+    // Detach any existing relationship with this archive
+    $user->archives()->detach($archiveId);
+
+    // Sync with new pivot data
+    return $user->archives()->syncWithoutDetaching([
+      $archiveId => [
+        'role_id' => $roleId,
+        'added_by' => auth()->id(),
+        'added_at' => now(),
+      ]
+    ]);
   }
 }

@@ -7,20 +7,13 @@ use App\Models\User;
 
 class Store
 {
-  public function execute(User $user, array $data)
+  public function execute(User $user, array $permissions, int $archiveId)
   {
-    // Find the archive by uuid
-    $archive = (new FindArchiveAction())->execute($data['archive'], true);
-    
-    if (!$archive) {
-      return;
-    }
-    
     // First, remove any existing permissions for this archive
-    $this->removeExistingPermissions($user, $archive);
+    $this->removeExistingPermissions($user, $archiveId);
     
     // Loop over all selected permissions
-    foreach($data['selectedPermissions'] as $permissionId)
+    foreach($permissions as $permissionId)
     {
       // Find the permission
       $permission = (new FindPermissionAction())->execute($permissionId);
@@ -31,7 +24,7 @@ class Store
       
       // Create the permission
       $userPermission = (new CreatePermissionAction())->execute([
-        'name' => $permission->name . '.' . $archive->id,
+        'name' => $permission->name . '.' . $archiveId,
         'guard_name' => 'web',
         'publish' => false
       ]);
@@ -44,14 +37,14 @@ class Store
   /**
    * Remove existing permissions for the given archive
    */
-  private function removeExistingPermissions(User $user, $archive)
+  private function removeExistingPermissions(User $user, int $archiveId)
   {
     // Get all permissions for the user
     $userPermissions = $user->getAllPermissions();
     
     foreach ($userPermissions as $permission) {
       // Check if this permission is for the current archive
-      if (str_ends_with($permission->name, '.' . $archive->id)) {
+      if (str_ends_with($permission->name, '.' . $archiveId)) {
         // Revoke this permission
         $user->revokePermissionTo($permission);
       }
