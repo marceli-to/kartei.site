@@ -21,17 +21,12 @@
         </div>
       </div>
     </div>
-    <!-- Add user button -->
     <div>
       <Action 
         label="Benutzer/in" 
         :icon="{ name: 'Plus', position: 'center' }"
         @click="$emit('create-user')" />
     </div>
-  </div>
-  <div v-else class="flex justify-center items-center h-64">
-    <!-- Loading state -->
-    <p>Lade Benutzer...</p>
   </div>
 </template>
 

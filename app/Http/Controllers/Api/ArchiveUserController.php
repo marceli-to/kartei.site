@@ -5,7 +5,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\ArchiveUser\StoreRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserRelatedResource;
 use App\Actions\User\Create as CreateUserAction;

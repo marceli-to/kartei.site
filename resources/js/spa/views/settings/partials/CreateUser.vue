@@ -84,7 +84,6 @@ const submit = async () => {
       name: error.response?.data?.errors?.name?.[0],
       email: error.response?.data?.errors?.email?.[0],
     };
-    
     toast.show('Fehler beim Erstellen des Benutzers.', 'error');
   }
   finally {
