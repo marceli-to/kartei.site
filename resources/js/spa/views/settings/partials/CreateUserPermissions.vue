@@ -18,12 +18,12 @@
               <template #icon="{ option }">
                 <IconCheckmark v-if="isSaved(option.value)" />
               </template>
-            </InputSelectButtons>
+          </InputSelectButtons>
       </InputGroup>
       <div :class="{'opacity-20 select-none pointer-events-none': !selectedArchiveId}" class="flex flex-col gap-y-20">
         <template v-if="!isSaved(selectedArchiveId)">
           <InputGroup>
-            <InputLabel label="Rechte" id="role" />
+            <InputLabel :label="roleLabel" id="role" />
             <InputSelect
               id="role"
               v-model="currentRole"
@@ -252,6 +252,28 @@ const hasChanges = computed(() => {
 const hasUnhandledArchives = computed(() => {
   return archives.value.some(archive => !isSaved(archive.uuid));
 });
+
+const roleLabel = computed(() => {
+  if (!selectedArchiveId.value) return 'Rechte';
+
+  const archiveData = archivePermissions.value[selectedArchiveId.value];
+  if (!archiveData) return 'Rechte';
+
+  const roleId = archiveData.role;
+  const selected = [...archiveData.selectedPermissions].sort();
+
+  const role = Object.values(permissionsByRole.value).find(r => r.id == roleId);
+  if (!role) return 'Rechte';
+
+  const rolePermissions = role.permissions.map(p => Number(p.id)).sort();
+
+  const isAdjusted =
+    selected.length !== rolePermissions.length ||
+    !selected.every((val, idx) => val === rolePermissions[idx]);
+
+  return isAdjusted ? 'Rechte (angepasst)' : 'Rechte';
+});
+
 
 // Methods
 function isSaved(archiveId) {
