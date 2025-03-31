@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Settings from '@/views/settings/Index.vue';
+import Archives from '@/views/archives/Index.vue';
+
 import Users from '@/views/Users.vue';
-import Archives from '@/views/Archives.vue';
+// import Archives from '@/views/Archives.vue';
+
 import Icons from '@/views/ui/Icons.vue';
 import Fonts from '@/views/ui/Fonts.vue';
 import Elements from '@/views/ui/Elements.vue';

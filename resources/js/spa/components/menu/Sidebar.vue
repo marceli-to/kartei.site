@@ -4,7 +4,12 @@
     :class="{ 'opacity-100 visible': isOpen, 'opacity-0 invisible pointer-events-none': !isOpen }">
     <ul class="mx-16 border-t border-t-black dark:border-t-white">
       <li>
-        <a href="">Meine Karteien</a>
+        <router-link
+          :to="{ name: 'archives' }"
+          @click="$emit('toggle')"
+          :class="{ 'text-graphite dark:text-black': $route.name === 'archives' }">
+          Meine Karteien
+        </router-link>
       </li>
       <li>
         <router-link

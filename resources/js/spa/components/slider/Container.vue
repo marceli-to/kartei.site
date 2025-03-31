@@ -34,7 +34,7 @@
       </template>
     </Navigation>
     
-    <div 
+    <main 
       class="flex flex-grow transition-transform duration-300 w-full relative z-40" 
       :style="{ transform: `translateX(-${computedOffsets[activeIndex]}%)` }">
       <section 
@@ -42,7 +42,7 @@
         :key="index" 
         :class="item.class"
         class="shrink-0">
-        <h1 
+        <h2 
           class="ml-8 opacity-1 flex justify-between items-center font-muoto-medium leading-none h-20"
           :class="{
             'transition-none delay-300': activeIndex === index, 
@@ -59,7 +59,7 @@
               <IconChevronRight variant="small" />
             </a>
           </template>
-        </h1>
+        </h2>
         <div class="flex flex-grow min-h-full pt-38">
           <div 
             class="flex-grow min-h-full border-r border-r-graphite relative"
@@ -67,14 +67,18 @@
               'opacity-20 pointer-events-none transition-all duration-none': activeIndex < index,
               'opacity-0 pointer-events-none transition-all duration-none': activeIndex > index
             }">
-            <component v-if="item.component" :is="item.component" :isActive="activeIndex === index" />
+            <component 
+              v-if="item.component" 
+              :is="item.component" 
+              :isActive="activeIndex === index" 
+              class="shrink-0" />
             <slot v-else :name="`section-${index}`">
               No content provided for section {{ item.name }}
             </slot>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   </div>
 </template>
 

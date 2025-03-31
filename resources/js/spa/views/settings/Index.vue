@@ -22,6 +22,9 @@ import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 const userStore = useUserStore();
 const activeIndex = ref(0);
 
+const title = ref('Einstellungen');
+defineExpose({ title });
+
 // Define all possible slides with their permissions and components
 const allSlides = [
   { 
