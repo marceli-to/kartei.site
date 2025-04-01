@@ -5,6 +5,6 @@
 </template>
 
 <script setup>
-import ImageCard from '@/components/media/ImageCard.vue';
+import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 </script>

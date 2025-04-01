@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-grow w-full overflow-hidden mt-48 relative">
 
-    <Navigation>
+    <SliderNavigation :variant="navigationVariant">
       <template #title
         v-if="activeIndex > 0">
         <div class="absolute left-0 -top-60 w-full flex items-center justify-between bg-white dark:bg-black">
@@ -16,6 +16,9 @@
             <IconChevronLeft variant="small" />
           </a>
         </div>
+      </template>
+      <template #navigationTitle>
+        <slot name="navigationTitle"></slot>
       </template>
       <template #navigation>
         <ul>
@@ -32,11 +35,9 @@
           </li>
         </ul>
       </template>
-    </Navigation>
+    </SliderNavigation>
     
-    <main 
-      class="flex flex-grow transition-transform duration-300 w-full relative z-40" 
-      :style="{ transform: `translateX(-${computedOffsets[activeIndex]}%)` }">
+    <SliderMain :style="{ transform: `translateX(-${computedOffsets[activeIndex]}%)` }">
       <section 
         v-for="(item, index) in slides" 
         :key="index" 
@@ -70,6 +71,7 @@
             <component 
               v-if="item.component" 
               :is="item.component" 
+              :componentProps="item.props || null"
               :isActive="activeIndex === index" 
               class="shrink-0" />
             <slot v-else :name="`section-${index}`">
@@ -78,7 +80,8 @@
           </div>
         </div>
       </section>
-    </main>
+    </SliderMain>
+
   </div>
 </template>
 
@@ -86,7 +89,8 @@
 import { ref, computed, watch } from 'vue';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
-import Navigation from '@/components/slider/Navigation.vue';
+import SliderNavigation from '@/components/slider/Navigation.vue';
+import SliderMain from '@/components/slider/Main.vue';
 
 const props = defineProps({
   slides: {
@@ -96,6 +100,10 @@ const props = defineProps({
   initialActiveIndex: {
     type: Number,
     default: 0
+  },
+  navigationVariant: {
+    type: String,
+    default: ''
   }
 });
 

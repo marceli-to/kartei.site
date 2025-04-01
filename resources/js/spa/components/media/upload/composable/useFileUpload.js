@@ -49,7 +49,10 @@ export function useFileUpload(options = {}) {
   }
 
   const processFiles = (fileList) => {
-    const files = Array.from(fileList)
+    let files = Array.from(fileList)
+    if (!multiple) {
+      files = files.slice(0, 1)
+    }
     const validFiles = []
     const errors = []
 
@@ -84,7 +87,9 @@ export function useFileUpload(options = {}) {
           uploadProgress.value = Math.round((event.loaded * 100) / event.total)
         }
       });
-      uploadedFiles.value = [...response.data.files, ...uploadedFiles.value];
+
+      uploadedFiles.value = multiple ? [...response.data.files, ...uploadedFiles.value] : [...response.data.files]
+
       return response.data;
     } 
     catch (error) {

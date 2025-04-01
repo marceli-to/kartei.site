@@ -3,7 +3,7 @@
     <div 
       v-for="archive in archives" :key="archive.id" 
       class="border-b last-of-type:border-b-0 py-10">
-      {{ archive.title }}
+      {{ archive.name }}
       <template v-if="userStore.can('view.archive.' + archive.id)">
         [can view]
       </template>

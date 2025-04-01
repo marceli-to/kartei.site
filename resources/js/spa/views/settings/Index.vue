@@ -7,23 +7,21 @@
 </template>
 
 <script setup>
-import { ref, computed, markRaw } from 'vue';
-import { useUserStore } from '@/stores/user';
+import { computed, markRaw } from 'vue';
+import { usePageTitle } from '@/composables/userPageTitle';
+import { useSlider } from '@/components/slider/composable/useSlider';
 import SliderContainer from '@/components/slider/Container.vue';
 import ProfileComponent from '@/views/settings/Profile.vue';
 import AddressComponent from '@/views/settings/Address.vue';
 import BillingAddressComponent from '@/views/settings/BillingAddress.vue';
-import CompnayComponent from '@/views/settings/Company.vue';
+import CompanyComponent from '@/views/settings/Company.vue';
 import UserComponent from '@/views/settings/User.vue';
 import SubscriptionComponent from '@/views/settings/Subscription.vue';
 import ThemeComponent from '@/views/settings/Theme.vue';
 import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 
-const userStore = useUserStore();
-const activeIndex = ref(0);
-
-const title = ref('Einstellungen');
-defineExpose({ title });
+const { setTitle } = usePageTitle();
+setTitle('Einstellungen');
 
 // Define all possible slides with their permissions and components
 const allSlides = [
@@ -64,7 +62,7 @@ const allSlides = [
     width: 25, 
     class: "w-3/12", 
     permission: 'edit.clients',
-    component: markRaw(CompnayComponent)
+    component: markRaw(CompanyComponent)
   },
   { 
     id: 'user', 
@@ -90,16 +88,5 @@ const allSlides = [
   }
 ];
 
-// Filter sections based on permissions
-const slides = computed(() => {
-  return allSlides.filter(section => 
-    !section.permission || userStore.can(section.permission)
-  );
-});
-
-function handleSlideChange(newIndex) {
-  if (newIndex >= 0 && newIndex < slides.value.length) {
-    activeIndex.value = newIndex;
-  }
-}
+const { slides, handleSlideChange } = useSlider(allSlides);
 </script>

@@ -25,9 +25,9 @@ class UserPermissionController extends Controller
     $archive = (new FindArchiveAction())->execute($request->archive, true);
 
     if ($archive) {
-      (new AssignRoleAction())->execute($user, $request->role, $archive->id);
-      (new AttachArchiveUserAction())->execute($user, $request->role, $archive->id);
-      (new StoreUserPermissionAction())->execute($user, $request->permissions, $archive->id);
+      (new AssignRoleAction())->execute($user, $archive->id, $request->role);
+      (new AttachArchiveUserAction())->execute($user, $archive->id, $request->role);
+      (new StoreUserPermissionAction())->execute($user, $archive->id, $request->permissions);
     }
     return new UserResource($user);
   }
@@ -37,9 +37,9 @@ class UserPermissionController extends Controller
     $archive = (new FindArchiveAction())->execute($request->archive, true);
 
     if ($archive) {
-      (new AssignRoleAction())->execute($user, $request->role, $archive->id);
-      (new SyncArchiveUserAction())->execute($user, $request->role, $archive->id);
-      (new StoreUserPermissionAction())->execute($user, $request->permissions, $archive->id);
+      (new AssignRoleAction())->execute($user, $archive->id, $request->role);
+      (new SyncArchiveUserAction())->execute($user, $archive->id, $request->role);
+      (new StoreUserPermissionAction())->execute($user, $archive->id, $request->permissions,);
     }
     
     return new UserResource($user);

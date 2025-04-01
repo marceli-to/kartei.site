@@ -7,7 +7,7 @@
           :maxSize="250 * 1024 * 1024"
           :allowedTypes="['image/*', 'video/mp4']"
           uploadUrl="/api/upload"
-          :multiple="false"
+          :multiple="true"
         />
       </div>
       <div>
@@ -45,14 +45,14 @@
           <h3 class="mb-8 font-muoto-regular">Button (box, icon right)</h3>
           <Action 
             label="Erstellen" 
-            classes="border pl-8" 
+            variant="box"
             :icon="{ name: 'Plus', position: 'right' }" />
         </div>
         <div>
           <h3 class="mb-8 font-muoto-regular">Button (box, icon left)</h3>
           <Action 
             label="Erstellen"
-            classes="border pl-8" 
+            variant="box"
             :icon="{ name: 'Plus', position: 'left' }" />
         </div>
         <div>
@@ -211,6 +211,16 @@
             :error="errors.country"
           />
         </InputGroup>
+        <InputGroup>
+          <InputLabel label="Land (Box Variant)" id="country_box" required />
+          <InputSelect
+            id="country_box"
+            v-model="form.country"
+            :options="countries"
+            :error="errors.country_box"
+            variant="box"
+          />
+        </InputGroup>
       </div>
 
       <div class="flex flex-col gap-y-24 mt-32 w-full">
@@ -331,8 +341,8 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
-import ImageUpload from '@/components/media/ImageUpload.vue';
-import ImageCard from '@/components/media/ImageCard.vue';
+import ImageUpload from '@/components/media/upload/Image.vue';
+import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import Slideshow from '@/components/media/Slideshow.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
@@ -398,7 +408,8 @@ const errors = ref({
   street_number: null,
   zip: null,
   city: 'Ort fehlt',
-  country: null
+  country: null,
+  country_box: null
 });
 
 const countries = [

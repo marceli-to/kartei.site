@@ -12,11 +12,11 @@ class ArchiveDelete extends Command
 
   public function handle()
   {
-    $archives = Archive::all()->pluck('title', 'id')->toArray();
+    $archives = Archive::all()->pluck('name', 'id')->toArray();
     $choice = $this->choice('Which archive do you want to delete?', $archives);
     $archiveId = array_search($choice, $archives);
     $archive = Archive::find($archiveId);
     (new DeleteArchiveAction())->execute($archive);
-    $this->info('Archive deleted: ' . $archive->title);
+    $this->info('Archive deleted: ' . $archive->name);
   }
 }

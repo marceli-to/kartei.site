@@ -1,22 +1,26 @@
 <template>
-  <div v-if="images.length" class="mt-24">
+  <div v-if="images.length" :class="multiple ? 'mt-24' : ''">
     <draggable
       v-model="localImages"
-      item-key="index"
-      class="grid grid-cols-12 gap-24"
-      @end="onDragEnd">
+      item-key="element.resized.name"
+      :class="multiple ? 'grid grid-cols-12 gap-24' : ''"
+      @end="onDragEnd"
+    >
       <template #item="{ element, index }">
-        <ImageCard class="col-span-6 cursor-move">
+        <ImageCard :class="multiple ? 'col-span-6 cursor-move' : ''">
           <Image
             :src="element.resized.url"
-            :alt="element.resized.original_name" />
+            :alt="element.resized.original_name"
+          />
 
-          <button v-if="editable"
+          <button
+            v-if="editable"
+            type="button"
             @click="deleteImage(element.resized.name, index)"
-            class="absolute top-0 right-0 p-8 hover:bg-snow">
+            class="absolute top-0 right-0 p-8 hover:bg-snow"
+          >
             <IconCross variant="small" />
-          </button> 
-
+          </button>
         </ImageCard>
       </template>
     </draggable>
@@ -28,7 +32,7 @@ import { ref, watch } from 'vue';
 import axios from 'axios';
 import draggable from 'vuedraggable';
 import IconCross from '@/components/icons/Cross.vue';
-import ImageCard from '@/components/media/ImageCard.vue';
+import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import { useToastStore } from '@/components/toast/stores/toast';
 const toast = useToastStore();
@@ -39,6 +43,10 @@ const props = defineProps({
     required: true,
   },
   editable: {
+    type: Boolean,
+    default: true,
+  },
+  multiple: {
     type: Boolean,
     default: true,
   },

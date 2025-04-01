@@ -1,7 +1,7 @@
 <template>
   <Header :title="pageTitle" />
   <router-view v-slot="{ Component }">
-    <component :is="Component" ref="pageComponent" />
+    <component :is="Component" :key="route.fullPath" ref="pageComponent" />
   </router-view>
   <Toast />
   <Dialog />

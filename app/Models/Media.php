@@ -13,6 +13,10 @@ class Media extends Model
     'uuid',
     'name',
     'original_name',
+    'resized_name',
+    'resized_width',
+    'resized_height',
+    'aspect_ratio',
     'mime_type',
     'size'
   ];

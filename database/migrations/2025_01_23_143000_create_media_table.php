@@ -16,6 +16,10 @@ return new class extends Migration
       $table->uuid('uuid')->unique();
       $table->string('name');
       $table->string('original_name');
+      $table->string('resized_name');
+      $table->integer('resized_width');
+      $table->integer('resized_height');      
+      $table->string('aspect_ratio');
       $table->string('mime_type');
       $table->unsignedBigInteger('size');
       $table->morphs('mediable');

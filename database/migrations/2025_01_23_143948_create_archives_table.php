@@ -15,7 +15,7 @@ return new class extends Migration
       $table->id();
       $table->uuid('uuid')->unique();
       $table->string('slug', 255)->unique();
-      $table->string('title');
+      $table->string('name');
       $table->string('acronym', 10);
       $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
       $table->timestamps();

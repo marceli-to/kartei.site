@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archives/admin', [ArchiveController::class, 'getByAdmin']);
   Route::get('/archives/user/{userId}', [ArchiveController::class, 'getByUser']);
   Route::get('/archives/all', [ArchiveController::class, 'getAll']);
+  Route::post('/archive', [ArchiveController::class, 'create']);
 
   // Archive User
   Route::post('/archive/user', [ArchiveUserController::class, 'create']);

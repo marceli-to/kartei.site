@@ -19,4 +19,9 @@ export const getArchivesByAdmin = async () => {
   const response = await axios.get('/api/archives/admin');
   return response.data;
 };
+
+export const createArchive = async (archiveData) => {
+  const response = await axios.post('/api/archive', archiveData);
+  return response.data;
+};
   

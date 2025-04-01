@@ -18,7 +18,7 @@ class ArchiveUserDetach extends Command
     $userId = array_search($choice, $users);
     $user = User::find($userId);
 
-    $archives = Archive::all()->pluck('title', 'id')->toArray();
+    $archives = Archive::all()->pluck('name', 'id')->toArray();
     $choice = $this->choice('Which archive do you want to remove this user from?', $archives);
     $archiveIds = array_search($choice, $archives);
 

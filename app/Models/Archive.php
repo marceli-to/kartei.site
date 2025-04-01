@@ -14,7 +14,7 @@ class Archive extends Model
   protected $fillable = [
     'uuid', 
     'slug',
-    'title', 
+    'name', 
     'acronym', 
     'company_id'
   ];
@@ -36,11 +36,11 @@ class Archive extends Model
 
   public function media()
   {
-    return $this->morphMany(Media::class, 'mediable');
+    return $this->morphOne(Media::class, 'mediable');
   }
 
   protected static function getSlugSource(): string
   {
-    return 'title';
+    return 'name';
   }
 }

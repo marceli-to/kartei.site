@@ -107,6 +107,11 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  variant: {
+    type: String,
+    default: 'default',
+    validator: (value) => ['default', 'box'].includes(value)
   }
 });
 
@@ -129,7 +134,11 @@ const resolveIconComponent = computed(() => {
 
 const baseClasses = 'min-h-default flex justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
 
-const defaultBorderClasses = 'border-y border-graphite pr-8';
+const defaultBorderClasses = computed(() => {
+  return props.variant === 'box' 
+    ? 'border border-graphite px-8' 
+    : 'border-y border-graphite pr-8';
+});
 
 const contentClasses = computed(() => {
   if (props.icon?.position === 'center') {

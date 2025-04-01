@@ -2,6 +2,7 @@
 namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\MediaResource;
 
 class ArchiveResource extends JsonResource
 {
@@ -11,7 +12,8 @@ class ArchiveResource extends JsonResource
       'id' => $this->id,
       'uuid' => $this->uuid,
       'acronym' => $this->acronym,
-      'title' => $this->title,
+      'name' => $this->name,
+      'media' => MediaResource::make($this->media),
     ];
   }
 }

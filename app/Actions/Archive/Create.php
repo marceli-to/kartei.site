@@ -7,9 +7,8 @@ class Create
   public function execute(array $data): Archive
   {
     return Archive::create([
-      'title' => $data['title'],
+      'name' => $data['name'],
       'acronym' => $data['acronym'],
-      'media_id' => $data['media_id'] ?? null,
       'company_id' => $data['company_id'] ?? null
     ]);
   }

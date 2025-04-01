@@ -4,6 +4,7 @@
       :id="id"
       :type="type"
       :value="modelValue"
+      :maxlength="maxLength"
       @input="$emit('update:modelValue', $event.target.value)"
       @focus="$emit('update:error', '')"
       :placeholder="placeholder"
@@ -29,6 +30,10 @@ const props = defineProps({
   type: {
     type: String,
     default: 'text'
+  },
+  maxLength: {
+    type: [String, Number],
+    default: ''
   },
   placeholder: {
     type: String,

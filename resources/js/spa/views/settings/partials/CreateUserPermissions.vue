@@ -181,7 +181,7 @@ const archivePermissions = ref({});
 const archiveOptions = computed(() => {
   return archives.value.map(archive => ({
     value: archive.uuid,
-    label: archive.title,
+    label: archive.name,
     disabled: isSaved(archive.uuid)
   }));
 });

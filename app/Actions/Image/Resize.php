@@ -33,7 +33,6 @@ class Resize
     $newHeight = $image->getHeight();
     
     return [
-      'path' => $destinationPath,
       'width' => $newWidth,
       'height' => $newHeight,
       'aspect_ratio' => $this->determineAspectRatio($newWidth, $newHeight),

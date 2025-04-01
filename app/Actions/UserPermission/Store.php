@@ -7,7 +7,7 @@ use App\Models\User;
 
 class Store
 {
-  public function execute(User $user, array $permissions, int $archiveId)
+  public function execute(User $user, int $archiveId, array $permissions)
   {
     // First, remove any existing permissions for this archive
     $this->removeExistingPermissions($user, $archiveId);

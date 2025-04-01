@@ -15,12 +15,12 @@ class ArchiveSeeder extends Seeder
     $archives = [
       [
         'slug' => Str::slug('Sammlung Bert Fiefelstein'),
-        'title' => 'Sammlung Bert Fiefelstein',
+        'name' => 'Sammlung Bert Fiefelstein',
         'acronym' => 'BF'
       ],
       [
         'slug' => Str::slug('Bildarchiv Kretschmann'),
-        'title' => 'Bildarchiv Kretschmann',
+        'name' => 'Bildarchiv Kretschmann',
         'acronym' => 'BK'
       ]
     ];

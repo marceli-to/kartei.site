@@ -5,7 +5,7 @@ use Spatie\Permission\Models\Role;
 
 class Assign
 {
-  public function execute(User $user, $roleId, $archiveId = NULL): array
+  public function execute(User $user, $archiveId = NULL, $roleId): array
   {
     // First, find any roles the user has for this archive
     $existingRoles = $user->roles()

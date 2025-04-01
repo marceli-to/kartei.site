@@ -14,13 +14,13 @@ class ArchiveCreate extends Command
   {
     $faker = Faker::create();
     $data = [
-      'title' => $this->ask('Enter title') ?? $faker->company,
+      'name' => $this->ask('Enter name') ?? $faker->company,
       'acronym' => $this->ask('Enter acronym') ?? $faker->unique()->word,
       'media_id' => $this->ask('Enter media id') ?? null,
       'company_id' => $this->ask('Enter company id') ?? null
     ];
 
     $archive = (new CreateArchiveAction())->execute($data);
-    $this->info('Archive created: ' . $archive->title);
+    $this->info('Archive created: ' . $archive->name);
   }
 }

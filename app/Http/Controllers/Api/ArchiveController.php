@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Archive;
 use App\Http\Resources\ArchiveResource;
 use App\Actions\Archive\Get as GetArchiveAction;
+use App\Actions\Archive\Create as CreateArchiveAction;
+use App\Actions\ArchiveImage\Create as CreateImageAction;
+use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use App\Models\User;
 
 class ArchiveController extends Controller
@@ -65,5 +68,19 @@ class ArchiveController extends Controller
         (new GetArchiveAction())->execute(['user_id' => $userId])
       )
     );
+  }
+
+  /**
+   * Create a new archive
+   *
+   * @param array $data
+   * @return JsonResponse
+   */
+  public function create(Request $request): JsonResponse
+  {
+    $archive = (new CreateArchiveAction())->execute($request->except('image'));
+    (new CreateImageAction())->execute($request->image, $archive);
+    (new AttachArchiveUserAction())->execute(auth()->user(), $archive->id);
+    return response()->json(new ArchiveResource($archive));
   }
 }

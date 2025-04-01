@@ -32,7 +32,7 @@ class Store
   {
     $baseName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
     $cleanName = $this->sanitizeFilename($baseName);
-    $uniqueId = now()->timestamp . '_' . Str::random(5);
+    $uniqueId = uniqid();
     $extension = $file->getClientOriginalExtension();
 
     $originalFilename = $this->generateFilename($cleanName, $uniqueId, $extension, '_original');
@@ -42,7 +42,7 @@ class Store
     $resizedImageData = $this->resizeAndStoreFile($originalPath, $resizedFilename);
 
     return [
-      'original' => $this->getFileDetails($file, $originalFilename, $originalPath),
+      'original' => $this->getFileDetails($file, $originalFilename,  Storage::url($originalPath)),
       'resized' => $this->getFileDetails($file, $resizedFilename, $resizedImageData['url']) + $resizedImageData,
     ];
   }
@@ -79,6 +79,7 @@ class Store
       'name' => $filename,
       'url' => $path,
       'mime_type' => $file->getMimeType(),
+      'size' => $file->getSize(),
     ];
   }
 

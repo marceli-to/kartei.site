@@ -6,7 +6,7 @@
           <router-link 
             :to="{ name: 'home' }" 
             class="block mt-25" 
-            @click="sidebar.hide">
+            @click="hide">
             <IconLogo class="text-black dark:text-white" />
           </router-link>
         </div>
@@ -17,8 +17,8 @@
         </div>
         <div class="w-3/12">
           <div class="flex justify-end gap-x-48">
-            <a 
-              href="javascript:;" 
+            <button 
+              type="button" 
               class="mt-20 group"
               @click="infoIcon.toggle">
               <template v-if="infoIcon.isActive">
@@ -28,7 +28,7 @@
                 <IconInfo classes="group-hover:hidden" />
                 <IconInfo variant="active" classes="hidden group-hover:block" />
               </template>
-            </a>
+            </button>
 
             <a href="" class="mt-20 group">
               <IconProfile classes="group-hover:hidden" />
@@ -36,8 +36,8 @@
             </a>
             <button 
               class="w-28 h-24 mt-33 flex items-center justify-center"
-              @click="sidebar.toggle">
-              <IconCross v-if="sidebar.isOpen.value" />
+              @click="toggle">
+              <IconCross v-if="isOpen" />
               <IconBurger v-else />
             </button>
           </div>
@@ -45,27 +45,26 @@
       </div>
     </div>
   </header>
-  <SidebarMenu :is-open="sidebar.isOpen.value" @toggle="sidebar.toggle" />
+  <SidebarMenu :is-open="isOpen" @toggle="toggle" />
 </template>
 <script setup>
+import { useToggleSidebar } from '@/composables/useToggleSidebar';
+import { useInfoIconStore } from '@/components/infobox/stores/info';
+import { usePageTitle } from '@/composables/userPageTitle';
 import IconLogo from '@/components/icons/Logo.vue';
 import IconInfo from '@/components/icons/Info.vue';
 import IconProfile from '@/components/icons/Profile.vue';
 import IconBurger from '@/components/icons/Burger.vue';
 import IconCross from '@/components/icons/Cross.vue';
 import SidebarMenu from '@/components/menu/Sidebar.vue';
-
-import { useToggleSidebar } from '@/composables/useToggleSidebar';
-const sidebar = useToggleSidebar();
-
-import { useInfoIconStore } from '@/components/infobox/stores/info';
+const { isOpen, toggle, hide } = useToggleSidebar();
 const infoIcon = useInfoIconStore();
 
+const { title } = usePageTitle();
 defineProps({
   title: {
     type: String,
     default: '',
   },
 });
-
 </script>

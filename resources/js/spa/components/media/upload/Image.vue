@@ -18,7 +18,7 @@
       @dragover.prevent="isDragging = true"
       @dragleave.prevent="isDragging = false"
       @drop.prevent="handleDrop"
-    >
+      v-if="multiple || uploadedFiles.length === 0">
       <input
         ref="fileInput"
         type="file"
@@ -49,16 +49,17 @@
     <ImageList 
       :images="uploadedFiles" 
       :editable="true" 
-      @delete="handleDeleteImage"
-    />
+      :multiple="multiple"
+      @delete="handleDeleteImage">
+    </ImageList>
 
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useFileUpload } from '@/composables/useFileUpload';
-import ImageList from '@/components/media/ImageList.vue';
+import { computed, watch } from 'vue'
+import { useFileUpload } from '@/components/media/upload/composable/useFileUpload.js';
+import ImageList from '@/components/media/upload/List.vue';
 import IconImage from '@/components/icons/Image.vue';
 
 const props = defineProps({
@@ -82,7 +83,13 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  modelValue: {
+    type: Array,
+    default: () => []
+  }  
 })
+
+const emit = defineEmits(['update:modelValue']);
 
 const {
   fileInput,
@@ -104,8 +111,9 @@ const {
   multiple: props.multiple
 });
 
-// Combine existing images with uploaded files
-uploadedFiles.value = [...props.existingImages, ...uploadedFiles.value];
+watch(uploadedFiles, (newVal) => {
+  emit('update:modelValue', newVal)
+});
 
 const handleDeleteImage = (index) => {
   uploadedFiles.value.splice(index, 1);
