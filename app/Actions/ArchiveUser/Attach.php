@@ -9,12 +9,12 @@ class Attach
     // Detach any existing entry for this archive
     $user->archives()->detach($archiveId);
 
-    // Attach with the new role and metadata, but only if the user is not 'Super Admin' or 'Admin'
+    // Attach without metadata if the user is 'Super Admin' or 'Admin'
     if ($user->hasRole('Super Admin') || $user->hasRole('Admin')) {
       return $user->archives()->attach($archiveId);
     }
 
-    // Add role and metadata for regular users
+    // Attach with role and metadata for regular users
     return $user->archives()->attach($archiveId, [
       'role_id' => $roleId,
       'added_by' => auth()->id(),

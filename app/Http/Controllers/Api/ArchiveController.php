@@ -9,6 +9,7 @@ use App\Actions\Archive\Get as GetArchiveAction;
 use App\Actions\Archive\Create as CreateArchiveAction;
 use App\Actions\ArchiveImage\Create as CreateImageAction;
 use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
+use App\Http\Requests\Archive\StoreRequest;
 use App\Models\User;
 
 class ArchiveController extends Controller
@@ -76,7 +77,7 @@ class ArchiveController extends Controller
    * @param array $data
    * @return JsonResponse
    */
-  public function create(Request $request): JsonResponse
+  public function create(StoreRequest $request): JsonResponse
   {
     $archive = (new CreateArchiveAction())->execute($request->except('image'));
     (new CreateImageAction())->execute($request->image, $archive);

@@ -9,13 +9,14 @@
       <!-- Form elements -->
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Titelbild" id="image" />
+          <InputLabel label="Titelbild" id="image" required />
           <ImageUpload
             :maxSize="250 * 1024 * 1024"
-            :allowedTypes="['image/*', 'video/mp4']"
+            :allowedTypes="['image/*']"
             uploadUrl="/api/upload"
             :multiple="false"
              v-model="form.image"
+             :error="errors.image"
           />
         </InputGroup>
         <InputGroup>
@@ -36,6 +37,7 @@
             :error="errors.acronym"
             @update:error="errors.acronym = $event"
             :placeholder="errors.acronym ? errors.name : 'Kürzel'"
+            :classes="'uppercase placeholder:normal-case'"
             :maxLength="5"
             aria-label="acronym" />
         </InputGroup>
@@ -63,7 +65,7 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { getUserCompanies } from '@/services/api/user';
 import { createArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -103,7 +105,8 @@ const form = ref({
 const errors = ref({
   name: null,
   acronym: null,
-  company: null
+  company: null,
+  image: null
 });
 
 onMounted(async () => {
@@ -129,6 +132,7 @@ const handleSubmit = async () => {
     errors.value = {
       name: error.response?.data?.errors?.name?.[0],
       acronym: error.response?.data?.errors?.acronym?.[0],
+      image: error.response?.data?.errors?.image?.[0]
     }
     toast.show('Fehler beim Speichern der Kartei.', 'error');
   }

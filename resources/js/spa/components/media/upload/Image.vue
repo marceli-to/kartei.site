@@ -5,7 +5,7 @@
       class="border border-graphite aspect-square flex items-center justify-center w-full h-full relative cursor-pointer outline-none transition duration-200 ease-in-out group"
       :class="{
         'border-lime !text-lime': isDragging,
-        'border-flame': hasError,
+        '!border-flame': hasError,
         'bg-snow': isUploading,
         '': isUploaded
       }"
@@ -37,12 +37,18 @@
         </div>
         <div class="text-xs mt-4 ml-4 leading-none">{{ uploadProgress }}%</div>
       </div>
-
       <div v-else class="flex flex-col items-center">
-        <IconImage :class="{ 'text-lime': isDragging, 'text-flame': hasError }" />
-        <div class="text-sm mt-8 opacity-0 group-hover:opacity-100 transition-all duration-200">
-          Click or drag & drop to upload an image
-        </div>
+        <IconImage :class="{ 'text-lime': isDragging, 'text-flame': hasError || hasValidationError }" />
+        <template v-if="hasValidationError">
+          <div class="text-sm mt-8 text-flame">
+            {{ error }}
+          </div>
+        </template>
+        <template v-else>
+          <div class="text-sm mt-8 opacity-0 group-hover:opacity-100 transition-all duration-200">
+            Click or drag & drop to upload an image
+          </div>
+        </template>
       </div>
     </div>
 
@@ -86,8 +92,14 @@ const props = defineProps({
   modelValue: {
     type: Array,
     default: () => []
-  }  
-})
+  },
+  error: {
+    type: String,
+    default: ''
+  }
+});
+
+const hasValidationError = computed(() => props.error !== null);
 
 const emit = defineEmits(['update:modelValue']);
 

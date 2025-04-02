@@ -9,9 +9,9 @@ class MediaResource extends JsonResource
   {
     return [
       'uuid' => $this->uuid,
-      'resized_name' => $this->resized_name,
-      'resized_width' => $this->resized_width,
-      'resized_height' => $this->resized_height,
+      'name' => $this->resized_name,
+      'width' => $this->resized_width,
+      'height' => $this->resized_height,
       'aspect_ratio' => $this->aspect_ratio,
       'archive' => $this->mediable?->uuid
     ];
