@@ -13,7 +13,13 @@ class MediaResource extends JsonResource
       'width' => $this->resized_width,
       'height' => $this->resized_height,
       'aspect_ratio' => $this->aspect_ratio,
-      'archive' => $this->mediable?->uuid
+      'original_name' => $this->original_name,
+      'mime_type' => $this->mime_type,
+      'size' => $this->size,
+      'url' => $this->mediable && $this->resized_name
+        ? "/storage/{$this->mediable->uuid}/{$this->resized_name}"
+        : null,
+      'archive' => $this->mediable?->uuid,
     ];
   }
 }

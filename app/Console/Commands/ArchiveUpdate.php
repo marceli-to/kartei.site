@@ -24,7 +24,7 @@ class ArchiveUpdate extends Command
       'company_id' => $this->ask('Enter new company id') ?? $archive->company_id
     ];
 
-    $archive = (new UpdateArchiveAction())->execute($archive, $data);
+    $archive = (new UpdateArchiveAction())->execute($data, $archive);
     $this->info('Archive updated: ' . $archive->name);
   }
 }

@@ -16,6 +16,7 @@
             uploadUrl="/api/upload"
             :multiple="false"
              v-model="form.image"
+             :existingImages="form.image"
              :error="errors.image"
           />
         </InputGroup>
@@ -99,8 +100,8 @@ const isSaving = ref(false);
 
 const form = ref({
   uuid: '',
-  name: '',
-  acronym: '',
+  name: 'Marcelito',
+  acronym: 'MTO',
   company: '',
   image: null
 });
@@ -126,7 +127,6 @@ onMounted(async () => {
 
     // If we have an archiveId from props or from store, use it
     if (props.componentProps?.archive) {
-      console.log('archiveId from props:', props.componentProps.archive);
       archiveStore.setArchiveId(props.componentProps.archive);
     }
 
@@ -158,8 +158,7 @@ const handleSubmit = async () => {
       const response = await createArchive(form.value);
       archiveStore.setArchiveId(response.uuid);
       form.value.uuid = response.uuid;
-      form.value.image = response.image;
-      console.log(form.value.image);
+      form.value.image = [response.image];
       toast.show('Kartei erfolgreich gespeichert.', 'success');
     } 
     else {

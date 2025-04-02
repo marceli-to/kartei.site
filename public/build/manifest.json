@@ -50,14 +50,14 @@
     "src": "resources/js/app.js"
   },
   "resources/js/spa.css": {
-    "file": "assets/spa-2a6724da.css",
+    "file": "assets/spa-ef7c581c.css",
     "src": "resources/js/spa.css"
   },
   "resources/js/spa.js": {
     "css": [
-      "assets/spa-2a6724da.css"
+      "assets/spa-ef7c581c.css"
     ],
-    "file": "assets/spa-d4278ce6.js",
+    "file": "assets/spa-d000ec72.js",
     "isEntry": true,
     "src": "resources/js/spa.js"
   }

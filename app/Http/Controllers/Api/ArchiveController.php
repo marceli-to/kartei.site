@@ -75,30 +75,32 @@ class ArchiveController extends Controller
   /**
    * Create a new archive
    *
-   * @param array $data
+   * @param StoreRequest $request
    * @return JsonResponse
    */
   public function create(StoreRequest $request): JsonResponse
   {
     $archive = (new CreateArchiveAction())->execute($request->except('image'));
-    (new CreateImageAction())->execute($request->image, $archive);
+    (new CreateImageAction())->execute($request->image[0], $archive);
     (new AttachArchiveUserAction())->execute(auth()->user(), $archive->id);
-    $archive->load('company', 'media');
-    return response()->json(new ArchiveResource($archive));
+    return response()->json(
+      new ArchiveResource($archive->load('company', 'media'))
+    );
   }
 
   /**
    * Update an existing archive
    *
-   * @param array $data
+   * @param StoreRequest $request
+   * @param Archive $archive
    * @return JsonResponse
    */
   public function update(StoreRequest $request, Archive $archive): JsonResponse
   {
-    dd($request->all(), $archive);
-    $archive = (new UpdateArchiveAction())->execute($request->except('image'), $uuid);
-    (new CreateImageAction())->execute($request->image, $archive);
-    $archive->load('company', 'media');
-    return response()->json(new ArchiveResource($archive));
+    $archive = (new UpdateArchiveAction())->execute($request->except('image'), $archive);
+    (new CreateImageAction())->execute($request->image[0], $archive);
+    return response()->json(
+      new ArchiveResource($archive->load('company', 'media'))
+    );
   }
 }

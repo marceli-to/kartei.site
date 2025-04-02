@@ -63,8 +63,8 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
-import { useFileUpload } from '@/components/media/upload/composable/useFileUpload.js';
+import { computed, watch, onMounted } from 'vue'
+import { useFileUpload, normalizeImageEntry } from '@/components/media/upload/composable/useFileUpload.js';
 import ImageList from '@/components/media/upload/List.vue';
 import IconImage from '@/components/icons/Image.vue';
 
@@ -126,6 +126,13 @@ const {
 watch(uploadedFiles, (newVal) => {
   emit('update:modelValue', newVal)
 });
+
+onMounted(() => {
+  if (props.existingImages?.length) {
+    const normalized = props.existingImages.map(normalizeImageEntry)
+    uploadedFiles.value = [...normalized]
+  }
+})
 
 const handleDeleteImage = (index) => {
   uploadedFiles.value.splice(index, 1);

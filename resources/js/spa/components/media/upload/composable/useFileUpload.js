@@ -88,7 +88,8 @@ export function useFileUpload(options = {}) {
         }
       });
 
-      uploadedFiles.value = multiple ? [...response.data.files, ...uploadedFiles.value] : [...response.data.files]
+      const normalized = response.data.files.map(normalizeImageEntry)
+      uploadedFiles.value = multiple ? [...normalized, ...uploadedFiles.value] : [...normalized]
 
       return response.data;
     } 
@@ -154,7 +155,7 @@ export function useFileUpload(options = {}) {
       fileInput.value.value = ''
     }
   }
-
+  
   return {
     fileInput,
     isDragging,
@@ -167,6 +168,35 @@ export function useFileUpload(options = {}) {
     handleFileSelect,
     triggerFileInput,
     retryFailed,
-    reset
+    reset,
+    normalizeImageEntry
+  }
+}
+
+export function normalizeImageEntry(entry) {
+  if ('resized' in entry) {
+    return {
+      url: entry.resized.url,
+      name: entry.original.original_name,
+      width: entry.resized.width,
+      height: entry.resized.height,
+      aspect_ratio: entry.resized.aspect_ratio,
+      original_name: entry.original.name,
+      resized_name: entry.resized.name,
+      mime_type: entry.original.mime_type,
+      size: entry.original.size
+    }
+  }
+
+  return {
+    uuid: entry.uuid,
+    url: `/storage/temp/${entry.name}`,
+    name: entry.name,
+    width: entry.width,
+    height: entry.height,
+    aspect_ratio: entry.aspect_ratio,
+    original_name: entry.name,
+    mime_type: entry.mime_type,
+    size: entry.size
   }
 }

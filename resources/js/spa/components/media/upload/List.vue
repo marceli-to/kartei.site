@@ -4,19 +4,18 @@
       v-model="localImages"
       item-key="element.resized.name"
       :class="multiple ? 'grid grid-cols-12 gap-24' : ''"
-      @end="onDragEnd"
-    >
+      @end="onDragEnd">
       <template #item="{ element, index }">
         <ImageCard :class="multiple ? 'col-span-6 cursor-move' : ''">
           <Image
-            :src="element.resized.url"
-            :alt="element.resized.original_name"
+            :src="element.resized?.url || element.url"
+            :alt="element.resized?.original_name || element.original_name || element.name"
           />
 
           <button
             v-if="editable"
             type="button"
-            @click="deleteImage(element.resized.name, index)"
+            @click="deleteImage((element.resized?.name || element.name), index)"
             class="absolute top-0 right-0 p-8 hover:bg-snow"
           >
             <IconCross variant="small" />
