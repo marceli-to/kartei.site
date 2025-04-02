@@ -15,9 +15,9 @@
             :allowedTypes="['image/*']"
             uploadUrl="/api/upload"
             :multiple="false"
-             v-model="form.image"
-             :existingImages="form.image"
-             :error="errors.image"
+            v-model="form.image"
+            :existingImages="form.image"
+            :error="errors.image"
           />
         </InputGroup>
         <InputGroup>
@@ -71,7 +71,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { getUserCompanies } from '@/services/api/user';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
-import { useArchiveStore } from '@/stores/archive';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -82,7 +81,6 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const toast = useToastStore();
-const archiveStore = useArchiveStore();
 
 const props = defineProps({
   isActive: {
@@ -92,7 +90,7 @@ const props = defineProps({
   componentProps: {
     type: Object,
     default: () => {}
-  },
+  }
 });
 
 const companies = ref([]);
@@ -101,7 +99,7 @@ const isSaving = ref(false);
 
 const route = useRoute();
 const router = useRouter();
-const uuid = route.params.uuid || null;
+const uuid = ref(route.params.uuid || null);
 
 const form = ref({
   uuid: '',
@@ -118,7 +116,17 @@ const errors = ref({
   image: null
 });
 
-// watch for changes if "isActive"
+// Watch for changes in route.params.uuid
+watch(() => route.params.uuid, (newUuid) => {
+  if (newUuid !== uuid.value) {
+    uuid.value = newUuid || null;
+    if (uuid.value) {
+      fetchArchive();
+    }
+  }
+}, { immediate: true });
+
+// Watch for changes if "isActive"
 watch(() => props.isActive, (newVal) => {
   if (!newVal) {
     resetView();
@@ -130,9 +138,8 @@ onMounted(async () => {
     isLoading.value = true;
     await fetchCompanies();
 
-    // If we have an archiveId from props or from store, use it
-    if (uuid) {
-      archiveStore.setArchiveId(uuid);
+    // If we have a uuid from props or route, fetch the archive
+    if (uuid.value) {
       await fetchArchive();
     }
   } 
@@ -149,9 +156,9 @@ const handleSubmit = async () => {
   try {
     isSaving.value = true;
 
-    if (!uuid) {
+    if (!uuid.value) {
       const response = await createArchive(form.value);
-      archiveStore.setArchiveId(response.uuid);
+      uuid.value = response.uuid;
       form.value.uuid = response.uuid;
       form.value.image = [response.image];
 
@@ -164,11 +171,9 @@ const handleSubmit = async () => {
       toast.show('Kartei erfolgreich gespeichert.', 'success');
     } 
     else {
-      console.log(form.value);
       const response = await updateArchive(form.value);
       toast.show('Kartei erfolgreich aktualisiert.', 'success');
     }
-
   } 
   catch (error) {
     console.error(error);
@@ -185,16 +190,22 @@ const handleSubmit = async () => {
 };
 
 const fetchArchive = async () => {
-  const response = await getArchive(uuid);
-  if (response) {
-    console.log(response.image);
-    form.value = {
-      uuid: response.uuid,
-      name: response.name,
-      acronym: response.acronym,
-      company: response.company?.uuid ?? '',
-      image: [response.image]
-    };
+  if (!uuid.value) return;
+  
+  try {
+    const response = await getArchive(uuid.value);
+    if (response) {
+      form.value = {
+        uuid: response.uuid,
+        name: response.name,
+        acronym: response.acronym,
+        company: response.company?.uuid ?? '',
+        image: [response.image]
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching archive:', error);
+    toast.show('Fehler beim Laden der Kartei.', 'error');
   }
 };
 
@@ -218,5 +229,4 @@ const resetView = () => {
     image: null
   };
 };
-
 </script>

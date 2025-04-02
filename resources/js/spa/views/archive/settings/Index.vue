@@ -16,32 +16,30 @@
 </template>
 
 <script setup>
-import { markRaw, watch, computed } from 'vue';
+import { markRaw, watch, ref } from 'vue';
 import { usePageTitle } from '@/composables/userPageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
-import { useArchiveStore } from '@/stores/archive';
+import { useRoute } from 'vue-router';
 import SliderContainer from '@/components/slider/Container.vue';
 import BasicInformationComponent from '@/views/archive/settings/BasicInformation.vue';
 import TagsComponent from '@/views/archive/settings/Tags.vue';
 import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
-const archiveStore = useArchiveStore();
+const route = useRoute();
+
 
 const { setTitle } = usePageTitle();
 setTitle('Einstellungen');
 
 // Create initial slides configuration
-const createSlides = (archiveId) => [
+const createSlides = () => [
   { 
     id: 'basic-information', 
     name: "Basisinformationen", 
     width: 25, 
     class: "w-3/12", 
     component: markRaw(BasicInformationComponent),
-    props: {
-      archive: archiveId
-    }
   },
   { 
     id: 'tags', 
@@ -50,10 +48,7 @@ const createSlides = (archiveId) => [
     class: "w-3/12", 
     permission: 'edit.tags',
     component: markRaw(TagsComponent),
-    props: {
-      archive: archiveId
-    },
-    disabled: !archiveId
+    disabled: !route.params.uuid
   },
   { 
     id: 'deleteAccount', 
@@ -61,25 +56,22 @@ const createSlides = (archiveId) => [
     width: 25, 
     class: "w-3/12", 
     component: markRaw(AccountDeleteComponent),
-    props: {
-      archive: archiveId
-    },
-    disabled: !archiveId
+    disabled: !route.params.uuid
   }
 ];
 
-// Initialize slider with current archive ID
-const initialSlides = createSlides(archiveStore.currentArchiveId);
+// Initialize slider with slides
+const initialSlides = createSlides();
 const { slides, handleSlideChange, updateSlides } = useSlider(initialSlides);
 
-// Watch for changes in archive ID and update slides accordingly
-watch(() => archiveStore.currentArchiveId, (newArchiveId) => {
-  const updatedSlides = createSlides(newArchiveId);
+// Watch for changes in route uuid parameter and update slides accordingly
+watch(() => route.params.uuid, () => {
+  const updatedSlides = createSlides();
   updateSlides(updatedSlides);
 }, { immediate: true });
 
-// Handle close event
+// Handle close event - no need to reset any store
 const handleClose = () => {
-  archiveStore.resetArchive();
+  // Just closes/navigates away
 };
 </script>

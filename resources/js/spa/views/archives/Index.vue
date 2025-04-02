@@ -53,17 +53,23 @@
         </div>
       </nav>
       <main class="w-10/12 px-8 min-h-full">
-        <router-link :to="{ name: 'archiveSettings', params: { uuid: 'c7468aa8-783e-492f-92b6-7958482a9639' } }">
-          Sammlung Bert Fiefelstein
-        </router-link>
+        <div v-if="archives.length > 0">
+          <div v-for="archive in archives" :key="archive.uuid">
+            <router-link :to="{ name: 'archiveSettings', params: { uuid: archive.uuid } }">
+              {{ archive.name }}
+            </router-link>
+          </div>
+        </div>
       </main>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, toRef } from 'vue';
+import { ref, toRef, onMounted } from 'vue';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import { usePageTitle } from '@/composables/userPageTitle';
+import { useUserStore } from '@/stores/user';
+import { getByUser } from '@/services/api/archive';
 import InputSearch from '@/components/forms/Search.vue';
 import InputSelect from '@/components/forms/Select.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -73,12 +79,15 @@ import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
 
 const { setTitle } = usePageTitle();
+const userStore = useUserStore();
+
 setTitle('Meine Karteien');
 
 const searchQuery = ref('');
 const sortOrder = ref('name');
 const layout = ref('list');
-const hasArchive = ref(false);
+const hasArchive = ref(true);
+const archives = ref([]);
 
 const sortOrderOptions = [
   { value: 'name', label: 'Name' },
@@ -95,5 +104,14 @@ const layoutOptions = [
 const infoBox = useInfoBox({
   isActive: toRef(true),
   condition: hasArchive
+});
+
+onMounted(async () => {
+  try {
+    archives.value = await getByUser(userStore.user.uuid);
+    hasArchive.value = archives.value.length > 0;
+  } catch (error) {
+    console.error(error);
+  }
 });
 </script>

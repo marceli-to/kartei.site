@@ -61,14 +61,14 @@ class ArchiveController extends Controller
   /**
    * Get archives for a specific user
    *
-   * @param string $userId
+   * @param User $user
    * @return JsonResponse
    */
-  public function getByUser(string $userId): JsonResponse
+  public function getByUser(User $user): JsonResponse
   {
     return response()->json(
       ArchiveResource::collection(
-        (new GetArchiveAction())->execute(['user_id' => $userId])
+        (new GetArchiveAction())->execute(['user_id' => $user->id])
       )
     );
   }
