@@ -7,6 +7,7 @@ use App\Models\Archive;
 use App\Http\Resources\ArchiveResource;
 use App\Actions\Archive\Get as GetArchiveAction;
 use App\Actions\Archive\Create as CreateArchiveAction;
+use App\Actions\Archive\Update as UpdateArchiveAction;
 use App\Actions\ArchiveImage\Create as CreateImageAction;
 use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use App\Http\Requests\Archive\StoreRequest;
@@ -82,6 +83,21 @@ class ArchiveController extends Controller
     $archive = (new CreateArchiveAction())->execute($request->except('image'));
     (new CreateImageAction())->execute($request->image, $archive);
     (new AttachArchiveUserAction())->execute(auth()->user(), $archive->id);
+    $archive->load('company', 'media');
+    return response()->json(new ArchiveResource($archive));
+  }
+
+  /**
+   * Update an existing archive
+   *
+   * @param array $data
+   * @return JsonResponse
+   */
+  public function update(StoreRequest $request, Archive $archive): JsonResponse
+  {
+    dd($request->all(), $archive);
+    $archive = (new UpdateArchiveAction())->execute($request->except('image'), $uuid);
+    (new CreateImageAction())->execute($request->image, $archive);
     $archive->load('company', 'media');
     return response()->json(new ArchiveResource($archive));
   }

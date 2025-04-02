@@ -84,6 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archives/user/{userId}', [ArchiveController::class, 'getByUser']);
   Route::get('/archives/all', [ArchiveController::class, 'getAll']);
   Route::post('/archive', [ArchiveController::class, 'create']);
+  Route::put('/archive/{archive:uuid}', [ArchiveController::class, 'update']);
 
   // Archive User
   Route::post('/archive/user', [ArchiveUserController::class, 'create']);

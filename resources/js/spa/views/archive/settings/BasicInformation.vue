@@ -67,7 +67,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { getUserCompanies } from '@/services/api/user';
-import { createArchive } from '@/services/api/archive';
+import { createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useArchiveStore } from '@/stores/archive';
 import ImageUpload from '@/components/media/upload/Image.vue';
@@ -98,6 +98,7 @@ const isLoading = ref(false);
 const isSaving = ref(false);
 
 const form = ref({
+  uuid: '',
   name: '',
   acronym: '',
   company: '',
@@ -132,17 +133,16 @@ onMounted(async () => {
     // Initialize form with existing data if editing
     if (archiveStore.currentArchiveId) {
       form.value = {
+        uuid: archiveStore.archiveData.uuid,
         name: archiveStore.archiveData.name,
         acronym: archiveStore.archiveData.acronym,
         company: archiveStore.archiveData.company?.uuid ?? '',
         image: archiveStore.archiveData.image
       };
-
     }
 
   } 
   catch (error) {
-    console.error(error);
     toast.show('Fehler beim Laden der Kartei.', 'error');
   }
   finally {
@@ -153,10 +153,20 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
-    const response = await createArchive(form.value);
-    archiveStore.setArchiveId(response.uuid);
-    archiveStore.setArchiveData(response);
-    toast.show('Kartei erfolgreich gespeichert.', 'success');
+
+    if (!archiveStore.currentArchiveId) {
+      const response = await createArchive(form.value);
+      archiveStore.setArchiveId(response.uuid);
+      form.value.uuid = response.uuid;
+      form.value.image = response.image;
+      console.log(form.value.image);
+      toast.show('Kartei erfolgreich gespeichert.', 'success');
+    } 
+    else {
+      const response = await updateArchive(form.value);
+      toast.show('Kartei erfolgreich aktualisiert.', 'success');
+    }
+
   } 
   catch (error) {
     errors.value = {
@@ -184,12 +194,6 @@ const fetchCompanies = async () => {
 };
 
 const resetView = () => {
-  // form.value = {
-  //   name: '',
-  //   acronym: '',
-  //   company: '',
-  //   image: null
-  // };
   errors.value = {
     name: null,
     acronym: null,
