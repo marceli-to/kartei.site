@@ -27,7 +27,6 @@ import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
 const archiveStore = useArchiveStore();
-console.log('Current archive ID:', archiveStore.currentArchiveId);
 
 const { setTitle } = usePageTitle();
 setTitle('Einstellungen');

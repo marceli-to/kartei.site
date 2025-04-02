@@ -17,7 +17,7 @@ class MediaResource extends JsonResource
       'mime_type' => $this->mime_type,
       'size' => $this->size,
       'url' => $this->mediable && $this->resized_name
-        ? "/storage/{$this->mediable->uuid}/{$this->resized_name}"
+        ? "/storage/archives/{$this->mediable->uuid}/{$this->resized_name}"
         : null,
       'archive' => $this->mediable?->uuid,
     ];

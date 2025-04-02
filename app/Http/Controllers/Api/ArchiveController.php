@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Archive;
 use App\Http\Resources\ArchiveResource;
 use App\Actions\Archive\Get as GetArchiveAction;
+use App\Actions\Archive\Find as FindArchiveAction;
 use App\Actions\Archive\Create as CreateArchiveAction;
 use App\Actions\Archive\Update as UpdateArchiveAction;
 use App\Actions\ArchiveImage\Create as CreateImageAction;
@@ -68,6 +69,21 @@ class ArchiveController extends Controller
     return response()->json(
       ArchiveResource::collection(
         (new GetArchiveAction())->execute(['user_id' => $userId])
+      )
+    );
+  }
+
+  /**
+   * Get a specific archive by UUID
+   *
+   * @param Archive $archive
+   * @return JsonResponse
+   */
+  public function find(Archive $archive): JsonResponse
+  {
+    return response()->json(
+      new ArchiveResource(
+        $archive->load('company', 'media')
       )
     );
   }

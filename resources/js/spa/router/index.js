@@ -17,7 +17,7 @@ const routes = [
   { path: '/archiv', name: 'home', component: Home },
   { path: '/archiv/einstellungen', name: 'settings', component: Settings },
   { path: '/archiv/karteien', name: 'archives', component: Archives },
-  { path: '/archiv/karteien/einstellungen', name: 'archiveSettings', component: ArchiveSettings },
+  { path: '/archiv/karteien/einstellungen/:uuid?', name: 'archiveSettings', component: ArchiveSettings },
 
   // ui/dev stuff
   { path: '/archiv/benutzer', name: 'users', component: Users },

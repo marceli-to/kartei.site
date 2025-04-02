@@ -67,8 +67,9 @@
 </template>
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { getUserCompanies } from '@/services/api/user';
-import { createArchive, updateArchive } from '@/services/api/archive';
+import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useArchiveStore } from '@/stores/archive';
 import ImageUpload from '@/components/media/upload/Image.vue';
@@ -98,6 +99,10 @@ const companies = ref([]);
 const isLoading = ref(false);
 const isSaving = ref(false);
 
+const route = useRoute();
+const router = useRouter();
+const uuid = route.params.uuid || null;
+
 const form = ref({
   uuid: '',
   name: 'Marcelito',
@@ -126,23 +131,13 @@ onMounted(async () => {
     await fetchCompanies();
 
     // If we have an archiveId from props or from store, use it
-    if (props.componentProps?.archive) {
-      archiveStore.setArchiveId(props.componentProps.archive);
+    if (uuid) {
+      archiveStore.setArchiveId(uuid);
+      await fetchArchive();
     }
-
-    // Initialize form with existing data if editing
-    if (archiveStore.currentArchiveId) {
-      form.value = {
-        uuid: archiveStore.archiveData.uuid,
-        name: archiveStore.archiveData.name,
-        acronym: archiveStore.archiveData.acronym,
-        company: archiveStore.archiveData.company?.uuid ?? '',
-        image: archiveStore.archiveData.image
-      };
-    }
-
   } 
   catch (error) {
+    console.error(error);
     toast.show('Fehler beim Laden der Kartei.', 'error');
   }
   finally {
@@ -154,20 +149,29 @@ const handleSubmit = async () => {
   try {
     isSaving.value = true;
 
-    if (!archiveStore.currentArchiveId) {
+    if (!uuid) {
       const response = await createArchive(form.value);
       archiveStore.setArchiveId(response.uuid);
       form.value.uuid = response.uuid;
       form.value.image = [response.image];
+
+      // Push the new uuid to route here:
+      router.push({ 
+        name: 'archiveSettings', 
+        params: { uuid: response.uuid }
+      });
+
       toast.show('Kartei erfolgreich gespeichert.', 'success');
     } 
     else {
+      console.log(form.value);
       const response = await updateArchive(form.value);
       toast.show('Kartei erfolgreich aktualisiert.', 'success');
     }
 
   } 
   catch (error) {
+    console.error(error);
     errors.value = {
       name: error.response?.data?.errors?.name?.[0],
       acronym: error.response?.data?.errors?.acronym?.[0],
@@ -177,6 +181,20 @@ const handleSubmit = async () => {
   }
   finally {
     isSaving.value = false;
+  }
+};
+
+const fetchArchive = async () => {
+  const response = await getArchive(uuid);
+  if (response) {
+    console.log(response.image);
+    form.value = {
+      uuid: response.uuid,
+      name: response.name,
+      acronym: response.acronym,
+      company: response.company?.uuid ?? '',
+      image: [response.image]
+    };
   }
 };
 

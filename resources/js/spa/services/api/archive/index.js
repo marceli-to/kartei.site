@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+export const getArchive = async (uuid) => {
+  const response = await axios.get(`/api/archive/${uuid}`);
+  return response.data;
+};
+
 export const getArchives = async () => {
   const response = await axios.get('/api/archives');
   return response.data;

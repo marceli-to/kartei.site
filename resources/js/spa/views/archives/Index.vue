@@ -53,7 +53,9 @@
         </div>
       </nav>
       <main class="w-10/12 px-8 min-h-full">
-        [content]
+        <router-link :to="{ name: 'archiveSettings', params: { uuid: 'c7468aa8-783e-492f-92b6-7958482a9639' } }">
+          Sammlung Bert Fiefelstein
+        </router-link>
       </main>
     </div>
   </div>

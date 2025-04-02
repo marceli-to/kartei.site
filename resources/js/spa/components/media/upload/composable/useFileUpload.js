@@ -187,10 +187,9 @@ export function normalizeImageEntry(entry) {
       size: entry.original.size
     }
   }
-
   return {
     uuid: entry.uuid,
-    url: `/storage/temp/${entry.name}`,
+    url: entry.url,
     name: entry.name,
     width: entry.width,
     height: entry.height,
