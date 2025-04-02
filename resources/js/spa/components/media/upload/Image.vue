@@ -75,7 +75,7 @@ const props = defineProps({
   },
   allowedTypes: {
     type: Array,
-    default: () => ['image/*', 'application/pdf']
+    default: () => ['image/*']
   },
   uploadUrl: {
     type: String,

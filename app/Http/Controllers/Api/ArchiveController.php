@@ -82,6 +82,7 @@ class ArchiveController extends Controller
     $archive = (new CreateArchiveAction())->execute($request->except('image'));
     (new CreateImageAction())->execute($request->image, $archive);
     (new AttachArchiveUserAction())->execute(auth()->user(), $archive->id);
+    $archive->load('company', 'media');
     return response()->json(new ArchiveResource($archive));
   }
 }

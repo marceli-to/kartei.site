@@ -29,7 +29,10 @@
               href="javascript:;"
               @click="activeIndex = index"
               class="block w-full"
-              :class="{ 'font-muoto-medium': activeIndex === index }">
+              :class="{
+                'font-muoto-medium': activeIndex === index,
+                '!opacity-50 pointer-events-none': item.disabled,
+              }">
               {{ item.name }}
             </a>
           </li>
@@ -129,13 +132,13 @@ const previousSectionName = computed(() => {
   return activeIndex.value > 0 ? props.slides[activeIndex.value - 1].name : '';
 });
 
-function next() {
+const next = () => {
   if (activeIndex.value < props.slides.length - 1) {
     activeIndex.value++;
   }
 }
 
-function prev() {
+const prev = () => {
   if (activeIndex.value > 0) {
     activeIndex.value--;
   }

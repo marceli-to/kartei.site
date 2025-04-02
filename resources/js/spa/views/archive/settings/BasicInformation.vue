@@ -69,6 +69,7 @@ import { ref, onMounted, watch } from 'vue';
 import { getUserCompanies } from '@/services/api/user';
 import { createArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useArchiveStore } from '@/stores/archive';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -79,6 +80,7 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const toast = useToastStore();
+const archiveStore = useArchiveStore();
 
 const props = defineProps({
   isActive: {
@@ -96,8 +98,8 @@ const isLoading = ref(false);
 const isSaving = ref(false);
 
 const form = ref({
-  name: 'Marceli To',
-  acronym: 'MTO',
+  name: '',
+  acronym: '',
   company: '',
   image: null
 });
@@ -109,13 +111,39 @@ const errors = ref({
   image: null
 });
 
+// watch for changes if "isActive"
+watch(() => props.isActive, (newVal) => {
+  if (!newVal) {
+    resetView();
+  }
+});
+
 onMounted(async () => {
   try {
     isLoading.value = true;
     await fetchCompanies();
+
+    // If we have an archiveId from props or from store, use it
+    if (props.componentProps?.archive) {
+      console.log('archiveId from props:', props.componentProps.archive);
+      archiveStore.setArchiveId(props.componentProps.archive);
+    }
+
+    // Initialize form with existing data if editing
+    if (archiveStore.currentArchiveId) {
+      form.value = {
+        name: archiveStore.archiveData.name,
+        acronym: archiveStore.archiveData.acronym,
+        company: archiveStore.archiveData.company?.uuid ?? '',
+        image: archiveStore.archiveData.image
+      };
+
+    }
+
   } 
   catch (error) {
-    toast.show('Fehler beim Laden des Adressen.', 'error');
+    console.error(error);
+    toast.show('Fehler beim Laden der Kartei.', 'error');
   }
   finally {
     isLoading.value = false;
@@ -126,6 +154,8 @@ const handleSubmit = async () => {
   try {
     isSaving.value = true;
     const response = await createArchive(form.value);
+    archiveStore.setArchiveId(response.uuid);
+    archiveStore.setArchiveData(response);
     toast.show('Kartei erfolgreich gespeichert.', 'success');
   } 
   catch (error) {
@@ -141,7 +171,7 @@ const handleSubmit = async () => {
   }
 };
 
-async function fetchCompanies() {
+const fetchCompanies = async () => {
   const response = await getUserCompanies();
   if (Array.isArray(response)) {
     companies.value = response;
@@ -151,6 +181,21 @@ async function fetchCompanies() {
       label: company.name
     }));
   }
-}
+};
+
+const resetView = () => {
+  // form.value = {
+  //   name: '',
+  //   acronym: '',
+  //   company: '',
+  //   image: null
+  // };
+  errors.value = {
+    name: null,
+    acronym: null,
+    company: null,
+    image: null
+  };
+};
 
 </script>

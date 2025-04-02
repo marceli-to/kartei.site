@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { computed, markRaw } from 'vue';
+import { markRaw } from 'vue';
 import { usePageTitle } from '@/composables/userPageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
 import SliderContainer from '@/components/slider/Container.vue';

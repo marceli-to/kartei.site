@@ -13,6 +13,10 @@ class ArchiveResource extends JsonResource
       'uuid' => $this->uuid,
       'acronym' => $this->acronym,
       'name' => $this->name,
+      'company' => [
+        'uuid' => $this->company->uuid,
+        'name' => $this->company->name
+      ],
       'media' => MediaResource::make($this->media),
     ];
   }
