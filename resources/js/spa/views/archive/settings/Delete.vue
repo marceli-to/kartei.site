@@ -1,5 +1,5 @@
 <template>
-  <Slide class="-top-4 pb-40">
+  <Slide class="-top-4 pb-36">
     <div class="w-full h-full flex flex-col justify-between">
 
       <!-- Content -->
@@ -24,7 +24,6 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
 import { deleteArchive } from '@/services/api/archive';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -72,7 +71,6 @@ async function handleDelete() {
 }
 
 function showDialog() {
-  
   dialogStore.show({
     title: 'Möchten Sie diese Kartei wirklich löschen?',
     confirmLabel: 'Löschen',

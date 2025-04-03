@@ -88,10 +88,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  componentProps: {
-    type: Object,
-    default: () => {}
-  }
 });
 
 const companies = ref([]);

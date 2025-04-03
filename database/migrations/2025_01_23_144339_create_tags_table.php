@@ -14,7 +14,8 @@ return new class extends Migration
     Schema::create('tags', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
-      $table->string('title');
+      $table->string('name');
+      $table->foreignId('archive_id')->constrained()->cascadeOnDelete();
       $table->timestamps();
     });
   }

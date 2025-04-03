@@ -9,11 +9,17 @@ class Tag extends Model
     
   protected $fillable = [
     'uuid', 
-    'title'
+    'name',
+    'archive_id'
   ];
 
   public function records(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
   {
     return $this->belongsToMany(Record::class, 'record_tags');
+  }
+
+  public function archive(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+  {
+    return $this->belongsTo(Archive::class);
   }
 }

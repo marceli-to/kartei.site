@@ -37,6 +37,11 @@ class Archive extends Model
     return $this->morphOne(Media::class, 'mediable');
   }
 
+  public function tags()
+  {
+    return $this->hasMany(Tag::class);
+  }
+
   protected static function getSlugSource(): string
   {
     return 'name';

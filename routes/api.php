@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\UserInviteController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
+use App\Http\Controllers\Api\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +95,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archive/user/{user:uuid}', [ArchiveUserController::class, 'find']);
   Route::put('/archive/user/{user:uuid}', [ArchiveUserController::class, 'update']);
   Route::delete('/archive/user/{user:uuid}', [ArchiveUserController::class, 'destroy']);
+
+  // Tags
+  Route::get('/tags/{archive:uuid}', [TagController::class, 'get']);
+  Route::put('/tags/{archive:uuid}', [TagController::class, 'store']);
+  Route::delete('/tag/{tag:uuid}', [TagController::class, 'destroy']);  
 
   // Permissions and roles
   Route::get('/permissions', [PermissionController::class, 'get']);

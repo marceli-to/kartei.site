@@ -1,5 +1,5 @@
 <template>
-  <Slide class="-top-4 pb-40">
+  <Slide class="-top-4 pb-36">
     <div class="w-full h-full flex flex-col justify-between">
       <!-- Content -->
       <div>
