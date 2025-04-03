@@ -1,13 +1,11 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasUuid;
 use App\Traits\Sluggable;
 
 class Archive extends Model
 {
-  use SoftDeletes;
   use HasUuid;
   use Sluggable;
 

@@ -26,6 +26,7 @@ class Store
       $userPermission = (new CreatePermissionAction())->execute([
         'name' => $permission->name . '.' . $archiveId,
         'guard_name' => 'web',
+        'archive_id' => $archiveId,
         'publish' => false
       ]);
       

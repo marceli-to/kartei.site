@@ -1,13 +1,11 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasUuid;
 
 class Address extends Model
 {
   use HasUuid;
-  use SoftDeletes;
 
   /**
    * The attributes that are mass assignable.

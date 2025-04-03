@@ -19,7 +19,6 @@ return new class extends Migration
       $table->string('acronym', 10);
       $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
       $table->timestamps();
-      $table->softDeletes();
     });
   }
 

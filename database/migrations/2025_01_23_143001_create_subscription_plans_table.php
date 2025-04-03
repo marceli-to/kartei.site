@@ -18,7 +18,6 @@ return new class extends Migration
       $table->decimal('rate_monthly', 10, 2);
       $table->decimal('rate_yearly', 10, 2);
       $table->timestamps();
-      $table->softDeletes();
     });
   }
 

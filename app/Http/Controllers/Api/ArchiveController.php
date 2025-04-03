@@ -131,7 +131,9 @@ class ArchiveController extends Controller
   public function destroy(Archive $archive): JsonResponse
   {
     (new DeleteArchiveAction())->execute($archive);
-    (new DeleteArchiveImageAction())->execute($archive);
+    if ($archive->media) {
+      (new DeleteArchiveImageAction())->execute($archive);
+    }
     return response()->json([
       'success' => true
     ]);

@@ -23,7 +23,6 @@ return new class extends Migration
       $table->string('country');
       $table->boolean('is_billing')->default(false);
       $table->morphs('addressable');
-      $table->softDeletes();      
       $table->timestamps();
     });
   }

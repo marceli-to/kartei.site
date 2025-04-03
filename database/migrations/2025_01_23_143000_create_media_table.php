@@ -24,7 +24,6 @@ return new class extends Migration
       $table->unsignedBigInteger('size');
       $table->morphs('mediable');
       $table->timestamps();
-      $table->softDeletes();
     });
   }
 

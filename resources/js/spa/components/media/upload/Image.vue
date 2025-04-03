@@ -128,8 +128,9 @@ watch(uploadedFiles, (newVal) => {
 });
 
 onMounted(() => {
-  if (props.existingImages?.length) {
-    const normalized = props.existingImages.map(normalizeImageEntry)
+  const validImages = props.existingImages?.filter(Boolean) ?? []
+  if (validImages.length) {
+    const normalized = validImages.map(normalizeImageEntry)
     uploadedFiles.value = [...normalized]
   }
 })
