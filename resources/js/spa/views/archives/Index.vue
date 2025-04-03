@@ -67,7 +67,7 @@
 <script setup>
 import { ref, toRef, onMounted } from 'vue';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
-import { usePageTitle } from '@/composables/userPageTitle';
+import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
 import { getByUser } from '@/services/api/archive';
 import InputSearch from '@/components/forms/Search.vue';
@@ -77,10 +77,8 @@ import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
-
-const { setTitle } = usePageTitle();
 const userStore = useUserStore();
-
+const { setTitle } = usePageTitle();
 setTitle('Meine Karteien');
 
 const searchQuery = ref('');

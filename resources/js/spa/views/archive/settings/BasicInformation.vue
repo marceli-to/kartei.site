@@ -68,6 +68,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { handleApiError } from '@/services/api/error'
 import { getUserCompanies } from '@/services/api/user';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -203,9 +204,9 @@ const fetchArchive = async () => {
         image: [response.image]
       };
     }
-  } catch (error) {
-    console.error('Error fetching archive:', error);
-    toast.show('Fehler beim Laden der Kartei.', 'error');
+  } 
+  catch (error) {
+    handleApiError(error);
   }
 };
 

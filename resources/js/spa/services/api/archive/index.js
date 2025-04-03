@@ -1,37 +1,37 @@
-import axios from 'axios';
+import api from '@/services/api/axios'
 
 export const getArchive = async (uuid) => {
-  const response = await axios.get(`/api/archive/${uuid}`);
+  const response = await api.get(`/archive/${uuid}`);
   return response.data;
 };
 
 export const getArchives = async () => {
-  const response = await axios.get('/api/archives');
+  const response = await api.get('/archives');
   return response.data;
 };
 
 export const getAllArchives = async () => {
-  const response = await axios.get('/api/archives/all');
+  const response = await api.get('/archives/all');
   return response.data;
 };
 
 export const getByUser = async (userId) => {
-  const response = await axios.get(`/api/archives/user/${userId}`);
+  const response = await api.get(`/archives/user/${userId}`);
   return response.data;
 };
   
 export const getArchivesByAdmin = async () => {
-  const response = await axios.get('/api/archives/admin');
+  const response = await api.get('/archives/admin');
   return response.data;
 };
 
 export const createArchive = async (archiveData) => {
-  const response = await axios.post('/api/archive', archiveData);
+  const response = await api.post('/archive', archiveData);
   return response.data;
 };
 
 export const updateArchive = async (archiveData) => {
-  const response = await axios.put(`/api/archive/${archiveData.uuid}`, archiveData);
+  const response = await api.put(`/archive/${archiveData.uuid}`, archiveData);
   return response.data;
 };
   

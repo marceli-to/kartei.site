@@ -17,7 +17,7 @@
 
 <script setup>
 import { markRaw, watch, ref } from 'vue';
-import { usePageTitle } from '@/composables/userPageTitle';
+import { usePageTitle } from '@/composables/usePageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
 import { useRoute } from 'vue-router';
 import SliderContainer from '@/components/slider/Container.vue';
@@ -27,8 +27,6 @@ import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
 const route = useRoute();
-
-
 const { setTitle } = usePageTitle();
 setTitle('Einstellungen');
 

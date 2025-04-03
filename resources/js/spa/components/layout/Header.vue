@@ -50,7 +50,7 @@
 <script setup>
 import { useToggleSidebar } from '@/composables/useToggleSidebar';
 import { useInfoIconStore } from '@/components/infobox/stores/info';
-import { usePageTitle } from '@/composables/userPageTitle';
+import { usePageTitle } from '@/composables/usePageTitle';
 import IconLogo from '@/components/icons/Logo.vue';
 import IconInfo from '@/components/icons/Info.vue';
 import IconProfile from '@/components/icons/Profile.vue';

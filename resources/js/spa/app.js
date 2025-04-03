@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from '@/App.vue';
 import router from '@/router';
+import { registerApiErrorRouter } from '@/services/api/error';
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -10,5 +11,6 @@ const pinia = createPinia();
 if (document.querySelector('#app')) {
   app.use(router)
   app.use(pinia)
+  registerApiErrorRouter(router)
   app.mount('#app')
 }

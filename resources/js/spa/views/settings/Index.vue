@@ -8,7 +8,7 @@
 
 <script setup>
 import { markRaw } from 'vue';
-import { usePageTitle } from '@/composables/userPageTitle';
+import { usePageTitle } from '@/composables/usePageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
 import SliderContainer from '@/components/slider/Container.vue';
 import ProfileComponent from '@/views/settings/Profile.vue';

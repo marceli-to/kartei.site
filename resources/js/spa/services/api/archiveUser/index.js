@@ -1,26 +1,26 @@
-import axios from 'axios';
+import api from '@/services/api/axios'
 
 export const findUser = async (uuid) => {
-  const response = await axios.get(`/api/archive/user/${uuid}`);
+  const response = await api.get(`/archive/user/${uuid}`);
   return response.data;
 };
 
 export const createUser = async (userData) => {
-  const response = await axios.post('/api/archive/user', userData);
+  const response = await api.post('/archive/user', userData);
   return response.data;
 };
 
 export const deleteUser = async (uuid) => {
-  const response = await axios.delete(`/api/archive/user/${uuid}`);
+  const response = await api.delete(`/archive/user/${uuid}`);
   return response.data;
 };
 
 export const updateUser = async (uuid, userData) => {
-  const response = await axios.put(`/api/archive/user/${uuid}`, userData);
+  const response = await api.put(`/archive/user/${uuid}`, userData);
   return response.data;
 };
 
 export const getRelatedUsers = async () => {
-  const response = await axios.get('/api/archive/user/related');
+  const response = await api.get('/archive/user/related');
   return response.data;
 }
