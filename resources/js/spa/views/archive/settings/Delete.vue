@@ -1,10 +1,10 @@
 <template>
   <Slide class="-top-4 pb-40">
     <div class="w-full h-full flex flex-col justify-between">
+
       <!-- Content -->
       <div>
-        <p>Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
-        <p>Ihre Abonnement läuft noch bis zum <strong>{{ new Date().toLocaleDateString() }}</strong></p>
+        <p>Mit dem Löschen dieser Kartei werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
         <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
       </div>
 
@@ -12,7 +12,7 @@
       <div v-if="isActive">
         <ButtonGroup>
           <ButtonPrimary 
-            label="Konto löschen" 
+            label="Kartei löschen" 
             @click="showDialog"
             :classes="'bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border'"
             :disabled="isDeleting" />
@@ -23,19 +23,26 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { deleteUser } from '@/services/api/user';
+import { useRoute, useRouter } from 'vue-router';
+
+import { deleteArchive } from '@/services/api/archive';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useToastStore } from '@/components/toast/stores/toast';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const dialogStore = useDialogStore();
 const toast = useToastStore();
 
+const route = useRoute();
+const router = useRouter();
+const uuid = ref(route.params.uuid || null);
+
 const error = ref(null);
 const isDeleting = ref(false);
+
+const redirectDelay = 2000;
 
 const props = defineProps({
   isActive: {
@@ -44,24 +51,20 @@ const props = defineProps({
   }
 });
 
-const redirectAfterDeletion = '/auf-wiedersehen';
-const redirectDelay = 2000;
-
 async function handleDelete() {
   isDeleting.value = true;
-  
+
   try {
-    await deleteUser();
+    await deleteArchive(uuid.value);
     dialogStore.hide();
-    toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in Kürze weitergeleitet.', 'success');
-    
+    toast.show('Die Kartei wurde erfolgreich gelöscht. Sie werden in Kürze weitergeleitet.', 'success');
+
     setTimeout(() => {
-      window.location.href = redirectAfterDeletion;
+      router.push({ name: 'archives' });
     }, redirectDelay);
-  } 
+  }
   catch (err) {
-    console.log(err);
-    toast.show('Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.', 'error');
+    toast.show('Es ist ein Fehler beim Löschen der Kartei aufgetreten.', 'error');
   } 
   finally {
     isDeleting.value = false;
@@ -71,8 +74,7 @@ async function handleDelete() {
 function showDialog() {
   
   dialogStore.show({
-    title: 'Möchten Sie ihr Konto wirklich löschen?',
-    component: AccountDeleteDialog,
+    title: 'Möchten Sie diese Kartei wirklich löschen?',
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
     size: 'medium',

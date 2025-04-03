@@ -34,4 +34,8 @@ export const updateArchive = async (archiveData) => {
   const response = await api.put(`/archive/${archiveData.uuid}`, archiveData);
   return response.data;
 };
-  
+
+export const deleteArchive = async (uuid) => {
+  const response = await api.delete(`/archive/${uuid}`);
+  return response.data;
+};

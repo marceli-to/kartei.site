@@ -9,7 +9,9 @@ use App\Actions\Archive\Get as GetArchiveAction;
 use App\Actions\Archive\Find as FindArchiveAction;
 use App\Actions\Archive\Create as CreateArchiveAction;
 use App\Actions\Archive\Update as UpdateArchiveAction;
-use App\Actions\ArchiveImage\Create as CreateImageAction;
+use App\Actions\Archive\Delete as DeleteArchiveAction;
+use App\Actions\ArchiveImage\Create as CreateArchiveImageAction;
+use App\Actions\ArchiveImage\Delete as DeleteArchiveImageAction;
 use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use App\Http\Requests\Archive\StoreRequest;
 use App\Models\User;
@@ -97,7 +99,7 @@ class ArchiveController extends Controller
   public function create(StoreRequest $request): JsonResponse
   {
     $archive = (new CreateArchiveAction())->execute($request->except('image'));
-    (new CreateImageAction())->execute($request->image[0], $archive);
+    (new CreateArchiveImageAction())->execute($request->image[0], $archive);
     (new AttachArchiveUserAction())->execute(auth()->user(), $archive->id);
     return response()->json(
       new ArchiveResource($archive->load('company', 'media'))
@@ -114,9 +116,24 @@ class ArchiveController extends Controller
   public function update(StoreRequest $request, Archive $archive): JsonResponse
   {
     $archive = (new UpdateArchiveAction())->execute($request->except('image'), $archive);
-    (new CreateImageAction())->execute($request->image[0], $archive);
+    (new CreateArchiveImageAction())->execute($request->image[0], $archive);
     return response()->json(
       new ArchiveResource($archive->load('company', 'media'))
     );
+  }
+
+  /**
+   * Delete an archive
+   *
+   * @param Archive $archive
+   * @return JsonResponse
+   */
+  public function destroy(Archive $archive): JsonResponse
+  {
+    (new DeleteArchiveAction())->execute($archive);
+    (new DeleteArchiveImageAction())->execute($archive);
+    return response()->json([
+      'success' => true
+    ]);
   }
 }

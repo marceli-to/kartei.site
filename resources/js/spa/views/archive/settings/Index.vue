@@ -23,6 +23,7 @@ import { useRoute } from 'vue-router';
 import SliderContainer from '@/components/slider/Container.vue';
 import BasicInformationComponent from '@/views/archive/settings/BasicInformation.vue';
 import TagsComponent from '@/views/archive/settings/Tags.vue';
+import DeleteComponent from '@/views/archive/settings/Delete.vue';
 import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
@@ -49,11 +50,11 @@ const createSlides = () => [
     disabled: !route.params.uuid
   },
   { 
-    id: 'deleteAccount', 
+    id: 'delete', 
     name: "Löschen", 
     width: 25, 
     class: "w-3/12", 
-    component: markRaw(AccountDeleteComponent),
+    component: markRaw(DeleteComponent),
     disabled: !route.params.uuid
   }
 ];
