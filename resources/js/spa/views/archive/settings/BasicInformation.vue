@@ -100,8 +100,8 @@ const uuid = ref(route.params.uuid || null);
 
 const form = ref({
   uuid: '',
-  name: 'Marcelito',
-  acronym: 'MTO',
+  name: '',
+  acronym: '',
   company: '',
   image: null
 });

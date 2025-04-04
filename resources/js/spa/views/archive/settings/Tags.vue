@@ -21,7 +21,8 @@
             <InputText
               v-model="form.tags[index].name"
               :placeholder="`Tag ${index + 1}`"
-              aria-label="Tag" />
+              aria-label="Tag"
+              :ref="el => inputRefs[index] = el" />
               <button 
                 type="button" 
                 class="absolute right-8 top-1/2 -translate-y-1/2"
@@ -43,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeTags, getTags, deleteTag } from '@/services/api/tags';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -69,6 +70,7 @@ const uuid = ref(route.params.uuid || null);
 
 const isSaving = ref(false);
 const isLoading = ref(false);
+const inputRefs = ref([]);
 
 const form = ref({
   tags: [{
@@ -126,11 +128,14 @@ const fetchTags = async () => {
   }
 };
 
-const add = () => {
+const add = async () => {
   form.value.tags.push({
     uuid: null,
     name: ''
   });
+  await nextTick();
+  const lastIndex = form.value.tags.length - 1;
+  inputRefs.value[lastIndex]?.$el?.querySelector('input')?.focus();
 }
 
 const remove = async (index) => {

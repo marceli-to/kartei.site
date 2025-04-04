@@ -10,7 +10,7 @@ class UpdateOrCreate
     foreach ($tags as $tag) {
       Tag::updateOrCreate(
         [
-          'name' => $tag['name'],
+          'uuid' => $tag['uuid'],
           'archive_id' => $archive->id,
         ],
         [
