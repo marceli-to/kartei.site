@@ -91,7 +91,8 @@ Route::middleware('auth:sanctum')->group(function () {
   
   // Archive User
   Route::post('/archive/user', [ArchiveUserController::class, 'create']);
-  Route::get('/archive/user/related', [ArchiveUserController::class, 'related']);
+  Route::get('/archive/users/related', [ArchiveUserController::class, 'related']);
+  Route::get('/archive/users/{archive:uuid}', [ArchiveUserController::class, 'get']);
   Route::get('/archive/user/{user:uuid}', [ArchiveUserController::class, 'find']);
   Route::put('/archive/user/{user:uuid}', [ArchiveUserController::class, 'update']);
   Route::delete('/archive/user/{user:uuid}', [ArchiveUserController::class, 'destroy']);
@@ -107,6 +108,4 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/permissions/user/{user:uuid}', [PermissionController::class, 'getByUser']);
   Route::get('/roles', [RoleController::class, 'get']);
   Route::get('/roles/permissions', [RoleController::class, 'getWithPermissions']);
-
-  
 });

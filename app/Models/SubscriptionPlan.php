@@ -10,6 +10,7 @@ class SubscriptionPlan extends Model
   protected $fillable = [
     'uuid',
     'title',
+    'max_users',
     'rate_monthly',
     'rate_yearly',
   ];
@@ -19,12 +20,17 @@ class SubscriptionPlan extends Model
     return $this->hasMany(UserSubscription::class);
   }
   
-  // Helper to get price based on interval
-  // Usage:
-  // $plan = SubscriptionPlan::findOrFail($request->plan_id);
-  // $interval = $request->interval; // 'monthly' or 'yearly'
-  // $price = $plan->getPriceForInterval($interval);
-
+  /**
+   * Helper to get price based on interval
+   * 
+   * @param string $interval 'monthly' or 'yearly'
+   * @return decimal
+   * 
+   * Usage:
+   * $plan = SubscriptionPlan::findOrFail($request->plan_id);
+   * $interval = $request->interval; // 'monthly' or 'yearly'
+   * $price = $plan->getPriceForInterval($interval);
+   */
   public function getPriceForInterval($interval): decimal
   {
     return $interval === 'yearly' ? $this->rate_yearly : $this->rate_monthly;

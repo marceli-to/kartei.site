@@ -5,9 +5,9 @@
     :navigationVariant="'box'"
     @slide-change="handleSlideChange">
     <template #navigationTitle>
-      <h2 class="flex justify-between items-center mb-32 mr-8">
+      <h2 class="flex justify-between items-center mb-38 mr-8">
         <span>Voreinstellungen</span>
-        <router-link :to="{ name: 'archives' }" @click="handleClose">
+        <router-link :to="{ name: 'archives' }">
           <IconCross variant="small" />
         </router-link>
       </h2>
@@ -21,10 +21,10 @@ import { usePageTitle } from '@/composables/usePageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
 import { useRoute } from 'vue-router';
 import SliderContainer from '@/components/slider/Container.vue';
-import BasicInformationComponent from '@/views/archive/settings/BasicInformation.vue';
-import TagsComponent from '@/views/archive/settings/Tags.vue';
-import DeleteComponent from '@/views/archive/settings/Delete.vue';
-import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';
+import BasicInformationComponent from '@/views/archive/BasicInformation.vue';
+import TagsComponent from '@/views/archive/Tags.vue';
+import UserComponent from '@/views/users/Index.vue';
+import DeleteComponent from '@/views/archive/Delete.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
 const route = useRoute();
@@ -50,6 +50,15 @@ const createSlides = () => [
     disabled: !route.params.uuid
   },
   { 
+    id: 'user', 
+    name: "Benutzer", 
+    width: 25, 
+    class: "w-3/12", 
+    permission: 'edit.users',
+    component: markRaw(UserComponent),
+    disabled: !route.params.uuid
+  },
+  { 
     id: 'delete', 
     name: "Löschen", 
     width: 25, 
@@ -68,9 +77,4 @@ watch(() => route.params.uuid, () => {
   const updatedSlides = createSlides();
   updateSlides(updatedSlides);
 }, { immediate: true });
-
-// Handle close event - no need to reset any store
-const handleClose = () => {
-  // Just closes/navigates away
-};
 </script>

@@ -4,7 +4,7 @@
     class="w-full h-full flex flex-col justify-between"
     v-if="!isLoading">
     <div class="flex flex-col gap-y-20">
-      <InputGroup>
+      <InputGroup v-if="!isSingleArchiveMode">
         <InputLabel label="Kartei" id="archive_selection" />
         <InputSelectButtons
             id="archive_selection"
@@ -119,7 +119,7 @@ import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { getRoles, getRolesWithPermissions } from '@/services/api/role';
 import { getPermissions, getPermissionsByUser } from '@/services/api/permission';
 import { updatePermissions, sendInvitation } from '@/services/api/user';
-import { getArchivesByAdmin } from '@/services/api/archive';
+import { getArchivesByAdmin, getArchive } from '@/services/api/archive';
 
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -140,6 +140,10 @@ const props = defineProps({
   user: {
     type: Object,
     required: true
+  },
+  archiveUuid: {
+    type: String,
+    required: false
   }
 });
 
@@ -165,6 +169,8 @@ const permissionsArchive = ref([]);
 const permissionsArchiveEdit = ref([]);
 const permissionsCard = ref([]);
 const permissionsCardEdit = ref([]);
+
+const isSingleArchiveMode = computed(() => !!props.archiveUuid);
 
 // Error handling
 const errors = ref({
@@ -422,17 +428,24 @@ async function submit() {
     archiveData.originalRole = currentRole.value;
     archiveData.originalPermissions = [...currentPermissions.value];
 
-    const wasNew = !userPermissions.value[selectedArchiveId.value]; // 👈 check BEFORE update
+    const wasNew = !userPermissions.value[selectedArchiveId.value];
 
     userPermissions.value[selectedArchiveId.value] = {
       role: currentRole.value,
       permissions: [...currentPermissions.value]
     };
-    // selectedArchiveId.value = '';
+
     currentArchiveId.value = null;
     toast.show('Berechtigungen wurden gespeichert.', 'success');
+    
+    // If this was a new archive, mark it as newly added
     if (wasNew) {
-      newlyAddedArchives.value[selectedArchiveId.value] = true; // ✅ set after update
+      newlyAddedArchives.value[selectedArchiveId.value] = true;
+    }
+
+    // Emit success event if this is a single archive update
+    if (props.archiveUuid) {
+      emit('success');
     }
   } 
   catch (error) {
@@ -495,8 +508,23 @@ onMounted(async () => {
 });
 
 async function fetchArchives() {
-  const response = await getArchivesByAdmin();
+  let response;
+  if (props.archiveUuid) {
+    response = await getArchive(props.archiveUuid);
+    response = [response];
+  }
+  else {
+    response = await getArchivesByAdmin();
+  }
   archives.value = response;
+
+  // If an archive UUID is provided, set it as the selected archive
+  if (props.archiveUuid && response.length > 0) {
+    selectedArchiveId.value = props.archiveUuid;
+    currentArchiveId.value = props.archiveUuid;
+    selectArchive(props.archiveUuid);
+  }
+
 }
 
 async function fetchRoles() {

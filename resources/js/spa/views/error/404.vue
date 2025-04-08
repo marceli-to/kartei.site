@@ -2,6 +2,6 @@
   <Message>404 – Seite nicht gefunden</Message>
 </template>
 <script setup>
-import Message from '@/views/error/partials/message.vue';
+import Message from '@/views/error/ErrorMessage.vue';
 </script>
   

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-y-32" v-if="!isLoading">
+  <div class="flex flex-col gap-y-16" v-if="!isLoading">
     <div>
       <InputSearch
         v-model="searchQuery"

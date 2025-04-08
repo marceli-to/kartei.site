@@ -14,7 +14,7 @@ class UserSubscriptionController extends Controller
   {
     $subscription = (new GetUserSubscriptionAction())->execute(auth()->user());
     if (!$subscription) {
-      return response()->noContent();
+      return response()->json(['data' => NULL]);
     }
     return new UserSubscriptionResource($subscription);
   }

@@ -15,7 +15,7 @@ import ProfileComponent from '@/views/settings/Profile.vue';
 import AddressComponent from '@/views/settings/Address.vue';
 import BillingAddressComponent from '@/views/settings/BillingAddress.vue';
 import CompanyComponent from '@/views/settings/Company.vue';
-import UserComponent from '@/views/settings/User.vue';
+import UserComponent from '@/views/users/Index.vue';
 import SubscriptionComponent from '@/views/settings/Subscription.vue';
 import ThemeComponent from '@/views/settings/Theme.vue';
 import AccountDeleteComponent from '@/views/settings/AccountDelete.vue';

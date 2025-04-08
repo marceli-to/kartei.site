@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Settings from '@/views/settings/Index.vue';
 import Archives from '@/views/archives/Index.vue';
-import ArchiveSettings from '@/views/archive/settings/Index.vue';
+import ArchiveSettings from '@/views/archive/Index.vue';
 
 // Error pages
 import Error401 from '@/views/error/401.vue';

@@ -9,7 +9,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import Message from '@/views/error/partials/message.vue'
+import Message from '@/views/error/ErrorMessage.vue'
 
 const countdown = ref(5)
 

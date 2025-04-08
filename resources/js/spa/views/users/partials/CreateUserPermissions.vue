@@ -4,7 +4,7 @@
     class="w-full h-full flex flex-col justify-between"
     v-if="!isLoading">
     <div class="flex flex-col gap-y-20">
-      <InputGroup>
+      <InputGroup v-if="!isSingleArchiveMode">
         <InputLabel label="Kartei" id="archive_selection" />
         <InputSelectButtons
             id="archive_selection"
@@ -76,14 +76,18 @@
           </InputGroup>
         </template>
         <template v-else>
-          <div v-if="!invitationSent[selectedArchiveId]">
+          <div 
+            v-if="!invitationSent[selectedArchiveId]"
+            :class="isSingleArchiveMode ? 'relative top-24' : ''">
             <ButtonAuth 
               :label="isSending ? 'Wird versendet...' : 'Einladungslink versenden'" 
               @click="send" 
               :disabled="isSending" />
             <p class="text-sm p-8 mt-8">Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
           </div>
-          <div v-else>
+          <div 
+            v-else
+            :class="isSingleArchiveMode ? 'relative top-8' : ''">
             <template v-if="hasUnhandledArchives">
               <p class="text-sm p-8 mt-8">
                 Einladungslink wurde versendet. Sie können Berechtigungen für weitere Karteien setzen oder den Prozess abschliessen.
@@ -122,7 +126,7 @@ import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { getRoles, getRolesWithPermissions } from '@/services/api/role';
 import { getPermissions } from '@/services/api/permission';
 import { storePermissions, sendInvitation } from '@/services/api/user';
-import { getArchivesByAdmin } from '@/services/api/archive';
+import { getArchivesByAdmin, getArchive } from '@/services/api/archive';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputSelect from '@/components/forms/Select.vue';
@@ -145,6 +149,10 @@ const props = defineProps({
   existingPermissions: {
     type: Array,
     default: () => []
+  },
+  archiveUuid: {
+    type: String,
+    default: null
   }
 });
 
@@ -168,6 +176,8 @@ const permissionsArchive = ref([]);
 const permissionsArchiveEdit = ref([]);
 const permissionsCard = ref([]);
 const permissionsCardEdit = ref([]);
+
+const isSingleArchiveMode = computed(() => !!props.archiveUuid);
 
 // Error handling
 const errors = ref({
@@ -538,9 +548,25 @@ onMounted(async () => {
 
 async function fetchArchives() {
   try {
-    const archivesResponse = await getArchivesByAdmin();
-    archives.value = archivesResponse;
-  } catch (error) {
+    let response;
+    if (props.archiveUuid) {
+      response = await getArchive(props.archiveUuid);
+      response = [response];
+    }
+    else {
+      response = await getArchivesByAdmin();
+    }
+    archives.value = response;
+
+    // If an archive UUID is provided, set it as the selected archive
+    if (props.archiveUuid && response.length > 0) {
+      selectedArchiveId.value = props.archiveUuid;
+      currentArchiveId.value = props.archiveUuid;
+      selectArchive(props.archiveUuid);
+    }
+
+  } 
+  catch (error) {
     console.error('Failed to fetch archives:', error);
     throw error;
   }

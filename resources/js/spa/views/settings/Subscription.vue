@@ -104,17 +104,16 @@ onMounted(async () => {
     isLoading.value = true;
     const response = await getSubscriptionPlans();
     const userSubscription = await getUserSubscription();
-    
-    // Map the subscription plans to an array of labels and values
+
     subscriptions.value = response.data.map((subscription) => ({
       label: subscription.title,
       value: subscription.uuid
     }));
 
-    // Set subscription status
-    hasSubscription.value = !!userSubscription;
-    
-    if (userSubscription) {
+    // Fix: check .data instead of the whole object
+    hasSubscription.value = !!userSubscription.data;
+
+    if (userSubscription.data) {
       form.value.payment_interval = userSubscription.data.payment_interval;
       form.value.payment_method = userSubscription.data.payment_method;
       form.value.subscription = userSubscription.data.plan.uuid;

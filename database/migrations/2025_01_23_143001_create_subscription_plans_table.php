@@ -15,6 +15,7 @@ return new class extends Migration
       $table->id();
       $table->uuid('uuid')->unique();
       $table->string('title');
+      $table->integer('max_users')->default(1);
       $table->decimal('rate_monthly', 10, 2);
       $table->decimal('rate_yearly', 10, 2);
       $table->timestamps();
