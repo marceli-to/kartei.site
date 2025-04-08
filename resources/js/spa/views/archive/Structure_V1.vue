@@ -8,7 +8,9 @@
     <div class="w-full">
       <div class="flex gap-x-16 mx-8 mb-32">
         <div class="w-3/12">
-          <button type="button" class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
+          <button 
+            type="button" 
+            class="min-h-default border-y border-y-graphite  w-full flex items-center justify-start">
             <IconSettings />
           </button>
         </div>
@@ -21,7 +23,9 @@
             @click="addCategory" />
         </div>
         <div class="w-3/12">
-          <button type="button" class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
+          <button 
+            type="button" 
+            class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
             <IconSettings />
           </button>
         </div>
@@ -30,15 +34,20 @@
       <div class="flex gap-x-17 mx-8 mb-4">
         <InputLabel label="Nr." class="w-3/12 !mb-0" />
         <InputLabel label="Titel" class="w-6/12 !mb-0" />
-        <InputLabel label="Kürzel" class="w-3/12 !mb-0" />
+        <InputLabel label="ID" class="w-3/12 !mb-0" />
       </div>
 
-      <draggable v-model="form.categories" group="categories" item-key="custom_id" class="flex flex-col" handle=".drag-handle">
+      <draggable 
+        v-model="form.categories" 
+        group="categories" 
+        item-key="id" 
+        class="flex flex-col"
+        handle=".drag-handle">
         <template #item="{ element: category, index: cIdx }">
           <div>
             <div class="flex gap-x-17 mx-8 mb-32 items-center drag-handle cursor-move">
               <div class="w-3/12">
-                <InputStatic>{{ formatNumber(cIdx, numerals_category, true) }}</InputStatic>
+                <InputStatic>{{ formatNumber(cIdx, numerals_category) }}</InputStatic>
               </div>
               <div class="w-6/12">
                 <InputText
@@ -57,14 +66,22 @@
               </div>
             </div>
 
-            <draggable v-model="category.registers" group="registers" item-key="custom_id" :clone="cloneRegister" class="flex flex-col" handle=".drag-handle">
+            <draggable 
+              v-model="category.registers" 
+              group="registers" 
+              item-key="id" 
+              :clone="cloneRegister" 
+              class="flex flex-col"
+              handle=".drag-handle">
               <template #item="{ element: register, index: rIdx }">
                 <div class="flex gap-x-17 mx-8 mb-8 last:mb-32 items-center drag-handle cursor-move">
                   <div class="w-3/12">
-                    <InputStatic>{{ `${formatNumber(cIdx, numerals_category, true)}${formatNumber(rIdx, numerals_register)}` }}</InputStatic>
+                    <InputStatic>{{ `${formatNumber(cIdx, numerals_category)}${formatNumber(rIdx, numerals_register)}` }}</InputStatic>
                   </div>
                   <div class="w-6/12">
-                    <InputText v-model="register.title" @blur="onRegisterTitleBlur(register)" />
+                    <InputText 
+                      v-model="register.title"
+                      @blur="onRegisterTitleBlur(register)" />
                   </div>
                   <div class="w-3/12">
                     <InputText
@@ -99,6 +116,7 @@
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
       <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
+
   </form>
 </template>
 
@@ -123,14 +141,14 @@ const isLoading = ref(false);
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
-const numerals_category = ref('decimal');
+const numerals_category = ref('alpha'); // decimal, roman, alpha
 const numerals_register = ref('decimal');
-const id_type = ref('auto');
+const id_type = ref('auto'); // auto, manual
 
 const form = ref({
   categories: [
     {
-      custom_id: '',
+      id: '',
       _localId: '',
       title: '',
       uuid: null,
@@ -148,34 +166,27 @@ onMounted(async () => {
 
 const fetchStructure = async () => {
   try {
+    isLoading.value = true;
     const response = await getStructure(uuid.value);
-    const mapped = response.data.map(category => ({
+
+    form.value.categories = response.data.map(category => ({
       title: category.title,
-      custom_id: category.custom_id ?? '',
-      _localId: category.custom_id ?? '',
+      custom_id: category.custom_id,
+      _localId: category.custom_id,
       uuid: category.uuid,
       registers: category.registers.map(register => ({
         title: register.title,
-        custom_id: register.custom_id ?? '',
-        _localId: register.custom_id ?? '',
+        custom_id: register.custom_id,
+        _localId: register.custom_id,
         uuid: register.uuid
       }))
     }));
-
-    form.value.categories = mapped.length > 0
-      ? mapped
-      : [{
-          title: '',
-          custom_id: '',
-          _localId: '',
-          uuid: null,
-          registers: []
-        }];
-
-  } catch (error) {
+  } 
+  catch (error) {
     console.error(error);
     toast.show('Fehler beim Laden der Ordnung', 'error');
-  } finally {
+  } 
+  finally {
     isLoading.value = false;
   }
 };
@@ -185,38 +196,44 @@ const handleSubmit = async () => {
 
   try {
     cleanForm();
+    const payload = [];
 
-    const payload = form.value.categories.map((category, cIdx) => {
+    form.value.categories.forEach((category, cIdx) => {
       const categoryNumber = formatNumber(cIdx, numerals_category.value);
-      return {
-        uuid: category.uuid,
+      const categoryItem = {
         number: categoryNumber,
         title: category.title,
-        custom_id: category.custom_id,
+        custom_id: category.id,
         order: cIdx,
+        uuid: category.uuid,
         registers: category.registers.map((register, rIdx) => ({
-          uuid: register.uuid,
           number: `${categoryNumber}${formatNumber(rIdx, numerals_register.value)}`,
           title: register.title,
-          custom_id: register.custom_id,
-          order: rIdx
-        }))
+          custom_id: register.id,
+          order: rIdx,
+          uuid: register.uuid
+        })),
       };
+      payload.push(categoryItem);
     });
 
+    // Validate payload
     if (!validatePayload(payload)) {
       isSaving.value = false;
       return;
     }
 
+    // Send to API
     const response = await storeStructure(uuid.value, payload);
     updateForm(response.data);
 
     toast.show('Ordnung erfolgreich gespeichert', 'success');
-  } catch (error) {
+  }
+  catch (error) {
     toast.show('Fehler beim Speichern der Ordnung', 'error');
     console.error(error);
-  } finally {
+  }
+  finally {
     isSaving.value = false;
   }
 };
@@ -228,6 +245,7 @@ const validatePayload = (payload) => {
     if (!category.custom_id || !category.number || !category.title) {
       isValid = false;
     }
+
     category.registers.forEach(register => {
       if (!register.custom_id || !register.number || !register.title) {
         isValid = false;
@@ -263,85 +281,79 @@ const updateForm = (data) => {
 const cleanForm = () => {
   form.value.categories = form.value.categories.filter(category => {
     category.registers = category.registers.filter(register =>
-      register.title || register.custom_id || register.uuid
+      register.title || register.id || register.uuid
     );
-    return category.title || category.custom_id || category.uuid || category.registers.length > 0;
+    return category.title || category.id || category.uuid || category.registers.length > 0;
   });
 };
 
 const addCategory = () => {
-  form.value.categories.push({
+  const newCategory = {
     title: '',
-    custom_id: '',
+    id: '',
     _localId: '',
     uuid: null,
     registers: []
-  });
-};
-
-const addRegisterToLastCategory = () => {
-  if (form.value.categories.length === 0) return;
-  const category = form.value.categories[form.value.categories.length - 1];
-  category.registers.push({
-    title: '',
-    custom_id: '',
-    _localId: '',
-    uuid: null
-  });
-};
+  };
+  form.value.categories.push(newCategory);
+}
 
 const onCategoryTitleBlur = (category) => {
   if (id_type.value !== 'auto') return;
   const autoId = category.title.slice(0, 2).toUpperCase();
-  category.custom_id = autoId;
-  category._localId = autoId;
-};
+  if (category.id !== autoId) {
+    category.id = autoId;
+    category._localId = autoId;
+  }
+}
 
 const onCategoryIdBlur = (category) => {
   if (id_type.value === 'manual') {
-    category.custom_id = category._localId;
+    category.id = category._localId;
   }
-};
+}
 
 const onRegisterTitleBlur = (register) => {
   if (id_type.value !== 'auto') return;
   const autoId = register.title.slice(0, 2).toUpperCase();
-  register.custom_id = autoId;
-  register._localId = autoId;
-};
+  if (register.id !== autoId) {
+    register.id = autoId;
+    register._localId = autoId;
+  }
+}
 
 const onRegisterIdBlur = (register) => {
   if (id_type.value === 'manual') {
-    register.custom_id = register._localId;
+    register.id = register._localId;
   }
-};
+}
 
-const cloneRegister = (original) => ({ ...original });
+const addRegisterToLastCategory = () => {
+  if (form.value.categories.length === 0) return;
+  const lastCategoryIndex = form.value.categories.length - 1;
+  const category = form.value.categories[lastCategoryIndex];
+  category.registers.push({
+    title: '',
+    id: '',
+    uuid: null,
+    _localId: ''
+  });
+}
 
-// const formatNumber = (index, type = 'decimal', isCategory = false) => {
-//   switch (type) {
-//     case 'alpha':
-//       const char = String.fromCharCode(65 + index);
-//       return (isCategory ? char : char.toLowerCase()) + '.';
-//     case 'roman': 
-//       return toRoman(index + 1) + '.';
-//     default: 
-//       return `${index + 1}.`;
-//   }
-// };
+const cloneRegister = (original) => {
+  return { ...original };
+}
 
-const formatNumber = (index, type = 'decimal', isCategory = false) => {
+const formatNumber = (index, type = 'decimal') => {
   switch (type) {
-    case 'alpha': {
-      const char = String.fromCharCode(65 + index);
-      return isCategory ? char + '.' : char.toLowerCase();
-    }
+    case 'alpha':
+      return String.fromCharCode(65 + index).toLowerCase() + '.';
     case 'roman':
-      return isCategory ? toRoman(index + 1) + '.' : toRoman(index + 1);
+      return toRoman(index + 1) + '.';
     default:
-      return isCategory ? `${index + 1}.` : `${index + 1}`;
+      return `${index + 1}.`;
   }
-};
+}
 
 const toRoman = (num) => {
   const romans = [
@@ -355,6 +367,6 @@ const toRoman = (num) => {
       num -= value;
     }
     return acc;
-  }, '');
-};
+  }, '')
+}
 </script>

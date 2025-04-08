@@ -41,6 +41,11 @@ class Archive extends Model
   {
     return $this->hasMany(Tag::class);
   }
+  
+  public function structure()
+  {
+    return $this->hasMany(ArchiveStructure::class);
+  }
 
   protected static function getSlugSource(): string
   {

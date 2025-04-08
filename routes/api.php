@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\ArchiveUserController;
+use App\Http\Controllers\Api\ArchiveStructureController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
@@ -96,6 +97,10 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archive/user/{user:uuid}', [ArchiveUserController::class, 'find']);
   Route::put('/archive/user/{user:uuid}', [ArchiveUserController::class, 'update']);
   Route::delete('/archive/user/{user:uuid}', [ArchiveUserController::class, 'destroy']);
+
+  // Archive Structure
+  Route::get('/archive/structure/{archive:uuid}', [ArchiveStructureController::class, 'get']);
+  Route::put('/archive/structure/{archive:uuid}', [ArchiveStructureController::class, 'store']);
 
   // Tags
   Route::get('/tags/{archive:uuid}', [TagController::class, 'get']);

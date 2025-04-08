@@ -135,7 +135,7 @@ onMounted(async () => {
     isLoading.value = true;
     await fetchCompanies();
 
-    // If we have a uuid from props or route, fetch the archive
+    // If we have a uuid from the route, fetch the archive
     if (uuid.value) {
       await fetchArchive();
     }
