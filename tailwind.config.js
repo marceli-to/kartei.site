@@ -79,6 +79,7 @@ export default {
         'sm': '0.875rem', // 14px
         'md': '1.125rem', // 18px
         'lg': '2.25rem', // 36px
+        'huge': '12rem', // 128px
       },
 
     },

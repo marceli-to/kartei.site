@@ -8,6 +8,7 @@
   [data-disabled] {
     @apply opacity-20 [&>*]:pointer-events-none [&>*]:select-none transition-all;
   }
+
 }
 
 /* Theme Styles */

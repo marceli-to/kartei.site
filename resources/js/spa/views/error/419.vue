@@ -1,16 +1,18 @@
 <template>
   <Message>
-    <div>419 – Sitzung abgelaufen</div>
-    <span class="text-sm">
-      Sie werden in {{ countdown }} Sekunde<span v-if="countdown !== 1">n</span> weitergeleitet.
-    </span>
+    <template #title>
+      419
+    </template>
+    <template #message>
+      <p class="text-center">
+        Sitzung abgelaufen<br>Sie werden in {{ countdown }} Sekunde<span v-if="countdown !== 1">n</span> weitergeleitet.
+      </p>
+    </template>
   </Message>
 </template>
-
-<script setup>
+ <script setup>
 import { ref, onMounted } from 'vue'
 import Message from '@/views/error/ErrorMessage.vue'
-
 const countdown = ref(5)
 
 onMounted(() => {
