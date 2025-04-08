@@ -1,13 +1,15 @@
 <template>
-  <div :class="class">
+  <div :class="[classes, props.class]">
     <slot />
   </div>
 </template>
+
 <script setup>
 const props = defineProps({
   class: {
     type: String,
-    default: 'flex flex-col gap-y-8'
+    default: '',
   },
 });
+const classes = 'flex flex-col gap-y-8';
 </script>

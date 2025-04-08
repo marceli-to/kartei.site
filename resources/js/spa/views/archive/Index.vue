@@ -22,6 +22,7 @@ import { useSlider } from '@/components/slider/composable/useSlider';
 import { useRoute } from 'vue-router';
 import SliderContainer from '@/components/slider/Container.vue';
 import BasicInformationComponent from '@/views/archive/BasicInformation.vue';
+import StructureComponent from '@/views/archive/Structure.vue';
 import TagsComponent from '@/views/archive/Tags.vue';
 import UserComponent from '@/views/users/Index.vue';
 import DeleteComponent from '@/views/archive/Delete.vue';
@@ -39,6 +40,14 @@ const createSlides = () => [
     width: 25, 
     class: "w-3/12", 
     component: markRaw(BasicInformationComponent),
+  },
+  { 
+    id: 'structure', 
+    name: "Struktur", 
+    width: 50, 
+    class: "w-6/12", 
+    component: markRaw(StructureComponent),
+    disabled: !route.params.uuid
   },
   { 
     id: 'tags', 
