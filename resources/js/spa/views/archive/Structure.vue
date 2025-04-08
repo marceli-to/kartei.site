@@ -61,7 +61,7 @@
               <template #item="{ element: register, index: rIdx }">
                 <div class="flex gap-x-17 mx-8 mb-8 last:mb-32 items-center drag-handle cursor-move">
                   <div class="w-3/12">
-                    <InputStatic>{{ `${formatNumber(cIdx, numerals_category, true)}${formatNumber(rIdx, numerals_register)}` }}</InputStatic>
+                    <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
                   </div>
                   <div class="w-6/12">
                     <InputText v-model="register.title" @blur="onRegisterTitleBlur(register)" />
@@ -123,9 +123,9 @@ const isLoading = ref(false);
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
-const numerals_category = ref('decimal');
-const numerals_register = ref('decimal');
-const id_type = ref('auto');
+const numerals_category = ref('alpha'); // decimal, roman, alpha
+const numerals_register = ref('alpha'); // decimal, roman, alpha
+const id_type = ref('auto'); // auto, manual
 
 const form = ref({
   categories: [
@@ -149,28 +149,22 @@ onMounted(async () => {
 const fetchStructure = async () => {
   try {
     const response = await getStructure(uuid.value);
-    const mapped = response.data.map(category => ({
-      title: category.title,
-      custom_id: category.custom_id ?? '',
-      _localId: category.custom_id ?? '',
-      uuid: category.uuid,
-      registers: category.registers.map(register => ({
-        title: register.title,
-        custom_id: register.custom_id ?? '',
-        _localId: register.custom_id ?? '',
-        uuid: register.uuid
-      }))
-    }));
+    const mapped = Array.isArray(response.data)
+      ? response.data.map(category => ({
+          title: category.title,
+          custom_id: category.custom_id ?? '',
+          _localId: category.custom_id ?? '',
+          uuid: category.uuid,
+          registers: (category.registers || []).map(register => ({
+            title: register.title,
+            custom_id: register.custom_id ?? '',
+            _localId: register.custom_id ?? '',
+            uuid: register.uuid
+          }))
+        }))
+      : [];
 
-    form.value.categories = mapped.length > 0
-      ? mapped
-      : [{
-          title: '',
-          custom_id: '',
-          _localId: '',
-          uuid: null,
-          registers: []
-        }];
+    form.value.categories = mapped.length > 0 ? mapped : [emptyCategory()];
 
   } catch (error) {
     console.error(error);
@@ -269,14 +263,18 @@ const cleanForm = () => {
   });
 };
 
+const emptyCategory = () => ({
+  title: '',
+  custom_id: '',
+  _localId: '',
+  uuid: null,
+  registers: []
+});
+
 const addCategory = () => {
-  form.value.categories.push({
-    title: '',
-    custom_id: '',
-    _localId: '',
-    uuid: null,
-    registers: []
-  });
+  form.value.categories.push(
+    emptyCategory()
+  );
 };
 
 const addRegisterToLastCategory = () => {
@@ -317,18 +315,6 @@ const onRegisterIdBlur = (register) => {
 };
 
 const cloneRegister = (original) => ({ ...original });
-
-// const formatNumber = (index, type = 'decimal', isCategory = false) => {
-//   switch (type) {
-//     case 'alpha':
-//       const char = String.fromCharCode(65 + index);
-//       return (isCategory ? char : char.toLowerCase()) + '.';
-//     case 'roman': 
-//       return toRoman(index + 1) + '.';
-//     default: 
-//       return `${index + 1}.`;
-//   }
-// };
 
 const formatNumber = (index, type = 'decimal', isCategory = false) => {
   switch (type) {
