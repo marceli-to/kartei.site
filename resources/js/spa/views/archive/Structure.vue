@@ -123,7 +123,7 @@ const isLoading = ref(false);
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
-const numerals_category = ref('alpha'); // decimal, roman, alpha
+const numerals_category = ref('roman'); // decimal, roman, alpha
 const numerals_register = ref('alpha'); // decimal, roman, alpha
 const id_type = ref('auto'); // auto, manual
 
