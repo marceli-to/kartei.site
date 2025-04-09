@@ -71,7 +71,7 @@ const props = defineProps({
   },
   classes: {
     type: String,
-    default: 'min-h-default w-full flex justify-between items-center font-muoto-regular text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8'
+    default: 'min-h-default w-full flex justify-between items-center text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8'
   },
   wrapperClasses: {
     type: String,

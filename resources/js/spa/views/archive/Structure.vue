@@ -1,120 +1,133 @@
 <template>
-  <form 
-    class="w-full h-full flex flex-col justify-between relative pb-40 before:absolute before:inset-y-0 before:left-[calc(25%_+_4px)] before:w-1 before:bg-graphite before:-z-1 after:absolute after:inset-y-0 after:left-[calc(75%_-_4px)] after:w-1 after:bg-graphite after:-z-1"
-    @submit.prevent="handleSubmit"
-    v-if="!isLoading">
+  <Slide>
+    <form 
+      class="w-full h-full flex flex-col justify-between pb-24 relative before:absolute before:inset-y-0 before:left-[calc(25%_+_4px)] before:w-1 before:bg-graphite before:-z-1 after:absolute after:inset-y-0 after:left-[calc(75%_-_4px)] after:w-1 after:bg-graphite after:-z-1"
+      @submit.prevent="handleSubmit"
+      v-if="!isLoading">
 
-    <!-- Categories and Registers -->
-    <div class="w-full">
-      <div class="flex gap-x-16 mx-8 mb-32">
-        <div class="w-3/12">
-          <button type="button" class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
-            <IconSettings />
-          </button>
-        </div>
-        <div class="w-6/12">
-          <Action 
-            type="button"
-            label="Kategorie" 
-            classes="!font-muoto-medium"
-            :icon="{ name: 'Plus', variant: 'small-bold', position: 'center' }"
-            @click="addCategory" />
-        </div>
-        <div class="w-3/12">
-          <button type="button" class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
-            <IconSettings />
-          </button>
-        </div>
-      </div>
-
-      <div class="flex gap-x-17 mx-8 mb-4">
-        <InputLabel label="Nr." class="w-3/12 !mb-0" />
-        <InputLabel label="Titel" class="w-6/12 !mb-0" />
-        <InputLabel label="Kürzel" class="w-3/12 !mb-0" />
-      </div>
-
-      <draggable v-model="form.categories" group="categories" item-key="custom_id" class="flex flex-col" handle=".drag-handle">
-        <template #item="{ element: category, index: cIdx }">
-          <div>
-            <div class="flex gap-x-17 mx-8 mb-32 items-center drag-handle cursor-move">
-              <div class="w-3/12">
-                <InputStatic>{{ formatNumber(cIdx, numerals_category, true) }}</InputStatic>
-              </div>
-              <div class="w-6/12">
-                <InputText
-                  v-model="category.title"
-                  :placeholder="`Kategorie ${cIdx + 1}`"
-                  @blur="onCategoryTitleBlur(category)"
-                />
-              </div>
-              <div class="w-3/12">
-                <InputText
-                  :model-value="category._localId"
-                  @update:model-value="val => category._localId = val"
-                  @blur="() => onCategoryIdBlur(category)"
-                  :readonly="id_type === 'auto'"
-                />
-              </div>
-            </div>
-
-            <draggable v-model="category.registers" group="registers" item-key="custom_id" :clone="cloneRegister" class="flex flex-col" handle=".drag-handle">
-              <template #item="{ element: register, index: rIdx }">
-                <div class="flex gap-x-17 mx-8 mb-8 last:mb-32 items-center drag-handle cursor-move">
-                  <div class="w-3/12">
-                    <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
-                  </div>
-                  <div class="w-6/12">
-                    <InputText v-model="register.title" @blur="onRegisterTitleBlur(register)" />
-                  </div>
-                  <div class="w-3/12">
-                    <InputText
-                      :model-value="register._localId"
-                      @update:model-value="val => register._localId = val"
-                      @blur="() => onRegisterIdBlur(register)"
-                      :readonly="id_type === 'auto'"
-                    />
-                  </div>
-                </div>
-              </template>
-            </draggable>
+      <!-- Categories and Registers -->
+      <div class="w-full">
+        <div class="flex gap-x-16 mx-8 mb-32">
+          <div class="w-3/12">
+            <button 
+              type="button" 
+              class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
+              @click="showStructureDialog">
+              <IconSettings />
+            </button>
           </div>
-        </template>
-      </draggable>
-
-      <div class="flex gap-x-17 mx-8 mb-8">
-        <div class="w-3/12">&nbsp;</div>
-        <div class="w-6/12">
-          <Action 
-            type="button"
-            label="Register"
-            :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
-            @click="addRegisterToLastCategory" />
+          <div class="w-6/12">
+            <Action 
+              type="button"
+              label="Kategorie" 
+              classes="!font-muoto-medium"
+              :icon="{ name: 'Plus', variant: 'small-bold', position: 'center' }"
+              @click="addCategory" />
+          </div>
+          <div class="w-3/12">
+            <button 
+              type="button" 
+              class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
+              @click="showStructureDialog">
+              <IconSettings />
+            </button>
+          </div>
         </div>
-        <div class="w-3/12">&nbsp;</div>
-      </div>
-    </div>
 
-    <!-- Buttons -->
-    <ButtonGroup class="mx-8 relative z-10">
-      <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
-      <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
-    </ButtonGroup>
-  </form>
+        <div class="flex gap-x-17 mx-8 mb-4">
+          <InputLabel label="Nr." class="w-3/12 !mb-0" />
+          <InputLabel label="Titel" class="w-6/12 !mb-0" />
+          <InputLabel label="Kürzel" class="w-3/12 !mb-0" />
+        </div>
+
+        <draggable v-model="form.categories" group="categories" item-key="custom_id" class="flex flex-col" handle=".drag-handle">
+          <template #item="{ element: category, index: cIdx }">
+            <div>
+              <div class="flex gap-x-17 mx-8 mb-32 items-center drag-handle cursor-move">
+                <div class="w-3/12">
+                  <InputStatic>{{ formatNumber(cIdx, numerals_category, true) }}</InputStatic>
+                </div>
+                <div class="w-6/12">
+                  <InputText
+                    v-model="category.title"
+                    :placeholder="`Kategorie ${cIdx + 1}`"
+                    @blur="onCategoryTitleBlur(category)"
+                  />
+                </div>
+                <div class="w-3/12">
+                  <InputText
+                    :model-value="category._localId"
+                    @update:model-value="val => category._localId = val"
+                    @blur="() => onCategoryIdBlur(category)"
+                    :readonly="id_type === 'auto'"
+                  />
+                </div>
+              </div>
+
+              <draggable v-model="category.registers" group="registers" item-key="custom_id" :clone="cloneRegister" class="flex flex-col" handle=".drag-handle">
+                <template #item="{ element: register, index: rIdx }">
+                  <div class="flex gap-x-17 mx-8 mb-8 last:mb-32 items-center drag-handle cursor-move">
+                    <div class="w-3/12">
+                      <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
+                    </div>
+                    <div class="w-6/12">
+                      <InputText v-model="register.title" @blur="onRegisterTitleBlur(register)" />
+                    </div>
+                    <div class="w-3/12">
+                      <InputText
+                        :model-value="register._localId"
+                        @update:model-value="val => register._localId = val"
+                        @blur="() => onRegisterIdBlur(register)"
+                        :readonly="id_type === 'auto'"
+                      />
+                    </div>
+                  </div>
+                </template>
+              </draggable>
+            </div>
+          </template>
+        </draggable>
+
+        <div class="flex gap-x-17 mx-8 mb-8">
+          <div class="w-3/12">&nbsp;</div>
+          <div class="w-6/12">
+            <Action 
+              type="button"
+              label="Register"
+              :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
+              @click="addRegisterToLastCategory" />
+          </div>
+          <div class="w-3/12">&nbsp;</div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <ButtonGroup class="mx-8 relative z-10">
+        <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
+        <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
+      </ButtonGroup>
+    </form>
+  </Slide>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import draggable from 'vuedraggable';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { getStructure, storeStructure } from '@/services/api/archiveStructure';
+import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
+import Slide from '@/components/slider/Slide.vue';
 import Action from '@/components/buttons/Action.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputStatic from '@/components/forms/Static.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
+import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
+
+const dialogStore = useDialogStore();
 
 const toast = useToastStore();
 const isSaving = ref(false);
@@ -343,4 +356,28 @@ const toRoman = (num) => {
     return acc;
   }, '');
 };
+
+const showStructureDialog = () => {
+  dialogStore.show({
+    component: StructureDialog,
+    hideDefaultActions: true,
+    confirmLabel: 'Löschen',
+    cancelLabel: 'Abbrechen',
+    size: 'xlarge',
+    props: {
+      numerals_category_type: numerals_category.value,
+      numerals_register_type: numerals_register.value,
+      id_type: id_type.value,
+      onConfirm: ({ category, register, idType }) => {
+        numerals_category.value = category;
+        numerals_register.value = register;
+        id_type.value = idType;
+        dialogStore.hide();
+      },
+      onCancel: () => {
+        dialogStore.hide();
+      }
+    }
+  });
+}
 </script>

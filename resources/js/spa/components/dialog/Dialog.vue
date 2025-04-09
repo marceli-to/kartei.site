@@ -14,7 +14,7 @@
         @click="handleBackdropClick"
       >
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/80"></div>
+        <div class="fixed inset-0 bg-black/80 transition-opacity duration-200"></div>
         <!-- Dialog -->
         <div class="flex min-h-full items-center justify-center p-4 relative">
           <div
@@ -22,6 +22,10 @@
               'relative w-full transform overflow-hidden bg-white dark:text-black p-24 text-left shadow-xl transition-all',
               getSizeClass(content.size)
             ]"
+            role="dialog"
+            aria-modal="true"
+            :aria-labelledby="content.title ? 'dialog-title' : null"
+            :aria-describedby="content.message ? 'dialog-desc' : null"
             @click.stop>
             <a 
               href="javascript:;" 
@@ -30,12 +34,15 @@
               <IconCross variant="small-bold" />
             </a>
             <div class="flex flex-col gap-y-24 mx-auto">
+
               <!-- Title -->
               <h3 v-if="content.title" class="font-muoto-medium">
                 {{ content.title }}
               </h3>
+
               <!-- Content -->
               <div>
+
                 <!-- Simple message -->
                 <p v-if="content.message">
                   {{ content.message }}
@@ -55,8 +62,9 @@
                 <!-- ! Default slot -->
               </div>
               <!-- ! Content -->
+
               <!-- Actions -->
-              <div>
+              <div v-if="!content.hideDefaultActions">
                 <slot name="actions">
                   <ButtonGroup>
                     <ButtonPrimary 
@@ -73,6 +81,7 @@
                 </slot>
               </div>
               <!-- ! Actions -->
+
             </div>
             
           </div>
@@ -83,6 +92,7 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import ButtonGroup from '@/components/buttons/Group.vue';
@@ -93,6 +103,16 @@ const dialogStore = useDialogStore();
 const { isVisible, content } = storeToRefs(dialogStore);
 const { hide } = dialogStore;
 
+onMounted(() => {
+  const handleKey = (e) => {
+    if (e.key === 'Escape') {
+      handleBackdropClick();
+    }
+  };
+  window.addEventListener('keydown', handleKey);
+  onUnmounted(() => window.removeEventListener('keydown', handleKey));
+});
+
 const getSizeClass = (size) => {
   switch (size) {
     case 'small':
@@ -101,6 +121,8 @@ const getSizeClass = (size) => {
       return 'max-w-md';
     case 'large':
       return 'max-w-4xl';
+    case 'xlarge':
+      return 'max-w-5xl';
     default:
       return 'max-w-2xl';
   }
