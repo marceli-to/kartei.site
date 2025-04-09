@@ -109,7 +109,7 @@
       </div>
 
       <!-- Buttons -->
-      <ButtonGroup class="mx-8 relative z-10">
+      <ButtonGroup class="relative z-10">
         <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
       </ButtonGroup>
     </form>
@@ -205,15 +205,12 @@ const fetchStructure = async () => {
     form.value.categories = mapped.length > 0 ? mapped : [emptyCategory()];
     hasStructure.value = mapped.length > 0 || false;
 
-    numerals_category.value = response.data[0].numeral_type;
-    numerals_register.value = response.data[0].numeral_type;
-    id_type.value = response.data[0].custom_id_type;
-    console.log(id_type.value);
-
+    numerals_category.value = response.data[0]?.numeral_type ?? 'decimal';
+    numerals_register.value = response.data[0]?.numeral_type ?? 'decimal';
+    id_type.value = response.data[0]?.custom_id_type ?? 'auto';
   } 
   catch (error) {
     console.error(error);
-    toast.show('Fehler beim Laden der Ordnung', 'error');
   } 
   finally {
     isLoading.value = false;

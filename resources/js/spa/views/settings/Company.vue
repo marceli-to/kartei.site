@@ -138,7 +138,7 @@ onMounted(async () => {
     companies.value = response.data;
   } 
   catch (error) {
-    toast.show('Fehler beim Laden der Firmen.', 'error');
+    console.log(error);
   } 
   finally {
     isLoading.value = false;

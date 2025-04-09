@@ -502,7 +502,6 @@ onMounted(async () => {
   } 
   catch (error) {
     console.error('Error initializing component:', error);
-    toast.show('Fehler beim Laden der Daten.', 'error');
   } 
   finally {
     isLoading.value = false;

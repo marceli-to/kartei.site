@@ -149,7 +149,7 @@ onMounted(async () => {
     form.value.billing_country = response.data.country;
   } 
   catch (error) {
-    toast.show('Fehler beim Laden der Rechnungsadresse.', 'error');
+    console.error(error);
   }
   finally {
     isLoading.value = false;

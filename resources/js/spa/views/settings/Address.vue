@@ -141,7 +141,7 @@ onMounted(async () => {
     form.value = response.data;
   } 
   catch (error) {
-    toast.show('Fehler beim Laden der Adressen.', 'error');
+    console.error(error);
   }
   finally {
     isLoading.value = false;

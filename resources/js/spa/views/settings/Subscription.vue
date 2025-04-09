@@ -120,7 +120,7 @@ onMounted(async () => {
     }
   } 
   catch (error) {
-    toast.show('Fehler beim Laden der Abonnements.', 'error');
+    console.log(error);
   }
   finally {
     isLoading.value = false;

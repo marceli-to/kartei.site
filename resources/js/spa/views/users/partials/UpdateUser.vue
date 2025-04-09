@@ -112,10 +112,11 @@ onMounted(async () => {
       name: userData.value.name || '',
       email: userData.value.email || '',
     };
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Failed to fetch user data:', error);
-    toast.show('Fehler beim Laden der Benutzerdaten.', 'error');
-  } finally {
+  }
+  finally {
     isLoading.value = false;
   }
 });

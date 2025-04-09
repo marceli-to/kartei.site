@@ -3,6 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasUuid;
 
 class ArchiveStructure extends Model
@@ -44,12 +45,12 @@ class ArchiveStructure extends Model
     }
 
     // Scopes
-    public function scopeCategories($query)
+    public function scopeCategories($query): Builder
     {
       return $query->whereNull('parent_id')->orderBy('order');
     }
 
-    public function scopeRegisters($query)
+    public function scopeRegisters($query): Builder
     {
       return $query->whereNotNull('parent_id')->orderBy('order');
     }

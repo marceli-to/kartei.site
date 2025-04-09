@@ -142,7 +142,6 @@ onMounted(async () => {
   } 
   catch (error) {
     console.error(error);
-    toast.show('Fehler beim Laden der Kartei.', 'error');
   }
   finally {
     isLoading.value = false;
