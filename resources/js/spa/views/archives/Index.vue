@@ -36,12 +36,14 @@
                 variant="box"
                 :to="{ name: 'archiveSettings' }"
                 :icon="{ name: 'Plus', position: 'right' }" />
-                <InfoBox 
-                  v-if="infoBox.isActive"
-                  class="absolute !top-0 !-right-16 !w-auto min-h-default !py-0 flex items-center"
-                  :closable="false">
-                  <InfoCreateArchive />
-                </InfoBox>
+                <template v-if="!hasArchive">
+                  <InfoBox 
+                    v-if="infoBox.isActive"
+                    class="absolute !top-0 !-right-16 !w-auto min-h-default !py-0 flex items-center"
+                    :closable="false">
+                    <InfoCreateArchive />
+                  </InfoBox>
+                </template>
             </InputGroup>
             <InputGroup>
               <Action 
@@ -77,6 +79,7 @@ import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
+
 const userStore = useUserStore();
 const { setTitle } = usePageTitle();
 setTitle('Meine Karteien');
@@ -108,7 +111,8 @@ onMounted(async () => {
   try {
     archives.value = await getByUser(userStore.user.uuid);
     hasArchive.value = archives.value.length > 0;
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error);
   }
 });

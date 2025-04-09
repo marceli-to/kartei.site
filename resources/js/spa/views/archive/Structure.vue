@@ -1,13 +1,20 @@
 <template>
   <Slide>
     <form 
-      class="w-full h-full flex flex-col justify-between pb-24 relative before:absolute before:inset-y-0 before:left-[calc(25%_+_4px)] before:w-1 before:bg-graphite before:-z-1 after:absolute after:inset-y-0 after:left-[calc(75%_-_4px)] after:w-1 after:bg-graphite after:-z-1"
+      class="w-full h-full flex flex-col justify-between pb-24 relative before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite before:-z-1 after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite after:-z-1"
       @submit.prevent="handleSubmit"
       v-if="!isLoading">
 
+      <!-- Info box -->
+      <template v-if="(!hasStructure && isActive) || (infoBox.isActive && isActive)">
+        <InfoBox class="!top-0 !-right-16 w-4/12">
+          <InfoStructure />
+        </InfoBox>
+      </template>
+
       <!-- Categories and Registers -->
       <div class="w-full">
-        <div class="flex gap-x-16 mx-8 mb-32">
+        <div class="flex gap-x-16 mb-32">
           <div class="w-3/12">
             <button 
               type="button" 
@@ -111,10 +118,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, toRef, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
+import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import { getStructure, storeStructure } from '@/services/api/archiveStructure';
 import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
@@ -126,19 +134,34 @@ import InputStatic from '@/components/forms/Static.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
+import InfoBox from '@/components/infobox/InfoBox.vue';
+import InfoStructure from '@/views/archive/partials/StructureInfo.vue';
 
 const dialogStore = useDialogStore();
 
 const toast = useToastStore();
 const isSaving = ref(false);
 const isLoading = ref(false);
+const hasStructure = ref(false);
 
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
-const numerals_category = ref('roman'); // decimal, roman, alpha
-const numerals_register = ref('alpha'); // decimal, roman, alpha
+const numerals_category = ref('decimal'); // decimal, roman, alpha
+const numerals_register = ref('decimal'); // decimal, roman, alpha
 const id_type = ref('auto'); // auto, manual
+
+const infoBox = useInfoBox({
+  isActive: toRef(true),
+  condition: hasStructure
+});
+
+const props = defineProps({
+  isActive: {
+    type: Boolean,
+    default: false
+  }
+});
 
 const form = ref({
   categories: [
@@ -162,8 +185,8 @@ onMounted(async () => {
 const fetchStructure = async () => {
   try {
     const response = await getStructure(uuid.value);
-    const mapped = Array.isArray(response.data)
-      ? response.data.map(category => ({
+    const mapped = Array.isArray(response.data) ? 
+      response.data.map(category => ({
           title: category.title,
           custom_id: category.custom_id ?? '',
           _localId: category.custom_id ?? '',
@@ -178,11 +201,14 @@ const fetchStructure = async () => {
       : [];
 
     form.value.categories = mapped.length > 0 ? mapped : [emptyCategory()];
+    hasStructure.value = mapped.length > 0 || false;
 
-  } catch (error) {
+  } 
+  catch (error) {
     console.error(error);
     toast.show('Fehler beim Laden der Ordnung', 'error');
-  } finally {
+  } 
+  finally {
     isLoading.value = false;
   }
 };
@@ -218,12 +244,13 @@ const handleSubmit = async () => {
 
     const response = await storeStructure(uuid.value, payload);
     updateForm(response.data);
-
     toast.show('Ordnung erfolgreich gespeichert', 'success');
-  } catch (error) {
+  } 
+  catch (error) {
     toast.show('Fehler beim Speichern der Ordnung', 'error');
     console.error(error);
-  } finally {
+  } 
+  finally {
     isSaving.value = false;
   }
 };
