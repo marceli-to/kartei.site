@@ -535,7 +535,6 @@ onMounted(async () => {
     await fetchRolesWithPermissions();
     await fetchArchives();
     applyExistingPermissions();
-
   }
   catch (error) {
     console.error('Error initializing component:', error);

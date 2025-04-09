@@ -494,15 +494,17 @@ onMounted(async () => {
     await Promise.all([
       fetchArchives(),
       fetchRoles(),
-      fetchPermissions(),
-      fetchRolesWithPermissions(),
-      fetchUserPermissions()
+      fetchPermissions()
     ]);
+    await fetchRolesWithPermissions();
+    await fetchUserPermissions();
     applyUserPermissions();
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error initializing component:', error);
     toast.show('Fehler beim Laden der Daten.', 'error');
-  } finally {
+  } 
+  finally {
     isLoading.value = false;
   }
 });
