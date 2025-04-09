@@ -50,7 +50,7 @@
         <draggable v-model="form.categories" group="categories" item-key="custom_id" class="flex flex-col" handle=".drag-handle">
           <template #item="{ element: category, index: cIdx }">
             <div>
-              <div class="flex gap-x-17 mx-8 mb-32 items-center drag-handle cursor-move">
+              <div class="flex gap-x-17 mb-32 items-center drag-handle cursor-move">
                 <div class="w-3/12">
                   <InputStatic>{{ formatNumber(cIdx, numerals_category, true) }}</InputStatic>
                 </div>
@@ -73,7 +73,7 @@
 
               <draggable v-model="category.registers" group="registers" item-key="custom_id" :clone="cloneRegister" class="flex flex-col" handle=".drag-handle">
                 <template #item="{ element: register, index: rIdx }">
-                  <div class="flex gap-x-17 mx-8 mb-8 last:mb-32 items-center drag-handle cursor-move">
+                  <div class="flex gap-x-17 mb-8 last:mb-32 items-center drag-handle cursor-move">
                     <div class="w-3/12">
                       <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
                     </div>
@@ -95,7 +95,7 @@
           </template>
         </draggable>
 
-        <div class="flex gap-x-17 mx-8 mb-8">
+        <div class="flex gap-x-17 mb-8">
           <div class="w-3/12">&nbsp;</div>
           <div class="w-6/12">
             <Action 
