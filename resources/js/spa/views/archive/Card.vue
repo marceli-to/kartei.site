@@ -10,7 +10,7 @@
 
         <div>
           <InputLabel label="Bildfeld" />
-          <ImageCard class="flex items-center justify-center mb-8 aspect-[16/9]">
+          <ImageCard class="flex items-center justify-center mb-8 !aspect-[16/9]">
             <IconImage v-if="form.image" />
             <IconImage variant="missing" v-else />
           </ImageCard>
@@ -120,7 +120,13 @@ onMounted(async () => {
     try {
       const response = await getTemplate(uuid.value);
       form.value.image = response.data.image;
-      form.value.fields = response.data.fields;
+
+      if (!response.data.fields || response.data.fields.length === 0) {
+        form.value.fields = [emptyField()];
+      }
+      else {
+        form.value.fields = response.data.fields;
+      }
     } 
     catch (error) {
       console.log(error);
@@ -157,6 +163,11 @@ const handleSubmit = async () => {
     isSaving.value = false;
   }
 }
+
+const emptyField = {
+  uuid: null,
+  placeholder: ''
+};
 
 const add = async () => {
   form.value.fields.push({
