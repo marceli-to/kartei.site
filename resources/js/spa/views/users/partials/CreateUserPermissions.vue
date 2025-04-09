@@ -528,14 +528,14 @@ onMounted(async () => {
   try {
     isLoading.value = true;
     await Promise.all([
-      fetchArchives(),
       fetchRoles(),
-      fetchPermissions(),
-      fetchRolesWithPermissions()
+      fetchPermissions()
     ]);
-    
-    // Apply existing permissions if provided
+
+    await fetchRolesWithPermissions();
+    await fetchArchives();
     applyExistingPermissions();
+
   }
   catch (error) {
     console.error('Error initializing component:', error);

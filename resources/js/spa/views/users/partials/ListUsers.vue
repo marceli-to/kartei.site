@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div>
+    <div class="mt-24">
       <Action 
         label="Benutzer/in" 
         :icon="{ name: 'Plus', position: 'center' }"

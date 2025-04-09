@@ -18,11 +18,11 @@ class ArchiveSeeder extends Seeder
         'name' => 'Sammlung Bert Fiefelstein',
         'acronym' => 'BF'
       ],
-      // [
-      //   'slug' => Str::slug('Bildarchiv Kretschmann'),
-      //   'name' => 'Bildarchiv Kretschmann',
-      //   'acronym' => 'BK'
-      // ]
+      [
+        'slug' => Str::slug('Bildarchiv Kretschmann'),
+        'name' => 'Bildarchiv Kretschmann',
+        'acronym' => 'BK'
+      ]
     ];
 
     foreach ($archives as $archive)

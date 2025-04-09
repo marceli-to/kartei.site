@@ -11,7 +11,7 @@ class UserSubscriptionResource extends JsonResource
       'uuid' => $this->uuid,
       'payment_interval' => $this->payment_interval,
       'payment_method' => $this->payment_method,
-      'max_users' => $this->max_users,
+      'max_users' => $this->plan->max_users,
       'starts_at' => $this->starts_at,
       'ends_at' => $this->ends_at,
       'plan' => [

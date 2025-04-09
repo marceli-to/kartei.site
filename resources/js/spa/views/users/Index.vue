@@ -39,19 +39,14 @@
         :isLoading="isLoadingUsers"
         @user-selected="handleUserSelected"
         @create-user="viewState = 'creating'"
-        :class="{ 'opacity-50 pointer-events-none': showSubscriptionInfo }" />
-        
-        <SubscriptionInfo v-if="showSubscriptionInfo">
-          <template v-if="hasSubscription && maxUsersReached">
-            Die maximale Anzahl von Benutzern für dein Abonnement ist erreicht. Um weitere Benutzer hinzuzufügen, musst du dein Abonnement upgraden.
-          </template>
-          <template v-if="!hasSubscription">
-            Du hast noch kein Abonnement. Um Benutzer hinzuzufügen, musst du ein Abonnement erstellen.
-          </template>
-        </SubscriptionInfo>
+        :class="{ 'opacity-50 pointer-events-none': disableListUsers }" />
+
+      <SubscriptionInfo 
+        :users="users" 
+        :isActive="props.isActive"
+        @update:disableListUsers="disableListUsers = $event" />
+
     </template>
-
-
   </Slide>
 </template>
 
@@ -59,35 +54,23 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { getRelatedUsers, getArchiveUsers } from '@/services/api/archiveUser';
-import { getUserSubscription } from '@/services/api/user';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/users/partials/CreateUser.vue';
 import UpdateUser from '@/views/users/partials/UpdateUser.vue';
 import CreateUserPermissions from '@/views/users/partials/CreateUserPermissions.vue';
 import UpdateUserPermissions from '@/views/users/partials/UpdateUserPermissions.vue';
 import ListUsers from '@/views/users/partials/ListUsers.vue';
-import SubscriptionInfo from '@/views/users/partials/SubscriptionInfo.vue';
+import SubscriptionInfo from '@/views/users/components/SubscriptionInfo.vue';
 
 const route = useRoute();
 const archiveUuid = ref(route.params.uuid || null);
-
 const userListRef = ref(null);
 const createdUser = ref(null);
 const selectedUser = ref(null);
 const users = ref([]);
 const viewState = ref('listing');
+const disableListUsers = ref(true); // default to true until info is available
 const isLoadingUsers = ref(false);
-
-const subscription = ref(null);
-const hasSubscription = computed(() => subscription.value !== null);
-const maxUsersReached = computed(() => {
-  if (!subscription.value || !subscription.value.max_users) return false;
-  return users.value.length >= subscription.value.max_users;
-});
-
-const showSubscriptionInfo = computed(() => {
-  return !hasSubscription.value || (maxUsersReached.value || !hasSubscription.value);
-});
 
 const props = defineProps({
   isActive: {
@@ -96,13 +79,18 @@ const props = defineProps({
   }
 });
 
+// Watch for when this slide becomes active
+watch(() => props.isActive, async (isActive) => {
+  if (isActive) {
+    resetView();
+    await fetchUsers();
+  }
+});
+
 // Load users when component mounts
 onMounted( async ()  => {
  if (props.isActive) {
-    await Promise.all([
-      fetchUsers(), 
-      fetchSubscription()
-    ]);
+    await fetchUsers();
  }
 });
 
@@ -124,17 +112,6 @@ const fetchUsers = async () => {
   }
   finally {
     isLoadingUsers.value = false;
-  }
-};
-
-// Fetch subscription
-const fetchSubscription = async () => {
-  try {
-    const response = await getUserSubscription();
-    subscription.value = response.data || null;
-  } 
-  catch (error) {
-    console.error('Failed to fetch users subscription:', error);
   }
 };
 
@@ -188,15 +165,4 @@ const resetView = () => {
     userListRef.value.resetSearch();
   }
 };
-
-// Watch for when this slide becomes active
-watch(() => props.isActive, async (isActive) => {
-  if (isActive) {
-    resetView();
-    await Promise.all([
-      fetchUsers(), 
-      fetchSubscription()
-    ]);
-  }
-});
 </script>
