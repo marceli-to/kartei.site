@@ -23,6 +23,7 @@ import { useRoute } from 'vue-router';
 import SliderContainer from '@/components/slider/Container.vue';
 import BasicInformationComponent from '@/views/archive/BasicInformation.vue';
 import StructureComponent from '@/views/archive/Structure.vue';
+import CardComponent from '@/views/archive/Card.vue';
 import TagsComponent from '@/views/archive/Tags.vue';
 import UserComponent from '@/views/users/Index.vue';
 import DeleteComponent from '@/views/archive/Delete.vue';
@@ -47,6 +48,14 @@ const createSlides = () => [
     width: 50, 
     class: "w-6/12", 
     component: markRaw(StructureComponent),
+    disabled: !route.params.uuid
+  },
+  { 
+    id: 'card', 
+    name: "Kartenvorlage", 
+    width: 25, 
+    class: "w-3/12", 
+    component: markRaw(CardComponent),
     disabled: !route.params.uuid
   },
   { 

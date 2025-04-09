@@ -17,6 +17,8 @@ return new class extends Migration
       $table->string('number', 10);
       $table->string('title');
       $table->string('custom_id', 25);
+      $table->enum('numeral_type', ['decimal', 'alpha', 'roman'])->default('decimal');
+      $table->enum('custom_id_type', ['auto', 'manual'])->default('auto');
       $table->unsignedInteger('order')->default(0);
       $table->foreignId('archive_id')->constrained()->onDelete('cascade');
       $table->foreignId('parent_id')->nullable()->constrained('archive_structure')->onDelete('cascade');

@@ -36,13 +36,17 @@ class UpdateOrCreate
 
     if ($category) {
       if (
+        $category->number !== $data['number'] ||
         $category->title !== $data['title'] ||
         $category->custom_id !== $data['custom_id'] ||
         $category->order !== $data['order']
       ) {
         $category->update([
+          'number' => $data['number'],
           'title' => $data['title'],
           'custom_id' => $data['custom_id'],
+          'numeral_type' => $data['numeral_type'],
+          'custom_id_type' => $data['custom_id_type'],
           'order' => $data['order'],
         ]);
       }
@@ -53,6 +57,8 @@ class UpdateOrCreate
         'number' => $data['number'],
         'title' => $data['title'],
         'custom_id' => $data['custom_id'],
+        'numeral_type' => $data['numeral_type'],
+        'custom_id_type' => $data['custom_id_type'],
         'order' => $data['order'],
       ]);
     }
@@ -71,6 +77,7 @@ class UpdateOrCreate
 
     if ($register) {
       if (
+        $register->number !== $data['number'] ||
         $register->title !== $data['title'] ||
         $register->custom_id !== $data['custom_id'] ||
         $register->order !== $data['order'] ||
@@ -80,6 +87,8 @@ class UpdateOrCreate
           'title' => $data['title'],
           'number' => $data['number'],
           'custom_id' => $data['custom_id'],
+          'numeral_type' => $data['numeral_type'],
+          'custom_id_type' => $data['custom_id_type'],
           'order' => $data['order'],
           'parent_id' => $category->id,
         ]);
@@ -91,6 +100,8 @@ class UpdateOrCreate
         'number' => $data['number'],
         'title' => $data['title'],
         'custom_id' => $data['custom_id'],
+        'numeral_type' => $data['numeral_type'],
+        'custom_id_type' => $data['custom_id_type'],
         'order' => $data['order'],
         'parent_id' => $category->id,
       ]);

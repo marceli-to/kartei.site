@@ -111,7 +111,6 @@
       <!-- Buttons -->
       <ButtonGroup class="mx-8 relative z-10">
         <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
-        <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
       </ButtonGroup>
     </form>
   </Slide>
@@ -164,6 +163,9 @@ const props = defineProps({
 });
 
 const form = ref({
+  numerals_category: numerals_category.value,
+  numerals_register: numerals_register.value,
+  custom_id_type: id_type.value,
   categories: [
     {
       custom_id: '',
@@ -203,6 +205,11 @@ const fetchStructure = async () => {
     form.value.categories = mapped.length > 0 ? mapped : [emptyCategory()];
     hasStructure.value = mapped.length > 0 || false;
 
+    numerals_category.value = response.data[0].numeral_type;
+    numerals_register.value = response.data[0].numeral_type;
+    id_type.value = response.data[0].custom_id_type;
+    console.log(id_type.value);
+
   } 
   catch (error) {
     console.error(error);
@@ -222,12 +229,16 @@ const handleSubmit = async () => {
     const payload = form.value.categories.map((category, cIdx) => {
       const categoryNumber = formatNumber(cIdx, numerals_category.value);
       return {
+        numeral_type: numerals_category.value,
+        custom_id_type: id_type.value,
         uuid: category.uuid,
         number: categoryNumber,
         title: category.title,
         custom_id: category.custom_id,
         order: cIdx,
         registers: category.registers.map((register, rIdx) => ({
+          numeral_type: numerals_register.value,
+          custom_id_type: id_type.value,
           uuid: register.uuid,
           number: `${categoryNumber}${formatNumber(rIdx, numerals_register.value)}`,
           title: register.title,

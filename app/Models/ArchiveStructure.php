@@ -16,6 +16,8 @@ class ArchiveStructure extends Model
     'title',
     'custom_id',
     'order',
+    'numeral_type',
+    'custom_id_type',
     'archive_id',
     'parent_id'
   ];

@@ -25,9 +25,9 @@ class ArchiveSeeder extends Seeder
       ]
     ];
 
-    // foreach ($archives as $archive)
-    // {
-    //   Archive::create($archive);
-    // }
+    foreach ($archives as $archive)
+    {
+      Archive::create($archive);
+    }
   }
 }
