@@ -11,7 +11,10 @@
         <span class="w-48">{{ item.number }}.</span>
         <span>{{ item.title }}</span>
       </span>
-      <IconChevronDown :class="isOpen[index] ? 'rotate-180' : ''" class="transition-transform" />
+      <IconChevronDown 
+        :class="isOpen[index] ? 'rotate-180' : ''" 
+        class="transition-transform"
+        v-if="item.registers.length > 0" />
     </a>
 
     <div 
