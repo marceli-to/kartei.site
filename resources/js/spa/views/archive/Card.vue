@@ -36,17 +36,17 @@
             <InputGroup
               class="relative"
               v-for="(field, index) in form.fields" :key="index">
-              <InputText
+              <InputTextarea
                 v-model="form.fields[index].placeholder"
                 :placeholder="`Textfeld ${index + 1}`"
                 aria-label="Textfeld"
                 :ref="el => inputRefs[index] = el" />
-                <button 
-                  type="button" 
-                  class="absolute right-8 top-1/2 -translate-y-1/2"
-                  @click="remove(index)">
-                  <IconCross variant="small" />
-                </button>
+              <button 
+                type="button" 
+                class="absolute right-8 top-12"
+                @click="remove(index)">
+                <IconCross variant="small" />
+              </button>
             </InputGroup>
           </div>
         </div>
@@ -76,6 +76,7 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
+import InputTextarea from '@/components/forms/Textarea.vue';
 import InputStatic from '@/components/forms/Static.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputGroup from '@/components/forms/Group.vue';

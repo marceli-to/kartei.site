@@ -2,7 +2,7 @@
   <div
     v-for="(item, index) in items"
     :key="item.uuid"
-    class="border-y border-y-graphite">
+    class="border-b border-b-graphite first:border-t first:border-t-graphite">
     <a
       href="javascript:;"
       @click="toggle(index)"
@@ -14,7 +14,9 @@
       <IconChevronDown :class="isOpen[index] ? 'rotate-180' : ''" class="transition-transform" />
     </a>
 
-    <div v-if="isOpen[index]" class="border-t border-t-graphite">
+    <div 
+      class="border-t border-t-graphite"
+      v-if="isOpen[index] && item.registers.length > 0">
       <div
         v-for="subItem in item.registers"
         :key="subItem.uuid"

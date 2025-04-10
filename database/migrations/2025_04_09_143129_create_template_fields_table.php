@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('template_fields', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
-      $table->string('placeholder');
+      $table->text('placeholder');
       $table->foreignId('archive_template_id')->constrained()->onDelete('cascade');
       $table->timestamps();
     });

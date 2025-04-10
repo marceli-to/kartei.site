@@ -57,10 +57,10 @@
       <main class="w-10/12 px-8 min-h-full">
         <div 
           v-if="archives.length > 0"
-          class="flex flex-wrap gap-x-8 h-full">
+          class="flex gap-x-8 h-full">
           <Teaser 
             :archive="archive" 
-            class="w-3/12 border-r border-r-graphite pr-8"
+            class="w-3/12 shrink-0 border-r border-r-graphite pr-8"
             v-for="archive in archives" :key="archive.uuid" />
         </div>
       </main>

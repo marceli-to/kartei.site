@@ -6,7 +6,7 @@
       title="Kartei bearbeiten">
       <IconEdit class="text-graphite w-full h-auto" />
     </router-link>
-    <ImageCard>
+    <ImageCard v-if="archive.image">
       <Image :src="archive.image.url" alt="Titelbild" spacing="m-40" />
     </ImageCard>
     <div class="border-y border-y-graphite min-h-default flex items-center">
@@ -14,7 +14,9 @@
         {{ archive.name }}
       </h2>
     </div>
-    <Collapsible :items="archive.structure" v-if="archive.structure" />
+    <div>
+      <Collapsible :items="archive.structure" v-if="archive.structure" />
+    </div>
   </div>
 </template>
 
