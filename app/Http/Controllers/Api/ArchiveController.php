@@ -68,9 +68,17 @@ class ArchiveController extends Controller
    */
   public function getByUser(User $user): JsonResponse
   {
+    $archives = (new GetArchiveAction())->execute(['user_id' => $user->id]);
+    $archives->load([
+      'company',
+      'tags',
+      'structure' => function ($query) {
+        $query->categories()->with('registers');
+      }
+    ]);
     return response()->json(
       ArchiveResource::collection(
-        (new GetArchiveAction())->execute(['user_id' => $user->id])
+        $archives
       )
     );
   }

@@ -55,12 +55,13 @@
         </div>
       </nav>
       <main class="w-10/12 px-8 min-h-full">
-        <div v-if="archives.length > 0">
-          <div v-for="archive in archives" :key="archive.uuid">
-            <router-link :to="{ name: 'archiveSettings', params: { uuid: archive.uuid } }">
-              {{ archive.name }}
-            </router-link>
-          </div>
+        <div 
+          v-if="archives.length > 0"
+          class="flex flex-wrap gap-x-8 h-full">
+          <Teaser 
+            :archive="archive" 
+            class="w-3/12 border-r border-r-graphite pr-8"
+            v-for="archive in archives" :key="archive.uuid" />
         </div>
       </main>
     </div>
@@ -79,6 +80,7 @@ import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
+import Teaser from '@/views/archives/partials/Teaser.vue';
 
 const userStore = useUserStore();
 const { setTitle } = usePageTitle();

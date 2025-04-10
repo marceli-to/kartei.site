@@ -237,7 +237,7 @@ const handleSubmit = async () => {
           numeral_type: numerals_register.value,
           custom_id_type: id_type.value,
           uuid: register.uuid,
-          number: `${categoryNumber}${formatNumber(rIdx, numerals_register.value)}`,
+          number: `${categoryNumber}.${formatNumber(rIdx, numerals_register.value)}`,
           title: register.title,
           custom_id: register.custom_id,
           order: rIdx

@@ -9,16 +9,14 @@ class ArchiveResource extends JsonResource
   public function toArray(Request $request): array
   {
     return [
-      'id' => $this->id,
       'uuid' => $this->uuid,
       'acronym' => $this->acronym,
       'name' => $this->name,
-      'company' => $this->whenLoaded('company', function () {
-        return $this->company ? [
-          'uuid' => $this->company->uuid,
-          'name' => $this->company->name,
-        ] : null;
-      }),
+      'company' => CompanyResource::make($this->whenLoaded('company')),
+      'tags' => TagResource::collection($this->whenLoaded('tags')),
+      'structure' => ArchiveStructureCategoryResource::collection(
+        $this->whenLoaded('structure')
+      ),
       'image' => MediaResource::make($this->media),
     ];
   }
