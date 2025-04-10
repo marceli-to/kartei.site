@@ -7,7 +7,7 @@
 
       <!-- Info box -->
       <template v-if="(!hasStructure && isActive) || (infoBox.isActive && isActive)">
-        <InfoBox class="!top-0 !-right-16 w-4/12">
+        <InfoBox class="!-top-0 !-right-16 w-4/12">
           <InfoStructure />
         </InfoBox>
       </template>
@@ -150,16 +150,16 @@ const numerals_category = ref('decimal'); // decimal, roman, alpha
 const numerals_register = ref('decimal'); // decimal, roman, alpha
 const id_type = ref('auto'); // auto, manual
 
-const infoBox = useInfoBox({
-  isActive: toRef(true),
-  condition: hasStructure
-});
-
 const props = defineProps({
   isActive: {
     type: Boolean,
     default: false
   }
+});
+
+const infoBox = useInfoBox({
+  isActive: toRef(true),
+  condition: hasStructure
 });
 
 const form = ref({
@@ -300,6 +300,12 @@ const updateForm = (data) => {
       });
     }
   });
+
+  // add an empty category if none exist
+  if (form.value.categories.length === 0) {
+    form.value.categories.push(emptyCategory());
+  }
+
 };
 
 const cleanForm = () => {

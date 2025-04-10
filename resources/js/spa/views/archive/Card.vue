@@ -106,12 +106,14 @@ const props = defineProps({
   }
 });
 
+const emptyField = {
+  uuid: null,
+  placeholder: ''
+};
+
 const form = ref({
   image: 1,
-  fields: [{
-    uuid: null,
-    placeholder: ''
-  }]
+  fields: [emptyField]
 });
 
 onMounted(async () => {
@@ -122,7 +124,7 @@ onMounted(async () => {
       form.value.image = response.data.image;
 
       if (!response.data.fields || response.data.fields.length === 0) {
-        form.value.fields = [emptyField()];
+        form.value.fields = [emptyField];
       }
       else {
         form.value.fields = response.data.fields;
@@ -150,8 +152,11 @@ const handleSubmit = async () => {
 
     const response = await storeTemplate(uuid.value, payload);
 
-    if (response?.data?.fields) {
+    if (response?.data?.fields.length > 0) {
       form.value.fields = response.data.fields;
+    }
+    else {
+      form.value.fields = [emptyField];
     }
 
     toast.show('Kartenvorlage erfolgreich gespeichert.', 'success');
@@ -164,10 +169,6 @@ const handleSubmit = async () => {
   }
 }
 
-const emptyField = {
-  uuid: null,
-  placeholder: ''
-};
 
 const add = async () => {
   form.value.fields.push({
