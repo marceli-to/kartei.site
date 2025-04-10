@@ -52,6 +52,16 @@ class Archive extends Model
     return $this->hasMany(ArchiveStructure::class);
   }
 
+  public function structureCategories(): HasMany
+  {
+    return $this->hasMany(ArchiveStructureCategory::class)->where('parent_id', null);
+  }
+
+  public function structureRegisters(): HasMany
+  {
+    return $this->hasMany(ArchiveStructureRegister::class)->where('parent_id', null);
+  }
+
   public function template(): HasOne
   {
     return $this->hasOne(ArchiveTemplate::class);

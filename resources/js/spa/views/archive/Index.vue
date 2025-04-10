@@ -38,31 +38,27 @@ const createSlides = () => [
   { 
     id: 'basic-information', 
     name: "Basisinformationen", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     component: markRaw(BasicInformationComponent),
   },
   { 
     id: 'structure', 
     name: "Struktur", 
-    width: 50, 
-    class: "w-6/12", 
+    class: "w-6/12 min-w-[600px]", 
     component: markRaw(StructureComponent),
     disabled: !route.params.uuid
   },
   { 
     id: 'card', 
     name: "Kartenvorlage", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     component: markRaw(CardComponent),
     disabled: !route.params.uuid
   },
   { 
     id: 'tags', 
     name: "Tags", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     permission: 'edit.tags',
     component: markRaw(TagsComponent),
     disabled: !route.params.uuid
@@ -70,8 +66,7 @@ const createSlides = () => [
   { 
     id: 'user', 
     name: "Benutzer", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     permission: 'edit.users',
     component: markRaw(UserComponent),
     disabled: !route.params.uuid
@@ -79,8 +74,7 @@ const createSlides = () => [
   { 
     id: 'delete', 
     name: "Löschen", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     component: markRaw(DeleteComponent),
     disabled: !route.params.uuid
   }

@@ -10,8 +10,12 @@ export const storeStructure = async (uuid, structure) => {
   return response.data;
 };
 
-export const deleteStructur = async (uuid) => {
+export const deleteStructure = async (uuid) => {
   const response = await api.delete(`/archive/structure/${uuid}`);
   return response.data;
 };
-  
+
+export const getStructureCategories = async (uuid) => {
+  const response = await api.get(`/archive/structure/categories/${uuid}`);
+  return response.data;
+};

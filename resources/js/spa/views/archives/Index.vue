@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-grow w-full">
     <div class="flex mt-106 min-h-full w-full">
-      <nav class="w-2/12 shrink-0 min-h-full border-r border-graphite pr-8">
+      <ContentNavigation>
         <div class="flex flex-col gap-y-48">
           <div class="flex flex-col gap-y-20">
             <InputGroup>
@@ -53,17 +53,17 @@
             </InputGroup>
           </div>
         </div>
-      </nav>
-      <main class="w-10/12 px-8 min-h-full">
+      </ContentNavigation>
+      <ContentMain>
         <div 
           v-if="archives.length > 0"
-          class="flex gap-x-8 h-full">
+          class="flex flex-wrap gap-x-16 gap-y-32">
           <Teaser 
             :archive="archive" 
-            class="w-3/12 shrink-0 border-r border-r-graphite pr-8"
+            class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
             v-for="archive in archives" :key="archive.uuid" />
         </div>
-      </main>
+      </ContentMain>
     </div>
   </div>
 </template>
@@ -73,6 +73,8 @@ import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
 import { getByUser } from '@/services/api/archive';
+import ContentNavigation from '@/components/layout/ContentNavigation.vue';
+import ContentMain from '@/components/layout/ContentMain.vue';
 import InputSearch from '@/components/forms/Search.vue';
 import InputSelect from '@/components/forms/Select.vue';
 import InputLabel from '@/components/forms/Label.vue';

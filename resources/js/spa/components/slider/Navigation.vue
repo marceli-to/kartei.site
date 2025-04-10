@@ -18,7 +18,7 @@ const props = defineProps({
   }
 });
 
-const navigationClass = 'w-2/12 sticky shrink-0 left-0 mt-58 min-h-full z-50 border-graphite border-r bg-white dark:bg-black';
+const navigationClass = 'w-2/12 min-w-nav sticky shrink-0 left-0 mt-58 min-h-full z-50 border-graphite border-r bg-white dark:bg-black';
 
 const variantClass = computed(() => {
   return props.variant === 'box' ? 'border border-graphite min-h-[calc(100%_-_20px)] mr-8 pl-8' : '';

@@ -229,7 +229,7 @@ const handleSubmit = async () => {
         numeral_type: numerals_category.value,
         custom_id_type: id_type.value,
         uuid: category.uuid,
-        number: categoryNumber,
+        number: categoryNumber.toUpperCase(),
         title: category.title,
         custom_id: category.custom_id,
         order: cIdx,
@@ -237,7 +237,7 @@ const handleSubmit = async () => {
           numeral_type: numerals_register.value,
           custom_id_type: id_type.value,
           uuid: register.uuid,
-          number: `${categoryNumber}.${formatNumber(rIdx, numerals_register.value)}`,
+          number: `${categoryNumber.toUpperCase()}.${formatNumber(rIdx, numerals_register.value)}`,
           title: register.title,
           custom_id: register.custom_id,
           order: rIdx

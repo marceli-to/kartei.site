@@ -18,6 +18,7 @@
       <span 
         :class="[
           borderClasses,
+          'min-h-default w-full flex justify-between items-center text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8',
           classes,
           isChecked(option.value) ? getActiveClass(option.value) : '',
           option.disabled ? disabledClasses : ''
@@ -71,11 +72,11 @@ const props = defineProps({
   },
   classes: {
     type: String,
-    default: 'min-h-default w-full flex justify-between items-center text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8'
+    default: ''
   },
   wrapperClasses: {
     type: String,
-    default: ''
+    default: 'text-graphite'
   },
   borderClasses: {
     type: String,
@@ -83,7 +84,7 @@ const props = defineProps({
   },
   activeClass: {
     type: String,
-    default: 'theme-color border-black !text-black'
+    default: 'theme-color !border-black !text-black'
   },
   labelClasses: {
     type: String,

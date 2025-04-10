@@ -28,46 +28,40 @@ const allSlides = [
   { 
     id: 'profile', 
     name: "Profil", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     component: markRaw(ProfileComponent)
   },
   { 
     id: 'address', 
     name: "Adresse", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     permission: 'edit.address',
     component: markRaw(AddressComponent)
   },
   { 
     id: 'billingAddress', 
     name: "Rechnungsadresse", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     permission: 'edit.address',
     component: markRaw(BillingAddressComponent)
   },
   { 
     id: 'subscription', 
     name: "Abonnement", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     permission: 'edit.subscription',
     component: markRaw(SubscriptionComponent)
   },
   { 
     id: 'company', 
     name: "Kundinnen/Kunden", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     permission: 'edit.clients',
     component: markRaw(CompanyComponent)
   },
   { 
     id: 'user', 
     name: "Benutzer", 
-    width: 25, 
     class: "w-3/12", 
     permission: 'edit.users',
     component: markRaw(UserComponent)
@@ -75,15 +69,13 @@ const allSlides = [
   { 
     id: 'theme', 
     name: "Erscheinungsbild", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     component: markRaw(ThemeComponent)
   },
   { 
     id: 'deleteAccount', 
     name: "Löschen", 
-    width: 25, 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-[300px]", 
     component: markRaw(AccountDeleteComponent)
   }
 ];

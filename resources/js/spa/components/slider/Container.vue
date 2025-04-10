@@ -40,10 +40,16 @@
       </template>
     </SliderNavigation>
     
-    <SliderMain :style="{ transform: `translateX(-${computedOffsets[activeIndex]}%)` }">
+    <SliderMain 
+      :class="{
+        'flex flex-grow w-full relative z-40': true,
+        'transition-transform duration-300 ease-in-out': !disableTransition
+      }"
+      :style="{ transform: `translateX(-${computedOffsets[activeIndex] || 0}px)` }">
       <section 
         v-for="(item, index) in slides" 
         :key="index" 
+        :ref="el => slideRefs[index] = el"
         :class="item.class"
         class="shrink-0">
         <h2 
@@ -89,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount, nextTick, watch, computed } from 'vue';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
 import SliderNavigation from '@/components/slider/Navigation.vue';
@@ -110,6 +116,9 @@ const props = defineProps({
   }
 });
 
+const slideRefs = ref([]);
+const disableTransition = ref(false);
+
 const emit = defineEmits(['slide-change']);
 
 const activeIndex = ref(props.initialActiveIndex);
@@ -118,15 +127,42 @@ watch(activeIndex, (newIndex) => {
   emit('slide-change', newIndex);
 });
 
-const computedOffsets = computed(() => {
+const computedOffsets = ref([]);
+
+const calculateOffsets = () => {
   const offsets = [];
   let sum = 0;
-  props.slides.forEach((slide) => {
+  for (const el of slideRefs.value) {
     offsets.push(sum);
-    sum += slide.width;
-  });
-  return offsets;
+    if (el) {
+      sum += el.offsetWidth;
+    }
+  }
+  computedOffsets.value = offsets;
+};
+
+const handleResize = () => {
+  disableTransition.value = true;
+  calculateOffsets();
+  setTimeout(() => {
+    disableTransition.value = false;
+  }, 100);
+};
+
+onMounted(async () => {
+  await nextTick();
+  calculateOffsets();
+  window.addEventListener('resize', handleResize);
 });
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+});
+
+watch(() => props.slides, async () => {
+  await nextTick();
+  calculateOffsets();
+}, { deep: true });
 
 const previousSectionName = computed(() => {
   return activeIndex.value > 0 ? props.slides[activeIndex.value - 1].name : '';

@@ -23,6 +23,10 @@ export default {
         'default': '2rem',
         'slim': '1.5rem',
       },
+
+      minWidth: {
+        'nav': '240px',
+      },
       
       maxWidth: {
         'page': '125rem',
@@ -81,7 +85,6 @@ export default {
         'lg': '2.25rem', // 36px
         'huge': '12rem', // 128px
       },
-
     },
 
     spacing: {

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col gap-y-32 relative h-full">
+  <div class="flex flex-col gap-y-32 relative">
     <router-link 
-      :to="{ name: 'archiveSettings', params: { uuid: archive.uuid } }"
-      class="block absolute top-8 right-16 z-10 size-24"
+      :to="{ name: 'archiveRecords', params: { uuid: archive.uuid } }"
+      class="block absolute top-8 right-8 z-10 size-24"
       title="Kartei bearbeiten">
       <IconEdit class="text-graphite w-full h-auto" />
     </router-link>

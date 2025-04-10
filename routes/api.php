@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\ArchiveUserController;
 use App\Http\Controllers\Api\ArchiveStructureController;
+use App\Http\Controllers\Api\ArchiveStructureCategoryController;
 use App\Http\Controllers\Api\ArchiveTemplateController;
 use App\Http\Controllers\Api\TemplateFieldController;
 use App\Http\Controllers\Api\UserController;
@@ -103,6 +104,8 @@ Route::middleware('auth:sanctum')->group(function () {
   // Archive Structure
   Route::get('/archive/structure/{archive:uuid}', [ArchiveStructureController::class, 'get']);
   Route::put('/archive/structure/{archive:uuid}', [ArchiveStructureController::class, 'store']);
+  
+  Route::get('/archive/structure/categories/{archive:uuid}', [ArchiveStructureCategoryController::class, 'get']);
 
   // Template Field  
   Route::delete('/archive/template/field/{templateField:uuid}', [TemplateFieldController::class, 'destroy']);  

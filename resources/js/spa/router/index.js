@@ -3,6 +3,7 @@ import Home from '@/views/Home.vue';
 import Settings from '@/views/settings/Index.vue';
 import Archives from '@/views/archives/Index.vue';
 import ArchiveSettings from '@/views/archive/Index.vue';
+import ArchiveRecords from '@/views/records/Index.vue';
 
 // Error pages
 import Error401 from '@/views/error/401.vue';
@@ -23,7 +24,8 @@ const routes = [
   { path: '/archiv', name: 'home', component: Home },
   { path: '/archiv/einstellungen', name: 'settings', component: Settings },
   { path: '/archiv/karteien', name: 'archives', component: Archives },
-  { path: '/archiv/karteien/einstellungen/:uuid?', name: 'archiveSettings', component: ArchiveSettings },
+  { path: '/archiv/kartei/karten/:uuid', name: 'archiveRecords', component: ArchiveRecords },
+  { path: '/archiv/kartei/einstellungen/:uuid?', name: 'archiveSettings', component: ArchiveSettings },
 
   // Error pages
   { path: '/error/401', name: '401', component: Error401 },
