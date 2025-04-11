@@ -47,7 +47,12 @@
           <InputLabel label="Kürzel" class="w-3/12 !mb-0" />
         </div>
 
-        <draggable v-model="form.categories" group="categories" item-key="custom_id" class="flex flex-col" handle=".drag-handle">
+        <draggable 
+          v-model="form.categories" 
+          group="categories" 
+          item-key="custom_id" 
+          class="flex flex-col" 
+          handle=".drag-handle">
           <template #item="{ element: category, index: cIdx }">
             <div>
               <div class="flex gap-x-17 mb-32 items-center drag-handle cursor-move">

@@ -30,27 +30,6 @@
           </InputStatic>
         </InputGroup>
 
-        <!-- <div>
-          <InputLabel label="Textfelder" />
-          <div class="flex flex-col gap-y-8">
-            <InputGroup
-              class="relative"
-              v-for="(field, index) in form.fields" :key="index">
-              <InputTextarea
-                v-model="form.fields[index].placeholder"
-                :placeholder="`Textfeld ${index + 1}`"
-                aria-label="Textfeld"
-                :ref="el => inputRefs[index] = el" />
-              <button 
-                type="button" 
-                class="absolute right-8 top-12"
-                @click="remove(index)">
-                <IconCross variant="small" />
-              </button>
-            </InputGroup>
-          </div>
-        </div> -->
-
         <div>
           <draggable 
             v-model="form.fields" 
