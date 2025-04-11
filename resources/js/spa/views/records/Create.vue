@@ -44,25 +44,49 @@
               </div>
               <div class="w-6/12">
                 <div class="relative -top-24">
-                  <InputLabel label="Bilder" />
-                  <ImageUpload
-                    :maxSize="250 * 1024 * 1024"
-                    :allowedTypes="['image/*']"
-                    uploadUrl="/api/upload"
-                    :multiple="true"
-                    v-model="form.images"
-                    :existingImages="form.images"
-                    :error="errors.images"
-                    classes="!aspect-[16/9]"
-                  />
+                  <InputGroup>
+                    <InputLabel label="Bilder" />
+                    <template v-if="template.image">
+                      <ImageUpload
+                        :maxSize="250 * 1024 * 1024"
+                        :allowedTypes="['image/*']"
+                        uploadUrl="/api/upload"
+                        :multiple="true"
+                        v-model="form.images"
+                        :existingImages="form.images"
+                        :error="errors.images"
+                        classes="!aspect-[16/9]" />
+                    </template>
+                    <template v-else>
+                      <ImageCard class="!aspect-[16/9] flex items-center justify-center">
+                        <div class="flex flex-col items-center">
+                          <IconImage variant="missing" />
+                          <div class="text-sm mt-8">
+                            Kein Bildfeld definiert
+                          </div>
+                        </div>
+                      </ImageCard>
+                    </template>
+                  </InputGroup>
                 </div>
               </div>
               <div class="w-3/12">
                 <div class="relative -top-24">
                   <InputLabel label="Beschreibung" />
-                  <InputStatic class="font-muoto-medium">
+                  <InputStatic class="font-muoto-medium mb-8">
                     Nr. / {{ archive?.acronym }}_
                   </InputStatic>
+                  <InputGroup 
+                    class="flex flex-col gap-y-8"
+                    v-if="template.fields.length > 0">
+                    <InputText
+                      v-for="(value, index) in template.fields"
+                      :key="index"
+                      v-model="form.fields[index]"
+                      :id="'field-' + index"
+                      :placeholder="value.placeholder"
+                      :aria-label="'field-' + index" />
+                  </InputGroup>
                 </div>
               </div>
             </div>
@@ -84,7 +108,9 @@ import { getArchive } from '@/services/api/archive';
 import { getStructureCategories } from '@/services/api/archiveStructure';
 import { getTags } from '@/services/api/tags';
 import { getStructure } from '@/services/api/archiveStructure';
+import { getTemplate } from '@/services/api/archiveTemplate';
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
+import { usePageTitle } from '@/composables/usePageTitle';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue';
 import ContentMain from '@/components/layout/ContentMain.vue';
@@ -94,16 +120,26 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputLabel from '@/components/forms/Label.vue';
+import InputText from '@/components/forms/Text.vue';
 import InputStatic from '@/components/forms/Static.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
+import ImageCard from '@/components/media/Card.vue';
+import IconImage from '@/components/icons/Image.vue';
 
 const router = useRouter();
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
+const { setTitle } = usePageTitle();
+
 const isLoading = ref(false);
 const isSaving = ref(false);
+
 const archive = ref(null);
+const template = ref({
+  image: null,
+  fields: []
+});
 
 const {
   structure,
@@ -126,7 +162,8 @@ const filters = ref({
 const form = ref({
   images: [],
   structure: [],
-  tags: []
+  tags: [],
+  fields: []
 });
 
 const errors = ref({
@@ -143,13 +180,19 @@ onMounted(async () => {
   try {
     isLoading.value = true;
 
-    const [archiveData, structure, categories, tags] = await Promise.all([
+    const [archiveData, structure, categories, tags, templateData] = await Promise.all([
       getArchive(uuid.value),
       getStructure(uuid.value),
       getStructureCategories(uuid.value),
-      getTags(uuid.value)
+      getTags(uuid.value),
+      getTemplate(uuid.value)
     ]);
+
     archive.value = archiveData;
+    setTitle(archive.value.name);
+
+    template.value = templateData.data;
+
     normalizeStructureData(structure.data);
     normalizeCategoryData(categories);
     normalizeTagsData(tags);

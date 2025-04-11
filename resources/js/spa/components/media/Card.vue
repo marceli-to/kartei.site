@@ -1,5 +1,9 @@
 <template>
-  <figure :class="classes">
+  <figure 
+    :class="[
+      'border border-graphite aspect-square relative bg-white dark:bg-black',
+      classes
+    ]">
     <slot />
   </figure>
 </template>
@@ -7,7 +11,7 @@
 const props = defineProps({
   classes: {
     type: String,
-    default: 'border border-graphite aspect-square relative bg-white dark:bg-black'
+    default: ''
   }
 })
 </script>
