@@ -9,6 +9,7 @@ class TemplateFieldResource extends JsonResource
     return [
       'uuid' => $this->uuid,
       'placeholder' => $this->placeholder,
+      'order' => $this->order
     ];
   }
 }

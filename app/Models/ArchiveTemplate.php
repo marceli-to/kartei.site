@@ -17,7 +17,7 @@ class ArchiveTemplate extends Model
 
   public function fields(): HasMany
   {
-    return $this->hasMany(TemplateField::class);
+    return $this->hasMany(TemplateField::class)->orderBy('order');
   }
 
   public function archive(): BelongsTo

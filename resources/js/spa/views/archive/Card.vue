@@ -30,7 +30,7 @@
           </InputStatic>
         </InputGroup>
 
-        <div>
+        <!-- <div>
           <InputLabel label="Textfelder" />
           <div class="flex flex-col gap-y-8">
             <InputGroup
@@ -49,7 +49,41 @@
               </button>
             </InputGroup>
           </div>
+        </div> -->
+
+        <div>
+          <draggable 
+            v-model="form.fields" 
+            item-key="uuid" 
+            class="flex flex-col gap-y-8" 
+            handle=".drag-handle"
+            :animation="200"
+            @end="reorder">
+            <template #item="{ element, index }">
+              <InputGroup class="relative flex justify-between items-center">
+                <span class="cursor-grab size-16 drag-handle">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M4 14h16" />
+                  </svg>
+                </span>
+                <InputTextarea
+                  v-model="element.placeholder"
+                  :placeholder="`Textfeld ${index + 1}`"
+                  aria-label="Textfeld"
+                  :ref="el => inputRefs[index] = el"
+                  class="pl-6"
+                />
+                <button 
+                  type="button" 
+                  class="absolute right-8 top-12"
+                  @click="remove(index)">
+                  <IconCross variant="small" />
+                </button>
+              </InputGroup>
+            </template>
+          </draggable>
         </div>
+
         <div class="mt-20">
           <Action 
             type="button"
@@ -68,6 +102,7 @@
 </template>
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
+import draggable from 'vuedraggable';
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { getTemplate, storeTemplate, deleteTemplateField } from '@/services/api/archiveTemplate';
@@ -109,7 +144,8 @@ const props = defineProps({
 
 const emptyField = {
   uuid: null,
-  placeholder: ''
+  placeholder: '',
+  order: 0
 };
 
 const form = ref({
@@ -168,8 +204,7 @@ const handleSubmit = async () => {
   finally {
     isSaving.value = false;
   }
-}
-
+};
 
 const add = async () => {
   form.value.fields.push({
@@ -179,7 +214,7 @@ const add = async () => {
   await nextTick();
   const lastIndex = form.value.fields.length - 1;
   inputRefs.value[lastIndex]?.$el?.querySelector('input')?.focus();
-}
+};
 
 const remove = async (index) => {
   const fieldUuid = form.value.fields[index].uuid;
@@ -195,5 +230,11 @@ const remove = async (index) => {
   if (form.value.fields.length === 0) {
     form.value.fields.push({ uuid: null, placeholder: '' });
   }
+};
+
+const reorder = () => {
+  form.value.fields.forEach((field, index) => {
+    field.order = index;
+  });
 };
 </script>

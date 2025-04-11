@@ -10,6 +10,7 @@ class TemplateField extends Model
 
   protected $fillable = [
     'placeholder',
+    'order',
     'archive_template_id',
   ];
 

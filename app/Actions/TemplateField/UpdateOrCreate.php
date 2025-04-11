@@ -15,6 +15,7 @@ class UpdateOrCreate
         ],
         [
           'placeholder' => $field['placeholder'],
+          'order' => $field['order']
         ]
       );
     }
