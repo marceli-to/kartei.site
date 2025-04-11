@@ -209,7 +209,8 @@ const fetchCompanies = async () => {
   const response = await getUserCompanies();
   if (Array.isArray(response)) {
     companies.value = response;
-  } else if (response?.data) {
+  } 
+  else if (response?.data) {
     companies.value = response.data.map(company => ({
       value: company.uuid,
       label: company.name

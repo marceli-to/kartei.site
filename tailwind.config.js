@@ -28,6 +28,7 @@ export default {
         'nav': '240px',
         '3/12': '18.75rem', // 300px
         '6/12': '37.5rem',  // 600px
+        '10/12': '75rem', // 1000px
       },
       
       maxWidth: {

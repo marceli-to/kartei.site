@@ -15,7 +15,7 @@ return new class extends Migration
       $table->id();
       $table->uuid('uuid')->unique();
       $table->string('number', 10);
-      $table->string('title');
+      $table->string('name');
       $table->string('custom_id', 25);
       $table->enum('numeral_type', ['decimal', 'alpha', 'roman'])->default('decimal');
       $table->enum('custom_id_type', ['auto', 'manual'])->default('auto');

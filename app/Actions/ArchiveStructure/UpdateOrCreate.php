@@ -37,13 +37,13 @@ class UpdateOrCreate
     if ($category) {
       if (
         $category->number !== $data['number'] ||
-        $category->title !== $data['title'] ||
+        $category->title !== $data['name'] ||
         $category->custom_id !== $data['custom_id'] ||
         $category->order !== $data['order']
       ) {
         $category->update([
           'number' => $data['number'],
-          'title' => $data['title'],
+          'name' => $data['name'],
           'custom_id' => $data['custom_id'],
           'numeral_type' => $data['numeral_type'],
           'custom_id_type' => $data['custom_id_type'],
@@ -55,7 +55,7 @@ class UpdateOrCreate
       $category = ArchiveStructure::create([
         'archive_id' => $archive->id,
         'number' => $data['number'],
-        'title' => $data['title'],
+        'name' => $data['name'],
         'custom_id' => $data['custom_id'],
         'numeral_type' => $data['numeral_type'],
         'custom_id_type' => $data['custom_id_type'],
@@ -78,13 +78,13 @@ class UpdateOrCreate
     if ($register) {
       if (
         $register->number !== $data['number'] ||
-        $register->title !== $data['title'] ||
+        $register->title !== $data['name'] ||
         $register->custom_id !== $data['custom_id'] ||
         $register->order !== $data['order'] ||
         $register->parent_id !== $category->id
       ) {
         $register->update([
-          'title' => $data['title'],
+          'name' => $data['name'],
           'number' => $data['number'],
           'custom_id' => $data['custom_id'],
           'numeral_type' => $data['numeral_type'],
@@ -98,7 +98,7 @@ class UpdateOrCreate
       $register = ArchiveStructure::create([
         'archive_id' => $archive->id,
         'number' => $data['number'],
-        'title' => $data['title'],
+        'name' => $data['name'],
         'custom_id' => $data['custom_id'],
         'numeral_type' => $data['numeral_type'],
         'custom_id_type' => $data['custom_id_type'],

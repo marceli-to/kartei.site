@@ -35,6 +35,7 @@ import { usePageTitle } from '@/composables/usePageTitle';
 import { getArchive } from '@/services/api/archive';
 import { getTags } from '@/services/api/tags';
 import { getStructureCategories } from '@/services/api/archiveStructure';
+import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue';
 import ContentMain from '@/components/layout/ContentMain.vue';
@@ -46,13 +47,17 @@ const uuid = ref(route.params.uuid || null);
 
 const { setTitle } = usePageTitle();
 
+const {
+  categories,
+  registers,
+  tags,
+  normalizeCategoryData,
+  normalizeTagsData
+} = useNormalizeData();
+
 const isLoading = ref(false);
 const archive = ref(null);
 const records = ref([]);
-
-const categories = ref([]);
-const registers = ref([]);
-const tags = ref([]);
 
 const filters = ref({
   searchQuery: '',
@@ -66,42 +71,26 @@ onMounted(async () => {
   try {
     isLoading.value = true;
 
-    const [archiveData, structure, tags] = await Promise.all([
+    const [archiveData, categories, tags] = await Promise.all([
       getArchive(uuid.value),
       getStructureCategories(uuid.value),
       getTags(uuid.value)
     ]);
 
-    normalizeStructureData(structure);
+    normalizeCategoryData(categories);
     normalizeTagsData(tags);
 
     archive.value = archiveData;
     setTitle(archive.value.name);
 
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error);
-  } finally {
+  }
+  finally {
     isLoading.value = false;
   }
 });
 
-const normalizeStructureData = (structureData) => {
-  categories.value = structureData.categories.map(cat => ({
-    label: cat.title,
-    value: cat.uuid
-  }));
-
-  registers.value = structureData.registers.map(reg => ({
-    label: reg.title,
-    value: reg.uuid
-  }));
-};
-
-const normalizeTagsData = (tagsData) => {
-  tags.value = tagsData.data.map(tag => ({
-    label: tag.name,
-    value: tag.uuid
-  }));
-};
 </script>
 

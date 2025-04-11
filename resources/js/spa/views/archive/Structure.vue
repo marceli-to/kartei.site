@@ -56,9 +56,9 @@
                 </div>
                 <div class="w-6/12">
                   <InputText
-                    v-model="category.title"
+                    v-model="category.name"
                     :placeholder="`Kategorie ${cIdx + 1}`"
-                    @blur="onCategoryTitleBlur(category)"
+                    @blur="onCategoryNameBlur(category)"
                   />
                 </div>
                 <div class="w-3/12">
@@ -78,7 +78,7 @@
                       <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
                     </div>
                     <div class="w-6/12">
-                      <InputText v-model="register.title" @blur="onRegisterTitleBlur(register)" />
+                      <InputText v-model="register.name" @blur="onRegisterNameBlur(register)" />
                     </div>
                     <div class="w-3/12">
                       <InputText
@@ -170,7 +170,7 @@ const form = ref({
     {
       custom_id: '',
       _localId: '',
-      title: '',
+      name: '',
       uuid: null,
       registers: []
     }
@@ -189,12 +189,12 @@ const fetchStructure = async () => {
     const response = await getStructure(uuid.value);
     const mapped = Array.isArray(response.data) ? 
       response.data.map(category => ({
-          title: category.title,
+          name: category.name,
           custom_id: category.custom_id ?? '',
           _localId: category.custom_id ?? '',
           uuid: category.uuid,
           registers: (category.registers || []).map(register => ({
-            title: register.title,
+            name: register.name,
             custom_id: register.custom_id ?? '',
             _localId: register.custom_id ?? '',
             uuid: register.uuid
@@ -230,7 +230,7 @@ const handleSubmit = async () => {
         custom_id_type: id_type.value,
         uuid: category.uuid,
         number: categoryNumber.toUpperCase(),
-        title: category.title,
+        name: category.name,
         custom_id: category.custom_id,
         order: cIdx,
         registers: category.registers.map((register, rIdx) => ({
@@ -238,7 +238,7 @@ const handleSubmit = async () => {
           custom_id_type: id_type.value,
           uuid: register.uuid,
           number: `${categoryNumber.toUpperCase()}.${formatNumber(rIdx, numerals_register.value)}`,
-          title: register.title,
+          name: register.name,
           custom_id: register.custom_id,
           order: rIdx
         }))
@@ -267,11 +267,11 @@ const validatePayload = (payload) => {
   let isValid = true;
 
   payload.forEach(category => {
-    if (!category.custom_id || !category.number || !category.title) {
+    if (!category.custom_id || !category.number || !category.name) {
       isValid = false;
     }
     category.registers.forEach(register => {
-      if (!register.custom_id || !register.number || !register.title) {
+      if (!register.custom_id || !register.number || !register.name) {
         isValid = false;
       }
     });
@@ -311,14 +311,14 @@ const updateForm = (data) => {
 const cleanForm = () => {
   form.value.categories = form.value.categories.filter(category => {
     category.registers = category.registers.filter(register =>
-      register.title || register.custom_id || register.uuid
+      register.name || register.custom_id || register.uuid
     );
-    return category.title || category.custom_id || category.uuid || category.registers.length > 0;
+    return category.name || category.custom_id || category.uuid || category.registers.length > 0;
   });
 };
 
 const emptyCategory = () => ({
-  title: '',
+  name: '',
   custom_id: '',
   _localId: '',
   uuid: null,
@@ -335,16 +335,16 @@ const addRegisterToLastCategory = () => {
   if (form.value.categories.length === 0) return;
   const category = form.value.categories[form.value.categories.length - 1];
   category.registers.push({
-    title: '',
+    name: '',
     custom_id: '',
     _localId: '',
     uuid: null
   });
 };
 
-const onCategoryTitleBlur = (category) => {
+const onCategoryNameBlur = (category) => {
   if (id_type.value !== 'auto') return;
-  const autoId = category.title.slice(0, 2).toUpperCase();
+  const autoId = category.name.slice(0, 2).toUpperCase();
   category.custom_id = autoId;
   category._localId = autoId;
 };
@@ -355,9 +355,9 @@ const onCategoryIdBlur = (category) => {
   }
 };
 
-const onRegisterTitleBlur = (register) => {
+const onRegisterNameBlur = (register) => {
   if (id_type.value !== 'auto') return;
-  const autoId = register.title.slice(0, 2).toUpperCase();
+  const autoId = register.name.slice(0, 2).toUpperCase();
   register.custom_id = autoId;
   register._localId = autoId;
 };

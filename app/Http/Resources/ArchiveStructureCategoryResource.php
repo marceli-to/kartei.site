@@ -9,7 +9,7 @@ class ArchiveStructureCategoryResource extends JsonResource
   {
     return [
       'number' => $this->number,
-      'title' => $this->title,
+      'name' => $this->name,
       'custom_id' => $this->custom_id,
       'numeral_type' => $this->numeral_type,
       'custom_id_type' => $this->custom_id_type,

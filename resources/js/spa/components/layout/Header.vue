@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 bg-white dark:bg-black z-90">
+  <header class="relative dark:bg-black z-90">
     <div class="min-h-80 flex border-b border-b-black dark:border-b-white">
       <div class="w-full flex leading-none">
         <div class="w-2/12 min-w-nav">

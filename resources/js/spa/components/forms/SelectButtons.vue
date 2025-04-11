@@ -18,7 +18,7 @@
       <span 
         :class="[
           borderClasses,
-          'min-h-default w-full flex justify-between items-center text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8',
+          'min-h-default w-full flex items-center justify-between text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8',
           classes,
           isChecked(option.value) ? getActiveClass(option.value) : '',
           option.disabled ? disabledClasses : ''
@@ -31,7 +31,19 @@
             :is-checked="isChecked(option.value)"
           ></slot>
         </span>
-        {{ option.label }}
+        <template v-if="option.prefix">
+          <span>
+            <span class="w-40 inline-block">
+              {{ option.prefix }}
+            </span>
+            <span :class="option.labelClass ? option.labelClass : ''">
+              {{ option.label }}
+            </span>
+          </span>
+        </template>
+        <template v-else>
+          {{ option.label }}
+        </template>
         <span class="option-icon">
           <slot 
             name="icon" 

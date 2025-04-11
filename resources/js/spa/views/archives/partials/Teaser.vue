@@ -21,7 +21,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import Collapsible from '@/components/Collapsible.vue';

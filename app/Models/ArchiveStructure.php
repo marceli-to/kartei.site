@@ -14,7 +14,7 @@ class ArchiveStructure extends Model
   
   protected $fillable = [
     'number',
-    'title',
+    'name',
     'custom_id',
     'order',
     'numeral_type',

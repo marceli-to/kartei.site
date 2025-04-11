@@ -1,12 +1,12 @@
 <template>
-  <div v-if="images.length" :class="multiple ? 'mt-24' : ''">
+  <div v-if="images.length" :class="multiple ? 'mt-20' : ''">
     <draggable
       v-model="localImages"
       item-key="element.resized.name"
-      :class="multiple ? 'grid grid-cols-12 gap-24' : ''"
+      :class="multiple ? 'grid grid-cols-12 gap-20' : ''"
       @end="onDragEnd">
       <template #item="{ element, index }">
-        <ImageCard :class="multiple ? 'col-span-6 cursor-move' : ''">
+        <ImageCard :class="multiple ? 'col-span-6 xl:col-span-4 cursor-move' : ''">
           <Image
             :src="element.resized?.url || element.url"
             :alt="element.resized?.original_name || element.original_name || element.name"
