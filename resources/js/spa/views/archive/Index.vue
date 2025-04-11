@@ -5,22 +5,21 @@
     :navigationVariant="'box'"
     @slide-change="handleSlideChange">
     <template #navigationTitle>
-      <h2 class="flex justify-between items-center mb-38 mr-8">
-        <span>Voreinstellungen</span>
-        <router-link :to="{ name: 'archives' }">
-          <IconCross variant="small" />
-        </router-link>
-      </h2>
+      <SliderNavigationHeader :title="'Voreinstellungen'" :uuid="uuid" :archive="archive" />
     </template>
   </SliderContainer>
 </template>
 
 <script setup>
-import { markRaw, watch, ref } from 'vue';
+import { markRaw, watch, ref, computed } from 'vue';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
 import { useRoute } from 'vue-router';
+import { getArchive } from '@/services/api/archive';
+
 import SliderContainer from '@/components/slider/Container.vue';
+import SliderNavigationHeader from '@/components/slider/NavigationHeader.vue';
+
 import BasicInformationComponent from '@/views/archive/BasicInformation.vue';
 import StructureComponent from '@/views/archive/Structure.vue';
 import CardComponent from '@/views/archive/Card.vue';
@@ -30,53 +29,57 @@ import DeleteComponent from '@/views/archive/Delete.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
 const route = useRoute();
+const uuid = computed(() => route.params.uuid || null);
+
 const { setTitle } = usePageTitle();
-setTitle('Einstellungen');
+
+const archive = ref(null);
+const isLoading = ref(false);
 
 // Create initial slides configuration
 const createSlides = () => [
   { 
     id: 'basic-information', 
     name: "Basisinformationen", 
-    class: "w-3/12 min-w-[300px]", 
+    class: "w-3/12 min-w-3/12", 
     component: markRaw(BasicInformationComponent),
   },
   { 
     id: 'structure', 
     name: "Struktur", 
-    class: "w-6/12 min-w-[600px]", 
+    class: "w-6/12 min-w-6/12", 
     component: markRaw(StructureComponent),
-    disabled: !route.params.uuid
+    disabled: !uuid.value
   },
   { 
     id: 'card', 
     name: "Kartenvorlage", 
-    class: "w-3/12 min-w-[300px]", 
+    class: "w-3/12 min-w-3/12", 
     component: markRaw(CardComponent),
-    disabled: !route.params.uuid
+    disabled: !uuid.value
   },
   { 
     id: 'tags', 
     name: "Tags", 
-    class: "w-3/12 min-w-[300px]", 
+    class: "w-3/12 min-w-3/12", 
     permission: 'edit.tags',
     component: markRaw(TagsComponent),
-    disabled: !route.params.uuid
+    disabled: !uuid.value
   },
   { 
     id: 'user', 
     name: "Benutzer", 
-    class: "w-3/12 min-w-[300px]", 
+    class: "w-3/12 min-w-3/12", 
     permission: 'edit.users',
     component: markRaw(UserComponent),
-    disabled: !route.params.uuid
+    disabled: !uuid.value
   },
   { 
     id: 'delete', 
     name: "Löschen", 
-    class: "w-3/12 min-w-[300px]", 
+    class: "w-3/12 min-w-3/12", 
     component: markRaw(DeleteComponent),
-    disabled: !route.params.uuid
+    disabled: !uuid.value
   }
 ];
 
@@ -84,9 +87,31 @@ const createSlides = () => [
 const initialSlides = createSlides();
 const { slides, handleSlideChange, updateSlides } = useSlider(initialSlides);
 
+const fetchArchive = async () => {
+  try {
+    isLoading.value = true;
+    const response = await getArchive(uuid.value);
+    archive.value = response;
+    setTitle(archive.value.name);
+  }
+  catch (error) {
+    console.error(error);
+  } 
+  finally {
+    isLoading.value = false;
+  }
+};
+
 // Watch for changes in route uuid parameter and update slides accordingly
-watch(() => route.params.uuid, () => {
+watch(uuid, () => {
   const updatedSlides = createSlides();
   updateSlides(updatedSlides);
+  if (uuid.value) {
+    fetchArchive();
+  }
+  else {
+    setTitle('Einstellungen');
+  }
 }, { immediate: true });
+
 </script>

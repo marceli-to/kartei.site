@@ -1,5 +1,5 @@
 <template>
-  <template v-if="variant === 'default'">
+  <template v-if="variant === 'small'">
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" :class="classes">
       <path d="M6 8.25C4.757 8.25 3.74899 7.243 3.74899 6C3.74899 4.758 4.757 3.75 6 3.75C7.243 3.75 8.24899 4.758 8.24899 6C8.24899 7.243 7.243 8.25 6 8.25ZM11.521 8.48499L12 6.33398L10.22 5.45502L10.122 4.91998L11.348 3.40601L9.94901 1.41998L8.216 2.27502L7.502 1.91699L7.075 0H4.924L4.49699 1.91699L3.783 2.27502L2.05099 1.41998L0.709 3.14502L1.93201 4.71802L1.77901 5.45502L0 6.33398L0.477997 8.48499H2.504L2.91901 9.008L2.467 11.043L4.40199 11.985L5.72301 10.353L6.312 10.351L7.59399 12L9.532 11.043L9.08 9.008L9.495 8.48499H11.521Z" fill="currentColor"/>
     </svg>
@@ -14,8 +14,8 @@
 const props = defineProps({
   variant: {
     type: String,
-    default: 'default',
-    validator: value => ['default', 'tiny'].includes(value)
+    default: 'small',
+    validator: value => ['small', 'tiny'].includes(value)
   },
   classes: {
     type: String,

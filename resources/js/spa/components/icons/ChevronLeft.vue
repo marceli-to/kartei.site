@@ -25,7 +25,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'large',
-    validator: value => ['large', 'small', 'small-bold'].includes(value)
+    validator: value => ['large', 'large-rounded', 'small', 'small-bold'].includes(value)
   },
   class: {
     type: String,

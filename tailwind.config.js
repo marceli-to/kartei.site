@@ -26,6 +26,8 @@ export default {
 
       minWidth: {
         'nav': '240px',
+        '3/12': '18.75rem', // 300px
+        '6/12': '37.5rem',  // 600px
       },
       
       maxWidth: {
@@ -81,7 +83,7 @@ export default {
       fontSize: {
         'xs': '0.75rem', // 12px
         'sm': '0.875rem', // 14px
-        'md': '1.125rem', // 18px
+        'md': '1.063rem', // 17px
         'lg': '2.25rem', // 36px
         'huge': '12rem', // 128px
       },

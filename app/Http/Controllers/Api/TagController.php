@@ -10,7 +10,6 @@ use App\Actions\Tag\Create as CreateTagAction;
 use App\Actions\Tag\Get as GetTagAction;
 use App\Actions\Tag\UpdateOrCreate as UpdateOrCreateTagAction;
 use App\Actions\Tag\Delete as DeleteTagAction;
-
 use App\Http\Resources\TagResource;
 
 class TagController extends Controller

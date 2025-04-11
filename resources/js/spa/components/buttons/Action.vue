@@ -69,6 +69,7 @@ import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import IconPlus from '@/components/icons/Plus.vue';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
+import IconSettings from '@/components/icons/Settings.vue';
 
 const props = defineProps({
   type: {
@@ -128,6 +129,7 @@ const resolveIconComponent = computed(() => {
   const icons = {
     plus: IconPlus,
     chevronright: IconChevronRight,
+    settings: IconSettings
   };
   return icons[props.icon.name.toLowerCase()] || null;
 });
