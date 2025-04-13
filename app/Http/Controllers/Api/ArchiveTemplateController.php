@@ -13,7 +13,7 @@ use App\Http\Resources\ArchiveTemplateResource;
 class ArchiveTemplateController extends Controller
 {
   /**
-   * Get the structure of an archive
+   * Get the template of an archive
    * 
    * @param Archive $archive
    * @return void
@@ -25,7 +25,7 @@ class ArchiveTemplateController extends Controller
   }
 
   /**
-   * Store the structure of an archive
+   * Store the template of an archive
    * 
    * @param Archive $archive
    * @return void

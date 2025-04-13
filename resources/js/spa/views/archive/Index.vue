@@ -21,12 +21,11 @@ import SliderContainer from '@/components/slider/Container.vue';
 import SliderNavigationHeader from '@/components/slider/NavigationHeader.vue';
 
 import BasicInformationComponent from '@/views/archive/BasicInformation.vue';
-import StructureComponent from '@/views/archive/Structure.vue';
+import CategoryComponent from '@/views/archive/Category.vue';
 import CardComponent from '@/views/archive/Card.vue';
 import TagsComponent from '@/views/archive/Tags.vue';
 import UserComponent from '@/views/users/Index.vue';
 import DeleteComponent from '@/views/archive/Delete.vue';
-import IconCross from '@/components/icons/Cross.vue';
 
 const route = useRoute();
 const uuid = computed(() => route.params.uuid || null);
@@ -48,7 +47,7 @@ const createSlides = () => [
     id: 'structure', 
     name: "Struktur", 
     class: "w-6/12 min-w-6/12", 
-    component: markRaw(StructureComponent),
+    component: markRaw(CategoryComponent),
     disabled: !uuid.value
   },
   { 

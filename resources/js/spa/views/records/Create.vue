@@ -23,12 +23,13 @@
                   <InputGroup>
                     <InputLabel label="Ordnung" />
                     <InputSelectButtons
-                      v-model="form.structure"
+                      v-model="form.categoriesRegisters"
                       :multiple="true"
-                      name="structure"
-                      :options="structure"
+                      name="categoriesRegisters"
+                      :options="categoriesRegisters"
                       classes="!text-black"
-                      wrapperClasses="flex flex-col gap-y-8" />
+                      wrapperClasses="flex flex-col gap-y-8"
+                      v-if="categoriesRegisters.length" />
                   </InputGroup>
                   <InputGroup>
                     <InputLabel label="Tags" />
@@ -38,7 +39,8 @@
                       name="tags"
                       :options="tags"
                       classes="!text-black"
-                      wrapperClasses="flex flex-col gap-y-8" />
+                      wrapperClasses="flex flex-col gap-y-8"
+                      v-if="tags.length > 0" />
                   </InputGroup>
                 </div>
               </div>
@@ -105,9 +107,9 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getArchive } from '@/services/api/archive';
-import { getStructureCategories } from '@/services/api/archiveStructure';
+import { getCategoriesAndRegisters } from '@/services/api/category';
 import { getTags } from '@/services/api/tags';
-import { getStructure } from '@/services/api/archiveStructure';
+import { getCategory } from '@/services/api/category';
 import { getTemplate } from '@/services/api/archiveTemplate';
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
 import { usePageTitle } from '@/composables/usePageTitle';
@@ -142,12 +144,12 @@ const template = ref({
 });
 
 const {
-  structure,
+  categoriesRegisters,
   categories,
   registers,
   tags,
-  normalizeStructureData,
   normalizeCategoryData,
+  normalizeCategoryRegisterData,
   normalizeTagsData
 } = useNormalizeData();
 
@@ -161,7 +163,7 @@ const filters = ref({
 
 const form = ref({
   images: [],
-  structure: [],
+  categoriesRegisters: [],
   tags: [],
   fields: []
 });
@@ -187,10 +189,10 @@ onMounted(async () => {
   try {
     isLoading.value = true;
 
-    const [archiveData, structure, categories, tags, templateData] = await Promise.all([
+    const [archiveData, categoriesRegisters, categories, tags, templateData] = await Promise.all([
       getArchive(uuid.value),
-      getStructure(uuid.value),
-      getStructureCategories(uuid.value),
+      getCategoriesAndRegisters(uuid.value),
+      getCategory(uuid.value),
       getTags(uuid.value),
       getTemplate(uuid.value)
     ]);
@@ -200,8 +202,8 @@ onMounted(async () => {
 
     template.value = templateData.data;
 
-    normalizeStructureData(structure.data);
-    normalizeCategoryData(categories);
+    normalizeCategoryData(categories.data);
+    normalizeCategoryRegisterData(categoriesRegisters);
     normalizeTagsData(tags);
   } 
   catch (error) {

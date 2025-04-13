@@ -11,7 +11,7 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('archive_structure', function (Blueprint $table) {
+    Schema::create('categories', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
       $table->string('number', 10);
@@ -21,7 +21,7 @@ return new class extends Migration
       $table->enum('custom_id_type', ['auto', 'manual'])->default('auto');
       $table->unsignedInteger('order')->default(0);
       $table->foreignId('archive_id')->constrained()->onDelete('cascade');
-      $table->foreignId('parent_id')->nullable()->constrained('archive_structure')->onDelete('cascade');
+      $table->foreignId('parent_id')->nullable()->constrained('categories')->onDelete('cascade');
       $table->timestamps();
     });
   }
@@ -31,6 +31,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('archive_structures');
+    Schema::dropIfExists('categories');
   }
 };

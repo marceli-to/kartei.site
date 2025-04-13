@@ -34,7 +34,7 @@ import { useRoute } from 'vue-router';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { getArchive } from '@/services/api/archive';
 import { getTags } from '@/services/api/tags';
-import { getStructureCategories } from '@/services/api/archiveStructure';
+import { getCategoriesAndRegisters } from '@/services/api/category';
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue';
@@ -51,7 +51,7 @@ const {
   categories,
   registers,
   tags,
-  normalizeCategoryData,
+  normalizeCategoryRegisterData,
   normalizeTagsData
 } = useNormalizeData();
 
@@ -73,11 +73,13 @@ onMounted(async () => {
 
     const [archiveData, categories, tags] = await Promise.all([
       getArchive(uuid.value),
-      getStructureCategories(uuid.value),
+      getCategoriesAndRegisters(uuid.value),
       getTags(uuid.value)
     ]);
 
-    normalizeCategoryData(categories);
+    console.log(categories);
+
+    normalizeCategoryRegisterData(categories);
     normalizeTagsData(tags);
 
     archive.value = archiveData;

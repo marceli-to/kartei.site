@@ -47,19 +47,14 @@ class Archive extends Model
     return $this->hasMany(Tag::class);
   }
   
-  public function structure(): HasMany
+  public function categories(): HasMany
   {
-    return $this->hasMany(ArchiveStructure::class);
+    return $this->hasMany(Category::class)->whereNull('parent_id')->orderBy('order');
   }
 
-  public function structureCategories(): HasMany
+  public function registers(): HasMany
   {
-    return $this->hasMany(ArchiveStructureCategory::class)->where('parent_id', null);
-  }
-
-  public function structureRegisters(): HasMany
-  {
-    return $this->hasMany(ArchiveStructureRegister::class)->where('parent_id', null);
+    return $this->hasMany(Category::class)->whereNotNull('parent_id')->orderBy('order');
   }
 
   public function template(): HasOne

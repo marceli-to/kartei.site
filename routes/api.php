@@ -6,8 +6,8 @@ use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\ArchiveUserController;
-use App\Http\Controllers\Api\ArchiveStructureController;
-use App\Http\Controllers\Api\ArchiveStructureCategoryController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CategoryRegisterController;
 use App\Http\Controllers\Api\ArchiveTemplateController;
 use App\Http\Controllers\Api\RecordController;
 use App\Http\Controllers\Api\TemplateFieldController;
@@ -102,12 +102,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('/archive/user/{user:uuid}', [ArchiveUserController::class, 'update']);
   Route::delete('/archive/user/{user:uuid}', [ArchiveUserController::class, 'destroy']);
 
-  // Archive Structure
-  Route::get('/archive/structure/{archive:uuid}', [ArchiveStructureController::class, 'get']);
-  Route::put('/archive/structure/{archive:uuid}', [ArchiveStructureController::class, 'store']);
-  
-  Route::get('/archive/structure/categories/{archive:uuid}', [ArchiveStructureCategoryController::class, 'get']);
-
   // Template Field  
   Route::delete('/archive/template/field/{templateField:uuid}', [TemplateFieldController::class, 'destroy']);  
 
@@ -115,6 +109,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/archive/template/{archive:uuid}', [ArchiveTemplateController::class, 'get']);
   Route::put('/archive/template/{archive:uuid}', [ArchiveTemplateController::class, 'store']);
 
+  // Category
+  Route::get('/category/{archive:uuid}', [CategoryController::class, 'get']);
+  Route::put('/category/{archive:uuid}', [CategoryController::class, 'store']);
+  Route::get('/category/categories/{archive:uuid}', [CategoryRegisterController::class, 'get']);
+    
   // Record
   Route::get('/records/{archive:uuid}', [RecordController::class, 'get']);
   Route::post('/record', [RecordController::class, 'create']);

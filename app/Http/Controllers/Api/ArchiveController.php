@@ -72,7 +72,7 @@ class ArchiveController extends Controller
     $archives->load([
       'company',
       'tags',
-      'structure' => function ($query) {
+      'categories' => function ($query) {
         $query->categories()->with('registers');
       }
     ]);

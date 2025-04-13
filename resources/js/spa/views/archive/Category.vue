@@ -6,7 +6,7 @@
       v-if="!isLoading">
 
       <!-- Info box -->
-      <template v-if="(!hasStructure && isActive) || (infoBox.isActive && isActive)">
+      <template v-if="(!hasCategories && isActive) || (infoBox.isActive && isActive)">
         <InfoBox class="!-top-0 !-right-16 w-4/12">
           <InfoStructure />
         </InfoBox>
@@ -127,7 +127,7 @@ import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
-import { getStructure, storeStructure } from '@/services/api/archiveStructure';
+import { getCategory, storeCategory } from '@/services/api/category';
 import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
 import Slide from '@/components/slider/Slide.vue';
@@ -146,7 +146,7 @@ const dialogStore = useDialogStore();
 const toast = useToastStore();
 const isSaving = ref(false);
 const isLoading = ref(false);
-const hasStructure = ref(false);
+const hasCategories = ref(false);
 
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
@@ -164,7 +164,7 @@ const props = defineProps({
 
 const infoBox = useInfoBox({
   isActive: toRef(true),
-  condition: hasStructure
+  condition: hasCategories
 });
 
 const form = ref({
@@ -191,7 +191,7 @@ onMounted(async () => {
 
 const fetchStructure = async () => {
   try {
-    const response = await getStructure(uuid.value);
+    const response = await getCategory(uuid.value);
     const mapped = Array.isArray(response.data) ? 
       response.data.map(category => ({
           name: category.name,
@@ -208,7 +208,7 @@ const fetchStructure = async () => {
       : [];
 
     form.value.categories = mapped.length > 0 ? mapped : [emptyCategory()];
-    hasStructure.value = mapped.length > 0 || false;
+    hasCategories.value = mapped.length > 0 || false;
 
     numerals_category.value = response.data[0]?.numeral_type ?? 'decimal';
     numerals_register.value = response.data[0]?.numeral_type ?? 'decimal';
@@ -255,7 +255,7 @@ const handleSubmit = async () => {
       return;
     }
 
-    const response = await storeStructure(uuid.value, payload);
+    const response = await storeCategory(uuid.value, payload);
     updateForm(response.data);
     toast.show('Ordnung erfolgreich gespeichert', 'success');
   } 

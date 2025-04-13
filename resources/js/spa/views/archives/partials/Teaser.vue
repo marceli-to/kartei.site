@@ -15,7 +15,7 @@
       </h2>
     </div>
     <div>
-      <Collapsible :items="archive.structure" v-if="archive.structure" />
+      <Collapsible :items="archive.categories" v-if="archive.categories" />
     </div>
   </div>
 </template>

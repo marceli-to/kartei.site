@@ -1,16 +1,15 @@
 <?php
-namespace App\Actions\ArchiveStructure;
-
+namespace App\Actions\Category;
 use App\Models\Archive;
-use App\Models\ArchiveStructure;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 
 class UpdateOrCreate
 {
-  public function execute(array $structure, Archive $archive)
+  public function execute(array $categories, Archive $archive)
   {
-    return DB::transaction(function () use ($structure, $archive) {
-      foreach ($structure as $categoryData) {
+    return DB::transaction(function () use ($categories, $archive) {
+      foreach ($categories as $categoryData) {
         $category = $this->updateOrCreateCategory($categoryData, $archive);
 
         foreach ($categoryData['registers'] ?? [] as $registerData) {
@@ -18,18 +17,18 @@ class UpdateOrCreate
         }
       }
 
-      return ArchiveStructure::where('archive_id', $archive->id)
+      return Category::where('archive_id', $archive->id)
         ->orderBy('order')
         ->get();
     });
   }
 
-  private function updateOrCreateCategory(array $data, Archive $archive): ArchiveStructure
+  private function updateOrCreateCategory(array $data, Archive $archive): Category
   {
     $category = null;
 
     if (!empty($data['uuid'])) {
-      $category = ArchiveStructure::where('archive_id', $archive->id)
+      $category = Category::where('archive_id', $archive->id)
         ->where('uuid', $data['uuid'])
         ->first();
     }
@@ -52,7 +51,7 @@ class UpdateOrCreate
       }
     } 
     else {
-      $category = ArchiveStructure::create([
+      $category = Category::create([
         'archive_id' => $archive->id,
         'number' => $data['number'],
         'name' => $data['name'],
@@ -65,12 +64,12 @@ class UpdateOrCreate
     return $category;
   }
 
-  private function updateOrCreateRegister(array $data, Archive $archive, ArchiveStructure $category): ArchiveStructure
+  private function updateOrCreateRegister(array $data, Archive $archive, Category $category): Category
   {
     $register = null;
 
     if (!empty($data['uuid'])) {
-      $register = ArchiveStructure::where('archive_id', $archive->id)
+      $register = Category::where('archive_id', $archive->id)
         ->where('uuid', $data['uuid'])
         ->first();
     }
@@ -95,7 +94,7 @@ class UpdateOrCreate
       }
     } 
     else {
-      $register = ArchiveStructure::create([
+      $register = Category::create([
         'archive_id' => $archive->id,
         'number' => $data['number'],
         'name' => $data['name'],

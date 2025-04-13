@@ -14,8 +14,8 @@ class ArchiveResource extends JsonResource
       'name' => $this->name,
       'company' => CompanyResource::make($this->whenLoaded('company')),
       'tags' => TagResource::collection($this->whenLoaded('tags')),
-      'structure' => ArchiveStructureCategoryResource::collection(
-        $this->whenLoaded('structure')
+      'categories' => CategoryResource::collection(
+        $this->whenLoaded('categories')
       ),
       'image' => MediaResource::make($this->media),
     ];

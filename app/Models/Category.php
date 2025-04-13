@@ -6,12 +6,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\HasUuid;
 
-class ArchiveStructure extends Model
+class Category extends Model
 {
   use HasUuid;
-  
-  protected $table = 'archive_structure';
-  
+    
   protected $fillable = [
     'number',
     'name',
@@ -31,17 +29,17 @@ class ArchiveStructure extends Model
 
     public function parent(): BelongsTo
     {
-      return $this->belongsTo(ArchiveStructure::class, 'parent_id');
+      return $this->belongsTo(Category::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-      return $this->hasMany(ArchiveStructure::class, 'parent_id')->orderBy('order');
+      return $this->hasMany(Category::class, 'parent_id')->orderBy('order');
     }
 
     public function registers(): HasMany
     {
-      return $this->hasMany(ArchiveStructure::class, 'parent_id')->orderBy('order');
+      return $this->hasMany(Category::class, 'parent_id')->orderBy('order');
     }
 
     // Scopes

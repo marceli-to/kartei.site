@@ -1,33 +1,33 @@
 import { ref } from 'vue';
 
-const structure = ref([]);
+const categoriesRegisters = ref([]);
 const categories = ref([]);
 const registers = ref([]);
 const tags = ref([]);
 
-const normalizeCategoryData = (structureData) => {
-  categories.value = structureData.categories.map(cat => ({
+const normalizeCategoryRegisterData = (data) => {
+  categories.value = data.categories.map(cat => ({
     label: cat.name,
     value: cat.uuid
   }));
 
-  registers.value = structureData.registers.map(reg => ({
+  registers.value = data.registers.map(reg => ({
     label: reg.name,
     value: reg.uuid
   }));
 };
 
-const normalizeTagsData = (tagsData) => {
-  tags.value = tagsData.data.map(tag => ({
+const normalizeTagsData = (data) => {
+  tags.value = data.data.map(tag => ({
     label: tag.name,
     value: tag.uuid
   }));
 };
 
-const normalizeStructureData = (structureData) => {
+const normalizeCategoryData = (data) => {
   const result = [];
 
-  structureData.forEach(cat => {
+  data.forEach(cat => {
     result.push({
       prefix: `${cat.number}.`,
       label:  cat.name,
@@ -44,18 +44,18 @@ const normalizeStructureData = (structureData) => {
     });
   });
 
-  structure.value = result;
+  categoriesRegisters.value = result;
 
 };
 
 export function useNormalizeData() {
   return {
-    structure,
+    categoriesRegisters,
     categories,
     registers,
     tags,
-    normalizeStructureData,
     normalizeCategoryData,
+    normalizeCategoryRegisterData,
     normalizeTagsData
   };
 }
