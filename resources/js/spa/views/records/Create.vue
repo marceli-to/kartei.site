@@ -170,7 +170,14 @@ const errors = ref({
   images: null,
 });
 
-const handleSubmit = () => { };
+const handleSubmit = () => {
+  isSaving.value = true;
+
+  // TODO: Handle form submission
+  console.log(form.value);
+
+  isSaving.value = false;
+};
 
 const handleCancel = () => {
   router.push({ name: 'archiveRecords', params: { uuid: uuid.value } });

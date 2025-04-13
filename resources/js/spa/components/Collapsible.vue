@@ -9,7 +9,7 @@
       class="min-h-default flex items-center justify-between">
       <span class="flex font-muoto-medium">
         <span class="w-48">{{ item.number }}.</span>
-        <span>{{ item.title }}</span>
+        <span>{{ item.name }}</span>
       </span>
       <IconChevronDown 
         :class="isOpen[index] ? 'rotate-180' : ''" 
@@ -26,7 +26,7 @@
         class="min-h-default flex items-center border-b border-b-graphite last:border-b-0">
         <span class="flex">
           <span class="w-48">{{ subItem.number }}</span>
-          <span>{{ subItem.title }}</span>
+          <span>{{ subItem.name }}</span>
         </span>
       </div>
     </div>
