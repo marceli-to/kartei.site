@@ -11,12 +11,21 @@
           :registers="registers"
           :tags="tags"
         />
+        <router-link :to="{ name: 'archiveRecordCreate', params: { uuid } }">
+          Erstellen
+        </router-link>
       </ContentNavigation>
 
       <ContentMain>
         <template v-if="records.length > 0">
           <div class="flex flex-wrap gap-x-16 gap-y-32">
-            [records]
+            <Card
+              v-for="record, index in records"
+              :key="record.uuid"
+              :record="record"
+              :loopIndex="index"
+              class="w-full lg:w-[calc(50%_-_8px)] 2xl:w-[calc(33.333%_-_(32px/3))] shrink-0"
+            />
           </div>
         </template>
         <template v-else>
@@ -34,12 +43,14 @@ import { useRoute } from 'vue-router';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { getArchive } from '@/services/api/archive';
 import { getTags } from '@/services/api/tags';
+import { getRecords } from '@/services/api/record';
 import { getCategoriesAndRegisters } from '@/services/api/category';
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue';
 import ContentMain from '@/components/layout/ContentMain.vue';
 import Skeleton from '@/views/records/partials/Skeleton.vue';
+import Card from '@/views/records/partials/Card.vue';
 import RecordsNavigation from '@/views/records/partials/Navigation.vue';
 
 const route = useRoute();
@@ -77,13 +88,14 @@ onMounted(async () => {
       getTags(uuid.value)
     ]);
 
-    console.log(categories);
-
     normalizeCategoryRegisterData(categories);
     normalizeTagsData(tags);
 
     archive.value = archiveData;
     setTitle(archive.value.name);
+
+    const recordsData = await getRecords(uuid.value);
+    records.value = recordsData;
 
   }
   catch (error) {

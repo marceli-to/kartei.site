@@ -17,6 +17,7 @@ return new class extends Migration
       $table->string('slug', 255)->unique();
       $table->string('name');
       $table->string('acronym', 10);
+      $table->json('settings')->nullable();
       $table->foreignId('company_id')->nullable()->constrained()->nullOnDelete();
       $table->timestamps();
     });

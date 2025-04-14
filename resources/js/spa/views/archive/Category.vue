@@ -127,7 +127,7 @@ import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
-import { getCategory, storeCategory } from '@/services/api/category';
+import { getCategories, storeCategory } from '@/services/api/category';
 import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
 import Slide from '@/components/slider/Slide.vue';
@@ -191,7 +191,7 @@ onMounted(async () => {
 
 const fetchStructure = async () => {
   try {
-    const response = await getCategory(uuid.value);
+    const response = await getCategories(uuid.value);
     const mapped = Array.isArray(response.data) ? 
       response.data.map(category => ({
           name: category.name,

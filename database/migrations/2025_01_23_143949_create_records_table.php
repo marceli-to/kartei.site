@@ -11,12 +11,13 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('template_fields', function (Blueprint $table) {
+    Schema::create('records', function (Blueprint $table) {
       $table->id();
       $table->uuid('uuid')->unique();
-      $table->text('placeholder');
-      $table->foreignId('archive_template_id')->constrained()->onDelete('cascade');
+      $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+      $table->foreignId('archive_id')->constrained()->cascadeOnDelete();
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 
@@ -25,6 +26,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('template_fields');
+    Schema::dropIfExists('records');
   }
 };

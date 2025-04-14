@@ -39,3 +39,18 @@ export const deleteArchive = async (uuid) => {
   const response = await api.delete(`/archive/${uuid}`);
   return response.data;
 };
+
+export const getArchiveSettings = async (uuid) => {
+  const response = await api.get(`/archive/settings/${uuid}`);
+  return response.data;
+};
+
+export const storeArchiveSettings = async (uuid, settings) => {
+  const response = await api.put(`/archive/settings/${uuid}`, settings);
+  return response.data;
+};
+
+export const deleteArchiveSettingsField = async (fieldUuid, archiveUuid) => {
+  const response = await api.delete(`/archive/settings/field/${fieldUuid}/${archiveUuid}`);
+  return response.data;
+};

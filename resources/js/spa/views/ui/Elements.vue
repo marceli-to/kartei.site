@@ -13,10 +13,15 @@
       <div>
         <h2 class="mb-12 font-muoto-medium">Image Slideshow</h2>
         <Slideshow :slides="[
-          'https://placehold.co/600x400',
-          'https://placehold.co/400x400',
-          'https://placehold.co/400x200',
-          'https://placehold.co/600x900',
+          {
+            src: 'https://placehold.co/600x400'
+          },
+          {
+            src: 'https://placehold.co/400x400'
+          },
+          {
+            src: 'https://placehold.co/400x200'
+          }
           ]" 
         />
       </div>

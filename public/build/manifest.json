@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-deda24d5.css",
+    "file": "assets/app-b0496f76.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -50,14 +50,14 @@
     "src": "resources/js/app.js"
   },
   "resources/js/spa.css": {
-    "file": "assets/spa-eb3bf0d7.css",
+    "file": "assets/spa-b740e3f7.css",
     "src": "resources/js/spa.css"
   },
   "resources/js/spa.js": {
     "css": [
-      "assets/spa-eb3bf0d7.css"
+      "assets/spa-b740e3f7.css"
     ],
-    "file": "assets/spa-8487d11e.js",
+    "file": "assets/spa-4615bac4.js",
     "isEntry": true,
     "src": "resources/js/spa.js"
   }

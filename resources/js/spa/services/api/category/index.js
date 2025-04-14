@@ -1,7 +1,7 @@
 import api from '@/services/api/axios'
 
-export const getCategory = async (uuid) => {
-  const response = await api.get(`/category/${uuid}`);
+export const getCategories = async (uuid) => {
+  const response = await api.get(`/categories/${uuid}`);
   return response.data;
 };
 
@@ -11,6 +11,6 @@ export const storeCategory = async (uuid, category) => {
 };
 
 export const getCategoriesAndRegisters = async (uuid) => {
-  const response = await api.get(`/category/categories/${uuid}`);
+  const response = await api.get(`/categories/registers/${uuid}`);
   return response.data;
 };

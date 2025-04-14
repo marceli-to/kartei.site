@@ -7,11 +7,9 @@ use App\Models\Record;
 use App\Models\Archive;
 use App\Http\Resources\RecordResource;
 use App\Actions\Record\Get as GetRecordAction;
-// use App\Actions\Record\Find as FindRecordAction;
-// use App\Actions\Record\Create as CreateRecordAction;
+use App\Actions\Record\Create as CreateRecordAction;
 // use App\Actions\Record\Update as UpdateRecordAction;
 // use App\Actions\Record\Delete as DeleteRecordAction;
-use App\Http\Requests\Record\StoreRequest;
 
 class RecordController extends Controller
 {
@@ -26,6 +24,20 @@ class RecordController extends Controller
     $records = (new GetRecordAction())->execute(['archive_id' => $archive->id]);
     return response()->json(
       RecordResource::collection($records)
+    );
+  }
+
+  /**
+   * Create a new record
+   *
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function create(Request $request): JsonResponse
+  {
+    $record = (new CreateRecordAction())->execute($request->all());
+    return response()->json(
+      RecordResource::make($record)
     );
   }
 }

@@ -14,9 +14,12 @@
 
       <swiper-slide v-for="slide in slides">
         <Image 
-          :src="slide" 
-          :alt="'Slide'" 
-          :spacing="'m-40'" />
+          :src="slide.src"
+          :alt="slide.alt || 'Slide'"
+          :width="slide.width || 'auto'"
+          :height="slide.height || 'auto'"
+          :spacing="'m-40'" 
+        />
       </swiper-slide>
 
     </swiper>

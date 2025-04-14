@@ -19,7 +19,12 @@ class Archive extends Model
     'slug',
     'name', 
     'acronym', 
+    'settings',
     'company_id'
+  ];
+
+  protected $casts = [
+    'settings' => 'array',
   ];
 
   public function records(): HasMany
@@ -57,13 +62,30 @@ class Archive extends Model
     return $this->hasMany(Category::class)->whereNotNull('parent_id')->orderBy('order');
   }
 
-  public function template(): HasOne
+  public function setAcronymAttribute($value)
   {
-    return $this->hasOne(ArchiveTemplate::class);
+    $this->attributes['acronym'] = strtoupper($value);
+  }
+
+  public function getAcronymAttribute($value)
+  {
+    return strtoupper($value);
   }
 
   protected static function getSlugSource(): string
   {
     return 'name';
+  }
+
+  protected static function booted()
+  {
+    static::creating(function ($archive) {
+      if (is_null($archive->settings)) {
+        $archive->settings = [
+          'has_images' => true,
+          'record_fields' => [],
+        ];
+      }
+    });
   }
 }

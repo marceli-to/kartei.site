@@ -7,8 +7,8 @@ class Find
   public function execute($id, $isUuid = false): Archive
   {
     if ($isUuid) {
-      return Archive::where('uuid', $id)->first();
+      return Archive::where('uuid', $id)->firstOrFail();
     }
-    return Archive::find($id);
+    return Archive::findOrFail($id);
   }
 }

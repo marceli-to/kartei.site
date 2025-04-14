@@ -11,12 +11,12 @@
         <div>
           <InputLabel label="Bildfeld" />
           <ImageCard class="flex items-center justify-center mb-8 !aspect-[16/9]">
-            <IconImage v-if="form.image" />
+            <IconImage v-if="form.has_images" />
             <IconImage variant="missing" v-else />
           </ImageCard>
           <InputGroup>
             <InputSelectButtons
-              v-model="form.image"
+              v-model="form.has_images"
               name="image"
               wrapperClasses="flex flex-col gap-y-8"
               :options="image_options" />
@@ -32,7 +32,7 @@
 
         <div>
           <draggable 
-            v-model="form.fields" 
+            v-model="form.record_fields" 
             item-key="uuid" 
             class="flex flex-col gap-y-8" 
             handle=".drag-handle"
@@ -40,17 +40,16 @@
             @end="reorder">
             <template #item="{ element, index }">
               <InputGroup class="relative flex justify-between items-center">
-                <span class="cursor-grab size-16 drag-handle">
+                <!-- <span class="cursor-grab size-16 drag-handle">
                   <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M4 14h16" />
                   </svg>
-                </span>
-                <InputTextarea
+                </span> -->
+                <InputText
                   v-model="element.placeholder"
                   :placeholder="`Textfeld ${index + 1}`"
                   aria-label="Textfeld"
                   :ref="el => inputRefs[index] = el"
-                  class="pl-6"
                 />
                 <button 
                   type="button" 
@@ -84,13 +83,12 @@ import { ref, onMounted, nextTick } from 'vue';
 import draggable from 'vuedraggable';
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
-import { getTemplate, storeTemplate, deleteTemplateField } from '@/services/api/archiveTemplate';
+import { getArchiveSettings, storeArchiveSettings, deleteArchiveSettingsField } from '@/services/api/archive';
 import Slide from '@/components/slider/Slide.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
-import InputTextarea from '@/components/forms/Textarea.vue';
 import InputStatic from '@/components/forms/Static.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputGroup from '@/components/forms/Group.vue';
@@ -110,8 +108,8 @@ const isLoading = ref(false);
 const inputRefs = ref([]);
 
 const image_options = [
-  { value: 1, label: 'Bildfeld' },
-  { value: 0, label: 'Ohne Bildfeld' }
+  { value: true, label: 'Bildfeld' },
+  { value: false, label: 'Ohne Bildfeld' }
 ];
 
 const props = defineProps({
@@ -122,28 +120,28 @@ const props = defineProps({
 });
 
 const emptyField = {
-  uuid: null,
+  uuid: '',
   placeholder: '',
   order: 0
 };
 
 const form = ref({
-  image: 1,
-  fields: [emptyField]
+  has_images: true,
+  record_fields: [emptyField]
 });
 
 onMounted(async () => {
   if (uuid.value) {
     isLoading.value = true;
     try {
-      const response = await getTemplate(uuid.value);
-      form.value.image = response.data.image;
+      const response = await getArchiveSettings(uuid.value);
+      form.value.has_images = response.has_images;
 
-      if (!response.data.fields || response.data.fields.length === 0) {
-        form.value.fields = [emptyField];
+      if (!response.record_fields || response.record_fields.length === 0) {
+        form.value.record_fields = [emptyField];
       }
       else {
-        form.value.fields = response.data.fields;
+        form.value.record_fields = response.record_fields;
       }
     } 
     catch (error) {
@@ -160,19 +158,19 @@ const handleSubmit = async () => {
   isSaving.value = true;
   try {
     isSaving.value = true;
-    const validFields = form.value.fields.filter(field => field.placeholder.trim() !== '');
+    const validFields = form.value.record_fields.filter(field => field.placeholder.trim() !== '');
     const payload = {
-      image: form.value.image,
-      fields: validFields
+      has_images: form.value.has_images,
+      record_fields: validFields
     };
 
-    const response = await storeTemplate(uuid.value, payload);
+    const response = await storeArchiveSettings(uuid.value, payload);
 
-    if (response?.data?.fields.length > 0) {
-      form.value.fields = response.data.fields;
+    if (response?.record_fields.length > 0) {
+      form.value.record_fields = response.record_fields;
     }
     else {
-      form.value.fields = [emptyField];
+      form.value.record_fields = [emptyField];
     }
 
     toast.show('Kartenvorlage erfolgreich gespeichert.', 'success');
@@ -186,33 +184,34 @@ const handleSubmit = async () => {
 };
 
 const add = async () => {
-  form.value.fields.push({
-    uuid: null,
-    placeholder: ''
+  form.value.record_fields.push({
+    uuid: '',
+    placeholder: '',
+    order: form.value.record_fields.length
   });
   await nextTick();
-  const lastIndex = form.value.fields.length - 1;
+  const lastIndex = form.value.record_fields.length - 1;
   inputRefs.value[lastIndex]?.$el?.querySelector('input')?.focus();
 };
 
 const remove = async (index) => {
-  const fieldUuid = form.value.fields[index].uuid;
+  const fieldUuid = form.value.record_fields[index].uuid;
   if (fieldUuid) {
     try {
-      await deleteTemplateField(fieldUuid);
+      await deleteArchiveSettingsField(fieldUuid, uuid.value);
     } 
     catch (error) {
       toast.show('Fehler beim Löschen des Textfelds.', 'error');
     }
   }
-  form.value.fields.splice(index, 1);
-  if (form.value.fields.length === 0) {
-    form.value.fields.push({ uuid: null, placeholder: '' });
+  form.value.record_fields.splice(index, 1);
+  if (form.value.record_fields.length === 0) {
+    form.value.record_fields.push(emptyField);
   }
 };
 
 const reorder = () => {
-  form.value.fields.forEach((field, index) => {
+  form.value.record_fields.forEach((field, index) => {
     field.order = index;
   });
 };

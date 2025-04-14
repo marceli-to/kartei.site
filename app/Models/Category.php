@@ -27,6 +27,11 @@ class Category extends Model
       return $this->belongsTo(Archive::class);
     }
 
+    public function records(): HasMany
+    {
+      return $this->hasMany(Record::class);
+    }
+
     public function parent(): BelongsTo
     {
       return $this->belongsTo(Category::class, 'parent_id');

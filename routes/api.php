@@ -8,9 +8,8 @@ use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\ArchiveUserController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CategoryRegisterController;
-use App\Http\Controllers\Api\ArchiveTemplateController;
+use App\Http\Controllers\Api\ArchiveSettingsController;
 use App\Http\Controllers\Api\RecordController;
-use App\Http\Controllers\Api\TemplateFieldController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\UserSubscriptionController;
@@ -84,6 +83,11 @@ Route::middleware('auth:sanctum')->group(function () {
   // Subscription plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 
+  // Archive settings
+  Route::get('/archive/settings/{archive:uuid}', [ArchiveSettingsController::class, 'get']);
+  Route::put('/archive/settings/{archive:uuid}', [ArchiveSettingsController::class, 'store']);
+  Route::delete('/archive/settings/field/{uuid}/{archive:uuid}', [ArchiveSettingsController::class, 'destroy']);
+
   // Archives
   Route::get('/archives', [ArchiveController::class, 'get']);
   Route::get('/archives/admin', [ArchiveController::class, 'getByAdmin']);
@@ -102,17 +106,10 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('/archive/user/{user:uuid}', [ArchiveUserController::class, 'update']);
   Route::delete('/archive/user/{user:uuid}', [ArchiveUserController::class, 'destroy']);
 
-  // Template Field  
-  Route::delete('/archive/template/field/{templateField:uuid}', [TemplateFieldController::class, 'destroy']);  
-
-  // Archive Template
-  Route::get('/archive/template/{archive:uuid}', [ArchiveTemplateController::class, 'get']);
-  Route::put('/archive/template/{archive:uuid}', [ArchiveTemplateController::class, 'store']);
-
   // Category
-  Route::get('/category/{archive:uuid}', [CategoryController::class, 'get']);
+  Route::get('/categories/registers/{archive:uuid}', [CategoryRegisterController::class, 'get']);
+  Route::get('/categories/{archive:uuid}', [CategoryController::class, 'get']);
   Route::put('/category/{archive:uuid}', [CategoryController::class, 'store']);
-  Route::get('/category/categories/{archive:uuid}', [CategoryRegisterController::class, 'get']);
     
   // Record
   Route::get('/records/{archive:uuid}', [RecordController::class, 'get']);

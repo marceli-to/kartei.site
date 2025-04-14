@@ -23,8 +23,8 @@
                   <InputGroup>
                     <InputLabel label="Ordnung" />
                     <InputSelectButtons
-                      v-model="form.categoriesRegisters"
-                      :multiple="true"
+                      v-model="form.category"
+                      :multiple="false"
                       name="categoriesRegisters"
                       :options="categoriesRegisters"
                       classes="!text-black"
@@ -48,15 +48,15 @@
                 <div class="relative -top-24">
                   <InputGroup>
                     <InputLabel label="Bilder" />
-                    <template v-if="template.image">
+                    <template v-if="settings.has_images">
                       <ImageUpload
                         :maxSize="250 * 1024 * 1024"
                         :allowedTypes="['image/*']"
                         uploadUrl="/api/upload"
                         :multiple="true"
-                        v-model="form.images"
-                        :existingImages="form.images"
-                        :error="errors.images"
+                        v-model="form.media"
+                        :existingImages="form.media"
+                        :error="null"
                         classes="!aspect-[16/9]" />
                     </template>
                     <template v-else>
@@ -75,16 +75,16 @@
               <div class="w-3/12">
                 <div class="relative -top-24">
                   <InputLabel label="Beschreibung" />
-                  <InputStatic class="font-muoto-medium mb-8">
+                  <!-- <InputStatic class="font-muoto-medium mb-8">
                     Nr. / {{ archive?.acronym }}_
-                  </InputStatic>
+                  </InputStatic> -->
                   <InputGroup 
                     class="flex flex-col gap-y-8"
-                    v-if="template.fields.length > 0">
-                    <InputText
-                      v-for="(value, index) in template.fields"
+                    v-if="settings.record_fields.length > 0">
+                    <InputTextarea
+                      v-for="(value, index) in settings.record_fields"
                       :key="index"
-                      v-model="form.fields[index]"
+                      v-model="form.fields[index].content"
                       :id="'field-' + index"
                       :placeholder="value.placeholder"
                       :aria-label="'field-' + index" />
@@ -106,11 +106,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getArchive } from '@/services/api/archive';
+import { getArchive, getArchiveSettings } from '@/services/api/archive';
 import { getCategoriesAndRegisters } from '@/services/api/category';
+import { createRecord } from '@/services/api/record';
 import { getTags } from '@/services/api/tags';
-import { getCategory } from '@/services/api/category';
-import { getTemplate } from '@/services/api/archiveTemplate';
+import { getCategories } from '@/services/api/category';
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
 import { usePageTitle } from '@/composables/usePageTitle';
 
@@ -123,6 +123,7 @@ import InputGroup from '@/components/forms/Group.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
+import InputTextarea from '@/components/forms/Textarea.vue';
 import InputStatic from '@/components/forms/Static.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import ImageCard from '@/components/media/Card.vue';
@@ -138,9 +139,9 @@ const isLoading = ref(false);
 const isSaving = ref(false);
 
 const archive = ref(null);
-const template = ref({
-  image: null,
-  fields: []
+const settings = ref({
+  has_images: null,
+  record_fields: []
 });
 
 const {
@@ -162,23 +163,32 @@ const filters = ref({
 });
 
 const form = ref({
-  images: [],
-  categoriesRegisters: [],
+  media: [],
+  category: '',
   tags: [],
   fields: []
 });
 
-const errors = ref({
-  images: null,
-});
-
-const handleSubmit = () => {
+const handleSubmit = async () => {
   isSaving.value = true;
+  const recordData = {
+    archive_id: uuid.value,
+    tags: form.value.tags,
+    category: form.value.category,
+    fields: form.value.fields,
+    media: form.value.media
+  };
+  try {
+    const response = await createRecord(recordData);
+    router.push({ name: 'archiveRecords', params: { uuid: uuid.value } });
+  } 
+  catch (error) {
+    console.error(error);
+  }
+  finally {
+    isSaving.value = false;
+  }
 
-  // TODO: Handle form submission
-  console.log(form.value);
-
-  isSaving.value = false;
 };
 
 const handleCancel = () => {
@@ -189,18 +199,27 @@ onMounted(async () => {
   try {
     isLoading.value = true;
 
-    const [archiveData, categoriesRegisters, categories, tags, templateData] = await Promise.all([
+    const [archiveData, categoriesRegisters, categories, tags, settingsData] = await Promise.all([
       getArchive(uuid.value),
       getCategoriesAndRegisters(uuid.value),
-      getCategory(uuid.value),
+      getCategories(uuid.value),
       getTags(uuid.value),
-      getTemplate(uuid.value)
+      getArchiveSettings(uuid.value)
     ]);
 
     archive.value = archiveData;
     setTitle(archive.value.name);
 
-    template.value = templateData.data;
+    settings.value = settingsData;
+
+    // update fields
+    for (const field of settings.value.record_fields) {
+      form.value.fields.push({
+        uuid: field.uuid,
+        placeholder: field.placeholder,
+        content: null,
+      });
+    }
 
     normalizeCategoryData(categories.data);
     normalizeCategoryRegisterData(categoriesRegisters);
