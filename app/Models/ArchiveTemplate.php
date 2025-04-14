@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUuid;
 
-
 class ArchiveTemplate extends Model
 {
   use HasUuid;
