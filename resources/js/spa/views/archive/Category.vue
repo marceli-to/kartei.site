@@ -76,7 +76,13 @@
                 </div>
               </div>
 
-              <draggable v-model="category.registers" group="registers" item-key="custom_id" :clone="cloneRegister" class="flex flex-col" handle=".drag-handle">
+              <draggable 
+                v-model="category.registers" 
+                group="registers" 
+                item-key="custom_id" 
+                :clone="cloneRegister" 
+                class="flex flex-col" 
+                handle=".drag-handle">
                 <template #item="{ element: register, index: rIdx }">
                   <div class="flex gap-x-17 mb-8 last:mb-32 items-center drag-handle cursor-move">
                     <div class="w-3/12">

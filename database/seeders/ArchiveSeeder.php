@@ -14,15 +14,15 @@ class ArchiveSeeder extends Seeder
   {
     $archives = [
       [
-        'slug' => Str::slug('Sammlung Bert Fiefelstein'),
-        'name' => 'Sammlung Bert Fiefelstein',
+        'slug' => Str::slug('AI Images'),
+        'name' => 'AI Images',
         'acronym' => 'BF'
       ],
-      [
-        'slug' => Str::slug('Bildarchiv Kretschmann'),
-        'name' => 'Bildarchiv Kretschmann',
-        'acronym' => 'BK'
-      ]
+      // [
+      //   'slug' => Str::slug('Bildarchiv Kretschmann'),
+      //   'name' => 'Bildarchiv Kretschmann',
+      //   'acronym' => 'BK'
+      // ]
     ];
 
     foreach ($archives as $archive)

@@ -7,10 +7,11 @@
     </ImageCard>
 
     <div class="border-t border-t-graphite">
-      <div 
-        class="min-h-default flex items-center font-muoto-medium"
-        v-if="record.category">
-        {{ record.display_number }}
+      <div class="min-h-default flex items-center justify-between font-muoto-medium">
+        <template v-if="record.display_number">
+          {{ record.display_number }}
+        </template>
+        <Favorite :uuid="record.uuid" />
       </div>
       <div 
         class="min-h-default flex items-center border-t border-t-graphite"
@@ -27,6 +28,7 @@ import { computed } from 'vue';
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import ImageSlideshow from '@/components/media/Slideshow.vue';
+import Favorite from '@/views/records/components/Favorite.vue';
 
 const props = defineProps({
   record: {

@@ -17,8 +17,6 @@ class RecordResource extends JsonResource
           'uuid' => $this->category->uuid,
           'name' => $this->category->name,
           'number' => $this->category->number,
-          'is_category' => $this->category->isCategory(),
-          'is_register' => $this->category->isRegister()
         ];
       }),
       'fields' => $this->whenLoaded('fields', function () {
@@ -28,7 +26,6 @@ class RecordResource extends JsonResource
           ];
         });
       }),
-
       'tags' => $this->whenLoaded('tags'),
       'media' => MediaResource::collection($this->media),
     ];

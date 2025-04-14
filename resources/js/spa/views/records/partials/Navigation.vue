@@ -9,6 +9,7 @@
           placeholder="Suche"
           aria-label="Suche" />
       </InputGroup>
+
       <InputGroup>
         <InputLabel label="Sortierfolge" id="sort_order" />
         <InputSelect
@@ -54,7 +55,7 @@
 
     </div>
 
-    <InputGroup>
+    <InputGroup class="sticky bottom-20">
       <Action
         label="Voreinstellungen"
         variant="box"

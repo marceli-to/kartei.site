@@ -15,6 +15,7 @@ class Category extends Model
     'name',
     'custom_id',
     'order',
+    'global_order',
     'numeral_type',
     'custom_id_type',
     'archive_id',

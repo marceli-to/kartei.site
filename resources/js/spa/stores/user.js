@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
 import { getUserPermissions } from '@/services/api/user';
+import { getFavorites } from '@/services/api/favorite';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: {},
     permissions: typeof window !== 'undefined' ? window.permissions || [] : [],
     roles: typeof window !== 'undefined' ? window.roles || [] : [],
+    favorites: [],
     initialized: false
   }),
 
@@ -21,9 +23,12 @@ export const useUserStore = defineStore('user', {
 
       try {
         await this.fetchPermissions();
-      } catch (error) {
+        await this.fetchFavorites();
+      } 
+      catch (error) {
         console.error('Initialization error:', error);
-      } finally {
+      } 
+      finally {
         this.initialized = true;
       }
     },
@@ -34,8 +39,19 @@ export const useUserStore = defineStore('user', {
         this.user = permissions.user;
         this.permissions = permissions.permissions;
         this.roles = permissions.roles;
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Failed to fetch permissions and roles:', error);
+      }
+    },
+
+    async fetchFavorites() {
+      try {
+        const favorites = await getFavorites();
+        this.favorites = favorites;
+      } 
+      catch (error) {
+        console.error('Failed to fetch favorites:', error);
       }
     },
 

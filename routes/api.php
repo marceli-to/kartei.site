@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SubscriptionPlanController;
 use App\Http\Controllers\Api\TagController;
+use App\Http\Controllers\Api\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,4 +129,8 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/permissions/user/{user:uuid}', [PermissionController::class, 'getByUser']);
   Route::get('/roles', [RoleController::class, 'get']);
   Route::get('/roles/permissions', [RoleController::class, 'getWithPermissions']);
+
+  // Favorite
+  Route::get('/favorites', [FavoriteController::class, 'get']);
+  Route::get('/favorite/toggle/{record:uuid}', [FavoriteController::class, 'toggle']);
 });

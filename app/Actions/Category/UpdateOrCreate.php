@@ -6,22 +6,59 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateOrCreate
 {
+  // public function execute(array $categories, Archive $archive)
+  // {
+  //   return DB::transaction(function () use ($categories, $archive) {
+  //     foreach ($categories as $categoryData) {
+  //       $category = $this->updateOrCreateCategory($categoryData, $archive);
+
+  //       foreach ($categoryData['registers'] ?? [] as $registerData) {
+  //         $this->updateOrCreateRegister($registerData, $archive, $category);
+  //       }
+  //     }
+
+  //     return Category::where('archive_id', $archive->id)
+  //       ->orderBy('order')
+  //       ->get();
+  //   });
+  // }
+
   public function execute(array $categories, Archive $archive)
   {
     return DB::transaction(function () use ($categories, $archive) {
+      $flatList = [];
+      $globalOrder = 1;
+  
       foreach ($categories as $categoryData) {
+        // 1. Update or create the category
         $category = $this->updateOrCreateCategory($categoryData, $archive);
-
+        $flatList[] = $category;
+  
+        // 2. Update or create registers and collect them
+        $registers = [];
         foreach ($categoryData['registers'] ?? [] as $registerData) {
-          $this->updateOrCreateRegister($registerData, $archive, $category);
+          $register = $this->updateOrCreateRegister($registerData, $archive, $category);
+          $registers[] = $register;
+        }
+  
+        // 3. Sort registers by their 'order' field before adding
+        usort($registers, fn($a, $b) => $a->order <=> $b->order);
+        foreach ($registers as $register) {
+          $flatList[] = $register;
         }
       }
-
+  
+      // 4. Apply global_order incrementally
+      foreach ($flatList as $model) {
+        $model->update(['global_order' => $globalOrder++]);
+      }
+  
       return Category::where('archive_id', $archive->id)
-        ->orderBy('order')
+        ->orderBy('global_order')
         ->get();
     });
   }
+  
 
   private function updateOrCreateCategory(array $data, Archive $archive): Category
   {

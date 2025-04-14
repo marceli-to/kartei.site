@@ -5,6 +5,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Traits\HasUuid;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
@@ -42,37 +48,37 @@ class User extends Authenticatable implements MustVerifyEmail
     'password' => 'hashed',
   ];
 
-  public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+  public function company(): BelongsTo
   {
     return $this->belongsTo(Company::class);
   }
 
-  public function companies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+  public function companies(): BelongsToMany
   {
     return $this->belongsToMany(Company::class);
   }
 
-  public function archives(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+  public function archives(): BelongsToMany
   {
     return $this->belongsToMany(Archive::class)->withPivot(['role_id', 'added_by', 'added_at']);
   }
 
-  public function address(): \Illuminate\Database\Eloquent\Relations\MorphOne
+  public function address(): MorphOne
   {
     return $this->morphOne(Address::class, 'addressable')->where('is_billing', false);
   }
 
-  public function billingAddress(): \Illuminate\Database\Eloquent\Relations\MorphOne
+  public function billingAddress(): MorphOne
   {
     return $this->morphOne(Address::class, 'addressable')->where('is_billing', true);
   }
 
-  public function subscription(): \Illuminate\Database\Eloquent\Relations\HasOne
+  public function subscription(): HasOne
   {
     return $this->hasOne(UserSubscription::class);
   }
 
-  public function relatedUsers(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+  public function relatedUsers(): HasManyThrough
   {
     return $this->hasManyThrough(
       User::class,
@@ -82,6 +88,18 @@ class User extends Authenticatable implements MustVerifyEmail
       'id', // Local key on admin's user record
       'user_id' // Local key on pivot table
     )->with('roles');
+  }
+
+  public function favorites(): HasMany
+  {
+    return $this->hasMany(Favorite::class);
+  }
+
+  public function getFavorites()
+  {
+    return $this->favorites()
+      ->join('records', 'favorites.record_id', '=', 'records.id')
+      ->pluck('records.uuid');
   }
 
   public function hasActiveSubscription(): bool
