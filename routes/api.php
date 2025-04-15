@@ -6,9 +6,9 @@ use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\ArchiveUserController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\CategoryRegisterController;
 use App\Http\Controllers\Api\ArchiveSettingsController;
+use App\Http\Controllers\Api\ArchiveMetaController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\RecordController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserAddressController;
@@ -84,6 +84,9 @@ Route::middleware('auth:sanctum')->group(function () {
   // Subscription plans
   Route::get('/subscription-plans', [SubscriptionPlanController::class, 'get']);
 
+  // Archive meta
+  Route::get('/archive/meta/{archive:uuid}', [ArchiveMetaController::class, 'get']);
+
   // Archive settings
   Route::get('/archive/settings/{archive:uuid}', [ArchiveSettingsController::class, 'get']);
   Route::put('/archive/settings/{archive:uuid}', [ArchiveSettingsController::class, 'store']);
@@ -108,7 +111,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::delete('/archive/user/{user:uuid}', [ArchiveUserController::class, 'destroy']);
 
   // Category
-  Route::get('/categories/registers/{archive:uuid}', [CategoryRegisterController::class, 'get']);
   Route::get('/categories/{archive:uuid}', [CategoryController::class, 'get']);
   Route::put('/category/{archive:uuid}', [CategoryController::class, 'store']);
     

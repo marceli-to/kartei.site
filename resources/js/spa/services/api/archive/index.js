@@ -54,3 +54,9 @@ export const deleteArchiveSettingsField = async (fieldUuid, archiveUuid) => {
   const response = await api.delete(`/archive/settings/field/${fieldUuid}/${archiveUuid}`);
   return response.data;
 };
+
+export const getArchiveMeta = async (uuid) => {
+  const response = await api.get(`/archive/meta/${uuid}`);
+  return response.data;
+};
+

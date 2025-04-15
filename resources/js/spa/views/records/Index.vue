@@ -10,17 +10,14 @@
           :categories="categories"
           :registers="registers"
           :tags="tags"
-        />
-        <router-link :to="{ name: 'archiveRecordCreate', params: { uuid } }">
-          Erstellen
-        </router-link>
+        />        
       </ContentNavigation>
 
       <ContentMain>
         <template v-if="records.length > 0">
           <div class="flex flex-wrap gap-x-16 gap-y-32">
             <Card
-              v-for="record, index in records"
+              v-for="(record, index) in records"
               :key="record.uuid"
               :record="record"
               :loopIndex="index"
@@ -37,38 +34,39 @@
     </div>
   </div>
 </template>
+
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { usePageTitle } from '@/composables/usePageTitle';
-import { getArchive } from '@/services/api/archive';
-import { getTags } from '@/services/api/tags';
-import { getRecords } from '@/services/api/record';
-import { getCategoriesAndRegisters } from '@/services/api/category';
-import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { usePageTitle } from '@/composables/usePageTitle'
+import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
+import { getArchive, getArchiveMeta } from '@/services/api/archive'
+import { getRecords } from '@/services/api/record'
 
-import ContentNavigation from '@/components/layout/ContentNavigation.vue';
-import ContentMain from '@/components/layout/ContentMain.vue';
-import Skeleton from '@/views/records/partials/Skeleton.vue';
-import Card from '@/views/records/partials/Card.vue';
-import RecordsNavigation from '@/views/records/partials/Navigation.vue';
+import ContentNavigation from '@/components/layout/ContentNavigation.vue'
+import ContentMain from '@/components/layout/ContentMain.vue'
+import Skeleton from '@/views/records/partials/Skeleton.vue'
+import Card from '@/views/records/partials/Card.vue'
+import RecordsNavigation from '@/views/records/partials/Navigation.vue'
 
-const route = useRoute();
-const uuid = ref(route.params.uuid || null);
-
-const { setTitle } = usePageTitle();
+const route = useRoute()
+const uuid = ref(route.params.uuid || null)
 
 const {
   categories,
+  categoriesRegisters,
   registers,
   tags,
   normalizeCategoryRegisterData,
+  normalizeCategoryData,
   normalizeTagsData
 } = useNormalizeData();
 
-const isLoading = ref(false);
-const archive = ref(null);
-const records = ref([]);
+const { setTitle } = usePageTitle()
+
+const isLoading = ref(false)
+const archive = ref(null)
+const records = ref([])
 
 const filters = ref({
   searchQuery: '',
@@ -76,35 +74,36 @@ const filters = ref({
   selectedCategories: [],
   selectedRegisters: [],
   selectedTags: []
-});
+})
 
 onMounted(async () => {
   try {
-    isLoading.value = true;
+    isLoading.value = true
 
-    const [archiveData, categories, tags] = await Promise.all([
+    const [archiveData, archiveMeta, recordsData] = await Promise.all([
       getArchive(uuid.value),
-      getCategoriesAndRegisters(uuid.value),
-      getTags(uuid.value)
+      getArchiveMeta(uuid.value),
+      getRecords(uuid.value)
     ]);
 
-    normalizeCategoryRegisterData(categories);
-    normalizeTagsData(tags);
+    normalizeCategoryRegisterData({
+      categories: archiveMeta.categories,
+      registers: archiveMeta.registers
+    });
+    normalizeTagsData(archiveMeta.tags);
+    normalizeCategoryData(archiveMeta.categories_registers);
 
     archive.value = archiveData;
-    setTitle(archive.value.name);
-
-    const recordsData = await getRecords(uuid.value);
     records.value = recordsData;
 
-  }
+    // Set title
+    setTitle(archive.value.name)
+  } 
   catch (error) {
-    console.error(error);
-  }
+    console.error(error)
+  } 
   finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-});
-
+})
 </script>
-

@@ -18,7 +18,7 @@ const normalizeCategoryRegisterData = (data) => {
 };
 
 const normalizeTagsData = (data) => {
-  tags.value = data.data.map(tag => ({
+  tags.value = data.map(tag => ({
     label: tag.name,
     value: tag.uuid
   }));

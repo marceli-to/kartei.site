@@ -75,9 +75,6 @@
               <div class="w-3/12">
                 <div class="relative -top-24">
                   <InputLabel label="Beschreibung" />
-                  <!-- <InputStatic class="font-muoto-medium mb-8">
-                    Nr. / {{ archive?.acronym }}_
-                  </InputStatic> -->
                   <InputGroup 
                     class="flex flex-col gap-y-8"
                     v-if="settings.record_fields.length > 0">
@@ -104,133 +101,124 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { getArchive, getArchiveSettings } from '@/services/api/archive';
-import { getCategoriesAndRegisters } from '@/services/api/category';
-import { createRecord } from '@/services/api/record';
-import { getTags } from '@/services/api/tags';
-import { getCategories } from '@/services/api/category';
-import { useNormalizeData } from '@/views/records/composables/useNormalizeData';
-import { usePageTitle } from '@/composables/usePageTitle';
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { usePageTitle } from '@/composables/usePageTitle'
+import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
+import { getArchive, getArchiveMeta } from '@/services/api/archive'
+import { createRecord } from '@/services/api/record'
 
-import ContentNavigation from '@/components/layout/ContentNavigation.vue';
-import ContentMain from '@/components/layout/ContentMain.vue';
-import RecordsNavigation from '@/views/records/partials/Navigation.vue';
-import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
-import InputGroup from '@/components/forms/Group.vue';
-import InputSelectButtons from '@/components/forms/SelectButtons.vue';
-import InputLabel from '@/components/forms/Label.vue';
-import InputText from '@/components/forms/Text.vue';
-import InputTextarea from '@/components/forms/Textarea.vue';
-import InputStatic from '@/components/forms/Static.vue';
-import ImageUpload from '@/components/media/upload/Image.vue';
-import ImageCard from '@/components/media/Card.vue';
-import IconImage from '@/components/icons/Image.vue';
+import ContentNavigation from '@/components/layout/ContentNavigation.vue'
+import ContentMain from '@/components/layout/ContentMain.vue'
+import RecordsNavigation from '@/views/records/partials/Navigation.vue'
+import ButtonGroup from '@/components/buttons/Group.vue'
+import ButtonPrimary from '@/components/buttons/Primary.vue'
+import InputGroup from '@/components/forms/Group.vue'
+import InputSelectButtons from '@/components/forms/SelectButtons.vue'
+import InputLabel from '@/components/forms/Label.vue'
+import InputTextarea from '@/components/forms/Textarea.vue'
+import ImageUpload from '@/components/media/upload/Image.vue'
+import ImageCard from '@/components/media/Card.vue'
+import IconImage from '@/components/icons/Image.vue'
 
-const router = useRouter();
-const route = useRoute();
-const uuid = ref(route.params.uuid || null);
-
-const { setTitle } = usePageTitle();
-
-const isLoading = ref(false);
-const isSaving = ref(false);
-
-const archive = ref(null);
-const settings = ref({
-  has_images: null,
-  record_fields: []
-});
+const router = useRouter()
+const route = useRoute()
+const uuid = ref(route.params.uuid || null)
 
 const {
-  categoriesRegisters,
   categories,
+  categoriesRegisters,
   registers,
   tags,
-  normalizeCategoryData,
   normalizeCategoryRegisterData,
+  normalizeCategoryData,
   normalizeTagsData
 } = useNormalizeData();
 
+const { setTitle } = usePageTitle()
+
+const isLoading = ref(false)
+const isSaving = ref(false)
+
+const archive = ref(null)
+const settings = ref({
+  has_images: null,
+  record_fields: []
+})
 
 const filters = ref({
   searchQuery: '',
   sortOrder: 'name',
   selectedCategories: [],
   selectedRegisters: []
-});
+})
 
 const form = ref({
   media: [],
   category: '',
   tags: [],
   fields: []
-});
+})
 
 const handleSubmit = async () => {
-  isSaving.value = true;
+  isSaving.value = true
   const recordData = {
     archive_id: uuid.value,
     tags: form.value.tags,
     category: form.value.category,
     fields: form.value.fields,
     media: form.value.media
-  };
-  try {
-    const response = await createRecord(recordData);
-    router.push({ name: 'archiveRecords', params: { uuid: uuid.value } });
-  } 
-  catch (error) {
-    console.error(error);
-  }
-  finally {
-    isSaving.value = false;
   }
 
-};
+  try {
+    await createRecord(recordData)
+    router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isSaving.value = false
+  }
+}
 
 const handleCancel = () => {
-  router.push({ name: 'archiveRecords', params: { uuid: uuid.value } });
-};
+  router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
+}
 
 onMounted(async () => {
   try {
-    isLoading.value = true;
+    isLoading.value = true
 
-    const [archiveData, categoriesRegisters, categories, tags, settingsData] = await Promise.all([
+    const [archiveData, archiveMeta] = await Promise.all([
       getArchive(uuid.value),
-      getCategoriesAndRegisters(uuid.value),
-      getCategories(uuid.value),
-      getTags(uuid.value),
-      getArchiveSettings(uuid.value)
-    ]);
+      getArchiveMeta(uuid.value),
+    ])
 
-    archive.value = archiveData;
-    setTitle(archive.value.name);
+    normalizeCategoryRegisterData({
+      categories: archiveMeta.categories,
+      registers: archiveMeta.registers
+    });
+    normalizeTagsData(archiveMeta.tags);
+    normalizeCategoryData(archiveMeta.categories_registers);
 
-    settings.value = settingsData;
+    archive.value = archiveData
+    setTitle(archive.value.name)
 
-    // update fields
-    for (const field of settings.value.record_fields) {
+    settings.value = archiveMeta.settings
+
+    // Pre-populate field structure based on settings
+    settings.value.record_fields.forEach(field => {
       form.value.fields.push({
         uuid: field.uuid,
         placeholder: field.placeholder,
-        content: null,
-      });
-    }
-
-    normalizeCategoryData(categories.data);
-    normalizeCategoryRegisterData(categoriesRegisters);
-    normalizeTagsData(tags);
+        content: null
+      })
+    })
   } 
   catch (error) {
-    console.error(error);
-  }
+    console.error(error)
+  } 
   finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-});
-
+})
 </script>

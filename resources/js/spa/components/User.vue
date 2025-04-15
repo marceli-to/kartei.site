@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed left-5 bottom-5 z-50 rounded-md bg-white dark:bg-black border border-black dark:border-white px-8 py-6 text-xs leading-snug flex gap-x-8">
+  <div class="fixed right-5 bottom-5 z-50 rounded-md bg-white dark:bg-black border border-black dark:border-white px-8 py-6 text-xs leading-snug flex gap-x-8">
     <a href="javascript:;" @click="toggleUserMenu" :class="{'mt-2': hasMenu}">
       <IconSettings />
     </a>

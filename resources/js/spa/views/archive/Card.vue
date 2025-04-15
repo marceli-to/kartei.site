@@ -84,6 +84,7 @@ import draggable from 'vuedraggable';
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { getArchiveSettings, storeArchiveSettings, deleteArchiveSettingsField } from '@/services/api/archive';
+
 import Slide from '@/components/slider/Slide.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
