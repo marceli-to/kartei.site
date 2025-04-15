@@ -466,10 +466,12 @@ async function send() {
     invitationSent.value[selectedArchiveId.value] = true;
     selectedArchiveId.value = '';
     toast.show('Einladungslink wurde versendet.', 'success');
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Failed to send invitation:', error);
     toast.show('Fehler beim Versenden des Einladungslinks.', 'error');
-  } finally {
+  } 
+  finally {
     isSending.value = false;
   }
 }

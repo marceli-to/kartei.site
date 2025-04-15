@@ -137,7 +137,8 @@ const submit = async () => {
     
     toast.show('Benutzer/in erfolgreich aktualisiert.', 'success');
     emit('success', response);
-  } catch (error) {
+  } 
+  catch (error) {
     errors.value = {
       firstname: error.response?.data?.errors?.firstname?.[0],
       name: error.response?.data?.errors?.name?.[0],

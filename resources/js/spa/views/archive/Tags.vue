@@ -142,7 +142,8 @@ const remove = async (index) => {
   if (tagUuid) {
     try {
       await deleteTag(tagUuid);
-    } catch (error) {
+    } 
+    catch (error) {
       console.error(error);
       toast.show('Fehler beim Löschen des Tags.', 'error');
     }

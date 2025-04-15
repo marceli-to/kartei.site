@@ -609,7 +609,8 @@ async function fetchRoles() {
       console.warn('Unexpected roles response structure:', rolesResponse);
       roles.value = []; // Fallback to empty array
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Failed to fetch roles:', error);
     roles.value = []; // Ensure it's always an array even on error
     throw error;
@@ -687,7 +688,8 @@ async function fetchPermissions() {
     } else {
       console.warn('Unexpected permissions response structure:', permissions.value);
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Failed to fetch permissions:', error);
     throw error;
   }

@@ -7,9 +7,9 @@ use App\Models\Record;
 use App\Models\Archive;
 use App\Http\Resources\RecordResource;
 use App\Actions\Record\Get as GetRecordAction;
+use App\Actions\Record\Find as FindRecordAction;
 use App\Actions\Record\Create as CreateRecordAction;
-// use App\Actions\Record\Update as UpdateRecordAction;
-// use App\Actions\Record\Delete as DeleteRecordAction;
+use App\Actions\Record\Update as UpdateRecordAction;
 
 class RecordController extends Controller
 {
@@ -21,9 +21,26 @@ class RecordController extends Controller
    */
   public function get(Archive $archive): JsonResponse
   {
-    $records = (new GetRecordAction())->execute(['archive_id' => $archive->id]);
     return response()->json(
-      RecordResource::collection($records)
+      RecordResource::collection(
+        (new GetRecordAction())->execute(['archive_id' => $archive->id])
+      )
+    );
+  }
+
+  /**
+   * Get a specific record
+   * 
+   * @param Record $record
+   * @return JsonResponse
+   */
+  
+  public function find(Record $record): JsonResponse
+  {
+    return response()->json(
+      RecordResource::make(
+        (new FindRecordAction())->execute($record)
+      )
     );
   }
 
@@ -36,6 +53,21 @@ class RecordController extends Controller
   public function create(Request $request): JsonResponse
   {
     $record = (new CreateRecordAction())->execute($request->all());
+    return response()->json(
+      RecordResource::make($record)
+    );
+  }
+
+  /**
+   * Update an existing record
+   * 
+   * @param Record $record
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function update(Record $record, Request $request): JsonResponse
+  {
+    $record = (new UpdateRecordAction())->execute($record, $request->all());
     return response()->json(
       RecordResource::make($record)
     );

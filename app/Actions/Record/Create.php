@@ -38,13 +38,14 @@ class Create
     // Add fields to record_fields
     if (isset($data['fields'])) {
       $record->fields()->createMany(
-        collect($data['fields'])->map(function ($field) {
-          return [
+        collect($data['fields'])
+        ->filter(fn($field) => !empty($field['content'])) // Only keep fields with non-empty content
+        ->map(fn($field) => [
             'uuid' => $field['uuid'],
             'placeholder' => $field['placeholder'],
             'content' => $field['content'],
-          ];
-        })->all()
+        ])
+        ->all()
       );
     }
 

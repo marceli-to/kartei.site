@@ -5,8 +5,7 @@
       :alt="alt"
       :width="width"
       :height="height"
-      class="max-w-full max-h-full object-contain"
-    />
+      class="max-w-full max-h-full object-contain" />
   </div>
 </template>
 

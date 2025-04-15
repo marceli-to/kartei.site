@@ -10,7 +10,11 @@ class RecordResource extends JsonResource
   {
     return [
       'uuid' => $this->uuid,
-      'archive_acronym' => $this->archive->acronym,
+      'archive' => [
+        'uuid' => $this->archive->uuid,
+        'name' => $this->archive->name,
+        'acronym' => $this->archive->acronym
+      ],
       'display_number' => $this->display_number,
       'category' => $this->whenLoaded('category', function () {
         return [
@@ -22,11 +26,15 @@ class RecordResource extends JsonResource
       'fields' => $this->whenLoaded('fields', function () {
         return $this->fields->map(function ($field) {
           return [
+            'uuid' => $field->uuid,
             'content' => $field->content,
+            'placeholder' => $field->placeholder,
           ];
         });
       }),
-      'tags' => $this->whenLoaded('tags'),
+      'tags' => $this->whenLoaded('tags', function () {
+        return $this->tags->pluck('uuid')->all();
+      }),
       'media' => MediaResource::collection($this->media),
     ];
   }

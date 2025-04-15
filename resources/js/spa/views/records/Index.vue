@@ -79,25 +79,7 @@ const filters = ref({
 onMounted(async () => {
   try {
     isLoading.value = true
-
-    const [archiveData, archiveMeta, recordsData] = await Promise.all([
-      getArchive(uuid.value),
-      getArchiveMeta(uuid.value),
-      getRecords(uuid.value)
-    ]);
-
-    normalizeCategoryRegisterData({
-      categories: archiveMeta.categories,
-      registers: archiveMeta.registers
-    });
-    normalizeTagsData(archiveMeta.tags);
-    normalizeCategoryData(archiveMeta.categories_registers);
-
-    archive.value = archiveData;
-    records.value = recordsData;
-
-    // Set title
-    setTitle(archive.value.name)
+    await loadData()
   } 
   catch (error) {
     console.error(error)
@@ -106,4 +88,25 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
+const loadData = async () => {
+  const [archiveData, archiveMetaData, recordsData] = await Promise.all([
+      getArchive(uuid.value),
+      getArchiveMeta(uuid.value),
+      getRecords(uuid.value)
+    ]);
+
+    normalizeCategoryRegisterData({
+      categories: archiveMetaData.categories,
+      registers: archiveMetaData.registers
+    });
+    normalizeTagsData(archiveMetaData.tags);
+    normalizeCategoryData(archiveMetaData.categories_registers);
+
+    archive.value = archiveData;
+    records.value = recordsData;
+
+    // Set title
+    setTitle(archive.value.name)
+}
 </script>

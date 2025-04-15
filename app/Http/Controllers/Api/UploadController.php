@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUploadRequest;
 use App\Actions\Image\Store as StoreImageAction;
-use App\Actions\Image\DeleteTemp as DeleteTempImageAction;
+use App\Actions\Image\Delete as DeleteImageAction;
 
 class UploadController extends Controller
 {
@@ -13,9 +13,9 @@ class UploadController extends Controller
     return response()->json(['files' => $files]);
   }
 
-  public function destroyTemp($name) 
+  public function destroy($url) 
   {
-    (new DeleteTempImageAction())->execute($name);
+    (new DeleteImageAction())->execute($url);
     return response()->json(200);
   }
 }

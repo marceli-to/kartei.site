@@ -1,8 +1,11 @@
 <template>
   <div class="flex flex-col gap-y-32">
-    <ImageSlideshow :slides="imageData" v-if="imageData.length > 1" />
+    
+    <ImageSlideshow 
+      :slides="imageData" 
+      v-if="imageData.length > 1" />
       
-    <ImageCard v-else>
+    <ImageCard v-else-if="imageData.length === 1">
       <Image v-bind="imageData[0]" />
     </ImageCard>
 

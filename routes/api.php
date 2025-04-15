@@ -39,8 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Uploads
   Route::post('/upload', [UploadController::class, 'store']);
-  Route::delete('/upload/temp/{name}', [UploadController::class, 'destroyTemp']);
-  Route::delete('/upload/{uuid}', [UploadController::class, 'destroy']);
+  Route::delete('/upload/{url}', [UploadController::class, 'destroy'])->where('url', '.*');;
 
   // Users
   Route::get('/users', [UserController::class, 'get']);
@@ -116,6 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
   // Record
   Route::get('/records/{archive:uuid}', [RecordController::class, 'get']);
+  Route::get('/record/{record:uuid}', [RecordController::class, 'find']);
   Route::post('/record', [RecordController::class, 'create']);
   Route::put('/record/{record:uuid}', [RecordController::class, 'update']);
   Route::delete('/record/{record:uuid}', [RecordController::class, 'destroy']);

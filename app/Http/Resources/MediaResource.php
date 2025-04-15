@@ -7,6 +7,8 @@ class MediaResource extends JsonResource
 {
   public function toArray(Request $request): array
   {
+    $mediableUuid = $this->mediable instanceof \App\Models\Record ? $this->mediable->archive->uuid : $this->mediable?->uuid;
+
     return [
       'uuid' => $this->uuid,
       'name' => $this->resized_name,
@@ -17,9 +19,9 @@ class MediaResource extends JsonResource
       'mime_type' => $this->mime_type,
       'size' => $this->size,
       'url' => $this->mediable && $this->resized_name
-        ? "/storage/archives/{$this->mediable->uuid}/{$this->resized_name}"
+        ? "/storage/archives/" . ($mediableUuid) . "/{$this->resized_name}"
         : null,
-      'archive' => $this->mediable?->uuid,
-    ];
+      'archive' => $mediableUuid,
+  ];
   }
 }

@@ -15,8 +15,8 @@ export const createRecord = async (recordData) => {
   return response.data;
 };
 
-export const updateRecord = async (recordData) => {
-  const response = await api.put(`/record/${recordData.uuid}`, recordData);
+export const updateRecord = async (uuid, recordData) => {
+  const response = await api.put(`/record/${uuid}`, recordData);
   return response.data;
 };
 

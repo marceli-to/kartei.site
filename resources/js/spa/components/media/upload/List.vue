@@ -11,11 +11,10 @@
             :src="element.resized?.url || element.url"
             :alt="element.resized?.original_name || element.original_name || element.name"
           />
-
-          <button
+           <button
             v-if="editable"
             type="button"
-            @click="deleteImage((element.resized?.name || element.name), index)"
+            @click="deleteImage((element.url), index)"
             class="absolute top-0 right-0 p-8 hover:bg-snow"
           >
             <IconCross variant="small" />
@@ -70,10 +69,10 @@ const onDragEnd = () => {
 };
 
 // Delete an image
-const deleteImage = async (imageName, index) => {
+const deleteImage = async (url, index) => {
   try {
     // Call the delete API
-    await axios.delete(`/api/upload/temp/${imageName}`);
+    await axios.delete(`/api/upload${url}`);
 
     // Remove the image from the local list
     localImages.value.splice(index, 1);

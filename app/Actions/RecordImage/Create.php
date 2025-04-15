@@ -26,8 +26,8 @@ class Create
       'size' => $image['size'],
     ]);
 
-    (new MoveImageAction())->execute($image['original_name'], $record->uuid);
-    (new MoveImageAction())->execute($image['resized_name'], $record->uuid);
+    (new MoveImageAction())->execute($image['original_name'], $record->archive->uuid);
+    (new MoveImageAction())->execute($image['resized_name'], $record->archive->uuid);
 
     $media->mediable()->associate($record);
     $media->save();

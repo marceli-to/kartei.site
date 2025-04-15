@@ -173,9 +173,11 @@ const handleSubmit = async () => {
   try {
     await createRecord(recordData)
     router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
-  } catch (error) {
+  }
+  catch (error) {
     console.error(error)
-  } finally {
+  }
+  finally {
     isSaving.value = false
   }
 }
@@ -186,33 +188,8 @@ const handleCancel = () => {
 
 onMounted(async () => {
   try {
-    isLoading.value = true
-
-    const [archiveData, archiveMeta] = await Promise.all([
-      getArchive(uuid.value),
-      getArchiveMeta(uuid.value),
-    ])
-
-    normalizeCategoryRegisterData({
-      categories: archiveMeta.categories,
-      registers: archiveMeta.registers
-    });
-    normalizeTagsData(archiveMeta.tags);
-    normalizeCategoryData(archiveMeta.categories_registers);
-
-    archive.value = archiveData
-    setTitle(archive.value.name)
-
-    settings.value = archiveMeta.settings
-
-    // Pre-populate field structure based on settings
-    settings.value.record_fields.forEach(field => {
-      form.value.fields.push({
-        uuid: field.uuid,
-        placeholder: field.placeholder,
-        content: null
-      })
-    })
+    isLoading.value = true;
+    await loadData();
   } 
   catch (error) {
     console.error(error)
@@ -220,5 +197,32 @@ onMounted(async () => {
   finally {
     isLoading.value = false
   }
-})
+});
+
+const loadData = async () => {
+  const [archiveData, archiveMetaData] = await Promise.all([
+    getArchive(uuid.value),
+    getArchiveMeta(uuid.value),
+  ])
+
+  normalizeCategoryRegisterData({
+    categories: archiveMetaData.categories,
+    registers: archiveMetaData.registers
+  });
+  normalizeTagsData(archiveMetaData.tags);
+  normalizeCategoryData(archiveMetaData.categories_registers);
+
+  archive.value = archiveData;
+  setTitle(archive.value.name);
+
+  // Pre-populate field structure based on settings
+  settings.value = archiveMetaData.settings;
+  settings.value.record_fields.forEach(field => {
+    form.value.fields.push({
+      uuid: field.uuid,
+      placeholder: field.placeholder,
+      content: null
+    })
+  })
+}
 </script>
