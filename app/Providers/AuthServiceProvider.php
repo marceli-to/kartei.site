@@ -9,10 +9,6 @@ use App\Policies\AddressPolicy;
 use App\Models\Company;
 use App\Policies\CompanyPolicy;
 
-
-// use App\Models\Record;
-// use App\Policies\RecordPolicy;
-
 class AuthServiceProvider extends ServiceProvider
 {
   /**
@@ -24,9 +20,6 @@ class AuthServiceProvider extends ServiceProvider
     Archive::class => ArchivePolicy::class,
     Address::class => AddressPolicy::class,
     Company::class => CompanyPolicy::class,
-
-    //Record::class => RecordPolicy::class,
-
   ];
 
   /**

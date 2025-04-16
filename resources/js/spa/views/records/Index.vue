@@ -1,16 +1,21 @@
 <template>
   <div 
     v-if="!isLoading"
-    class="flex flex-grow w-full">
+    class="flex flex-grow w-full relative">
+    <Actions :links="actionLinks">
+      <router-link :to="{ name: 'archives' }" v-if="uuid">
+        <IconChevronLeft variant="small-bold" />
+      </router-link>
+    </Actions>
     <div class="flex mt-106 min-h-full w-full">
       <ContentNavigation>
-        <RecordsNavigation
+        <Sidebar
           v-model="filters"
           :uuid="uuid"
           :categories="categories"
           :registers="registers"
-          :tags="tags"
-        />        
+          :tags="tags">
+        </Sidebar>        
       </ContentNavigation>
 
       <ContentMain>
@@ -47,7 +52,16 @@ import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
 import Skeleton from '@/views/records/partials/Skeleton.vue'
 import Card from '@/views/records/partials/Card.vue'
-import RecordsNavigation from '@/views/records/partials/Navigation.vue'
+import Sidebar from '@/views/records/partials/Sidebar.vue'
+import Actions from '@/views/records/partials/Actions.vue'
+import IconPlus from '@/components/icons/Plus.vue'
+import IconReorder from '@/components/icons/Reorder.vue'
+import IconTiles from '@/components/icons/Tiles.vue'
+import IconList from '@/components/icons/List.vue'
+import IconImage from '@/components/icons/Image.vue'
+import IconDownload from '@/components/icons/Download.vue'
+import IconUpload from '@/components/icons/Upload.vue'
+import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
 
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
@@ -67,6 +81,52 @@ const { setTitle } = usePageTitle()
 const isLoading = ref(false)
 const archive = ref(null)
 const records = ref([])
+
+const actionLinks = [
+  {
+    type: 'link',
+    label: 'Karte',
+    icon: IconPlus,
+    to: { name: 'archiveRecordCreate', params: { uuid: uuid.value } },
+    router: true,
+  },
+  {
+    type: 'button',
+    label: 'Ordnen',
+    icon: IconReorder,
+    onClick: () => {},
+  },
+  {
+    type: 'button',
+    label: 'Kacheln',
+    icon: IconTiles,
+    onClick: () => {},
+  },
+  {
+    type: 'button',
+    label: 'Liste',
+    icon: IconList,
+    onClick: () => {},
+  },
+  {
+    type: 'button',
+    label: 'Bilder',
+    icon: IconImage,
+    onClick: () => {},
+  },
+  {
+    type: 'button',
+    label: 'Export',
+    icon: IconDownload,
+    onClick: () => {},
+  },
+  {
+    type: 'button',
+    label: 'Teilen',
+    icon: IconUpload,
+    onClick: () => {},
+  },
+];
 
 const filters = ref({
   searchQuery: '',

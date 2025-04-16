@@ -1,14 +1,22 @@
 <template>
-  <div class="flex flex-grow w-full">
+  <div class="flex flex-grow w-full relative">
+    <Actions>
+      <router-link 
+        :to="{ name: 'archiveRecords', params: { uuid: uuid } }"
+        v-if="uuid">
+        <IconChevronLeft variant="small-bold" />
+      </router-link>
+    </Actions>
     <div class="flex mt-106 min-h-full w-full">
       <ContentNavigation>
-        <RecordsNavigation
+        <Sidebar
           v-model="filters"
           :uuid="uuid"
           :categories="categories"
           :registers="registers"
           :tags="tags"
-          :disabled="true" />
+          :disabled="true">
+        </Sidebar>
       </ContentNavigation>
 
       <ContentMain class="!pb-0">
@@ -110,7 +118,8 @@ import { createRecord } from '@/services/api/record'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
-import RecordsNavigation from '@/views/records/partials/Navigation.vue'
+import Sidebar from '@/views/records/partials/Sidebar.vue'
+import Actions from '@/views/records/partials/Actions.vue'
 import ButtonGroup from '@/components/buttons/Group.vue'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
 import InputGroup from '@/components/forms/Group.vue'
@@ -120,6 +129,7 @@ import InputTextarea from '@/components/forms/Textarea.vue'
 import ImageUpload from '@/components/media/upload/Image.vue'
 import ImageCard from '@/components/media/Card.vue'
 import IconImage from '@/components/icons/Image.vue'
+import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
 
 const router = useRouter()
 const route = useRoute()

@@ -1,21 +1,29 @@
 <template>
-  <div class="flex flex-grow w-full">
+  <div class="flex flex-grow w-full relative" 
+    v-if="!isLoading">
+    <Actions :links="actionLinks">
+      <router-link 
+        :to="{ name: 'archiveRecords', params: { uuid: record.archive.uuid } }"
+        v-if="record && record.archive && record.archive.uuid">
+        <IconChevronLeft variant="small-bold" />
+      </router-link>
+    </Actions>
     <div class="flex mt-106 min-h-full w-full">
       <ContentNavigation>
-        <RecordsNavigation
+        <Sidebar
           v-model="filters"
           :uuid="uuid"
           :categories="categories"
           :registers="registers"
           :tags="tags"
-          :disabled="true" />
+          :disabled="true">
+        </Sidebar>
       </ContentNavigation>
 
       <ContentMain class="!pb-0">
         <form 
           class="w-full min-w-[800px] h-full flex flex-col justify-between pb-24 relative before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite before:-z-1 after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite after:-z-1"
-          @submit.prevent="handleSubmit"
-          v-if="!isLoading">
+          @submit.prevent="handleSubmit">
           <div class="flex flex-col h-full justify-between">
             <div class="flex h-full gap-x-17 relative z-10">
               <div class="w-3/12">
@@ -110,7 +118,8 @@ import { getRecord, updateRecord } from '@/services/api/record'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
-import RecordsNavigation from '@/views/records/partials/Navigation.vue'
+import Sidebar from '@/views/records/partials/Sidebar.vue'
+import Actions from '@/views/records/partials/Actions.vue'
 import ButtonGroup from '@/components/buttons/Group.vue'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
 import InputGroup from '@/components/forms/Group.vue'
@@ -120,10 +129,22 @@ import InputTextarea from '@/components/forms/Textarea.vue'
 import ImageUpload from '@/components/media/upload/Image.vue'
 import ImageCard from '@/components/media/Card.vue'
 import IconImage from '@/components/icons/Image.vue'
+import IconCross from '@/components/icons/Cross.vue'
+import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
 
 const router = useRouter()
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
+
+const actionLinks = [
+  {
+    type: 'button',
+    label: 'Löschen',
+    icon: IconCross,
+    onClick: () => {},
+  },
+];
+
 
 const {
   categories,
@@ -218,6 +239,7 @@ const loadRecordAndArchive = async (recordUuid) => {
 
   normalizeTagsData(archiveMetaData.tags);
   normalizeCategoryData(archiveMetaData.categories_registers);
+
 }
 
 const populateForm = () => {

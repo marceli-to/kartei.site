@@ -25,7 +25,7 @@ import Layouts from '@/views/ui/Layouts.vue';
 const routes = [
   { path: '/archiv', name: 'home', component: Home },
   { path: '/archiv/einstellungen', name: 'settings', component: Settings },
-  { path: '/archiv/karteien', name: 'archives', component: Archives },
+  { path: '/archiv/meine-karteien', name: 'archives', component: Archives },
   { path: '/archiv/kartei/einstellungen/:uuid?', name: 'archiveSettings', component: ArchiveSettings },
   { path: '/archiv/kartei/karten/:uuid', name: 'archiveRecords', component: ArchiveRecords },
   { path: '/archiv/kartei/karte/erstellen/:uuid', name: 'archiveRecordCreate', component: ArchiveRecordCreate },

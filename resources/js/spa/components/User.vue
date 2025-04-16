@@ -11,7 +11,7 @@
       <nav class="border-t border-graphite mt-8 pt-8 pb-4 flex justify-between">
         <ul class="flex gap-x-8 list-none p-0">
           <li>
-            <router-link to="/archiv/karteien">Karteien</router-link>
+            <router-link to="/archiv/meine-karteien">Karteien</router-link>
           </li>
           <li>
             <router-link to="/archiv/benutzer">Users</router-link>

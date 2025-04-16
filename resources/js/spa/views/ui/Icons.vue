@@ -37,7 +37,7 @@
       <IconCross variant="square" />
       <IconList variant="square" />
       <IconPlus variant="square" />
-      <IconRefresh variant="square" />
+      <IconReorder variant="square" />
       <IconImage variant="square" />
       <IconUpload variant="square" />
       <IconDownload />
@@ -58,7 +58,7 @@ import IconEye from '@/components/icons/Eye.vue';
 import IconPlus from '@/components/icons/Plus.vue';
 import IconSettings from '@/components/icons/Settings.vue';
 import IconList from '@/components/icons/List.vue';
-import IconRefresh from '@/components/icons/Refresh.vue';
+import IconReorder from '@/components/icons/Reorder.vue';
 import IconImage from '@/components/icons/Image.vue';
 import IconMagnifier from '@/components/icons/Magnifier.vue';
 import IconInfo from '@/components/icons/Info.vue';
