@@ -9,7 +9,7 @@
       <Image v-bind="imageData[0]" />
     </ImageCard>
 
-    <div class="border-t border-t-graphite">
+    <div class="border-y border-y-graphite">
       <div class="min-h-default flex items-center justify-between font-muoto-medium">
         <template v-if="record.display_number">
           <router-link :to="{ name: 'archiveRecordUpdate', params: { uuid: record.uuid } }">
