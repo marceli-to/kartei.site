@@ -16,7 +16,7 @@ class ArchiveSeeder extends Seeder
       [
         'slug' => Str::slug('AI Images'),
         'name' => 'AI Images',
-        'acronym' => 'BF'
+        'acronym' => 'AI'
       ],
       // [
       //   'slug' => Str::slug('Bildarchiv Kretschmann'),
