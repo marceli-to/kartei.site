@@ -29,13 +29,16 @@
               <div class="w-3/12">
                 <div class="relative flex flex-col gap-20 -top-24">
                   <InputGroup>
-                    <InputLabel label="Ordnung" />
+                    <InputLabel 
+                      :label="errors.category ? errors.category : 'Ordnung'" 
+                      :class="errors.category ? 'text-flame' : ''" />
                     <InputSelectButtons
                       v-model="form.category"
                       :multiple="false"
                       name="categoriesRegisters"
                       :options="categoriesRegisters"
                       classes="!text-black"
+                      @update:modelValue="errors.category = null"
                       wrapperClasses="flex flex-col gap-y-8"
                       v-if="categoriesRegisters.length" />
                   </InputGroup>
@@ -115,6 +118,7 @@ import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
 import { getArchive, getArchiveMeta } from '@/services/api/archive'
 import { createRecord } from '@/services/api/record'
+import { useToastStore } from '@/components/toast/stores/toast';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -134,6 +138,8 @@ import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
 const router = useRouter()
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
+
+const toast = useToastStore();
 
 const {
   categories,
@@ -170,6 +176,10 @@ const form = ref({
   fields: []
 })
 
+const errors = ref({
+  category: null,
+})
+
 const handleSubmit = async () => {
   isSaving.value = true
   const recordData = {
@@ -185,7 +195,10 @@ const handleSubmit = async () => {
     router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
   }
   catch (error) {
-    console.error(error)
+    errors.value = {
+      category: error.response?.data?.errors?.category?.[0],
+    }
+    toast.show('Fehler beim Speichern der Kartei.', 'error');
   }
   finally {
     isSaving.value = false

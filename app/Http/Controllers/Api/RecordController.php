@@ -10,6 +10,7 @@ use App\Actions\Record\Get as GetRecordAction;
 use App\Actions\Record\Find as FindRecordAction;
 use App\Actions\Record\Create as CreateRecordAction;
 use App\Actions\Record\Update as UpdateRecordAction;
+use App\Http\Requests\Record\StoreRequest;
 
 class RecordController extends Controller
 {
@@ -47,10 +48,10 @@ class RecordController extends Controller
   /**
    * Create a new record
    *
-   * @param Request $request
+   * @param StoreRequest $request
    * @return JsonResponse
    */
-  public function create(Request $request): JsonResponse
+  public function create(StoreRequest $request): JsonResponse
   {
     $record = (new CreateRecordAction())->execute($request->all());
     return response()->json(
