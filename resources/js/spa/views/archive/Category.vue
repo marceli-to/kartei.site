@@ -95,8 +95,15 @@
                     <div class="w-3/12">
                       <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
                     </div>
-                    <div class="w-6/12">
+                    <div class="w-6/12 relative">
                       <InputText v-model="register.name" @blur="onRegisterNameBlur(register)" />
+                      <button 
+                        type="button" 
+                        class="absolute right-8 top-12"
+                        @click="removeRegister(cIdx, rIdx)"
+                        >
+                        <IconCross variant="small" />
+                      </button>
                     </div>
                     <div class="w-3/12">
                       <InputText
@@ -140,7 +147,7 @@ import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
-import { getCategories, storeCategory } from '@/services/api/category';
+import { getCategories, storeCategory, deleteCategory, deleteRegister } from '@/services/api/category';
 import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
 import IconCross from '@/components/icons/Cross.vue';
@@ -350,8 +357,85 @@ const addCategory = () => {
   );
 };
 
-const removeCategory = (cIdx) => {
-  form.value.categories.splice(cIdx, 1);
+const removeCategory = async (cIdx) => {
+  const category = form.value.categories[cIdx];
+  
+  // If category doesn't have a UUID, it's not saved yet, just remove locally
+  if (!category.uuid) {
+    form.value.categories.splice(cIdx, 1);
+    return;
+  }
+
+  // Show confirmation dialog
+  dialogStore.show({
+    title: 'Kategorie löschen',
+    message: `Möchten Sie die Kategorie "${category.name}" wirklich löschen? Alle zugehörigen Register werden ebenfalls gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.`,
+    confirmLabel: 'Löschen',
+    cancelLabel: 'Abbrechen',
+    type: 'danger',
+    onConfirm: async () => {
+      try {
+        // Call API to delete category
+        await deleteCategory(category.uuid);
+        
+        // Remove from local form
+        form.value.categories.splice(cIdx, 1);
+        
+        // Show success message
+        toast.show('Kategorie erfolgreich gelöscht', 'success');
+        
+        dialogStore.hide();
+      } catch (error) {
+        console.error('Error deleting category:', error);
+        toast.show('Fehler beim Löschen der Kategorie', 'error');
+        dialogStore.hide();
+      }
+    },
+    onCancel: () => {
+      dialogStore.hide();
+    }
+  });
+};
+
+const removeRegister = async (cIdx, rIdx) => {
+  const category = form.value.categories[cIdx];
+  const register = category.registers[rIdx];
+  
+  // If register doesn't have a UUID, it's not saved yet, just remove locally
+  if (!register.uuid) {
+    category.registers.splice(rIdx, 1);
+    return;
+  }
+
+  // Show confirmation dialog
+  dialogStore.show({
+    title: 'Register löschen',
+    message: `Möchten Sie das Register "${register.name}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
+    confirmLabel: 'Löschen',
+    cancelLabel: 'Abbrechen',
+    type: 'danger',
+    onConfirm: async () => {
+      try {
+        // Call API to delete register
+        await deleteRegister(register.uuid);
+        
+        // Remove from local form
+        category.registers.splice(rIdx, 1);
+        
+        // Show success message
+        toast.show('Register erfolgreich gelöscht', 'success');
+        
+        dialogStore.hide();
+      } catch (error) {
+        console.error('Error deleting register:', error);
+        toast.show('Fehler beim Löschen des Registers', 'error');
+        dialogStore.hide();
+      }
+    },
+    onCancel: () => {
+      dialogStore.hide();
+    }
+  });
 };
 
 const addRegisterToLastCategory = () => {

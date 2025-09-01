@@ -6,23 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateOrCreate
 {
-  // public function execute(array $categories, Archive $archive)
-  // {
-  //   return DB::transaction(function () use ($categories, $archive) {
-  //     foreach ($categories as $categoryData) {
-  //       $category = $this->updateOrCreateCategory($categoryData, $archive);
-
-  //       foreach ($categoryData['registers'] ?? [] as $registerData) {
-  //         $this->updateOrCreateRegister($registerData, $archive, $category);
-  //       }
-  //     }
-
-  //     return Category::where('archive_id', $archive->id)
-  //       ->orderBy('order')
-  //       ->get();
-  //   });
-  // }
-
   public function execute(array $categories, Archive $archive)
   {
     return DB::transaction(function () use ($categories, $archive) {
@@ -59,7 +42,6 @@ class UpdateOrCreate
     });
   }
   
-
   private function updateOrCreateCategory(array $data, Archive $archive): Category
   {
     $category = null;

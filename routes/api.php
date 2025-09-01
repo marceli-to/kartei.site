@@ -112,6 +112,8 @@ Route::middleware('auth:sanctum')->group(function () {
   // Category
   Route::get('/categories/{archive:uuid}', [CategoryController::class, 'get']);
   Route::put('/category/{archive:uuid}', [CategoryController::class, 'store']);
+  Route::delete('/category/{category:uuid}', [CategoryController::class, 'destroy']);
+  Route::delete('/category/register/{category:uuid}', [CategoryController::class, 'destroyRegister']);
     
   // Record
   Route::get('/records/{archive:uuid}', [RecordController::class, 'get']);
