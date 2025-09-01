@@ -27,7 +27,7 @@ const props = defineProps({
   },
   defaultClass: {
     type: [String],
-    default: 'absolute top-24 -right-8 z-[100] translate-x-full w-10/12 bg-ice p-8 text-sm'
+    default: 'absolute top-24 -right-8 z-[100] translate-x-full w-10/12 bg-[var(--theme-color)] p-8 text-sm'
   },
   closable: {
     type: Boolean,

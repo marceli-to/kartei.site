@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
+import { useToastStore } from '@/components/toast/stores/toast'
 
 export function useFileUpload(options = {}) {
   const {
@@ -8,6 +9,8 @@ export function useFileUpload(options = {}) {
     uploadUrl = '/api/upload',
     multiple = true
   } = options;
+
+  const toastStore = useToastStore();
 
   const fileInput = ref(null)
   const isDragging = ref(false)
@@ -108,8 +111,9 @@ export function useFileUpload(options = {}) {
     const { validFiles, errors } = processFiles(event.dataTransfer.files)
     
     if (errors.length) {
-      // Handle validation errors
-      console.error('Validation errors:', errors)
+      errors.forEach(error => {
+        toastStore.show(error, 'error', 5000)
+      })
     }
 
     if (validFiles.length) {
@@ -121,7 +125,9 @@ export function useFileUpload(options = {}) {
     const { validFiles, errors } = processFiles(event.target.files)
     
     if (errors.length) {
-      console.error('Validation errors:', errors)
+      errors.forEach(error => {
+        toastStore.show(error, 'error', 5000)
+      })
     }
 
     if (validFiles.length) {

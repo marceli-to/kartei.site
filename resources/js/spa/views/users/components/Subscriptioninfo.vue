@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="bg-ice text-sm p-8 mt-32"
+    class="bg-[var(--theme-color)] text-sm p-8 mt-32"
     v-if="showSubscriptionInfo">
     <div>
       <p v-if="hasSubscription && maxUsersReached">

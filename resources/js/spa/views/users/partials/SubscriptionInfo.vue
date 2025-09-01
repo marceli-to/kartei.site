@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-ice text-sm p-8 mt-32">
+  <div class="bg-[var(--theme-color)] text-sm p-8 mt-32">
     <slot />
     <router-link 
       :to="{ name: 'settings' }"

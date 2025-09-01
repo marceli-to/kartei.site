@@ -3,12 +3,12 @@
     <div
       ref="dropZone"
       class="border border-graphite aspect-square flex items-center justify-center w-full h-full relative cursor-pointer outline-none transition duration-200 ease-in-out group"
-      :class="classes, {
-        'border-lime !text-lime': isDragging,
+      :class="[classes, {
+        '!border-[var(--theme-color)] text-[var(--theme-color)]': isDragging,
         '!border-flame': hasError,
         'bg-snow': isUploading,
         '': isUploaded
-      }"
+      }]"
       role="button"
       tabindex="0"
       aria-label="Upload files"
@@ -38,7 +38,7 @@
         <div class="text-xs mt-4 ml-4 leading-none">{{ uploadProgress }}%</div>
       </div>
       <div v-else class="flex flex-col items-center">
-        <IconImage :class="{ 'text-lime': isDragging, 'text-flame': hasError || hasValidationError }" />
+        <IconImage :class="{ 'text-flame': hasError || hasValidationError }" />
         <template v-if="hasValidationError">
           <div class="text-sm mt-8 text-flame">
             {{ error }}
@@ -103,7 +103,7 @@ const props = defineProps({
   }
 });
 
-const hasValidationError = computed(() => props.error !== null);
+const hasValidationError = computed(() => props.error !== '' && props.error !== null);
 
 const emit = defineEmits(['update:modelValue']);
 
