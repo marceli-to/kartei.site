@@ -4,14 +4,13 @@
       <slot />
     </div>
     <nav 
-      class="w-10/12 min-w-10/12 ml-8" 
+      class="w-10/12 min-w-10/12 ml-8 relative" 
       v-if="links">
-      <ul class="flex justify-start gap-x-84">
-        <li
-          v-for="(item, idx) in links"
-          :key="idx"
-          class="leading-none"
-        >
+      <ul class="flex justify-start gap-x-44 2xl:gap-x-16 leading-none">
+        <li 
+          v-for="(item, idx) in links" 
+          :key="idx" 
+          class="shrink-0 2xl:w-[calc((25%/2)_-_14px)]">
           <component
             v-if="item.type === 'link'"
             :is="item.router ? 'router-link' : 'a'"

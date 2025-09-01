@@ -59,12 +59,19 @@
                 <div class="w-3/12">
                   <InputStatic>{{ formatNumber(cIdx, numerals_category, true) }}</InputStatic>
                 </div>
-                <div class="w-6/12">
+                <div class="w-6/12 relative">
                   <InputText
                     v-model="category.name"
                     :placeholder="`Kategorie ${cIdx + 1}`"
                     @blur="onCategoryNameBlur(category)"
                   />
+                  <button 
+                    type="button" 
+                    class="absolute right-8 top-12"
+                    @click="removeCategory(cIdx)"
+                    >
+                    <IconCross variant="small" />
+                  </button>
                 </div>
                 <div class="w-3/12">
                   <InputText
@@ -136,6 +143,7 @@ import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import { getCategories, storeCategory } from '@/services/api/category';
 import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
+import IconCross from '@/components/icons/Cross.vue';
 import Slide from '@/components/slider/Slide.vue';
 import Action from '@/components/buttons/Action.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -340,6 +348,10 @@ const addCategory = () => {
   form.value.categories.push(
     emptyCategory()
   );
+};
+
+const removeCategory = (cIdx) => {
+  form.value.categories.splice(cIdx, 1);
 };
 
 const addRegisterToLastCategory = () => {
