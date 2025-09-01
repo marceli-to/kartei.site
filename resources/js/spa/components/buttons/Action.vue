@@ -134,7 +134,7 @@ const resolveIconComponent = computed(() => {
   return icons[props.icon.name.toLowerCase()] || null;
 });
 
-const baseClasses = 'min-h-default flex justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
+const baseClasses = 'min-h-default flex items-center justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
 
 const defaultBorderClasses = computed(() => {
   return props.variant === 'box' 

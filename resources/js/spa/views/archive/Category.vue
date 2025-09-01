@@ -125,7 +125,7 @@
           <div class="w-6/12">
             <Action 
               type="button"
-              label="Register"
+              label="Registerrr"
               :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
               @click="addRegisterToLastCategory" />
           </div>
