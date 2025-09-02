@@ -19,7 +19,7 @@
         <Favorite :uuid="record.uuid" />
       </div>
       <div 
-        class="min-h-default flex items-center border-t border-t-graphite"
+        class="min-h-default py-3 border-t border-t-graphite"
         v-for="(field, index) in record.fields"
         :key="index">
         {{ field.content }}
