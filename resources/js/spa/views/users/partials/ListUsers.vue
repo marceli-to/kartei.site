@@ -6,6 +6,12 @@
         placeholder="Suche"
         aria-label="Suche" />
     </div>
+    <div class="mt-15">
+      <Action 
+        label="Benutzer/in" 
+        :icon="{ name: 'Plus', position: 'center' }"
+        @click="$emit('create-user')" />
+    </div>
     <div class="flex flex-col gap-y-20">
       <div v-for="(users, role) in groupedUsers" :key="role">
         <h3 class="text-sm mb-4 block">
@@ -20,12 +26,6 @@
             @click="$emit('user-selected', user)" />
         </div>
       </div>
-    </div>
-    <div class="mt-24">
-      <Action 
-        label="Benutzer/in" 
-        :icon="{ name: 'Plus', position: 'center' }"
-        @click="$emit('create-user')" />
     </div>
   </div>
 </template>

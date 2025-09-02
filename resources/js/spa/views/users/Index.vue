@@ -145,9 +145,9 @@ const handleUserPermissionsUpdated = () => {
   fetchUsers();
 };
 
-const handleUserDeleted = () => {
+const handleUserDeleted = (deletedUserUuid) => {
+  users.value = users.value.filter(user => user.uuid !== deletedUserUuid);
   resetView();
-  fetchUsers();
 };
 
 const resetView = () => {

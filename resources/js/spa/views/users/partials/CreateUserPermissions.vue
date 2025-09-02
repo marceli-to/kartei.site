@@ -103,12 +103,13 @@
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary 
-        v-if="!isSaved(selectedArchiveId)" 
-        type="submit" 
-        label="Speichern" 
-        :disabled="isSaving || !selectedArchiveId || !hasChanges" 
-        :loading="isSaving" />
+      <template v-if="!isSaved(selectedArchiveId)">
+        <ButtonPrimary 
+          type="submit" 
+          label="Speichern" 
+          :disabled="isSaving || !selectedArchiveId || !hasChanges" 
+          :loading="isSaving" />
+      </template>
       <template v-else>
         <ButtonPrimary 
           @click="$emit('success')" 
