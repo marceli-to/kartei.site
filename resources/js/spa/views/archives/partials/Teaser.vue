@@ -4,7 +4,7 @@
       :to="{ name: 'archiveRecords', params: { uuid: archive.uuid } }"
       class="block absolute top-8 right-8 z-10 size-24"
       title="Kartei bearbeiten">
-      <IconEdit class="text-graphite w-full h-auto" />
+      <IconEdit class="text-graphite hover:text-black transition-colors w-full h-auto" />
     </router-link>
     <ImageCard v-if="archive.image">
       <Image :src="archive.image.url" alt="Titelbild" spacing="m-40" />
