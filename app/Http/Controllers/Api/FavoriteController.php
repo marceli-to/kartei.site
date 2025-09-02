@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Favorite;
 use App\Actions\Favorite\Toggle as ToggleAction;
+use App\Actions\Favorite\Get as GetAction;
 use App\Models\Record;
 
 class FavoriteController extends Controller
@@ -16,7 +17,7 @@ class FavoriteController extends Controller
   public function get()
   {
     return response()->json(
-      auth()->user()->getFavorites()
+      (new GetAction())->execute()
     );
   }
 
