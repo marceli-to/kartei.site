@@ -12,7 +12,7 @@
             href="javascript:;"
             @click.prevent="prev"
             title="Prev Section"
-            class="opacity-20">
+            class="opacity-20 mr-16">
             <IconChevronLeft variant="small" />
           </a>
         </div>
@@ -65,7 +65,7 @@
               href="javascript:;"
               @click.prevent="next"
               title="Next Section"
-              class="mr-8">
+              class="mr-16">
               <IconChevronRight variant="small" />
             </a>
           </template>
