@@ -64,8 +64,23 @@ watch(
 );
 
 // Emit the updated order when drag ends
-const onDragEnd = () => {
+const onDragEnd = async () => {
   emit('update:images', localImages.value);
+  
+  // Save the new order to the database
+  try {
+    const positions = localImages.value.map((image, index) => ({
+      uuid: image.uuid,
+      position: index
+    }));
+    
+    await axios.put('/api/upload/order', { positions });
+    
+    toast.show('Image order updated successfully!', 'success');
+  } catch (error) {
+    console.error('Failed to update image order:', error);
+    toast.show('Failed to update image order', 'error');
+  }
 };
 
 // Delete an image

@@ -16,8 +16,18 @@ class Media extends Model
     'resized_height',
     'aspect_ratio',
     'mime_type',
-    'size'
+    'size',
+    'position'
   ];
+
+  protected static function boot()
+  {
+    parent::boot();
+    
+    static::addGlobalScope('ordered', function ($query) {
+      $query->orderBy('position');
+    });
+  }
 
   public function mediable()
   {

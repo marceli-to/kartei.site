@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Uploads
   Route::post('/upload', [UploadController::class, 'store']);
+  Route::put('/upload/order', [UploadController::class, 'order']);
   Route::delete('/upload/{url}', [UploadController::class, 'destroy'])->where('url', '.*');;
 
   // Users

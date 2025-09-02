@@ -182,6 +182,7 @@ export function useFileUpload(options = {}) {
 export function normalizeImageEntry(entry) {
   if ('resized' in entry) {
     return {
+      uuid: entry.original.uuid,
       url: entry.resized.url,
       name: entry.original.original_name,
       width: entry.resized.width,
