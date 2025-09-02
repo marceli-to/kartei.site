@@ -72,6 +72,7 @@ const users = ref([]);
 const viewState = ref('listing');
 const isLoadingUsers = ref(false);
 const subscription = ref(null);
+const isLoadingSubscription = ref(false);
 
 const props = defineProps({
   isActive: {
@@ -89,6 +90,7 @@ const maxUsersReached = computed(() => {
 });
 
 const showSubscriptionInfo = computed(() => {
+  if (!props.isActive || isLoadingSubscription.value) return false;
   return !hasSubscription.value || maxUsersReached.value;
 });
 
@@ -111,10 +113,13 @@ onMounted( async ()  => {
 const fetchSubscription = async () => {
   if (!props.isActive) return;
   try {
+    isLoadingSubscription.value = true;
     const response = await getUserSubscription();
     subscription.value = response.data || null;
   } catch (error) {
     console.error('Failed to fetch subscription:', error);
+  } finally {
+    isLoadingSubscription.value = false;
   }
 };
 
