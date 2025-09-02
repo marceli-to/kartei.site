@@ -45,7 +45,7 @@
       <InputGroup v-if="tags.length > 0">
         <InputLabel label="Tags" id="tags" />
         <InputSelectButtons
-          v-model="localSelectedRegisters"
+          v-model="localSelectedTags"
           :multiple="true"
           name="tags"
           :options="tags"

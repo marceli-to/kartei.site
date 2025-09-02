@@ -19,10 +19,10 @@
       </ContentNavigation>
 
       <ContentMain>
-        <template v-if="records.length > 0">
+        <template v-if="filteredRecords.length > 0">
           <div class="flex flex-wrap gap-x-16 gap-y-32">
             <Card
-              v-for="(record, index) in records"
+              v-for="(record, index) in filteredRecords"
               :key="record.uuid"
               :record="record"
               class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
@@ -30,9 +30,14 @@
           </div>
         </template>
         <template v-else>
-          <router-link :to="{ name: 'archiveRecordCreate', params: { uuid } }">
-            <Skeleton />
-          </router-link>         
+          <div v-if="records.length === 0">
+            <router-link :to="{ name: 'archiveRecordCreate', params: { uuid } }">
+              <Skeleton />
+            </router-link>
+          </div>
+          <div v-else class="text-center py-20">
+            <p class="text-gray-500">Keine Ergebnisse gefunden.</p>
+          </div>       
         </template>
       </ContentMain>
     </div>
@@ -40,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
@@ -133,6 +138,62 @@ const filters = ref({
   selectedCategories: [],
   selectedRegisters: [],
   selectedTags: []
+})
+
+// Client-side filtering logic
+const filteredRecords = computed(() => {
+  let filtered = [...records.value]
+
+  // Search filter
+  if (filters.value.searchQuery) {
+    const query = filters.value.searchQuery.toLowerCase()
+    filtered = filtered.filter(record => 
+      record.display_number?.toLowerCase().includes(query) ||
+      record.fields?.some(field => 
+        field.content?.toLowerCase().includes(query)
+      )
+    )
+  }
+
+  // Category filter
+  if (filters.value.selectedCategories.length > 0) {
+    filtered = filtered.filter(record => 
+      filters.value.selectedCategories.includes(record.category?.uuid)
+    )
+  }
+
+  // Register filter (same as category filtering)
+  if (filters.value.selectedRegisters.length > 0) {
+    filtered = filtered.filter(record => 
+      filters.value.selectedRegisters.includes(record.category?.uuid)
+    )
+  }
+
+  // Tags filter
+  if (filters.value.selectedTags.length > 0) {
+    filtered = filtered.filter(record =>
+      record.tags?.some(tagUuid => 
+        filters.value.selectedTags.includes(tagUuid)
+      )
+    )
+  }
+
+  // Sort
+  filtered.sort((a, b) => {
+    switch(filters.value.sortOrder) {
+      case 'date':
+        return new Date(b.created_at) - new Date(a.created_at)
+      case 'created_at':
+        return new Date(b.created_at) - new Date(a.created_at)
+      case 'updated_at':
+        return new Date(b.updated_at) - new Date(a.updated_at)
+      case 'name':
+      default:
+        return a.display_number?.localeCompare(b.display_number) || 0
+    }
+  })
+
+  return filtered
 })
 
 onMounted(async () => {
