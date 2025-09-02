@@ -25,10 +25,18 @@
 
         <InputGroup>
           <InputLabel label="Nr. / ID" />
-          <InputStatic class="font-muoto-medium">
+          <InputStatic>
             Nr. / ID (wird automatisch generiert)
           </InputStatic>
         </InputGroup>
+
+        <div class="mt-16">
+          <Action 
+            type="button"
+            label="Textfeld" 
+            :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
+            @click="add" />
+        </div>
 
         <div>
           <draggable 
@@ -40,17 +48,19 @@
             @end="reorder">
             <template #item="{ element, index }">
               <InputGroup class="relative flex justify-between items-center">
-                <!-- <span class="cursor-grab size-16 drag-handle">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M4 14h16" />
-                  </svg>
-                </span> -->
+                <!-- 
+                  <span class="cursor-grab size-16 drag-handle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M4 14h16" />
+                    </svg>
+                  </span>
+                -->
                 <InputText
                   v-model="element.placeholder"
                   :placeholder="`Textfeld ${index + 1}`"
                   aria-label="Textfeld"
-                  :ref="el => inputRefs[index] = el"
-                />
+                  :ref="el => inputRefs[index] = el" />
+
                 <button 
                   type="button" 
                   class="absolute right-8 top-12"
@@ -62,13 +72,6 @@
           </draggable>
         </div>
 
-        <div class="mt-20">
-          <Action 
-            type="button"
-            label="Textfeld" 
-            :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
-            @click="add" />
-        </div>
       </div>
 
       <!-- Buttons -->
