@@ -85,6 +85,7 @@ const { setTitle } = usePageTitle()
 const isLoading = ref(false)
 const archive = ref(null)
 const records = ref([])
+const categoryHierarchy = ref([])
 
 const actionLinks = [
   {
@@ -140,6 +141,31 @@ const filters = ref({
   selectedTags: []
 })
 
+// Helper to get all register UUIDs for selected categories
+const getAllowedCategoryUuids = computed(() => {
+  const allowed = new Set()
+  
+  // Add directly selected categories
+  filters.value.selectedCategories.forEach(categoryUuid => {
+    allowed.add(categoryUuid)
+    
+    // Find this category in hierarchy and add all its registers
+    const category = categoryHierarchy.value.find(cat => cat.uuid === categoryUuid)
+    if (category?.registers) {
+      category.registers.forEach(register => {
+        allowed.add(register.uuid)
+      })
+    }
+  })
+  
+  // Add directly selected registers
+  filters.value.selectedRegisters.forEach(registerUuid => {
+    allowed.add(registerUuid)
+  })
+  
+  return Array.from(allowed)
+})
+
 // Client-side filtering logic
 const filteredRecords = computed(() => {
   let filtered = [...records.value]
@@ -155,17 +181,11 @@ const filteredRecords = computed(() => {
     )
   }
 
-  // Category filter
-  if (filters.value.selectedCategories.length > 0) {
+  // Category + Register filter (hierarchical)
+  if (filters.value.selectedCategories.length > 0 || filters.value.selectedRegisters.length > 0) {
+    const allowedUuids = getAllowedCategoryUuids.value
     filtered = filtered.filter(record => 
-      filters.value.selectedCategories.includes(record.category?.uuid)
-    )
-  }
-
-  // Register filter (same as category filtering)
-  if (filters.value.selectedRegisters.length > 0) {
-    filtered = filtered.filter(record => 
-      filters.value.selectedRegisters.includes(record.category?.uuid)
+      allowedUuids.includes(record.category?.uuid)
     )
   }
 
@@ -222,6 +242,9 @@ const loadData = async () => {
     });
     normalizeTagsData(archiveMetaData.tags);
     normalizeCategoryData(archiveMetaData.categories_registers);
+
+    // Store hierarchical category data for filtering
+    categoryHierarchy.value = archiveMetaData.categories_registers;
 
     archive.value = archiveData;
     records.value = recordsData;
