@@ -13,7 +13,7 @@
             @click.prevent="prev"
             title="Prev Section"
             class="opacity-20 mr-16">
-            <IconChevronLeft variant="small" />
+            <IconChevronLeft variant="small-bold" />
           </a>
         </div>
       </template>
@@ -50,7 +50,7 @@
               @click.prevent="next"
               title="Next Section"
               class="mr-16">
-              <IconChevronRight variant="small" />
+              <IconChevronRight variant="small-bold" />
             </a>
           </template>
         </h1>
