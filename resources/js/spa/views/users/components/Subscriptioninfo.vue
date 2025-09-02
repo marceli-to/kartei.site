@@ -1,7 +1,5 @@
 <template>
-  <div 
-    class="bg-[var(--theme-color)] text-sm p-8 mt-32"
-    v-if="showSubscriptionInfo">
+  <div class="bg-[var(--theme-color)] text-sm p-8 mt-32">
     <div>
       <p v-if="hasSubscription && maxUsersReached">
         Die maximale Anzahl von Benutzern für dein Abonnement ist erreicht. Um weitere Benutzer hinzuzufügen, musst du dein Abonnement upgraden.
@@ -19,43 +17,16 @@
   </div>
 </template>
 <script setup>
-import { watch, onMounted, computed } from 'vue';
-import { useSubscriptionInfo } from '@/views/users/components/useSubscriptionInfo';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
 
-const emit = defineEmits(['update:disableListUsers']);
-
 const props = defineProps({
-  users: {
-    type: Array,
+  hasSubscription: {
+    type: Boolean,
     required: true
   },
-  isActive: {
+  maxUsersReached: {
     type: Boolean,
-    default: false
+    required: true
   }
-});
-
-const isActiveRef = computed(() => props.isActive);
-
-const {
-  hasSubscription,
-  maxUsersReached,
-  showSubscriptionInfo,
-  disableListUsers,
-  fetchSubscription
-} = useSubscriptionInfo(props.users, isActiveRef);
-
-// Emit to parent whenever value changes
-watch(disableListUsers, (val) => {
-  emit('update:disableListUsers', val);
-});
-
-watch(isActiveRef, async (active) => {
-  if (active) await fetchSubscription();
-});
-
-onMounted(async () => {
-  if (props.isActive) await fetchSubscription();
 });
 </script>

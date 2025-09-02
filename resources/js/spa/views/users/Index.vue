@@ -39,12 +39,12 @@
         :isLoading="isLoadingUsers"
         @user-selected="handleUserSelected"
         @create-user="viewState = 'creating'"
-        :class="{ 'opacity-50 pointer-events-none': disableListUsers }" />
+        :class="{ 'opacity-50 pointer-events-none': showSubscriptionInfo }" />
 
       <SubscriptionInfo 
-        :users="users" 
-        :isActive="props.isActive"
-        @update:disableListUsers="disableListUsers = $event" />
+        v-if="showSubscriptionInfo"
+        :hasSubscription="hasSubscription"
+        :maxUsersReached="maxUsersReached" />
 
     </template>
   </Slide>
@@ -54,6 +54,7 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { getRelatedUsers, getArchiveUsers } from '@/services/api/archiveUser';
+import { getUserSubscription } from '@/services/api/user';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/users/partials/CreateUser.vue';
 import UpdateUser from '@/views/users/partials/UpdateUser.vue';
@@ -69,8 +70,8 @@ const createdUser = ref(null);
 const selectedUser = ref(null);
 const users = ref([]);
 const viewState = ref('listing');
-const disableListUsers = ref(true); // default to true until info is available
 const isLoadingUsers = ref(false);
+const subscription = ref(null);
 
 const props = defineProps({
   isActive: {
@@ -79,20 +80,43 @@ const props = defineProps({
   }
 });
 
+// Subscription logic
+const hasSubscription = computed(() => subscription.value !== null);
+
+const maxUsersReached = computed(() => {
+  if (!hasSubscription.value) return false;
+  return users.value.length >= subscription.value.max_users;
+});
+
+const showSubscriptionInfo = computed(() => {
+  return !hasSubscription.value || maxUsersReached.value;
+});
+
 // Watch for when this slide becomes active
 watch(() => props.isActive, async (isActive) => {
   if (isActive) {
     resetView();
-    await fetchUsers();
+    await Promise.all([fetchUsers(), fetchSubscription()]);
   }
 });
 
 // Load users when component mounts
 onMounted( async ()  => {
  if (props.isActive) {
-    await fetchUsers();
+    await Promise.all([fetchUsers(), fetchSubscription()]);
  }
 });
+
+// Fetch subscription
+const fetchSubscription = async () => {
+  if (!props.isActive) return;
+  try {
+    const response = await getUserSubscription();
+    subscription.value = response.data || null;
+  } catch (error) {
+    console.error('Failed to fetch subscription:', error);
+  }
+};
 
 // Fetch users
 const fetchUsers = async () => {
