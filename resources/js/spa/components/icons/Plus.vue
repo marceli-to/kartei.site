@@ -17,9 +17,14 @@
     </svg>
   </template>
   <template v-if="variant === 'rounded'">
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
+    <!-- <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
       <path d="M18 0C8.05902 0 0 8.05902 0 18C0 27.941 8.05902 36 18 36C27.941 36 36 27.941 36 18C36 8.05902 27.941 0 18 0ZM28 20H20V28H16V20H8V16H16V8H20V16H28V20Z" fill="currentColor"/>
+    </svg> -->
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" :class="class">
+      <path d="M12 0C5.37 0 0 5.37 0 12C0 18.63 5.37 24 12 24C18.63 24 24 18.63 24 12C24 5.37 18.63 0 12 0ZM18 13.25H13.25V18H10.75V13.25H6V10.75H10.75V6H13.25V10.75H18V13.25Z" fill="currentColor"/>
     </svg>
+
+
   </template>
 </template>
 <script setup>
