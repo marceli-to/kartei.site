@@ -40,10 +40,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  loopIndex: {
-    type: Number,
-    required: true
-  }
 });
 
 const media = computed(() => props.record.media || []);
@@ -56,7 +52,5 @@ const imageData = computed(() =>
     height: item.height || 'auto'
   }))
 );
-
-const paddedLoopIndex = computed(() => String(props.loopIndex + 1).padStart(4, '0'));
 
 </script>

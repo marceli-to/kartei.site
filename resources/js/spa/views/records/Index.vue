@@ -25,7 +25,6 @@
               v-for="(record, index) in records"
               :key="record.uuid"
               :record="record"
-              :loopIndex="index"
               class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
             />
           </div>
