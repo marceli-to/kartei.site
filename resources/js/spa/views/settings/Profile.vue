@@ -206,7 +206,7 @@ const handleSubmit = async () => {
 const handleAuthSubmit = async () => {
   try {
     authErrors.value = []; // Clear previous errors
-    isLoading.value = true;
+    // Don't set isLoading here - it hides the form and disconnects it from DOM
     const passwordData = await updatePassword(auth.value);
     toast.show('Passwort wurde erfolgreich geändert.', 'success');
     auth.value.current_password = '';
@@ -240,9 +240,6 @@ const handleAuthSubmit = async () => {
     }
 
     toast.show('Es ist ein Fehler aufgetreten.', 'error', 5000);
-  }
-  finally {
-    isLoading.value = false;
   }
 };
 

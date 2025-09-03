@@ -239,7 +239,6 @@ const loadRecordAndArchive = async (recordUuid) => {
 
   normalizeTagsData(archiveMetaData.tags);
   normalizeCategoryData(archiveMetaData.categories_registers);
-
 }
 
 const populateForm = () => {
