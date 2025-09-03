@@ -53,7 +53,6 @@ export function useTheme() {
     try {
       isSaving.value = true;
       await updateUserTheme(theme.value);
-      // toast.show('Einstellungen geändert.', 'success');
       return true;
     } 
     catch (error) {
