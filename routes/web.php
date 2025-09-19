@@ -13,6 +13,8 @@ use App\Http\Controllers\UserController;
 |
 */
 
+throw new \Exception('test');
+
 // TestController
 Route::get('/permissions', [UserController::class, 'index']);
 
