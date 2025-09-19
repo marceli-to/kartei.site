@@ -135,7 +135,7 @@ return [
         */
 
         // Validation errors (form validation failures)
-        'Illuminate\Validation\ValidationException' => 'info',
+        'Illuminate\Validation\ValidationException' => 'skip',
 
         // Authentication required
         'Illuminate\Auth\AuthenticationException' => 'warning',
@@ -144,7 +144,7 @@ return [
         'Illuminate\Auth\Access\AuthorizationException' => 'warning',
 
         // Model not found (404s)
-        'Illuminate\Database\Eloquent\ModelNotFoundException' => 'info',
+        'Illuminate\Database\Eloquent\ModelNotFoundException' => 'skip',
 
         /*
         |--------------------------------------------------------------------------
