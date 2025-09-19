@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
+use MarceliTo\Wiretap\Facades\Wiretap;
 
 class Handler extends ExceptionHandler
 {
@@ -26,6 +27,12 @@ class Handler extends ExceptionHandler
   public function register(): void
   {
     $this->reportable(function (Throwable $e) {
+      Wiretap::exception($e, [
+        'url' => request()->fullUrl(),
+        'method' => request()->method(),
+        'user_id' => auth()->id(),
+        'ip' => request()->ip()
+      ]);
     });
 
     $this->renderable(function (AuthorizationException $e, Request $request) {
