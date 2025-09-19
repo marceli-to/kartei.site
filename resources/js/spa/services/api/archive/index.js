@@ -16,6 +16,9 @@ export const getAllArchives = async () => {
 };
 
 export const getByUser = async (userId) => {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
   const response = await api.get(`/archives/user/${userId}`);
   return response.data;
 };

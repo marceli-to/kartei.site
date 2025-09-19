@@ -113,6 +113,13 @@ const infoBox = useInfoBox({
 
 onMounted(async () => {
   try {
+    await userStore.initialize();
+
+    if (!userStore.user || !userStore.user.uuid) {
+      console.error('User not properly authenticated');
+      return;
+    }
+
     archives.value = await getByUser(userStore.user.uuid);
     hasArchive.value = archives.value.length > 0;
   }
