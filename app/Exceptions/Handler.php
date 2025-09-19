@@ -27,12 +27,6 @@ class Handler extends ExceptionHandler
   public function register(): void
   {
     $this->reportable(function (Throwable $e) {
-      Wiretap::exception($e, [
-        'url' => request()->fullUrl(),
-        'method' => request()->method(),
-        'user_id' => auth()->id(),
-        'ip' => request()->ip()
-      ]);
     });
 
     $this->renderable(function (AuthorizationException $e, Request $request) {
@@ -42,5 +36,17 @@ class Handler extends ExceptionHandler
         ], Response::HTTP_FORBIDDEN);
       }
     });
+  }
+
+  public function report(Throwable $e)
+  {
+    Wiretap::exception($e, [
+        'url' => request()->fullUrl(),
+        'method' => request()->method(),
+        'user_id' => auth()->id(),
+        'ip' => request()->ip()
+    ]);
+
+    parent::report($e);
   }
 }
