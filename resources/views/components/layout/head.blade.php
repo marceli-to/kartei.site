@@ -19,6 +19,5 @@
 <meta name="apple-mobile-web-app-title" content="kartei.site" />
 <link rel="manifest" href="/site.webmanifest" />
 @vite('resources/css/app.css')
-@livewireStyles
 </head>
 <body class="antialiased font-muoto-regular text-md leading-[1.4] flex flex-col min-h-screen px-16 text-black dark:text-white bg-white dark:bg-black">
