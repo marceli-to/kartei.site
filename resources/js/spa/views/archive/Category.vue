@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div class="flex gap-x-17 mx-8 mb-4">
+        <div class="flex gap-x-17 mb-4">
           <InputLabel label="Nr." class="w-3/12 !mb-0" />
           <InputLabel label="Titel" class="w-6/12 !mb-0" />
           <InputLabel label="Kürzel" class="w-3/12 !mb-0" />
