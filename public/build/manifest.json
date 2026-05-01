@@ -1,64 +1,78 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-53bca34f.css",
+    "file": "assets/app-CcycJT80.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
     "isEntry": true,
-    "src": "resources/css/app.css"
+    "assets": [
+      "assets/ABCOtto-Bold-B82ag7oZ.woff2",
+      "assets/ABCOtto-Bold-BlcjO5L5.woff",
+      "assets/ABCOtto-Regular-CeD1jmf4.woff2",
+      "assets/ABCOtto-Regular-Bh_MH09W.woff",
+      "assets/Muoto-Regular-KNkP-Kmm.woff2",
+      "assets/Muoto-Regular-BYVJEdsc.woff",
+      "assets/Muoto-Medium-DPzDCB5U.woff2",
+      "assets/Muoto-Medium-iAN1qGbk.woff",
+      "assets/Muoto-Italic-Dpak3Iva.woff2",
+      "assets/Muoto-Italic-pyxdGFVI.woff"
+    ]
   },
   "resources/fonts/ABCOtto-Bold.woff": {
-    "file": "assets/ABCOtto-Bold-8b4219a1.woff",
+    "file": "assets/ABCOtto-Bold-BlcjO5L5.woff",
     "src": "resources/fonts/ABCOtto-Bold.woff"
   },
   "resources/fonts/ABCOtto-Bold.woff2": {
-    "file": "assets/ABCOtto-Bold-3c5a8890.woff2",
+    "file": "assets/ABCOtto-Bold-B82ag7oZ.woff2",
     "src": "resources/fonts/ABCOtto-Bold.woff2"
   },
   "resources/fonts/ABCOtto-Regular.woff": {
-    "file": "assets/ABCOtto-Regular-658f1764.woff",
+    "file": "assets/ABCOtto-Regular-Bh_MH09W.woff",
     "src": "resources/fonts/ABCOtto-Regular.woff"
   },
   "resources/fonts/ABCOtto-Regular.woff2": {
-    "file": "assets/ABCOtto-Regular-c7806061.woff2",
+    "file": "assets/ABCOtto-Regular-CeD1jmf4.woff2",
     "src": "resources/fonts/ABCOtto-Regular.woff2"
   },
   "resources/fonts/Muoto-Italic.woff": {
-    "file": "assets/Muoto-Italic-0e8ba698.woff",
+    "file": "assets/Muoto-Italic-pyxdGFVI.woff",
     "src": "resources/fonts/Muoto-Italic.woff"
   },
   "resources/fonts/Muoto-Italic.woff2": {
-    "file": "assets/Muoto-Italic-e225fbe7.woff2",
+    "file": "assets/Muoto-Italic-Dpak3Iva.woff2",
     "src": "resources/fonts/Muoto-Italic.woff2"
   },
   "resources/fonts/Muoto-Medium.woff": {
-    "file": "assets/Muoto-Medium-a59623b9.woff",
+    "file": "assets/Muoto-Medium-iAN1qGbk.woff",
     "src": "resources/fonts/Muoto-Medium.woff"
   },
   "resources/fonts/Muoto-Medium.woff2": {
-    "file": "assets/Muoto-Medium-0fdf1c46.woff2",
+    "file": "assets/Muoto-Medium-DPzDCB5U.woff2",
     "src": "resources/fonts/Muoto-Medium.woff2"
   },
   "resources/fonts/Muoto-Regular.woff": {
-    "file": "assets/Muoto-Regular-4a7fb7ef.woff",
+    "file": "assets/Muoto-Regular-BYVJEdsc.woff",
     "src": "resources/fonts/Muoto-Regular.woff"
   },
   "resources/fonts/Muoto-Regular.woff2": {
-    "file": "assets/Muoto-Regular-040b3615.woff2",
+    "file": "assets/Muoto-Regular-KNkP-Kmm.woff2",
     "src": "resources/fonts/Muoto-Regular.woff2"
   },
   "resources/js/app.js": {
-    "file": "assets/app-e508ae40.js",
-    "isEntry": true,
-    "src": "resources/js/app.js"
-  },
-  "resources/js/spa.css": {
-    "file": "assets/spa-7867cfcb.css",
-    "src": "resources/js/spa.css"
+    "file": "assets/app-Bld9z2uC.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
   },
   "resources/js/spa.js": {
-    "css": [
-      "assets/spa-7867cfcb.css"
-    ],
-    "file": "assets/spa-e7205ad8.js",
+    "file": "assets/spa-DFvPRyun.js",
+    "name": "spa",
+    "src": "resources/js/spa.js",
     "isEntry": true,
-    "src": "resources/js/spa.js"
+    "css": [
+      "assets/spa-op73n1iJ.css"
+    ]
   }
 }
