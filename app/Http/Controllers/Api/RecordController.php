@@ -10,6 +10,7 @@ use App\Actions\Record\Get as GetRecordAction;
 use App\Actions\Record\Find as FindRecordAction;
 use App\Actions\Record\Create as CreateRecordAction;
 use App\Actions\Record\Update as UpdateRecordAction;
+use App\Actions\Record\Delete as DeleteRecordAction;
 use App\Http\Requests\Record\StoreRequest;
 
 class RecordController extends Controller
@@ -72,5 +73,19 @@ class RecordController extends Controller
     return response()->json(
       RecordResource::make($record)
     );
+  }
+
+  /**
+   * Delete a record
+   *
+   * @param Record $record
+   * @return JsonResponse
+   */
+  public function destroy(Record $record): JsonResponse
+  {
+    (new DeleteRecordAction())->execute($record);
+    return response()->json([
+      'success' => true
+    ]);
   }
 }

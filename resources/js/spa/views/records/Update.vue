@@ -113,8 +113,10 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
+import { useToastStore } from '@/components/toast/stores/toast'
+import { useDialogStore } from '@/components/dialog/stores/dialog'
 import { getArchiveMeta } from '@/services/api/archive'
-import { getRecord, updateRecord } from '@/services/api/record'
+import { getRecord, updateRecord, deleteRecord } from '@/services/api/record'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -136,12 +138,40 @@ const router = useRouter()
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
 
+const toast = useToastStore()
+const dialogStore = useDialogStore()
+
+const handleDelete = () => {
+  dialogStore.show({
+    title: 'Karte löschen',
+    message: 'Möchten Sie diese Karte wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
+    confirmLabel: 'Löschen',
+    cancelLabel: 'Abbrechen',
+    type: 'danger',
+    onConfirm: async () => {
+      try {
+        await deleteRecord(record.value.uuid)
+        toast.show('Karte erfolgreich gelöscht', 'success')
+        dialogStore.hide()
+        router.push({ name: 'archiveRecords', params: { uuid: record.value.archive.uuid } })
+      } catch (error) {
+        console.error('Error deleting record:', error)
+        toast.show('Fehler beim Löschen der Karte', 'error')
+        dialogStore.hide()
+      }
+    },
+    onCancel: () => {
+      dialogStore.hide()
+    }
+  })
+}
+
 const actionLinks = [
   {
     type: 'button',
     label: 'Löschen',
     icon: IconCross,
-    onClick: () => {},
+    onClick: handleDelete,
   },
 ];
 
