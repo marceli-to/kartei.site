@@ -6,13 +6,7 @@ class Delete
 {
   public function execute(Category $category): bool
   {
-    // Delete all registers (children) first
-    $category->registers()->delete();
-    
-    // Handle records - set category_id to null for orphaned records
-    $category->records()->update(['category_id' => null]);
-    
-    // Delete the category
+    // Delete the category — FK cascade handles records and registers
     return $category->delete();
   }
 }

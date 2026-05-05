@@ -11,8 +11,8 @@ class DeleteRegister
       return false;
     }
     
-    // Handle records - set category_id to null for orphaned records
-    $register->records()->update(['category_id' => null]);
+    // Move records up to the parent category before deleting the register
+    $register->records()->update(['category_id' => $register->parent_id]);
     
     // Delete the register
     return $register->delete();
