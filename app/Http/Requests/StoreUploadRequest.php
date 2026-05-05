@@ -46,7 +46,7 @@ class StoreUploadRequest extends FormRequest
       'files.*.required' => 'One or more files are missing.',
       'files.*.file' => 'The uploaded item must be a valid file.',
       'files.*.mimes' => 'Only JPEG, PNG, GIF, and WEBP files are allowed.',
-      'files.*.max' => 'Each file must not exceed 2MB in size.',
+      'files.*.max' => 'Each file must not exceed 10MB in size.',
     ];
   }
 }

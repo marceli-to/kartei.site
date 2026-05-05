@@ -41,7 +41,7 @@
         <IconImage :class="{ 'text-flame': hasError || hasValidationError }" />
         <template v-if="hasValidationError">
           <div class="text-sm mt-8 text-flame">
-            {{ error }}
+            {{ displayedError }}
           </div>
         </template>
         <template v-else>
@@ -71,7 +71,7 @@ import IconImage from '@/components/icons/Image.vue';
 const props = defineProps({
   maxSize: {
     type: Number,
-    default: 5 * 1024 * 1024 // 5MB
+    default: 10 * 1024 * 1024 // 10MB
   },
   allowedTypes: {
     type: Array,
@@ -103,8 +103,6 @@ const props = defineProps({
   }
 });
 
-const hasValidationError = computed(() => props.error !== '' && props.error !== null);
-
 const emit = defineEmits(['update:modelValue']);
 
 const {
@@ -113,6 +111,7 @@ const {
   isUploading,
   uploadProgress,
   hasError,
+  validationErrors,
   isUploaded,
   uploadedFiles,
   handleDrop,
@@ -126,6 +125,13 @@ const {
   uploadUrl: props.uploadUrl,
   multiple: props.multiple
 });
+
+const displayedError = computed(() => {
+  if (props.error) return props.error;
+  return validationErrors.value[0] || '';
+});
+
+const hasValidationError = computed(() => displayedError.value !== '');
 
 watch(uploadedFiles, (newVal) => {
   emit('update:modelValue', newVal)

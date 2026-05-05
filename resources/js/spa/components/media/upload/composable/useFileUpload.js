@@ -4,7 +4,7 @@ import { useToastStore } from '@/components/toast/stores/toast'
 
 export function useFileUpload(options = {}) {
   const {
-    maxSize = 5 * 1024 * 1024, // 5MB
+    maxSize = 10 * 1024 * 1024, // 10MB
     allowedTypes = ['image/*', 'application/pdf'],
     uploadUrl = '/api/upload',
     multiple = true
@@ -17,6 +17,7 @@ export function useFileUpload(options = {}) {
   const isUploading = ref(false)
   const uploadProgress = ref(0)
   const hasError = ref(false)
+  const validationErrors = ref([])
   const retryQueue = ref([])
   const uploadedFiles = ref([])
 
@@ -109,7 +110,9 @@ export function useFileUpload(options = {}) {
   const handleDrop = async (event) => {
     toggleDrag(false)
     const { validFiles, errors } = processFiles(event.dataTransfer.files)
-    
+
+    validationErrors.value = errors
+
     if (errors.length) {
       errors.forEach(error => {
         toastStore.show(error, 'error', 5000)
@@ -123,7 +126,9 @@ export function useFileUpload(options = {}) {
 
   const handleFileSelect = async (event) => {
     const { validFiles, errors } = processFiles(event.target.files)
-    
+
+    validationErrors.value = errors
+
     if (errors.length) {
       errors.forEach(error => {
         toastStore.show(error, 'error', 5000)
@@ -155,19 +160,21 @@ export function useFileUpload(options = {}) {
     uploadedFiles.value = []
     retryQueue.value = []
     hasError.value = false
+    validationErrors.value = []
     isUploading.value = false
     uploadProgress.value = 0
     if (fileInput.value) {
       fileInput.value.value = ''
     }
   }
-  
+
   return {
     fileInput,
     isDragging,
     isUploading,
     uploadProgress,
     hasError,
+    validationErrors,
     isUploaded,
     uploadedFiles,
     handleDrop,
