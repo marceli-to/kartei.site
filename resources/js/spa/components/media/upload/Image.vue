@@ -56,7 +56,7 @@
       :images="uploadedFiles" 
       :editable="true" 
       :multiple="multiple"
-      @delete="handleDeleteImage">
+      @update:images="handleImagesChange">
     </ImageList>
 
   </div>
@@ -145,8 +145,9 @@ onMounted(() => {
   }
 })
 
-const handleDeleteImage = (index) => {
-  uploadedFiles.value.splice(index, 1);
+// Reordered or deleted in the list: replace the array so the watcher emits
+const handleImagesChange = (images) => {
+  uploadedFiles.value = [...images];
 };
 
 // Computed display of maximum size

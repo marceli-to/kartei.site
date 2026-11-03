@@ -3,9 +3,11 @@ import { ref } from 'vue';
 
 export const useToastStore = defineStore('toast', () => {
   const toasts = ref([]);
+  // Counter instead of Date.now(): several toasts in the same ms need unique ids
+  let nextId = 1;
 
   const show = (message, type = 'info', duration = 3000) => {
-    const id = Date.now();
+    const id = nextId++;
     toasts.value.push({ id, message, type });
 
     if (duration > 0) {

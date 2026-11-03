@@ -33,27 +33,27 @@ class UserAddressController extends Controller
       $this->authorize('update', auth()->user()->address) : 
       $this->authorize('create', Address::class);
 
-    $user = (new UpdateUserAddressAction())->execute(
-      $request->all(), 
+    $address = (new UpdateUserAddressAction())->execute(
+      $request->validated(), 
       auth()->user(),
       false
     );
 
-    return new UserAddressResource($user->address);
+    return new UserAddressResource($address);
   }
 
   public function updateBilling(UpdateRequest $request): UserAddressResource
   {
-    auth()->user()->address ? 
-      $this->authorize('update', auth()->user()->address) : 
+    auth()->user()->billingAddress ? 
+      $this->authorize('update', auth()->user()->billingAddress) : 
       $this->authorize('create', Address::class);
 
-    $user = (new UpdateUserAddressAction())->execute(
-      $request->all(), 
+    $address = (new UpdateUserAddressAction())->execute(
+      $request->validated(), 
       auth()->user(),
       true
     );
 
-    return new UserAddressResource($user->address);
+    return new UserAddressResource($address);
   }
 }

@@ -14,7 +14,12 @@ export const useDialogStore = defineStore('dialog', () => {
     size: 'medium' // Default size
   });
 
+  // Pending reset from hide(); must not wipe a dialog opened right after
+  let resetTimer = null;
+
   const show = (dialogContent) => {
+    clearTimeout(resetTimer);
+    resetTimer = null;
     content.value = {
       ...content.value,
       ...dialogContent,
@@ -25,7 +30,9 @@ export const useDialogStore = defineStore('dialog', () => {
 
   const hide = () => {
     isVisible.value = false;
-    setTimeout(() => {
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => {
+      resetTimer = null;
       content.value = {
         title: '',
         confirmLabel: 'Confirm',

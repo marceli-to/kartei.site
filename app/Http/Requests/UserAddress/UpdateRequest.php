@@ -12,9 +12,13 @@ class UpdateRequest extends FormRequest
   public function rules(): array
   {
     return [
-      'street' => ['required', 'string'],
-      'zip' => ['required', 'string'],
-      'city' => ['required', 'string'],
+      'company' => ['nullable', 'string', 'max:255'],
+      'byline' => ['nullable', 'string', 'max:255'],
+      'street' => ['required', 'string', 'max:255'],
+      'street_number' => ['nullable', 'string', 'max:20'],
+      'zip' => ['required', 'string', 'max:20'],
+      'city' => ['required', 'string', 'max:255'],
+      'country' => ['nullable', 'string', 'max:255'],
     ];
   }
 }

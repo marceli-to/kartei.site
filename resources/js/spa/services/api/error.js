@@ -16,7 +16,7 @@ export function handleApiError(error, fallbackMessage = 'Ein unbekannter Fehler 
         globalRouter.push('/error/403')
         return
       case 404:
-        globalRouter.push('/archiv/404')
+        globalRouter.push('/error/404')
         return
       case 419:
         globalRouter.push('/error/419')

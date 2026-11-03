@@ -25,7 +25,7 @@ class UploadController extends Controller
   {
     $request->validate([
       'positions' => 'required|array',
-      'positions.*.uuid' => 'required|string',
+      'positions.*.uuid' => 'nullable|string',
       'positions.*.position' => 'required|integer',
     ]);
     (new OrderImageAction())->execute($request->positions, $request->user());

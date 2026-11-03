@@ -6,7 +6,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use App\Models\Archive;
-use App\Actions\Tag\Create as CreateTagAction;
 use App\Actions\Tag\Get as GetTagAction;
 use App\Actions\Tag\UpdateOrCreate as UpdateOrCreateTagAction;
 use App\Actions\Tag\Delete as DeleteTagAction;

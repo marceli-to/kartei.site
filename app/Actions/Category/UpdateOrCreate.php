@@ -53,21 +53,15 @@ class UpdateOrCreate
     }
 
     if ($category) {
-      if (
-        $category->number !== $data['number'] ||
-        $category->title !== $data['name'] ||
-        $category->custom_id !== $data['custom_id'] ||
-        $category->order !== $data['order']
-      ) {
-        $category->update([
-          'number' => $data['number'],
-          'name' => $data['name'],
-          'custom_id' => $data['custom_id'],
-          'numeral_type' => $data['numeral_type'],
-          'custom_id_type' => $data['custom_id_type'],
-          'order' => $data['order'],
-        ]);
-      }
+      // update() only writes changed attributes
+      $category->update([
+        'number' => $data['number'],
+        'name' => $data['name'],
+        'custom_id' => $data['custom_id'],
+        'numeral_type' => $data['numeral_type'],
+        'custom_id_type' => $data['custom_id_type'],
+        'order' => $data['order'],
+      ]);
     } 
     else {
       $category = Category::create([
@@ -94,23 +88,16 @@ class UpdateOrCreate
     }
 
     if ($register) {
-      if (
-        $register->number !== $data['number'] ||
-        $register->title !== $data['name'] ||
-        $register->custom_id !== $data['custom_id'] ||
-        $register->order !== $data['order'] ||
-        $register->parent_id !== $category->id
-      ) {
-        $register->update([
-          'name' => $data['name'],
-          'number' => $data['number'],
-          'custom_id' => $data['custom_id'],
-          'numeral_type' => $data['numeral_type'],
-          'custom_id_type' => $data['custom_id_type'],
-          'order' => $data['order'],
-          'parent_id' => $category->id,
-        ]);
-      }
+      // update() only writes changed attributes
+      $register->update([
+        'name' => $data['name'],
+        'number' => $data['number'],
+        'custom_id' => $data['custom_id'],
+        'numeral_type' => $data['numeral_type'],
+        'custom_id_type' => $data['custom_id_type'],
+        'order' => $data['order'],
+        'parent_id' => $category->id,
+      ]);
     } 
     else {
       $register = Category::create([

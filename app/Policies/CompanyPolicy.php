@@ -21,7 +21,7 @@ class CompanyPolicy
    */
   public function view(User $user, Company $company): bool
   {
-    return $user->id === $company->user_id;
+    return $this->belongsTo($user, $company);
   }
 
   /**
@@ -37,7 +37,7 @@ class CompanyPolicy
    */
   public function update(User $user, Company $company): bool
   {
-    return $user->id === $company->user_id;
+    return $this->belongsTo($user, $company);
   }
 
   /**
@@ -45,6 +45,14 @@ class CompanyPolicy
    */
   public function delete(User $user, Company $company): bool
   {
-    return $user->id === $company->user_id;
+    return $this->belongsTo($user, $company);
+  }
+
+  /**
+   * Users are linked to companies through the company_user table.
+   */
+  private function belongsTo(User $user, Company $company): bool
+  {
+    return $user->companies()->whereKey($company->id)->exists();
   }
 }

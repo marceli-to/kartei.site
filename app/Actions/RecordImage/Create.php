@@ -3,7 +3,6 @@ namespace App\Actions\RecordImage;
 use App\Models\Media;
 use App\Models\Record;
 use App\Actions\Image\Move as MoveImageAction;
-use App\Actions\RecordImage\Delete as DeleteRecordImageAction;
 
 class Create
 {

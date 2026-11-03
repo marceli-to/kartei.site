@@ -4,7 +4,7 @@
       <div>
         <h2 class="mb-12 font-muoto-medium">Image Upload</h2>
         <ImageUpload
-          :maxSize="250 * 1024 * 1024"
+          :maxSize="10 * 1024 * 1024"
           :allowedTypes="['image/*', 'video/mp4']"
           uploadUrl="/api/upload"
           :multiple="true"

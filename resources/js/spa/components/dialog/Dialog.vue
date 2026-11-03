@@ -27,12 +27,13 @@
             :aria-labelledby="content.title ? 'dialog-title' : null"
             :aria-describedby="content.message ? 'dialog-desc' : null"
             @click.stop>
-            <a 
-              href="javascript:;" 
+            <button
+              type="button"
               class="absolute right-24 top-24"
-              @click="isVisible = false">
+              aria-label="Schliessen"
+              @click="handleCancel">
               <IconCross variant="small-bold" />
-            </a>
+            </button>
             <div class="flex flex-col gap-y-24 mx-auto">
 
               <!-- Title -->
@@ -105,7 +106,7 @@ const { hide } = dialogStore;
 
 onMounted(() => {
   const handleKey = (e) => {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && isVisible.value) {
       handleBackdropClick();
     }
   };

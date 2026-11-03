@@ -15,7 +15,7 @@ class Tag extends Model
 
   public function records(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
   {
-    return $this->belongsToMany(Record::class, 'record_tags');
+    return $this->belongsToMany(Record::class);
   }
 
   public function archive(): \Illuminate\Database\Eloquent\Relations\BelongsTo

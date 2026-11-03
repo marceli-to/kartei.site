@@ -7,8 +7,8 @@ class Find
   public function execute($id, $isUuid = false): Company
   {
     if ($isUuid) {
-      return Company::where('uuid', $id)->first();
+      return Company::where('uuid', $id)->firstOrFail();
     }
-    return Company::find($id);
+    return Company::findOrFail($id);
   }
 }

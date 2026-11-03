@@ -7,7 +7,14 @@ class UpdateOrCreate
   public function execute($data, Archive $archive): Archive
   {
     $settings = $archive->settings ?? [];
-    $settings['has_images'] = $data['has_images'];
+    $settings['has_images'] = (bool) ($data['has_images'] ?? $settings['has_images'] ?? true);
+
+    // Without record_fields in the request, keep the existing fields
+    if (!isset($data['record_fields']) || !is_array($data['record_fields'])) {
+      $archive->settings = $settings;
+      $archive->save();
+      return $archive;
+    }
 
     // Convert existing fields to associative array by UUID for easy lookup
     $existingFields = collect($settings['record_fields'] ?? [])->keyBy('uuid');
@@ -19,16 +26,16 @@ class UpdateOrCreate
       if (!empty($field['uuid']) && $existingFields->has($field['uuid'])) {
         $existing = $existingFields[$field['uuid']];
         $updatedFields[] = array_merge($existing, [
-          'placeholder' => $field['placeholder'],
-          'order' => $field['order'],
+          'placeholder' => $field['placeholder'] ?? '',
+          'order' => $field['order'] ?? 0,
         ]);
       } 
       else {
         // New field — assign UUID and add to list
         $updatedFields[] = [
           'uuid' => \Str::uuid()->toString(),
-          'placeholder' => $field['placeholder'],
-          'order' => $field['order'],
+          'placeholder' => $field['placeholder'] ?? '',
+          'order' => $field['order'] ?? 0,
         ];
       }
     }

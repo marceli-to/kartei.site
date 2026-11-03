@@ -50,7 +50,7 @@
         <draggable 
           v-model="form.categories" 
           group="categories" 
-          item-key="custom_id" 
+          :item-key="rowKey" 
           class="flex flex-col" 
           handle=".drag-handle">
           <template #item="{ element: category, index: cIdx }">
@@ -86,7 +86,7 @@
               <draggable 
                 v-model="category.registers" 
                 group="registers" 
-                item-key="custom_id" 
+                :item-key="rowKey" 
                 :clone="cloneRegister" 
                 class="flex flex-col" 
                 handle=".drag-handle">
@@ -142,7 +142,8 @@
 </template>
 
 <script setup>
-import { ref, toRef, onMounted } from 'vue';
+import { ref, toRef, onMounted, toRaw } from 'vue';
+
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
@@ -161,6 +162,16 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoStructure from '@/views/archive/partials/StructureInfo.vue';
+
+// Stable drag keys per row object. custom_id can be empty or duplicated
+// ("Bilder" and "Bibliothek" both become "BI") and changes while typing.
+const rowKeys = new WeakMap();
+let nextRowKey = 1;
+const rowKey = (row) => {
+  const raw = toRaw(row);
+  if (!rowKeys.has(raw)) rowKeys.set(raw, nextRowKey++);
+  return rowKeys.get(raw);
+};
 
 const dialogStore = useDialogStore();
 

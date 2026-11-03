@@ -32,7 +32,14 @@ class ArchiveSettingsController extends Controller
   public function store(Request $request, Archive $archive)
   {
     $this->authorize('manageTemplate', $archive);
-    $archive = (new UpdateOrCreateArchiveSettingsAction())->execute($request->all(), $archive);
+    $data = $request->validate([
+      'has_images' => ['sometimes', 'boolean'],
+      'record_fields' => ['sometimes', 'array'],
+      'record_fields.*.uuid' => ['nullable', 'string'],
+      'record_fields.*.placeholder' => ['nullable', 'string', 'max:255'],
+      'record_fields.*.order' => ['nullable', 'integer'],
+    ]);
+    $archive = (new UpdateOrCreateArchiveSettingsAction())->execute($data, $archive);
     return response()->json($archive->settings);
   }
 

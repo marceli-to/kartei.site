@@ -97,6 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail
   {
     return $this->favorites()
       ->join('records', 'favorites.record_id', '=', 'records.id')
+      ->whereNull('records.deleted_at')
       ->pluck('records.uuid');
   }
 
@@ -166,7 +167,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
   public function hasActiveSubscription(): bool
   {
-    return $this->subscription->deleted_at === NULL && ($this->subscription->ends_at === null || $this->subscription->ends_at > now());
+    return $this->subscription?->isActive() ?? false;
   }
 
 }

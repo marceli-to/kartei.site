@@ -2,7 +2,7 @@
   <div v-if="images.length" :class="multiple ? 'mt-20' : ''">
     <draggable
       v-model="localImages"
-      item-key="element.resized.name"
+      :item-key="imageKey"
       :class="multiple ? 'grid grid-cols-12 gap-20' : ''"
       @end="onDragEnd">
       <template #item="{ element, index }">
@@ -63,23 +63,26 @@ watch(
   }
 );
 
+// Stable key per image: saved images have a uuid, new uploads a unique url
+const imageKey = (image) => image.uuid || image.resized_name || image.url;
+
 // Emit the updated order when drag ends
 const onDragEnd = async () => {
-  emit('update:images', localImages.value);
-  
-  // Save the new order to the database
+  emit('update:images', [...localImages.value]);
+
+  // Only saved images (with a uuid) have a position in the database
+  const positions = localImages.value
+    .map((image, index) => ({ uuid: image.uuid, position: index }))
+    .filter((position) => position.uuid);
+
+  if (!positions.length) return;
+
   try {
-    const positions = localImages.value.map((image, index) => ({
-      uuid: image.uuid,
-      position: index
-    }));
-    
     await axios.put('/api/upload/order', { positions });
-    
-    toast.show('Image order updated successfully!', 'success');
+    toast.show('Reihenfolge gespeichert', 'success');
   } catch (error) {
     console.error('Failed to update image order:', error);
-    toast.show('Failed to update image order', 'error');
+    toast.show('Reihenfolge konnte nicht gespeichert werden', 'error');
   }
 };
 
@@ -89,19 +92,16 @@ const deleteImage = async (url, index) => {
     // Call the delete API
     await axios.delete(`/api/upload${url}`);
 
-    // Remove the image from the local list
-    localImages.value.splice(index, 1);
-
-    // Emit the updated list to the parent
-    emit('update:images', localImages.value);
-
-    // Emit the delete event
+    // Emit a new list without the image (no in-place mutation)
+    localImages.value = localImages.value.filter((_, i) => i !== index);
+    emit('update:images', [...localImages.value]);
     emit('delete', index);
 
-    toast.show('Image deleted successfully!', 'success')
+    toast.show('Bild gelöscht', 'success');
   } 
   catch (error) {
     console.error('Failed to delete image:', error);
+    toast.show('Bild konnte nicht gelöscht werden', 'error');
   }
 };
 </script>

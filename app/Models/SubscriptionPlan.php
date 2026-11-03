@@ -24,14 +24,14 @@ class SubscriptionPlan extends Model
    * Helper to get price based on interval
    * 
    * @param string $interval 'monthly' or 'yearly'
-   * @return decimal
+   * @return string decimal value as returned by the database
    * 
    * Usage:
    * $plan = SubscriptionPlan::findOrFail($request->plan_id);
    * $interval = $request->interval; // 'monthly' or 'yearly'
    * $price = $plan->getPriceForInterval($interval);
    */
-  public function getPriceForInterval($interval): decimal
+  public function getPriceForInterval($interval): string|float|null
   {
     return $interval === 'yearly' ? $this->rate_yearly : $this->rate_monthly;
   }

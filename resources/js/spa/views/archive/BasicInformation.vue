@@ -11,7 +11,7 @@
         <InputGroup>
           <InputLabel label="Titelbild" id="image" required />
           <ImageUpload
-            :maxSize="250 * 1024 * 1024"
+            :maxSize="10 * 1024 * 1024"
             :allowedTypes="['image/*']"
             uploadUrl="/api/upload"
             :multiple="false"

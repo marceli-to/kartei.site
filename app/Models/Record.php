@@ -23,11 +23,6 @@ class Record extends Model
     return $this->belongsTo(Archive::class);
   }
 
-  public function categories(): HasMany
-  {
-    return $this->hasMany(RecordCategory::class);
-  }
-
   public function tags(): BelongsToMany
   {
     return $this->belongsToMany(Tag::class);
