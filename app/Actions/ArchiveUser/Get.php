@@ -6,7 +6,7 @@ class Get
 {
   public function execute(Archive $archive, $filter = FALSE)
   {
-    $users = $archive->users()->get();
+    $users = $archive->users()->with('roles')->get();
 
     // Return all users if filter is FALSE
     if (!$filter) {

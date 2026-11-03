@@ -22,12 +22,14 @@
         <template v-if="filteredRecords.length > 0">
           <div class="flex flex-wrap gap-x-16 gap-y-32">
             <Card
-              v-for="(record, index) in filteredRecords"
+              v-for="record in visibleRecords"
               :key="record.uuid"
               :record="record"
               class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
             />
           </div>
+          <!-- Renders the next batch of cards when scrolled into view -->
+          <div v-if="visibleRecords.length < filteredRecords.length" ref="loadMoreSentinel" class="h-px" />
         </template>
         <template v-else>
           <div v-if="records.length === 0">
@@ -46,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
@@ -226,6 +228,34 @@ const filteredRecords = computed(() => {
 
   return filtered
 })
+
+// Render cards in batches: large archives would otherwise mount
+// hundreds of cards (with images) at once
+const BATCH_SIZE = 48
+const visibleCount = ref(BATCH_SIZE)
+const visibleRecords = computed(() => filteredRecords.value.slice(0, visibleCount.value))
+
+// Back to the first batch whenever the filters change
+watch(filters, () => { visibleCount.value = BATCH_SIZE }, { deep: true })
+
+const loadMoreSentinel = ref(null)
+let observer = null
+
+onMounted(() => {
+  observer = new IntersectionObserver((entries) => {
+    if (entries.some(entry => entry.isIntersecting)) {
+      visibleCount.value += BATCH_SIZE
+    }
+  }, { rootMargin: '800px' })
+})
+
+// The sentinel element comes and goes with v-if
+watch(loadMoreSentinel, (element, previous) => {
+  if (previous) observer?.unobserve(previous)
+  if (element) observer?.observe(element)
+})
+
+onUnmounted(() => observer?.disconnect())
 
 onMounted(async () => {
   try {

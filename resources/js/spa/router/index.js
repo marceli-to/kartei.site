@@ -55,7 +55,8 @@ if (import.meta.env.DEV) {
 }
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // No base: import.meta.env.BASE_URL is the asset path (/build/) with laravel-vite-plugin
+  history: createWebHistory(),
   routes,
 });
 

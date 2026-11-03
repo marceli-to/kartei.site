@@ -6,6 +6,6 @@ class Find
 {
   public function execute(Record $record)
   {
-    return Record::with('category', 'tags', 'media', 'fields', 'archive')->find($record->id);
+    return Record::with('category.parent', 'tags', 'media', 'fields', 'archive')->find($record->id);
   }
 }

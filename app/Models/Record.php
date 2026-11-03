@@ -35,7 +35,8 @@ class Record extends Model
   
   public function media()
   {
-    return $this->morphMany(Media::class, 'mediable');
+    // chaperone: each image knows its record without another query
+    return $this->morphMany(Media::class, 'mediable')->chaperone('mediable');
   }
 
   public function category(): BelongsTo
@@ -58,6 +59,45 @@ class Record extends Model
    *
    * @return string
    */
+  /**
+   * Position (0-based) within the category, when computed in bulk for a list
+   * (see withDisplayIndexes). The number is positional on purpose: it shifts
+   * when an earlier record in the category is deleted.
+   */
+  protected ?int $displayIndex = null;
+
+  public function setDisplayIndex(int $index): static
+  {
+    $this->displayIndex = $index;
+    return $this;
+  }
+
+  /**
+   * Compute every record's position within its category with one query,
+   * instead of one query per record in getDisplayNumberAttribute.
+   */
+  public static function withDisplayIndexes(iterable $records, int $archiveId): void
+  {
+    $ordered = static::where('archive_id', $archiveId)
+      ->orderBy('category_id')
+      ->orderBy('created_at')
+      ->orderBy('id')
+      ->get(['id', 'category_id']);
+
+    // id => position within its category
+    $positions = [];
+    $counters = [];
+    foreach ($ordered as $row) {
+      $positions[$row->id] = $counters[$row->category_id] = ($counters[$row->category_id] ?? -1) + 1;
+    }
+
+    foreach ($records as $record) {
+      if (isset($positions[$record->id])) {
+        $record->setDisplayIndex($positions[$record->id]);
+      }
+    }
+  }
+
   public function getDisplayNumberAttribute(): string
   {
     $category = $this->category;
@@ -68,8 +108,9 @@ class Record extends Model
       return '';
     }
 
-    // Get the index of this record within its category, ordered by created_at (or id fallback)
-    $index = $category->records()->orderBy('created_at')->pluck('id')->search($this->id);
+    // Index of this record within its category, ordered by created_at (id breaks ties)
+    $index = $this->displayIndex
+      ?? $category->records()->orderBy('created_at')->orderBy('id')->pluck('id')->search($this->id);
 
     if ($index === false) {
       return '';

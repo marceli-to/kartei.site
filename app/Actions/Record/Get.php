@@ -6,9 +6,12 @@ class Get
 {
   public function execute($data)
   {
-    $records = Record::with('category', 'tags', 'media', 'fields', 'archive')
+    $records = Record::with('category.parent', 'tags', 'media', 'fields', 'archive')
       ->where('archive_id', $data['archive_id'])
       ->get();
+
+    // Display numbers for all records in one query
+    Record::withDisplayIndexes($records, $data['archive_id']);
 
     // Sort records by category global order
     $sortedRecords = $records->sortBy('category.global_order');

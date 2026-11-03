@@ -44,7 +44,7 @@ class Archive extends Model
 
   public function media(): MorphOne
   {
-    return $this->morphOne(Media::class, 'mediable');
+    return $this->morphOne(Media::class, 'mediable')->chaperone('mediable');
   }
 
   public function tags(): HasMany

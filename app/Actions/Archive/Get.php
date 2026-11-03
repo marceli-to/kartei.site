@@ -17,7 +17,7 @@ class Get
   public function execute(array $options = [])
   {
     $user = auth()->user();
-    $query = Archive::query();
+    $query = Archive::query()->with('media');
     
     // Get all archives (Super Admin only)
     if (!empty($options['all']) && $user->hasRole('Super Admin')) {
