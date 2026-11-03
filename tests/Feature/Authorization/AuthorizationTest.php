@@ -106,7 +106,6 @@ it('blocks reading another tenant\'s archive data', function (string $route) {
   '/api/record/{record}',
   '/api/tags/{archive}',
   '/api/archive/users/{archive}',
-  '/api/favorite/toggle/{record}',
 ]);
 
 it('blocks changing or deleting another tenant\'s archive data', function () {
@@ -427,4 +426,57 @@ it('returns per-archive abilities that match the policy', function () {
   Sanctum::actingAs($this->admin);
   $abilities = $this->getJson('/api/user/permissions')->json('archives');
   expect($abilities[$this->archive->uuid])->toBe(\App\Actions\UserPermission\ArchiveAbilities::ABILITIES);
+});
+
+// ---------------------------------------------------------------------------
+// Favorites and per-archive roles
+// ---------------------------------------------------------------------------
+
+it('toggles favorites only with POST and only for readable records', function () {
+  $record = Record::create(['category_id' => $this->category->id, 'archive_id' => $this->archive->id]);
+  Sanctum::actingAs($this->admin);
+
+  $this->getJson("/api/favorite/toggle/{$record->uuid}")->assertMethodNotAllowed();
+  expect($this->admin->favorites()->count())->toBe(0);
+
+  $this->postJson("/api/favorite/toggle/{$record->uuid}")->assertNoContent();
+  expect($this->admin->favorites()->count())->toBe(1);
+
+  $this->postJson("/api/favorite/toggle/{$record->uuid}")->assertNoContent();
+  expect($this->admin->favorites()->count())->toBe(0);
+
+  $this->postJson("/api/favorite/toggle/{$this->otherRecord->uuid}")->assertForbidden();
+});
+
+function archiveRoleNames(User $user, Archive $archive): array
+{
+  return $user->roles()->wherePivot('archive_id', $archive->id)->pluck('name')->all();
+}
+
+it('changes a role on one archive without touching the user\'s other archives', function () {
+  $secondArchive = Archive::create(['name' => 'Zweite', 'acronym' => 'ZW']);
+  $this->admin->archives()->attach($secondArchive->id);
+  $target = makeUser();
+  Sanctum::actingAs($this->admin);
+
+  $grant = fn (Archive $archive, string $role, string $action = 'store') => $this->putJson(
+    "/api/user/permissions/{$action}/{$target->uuid}",
+    ['archive' => $archive->uuid, 'role' => Role::findByName($role, 'web')->id, 'permissions' => []]
+  )->assertOk();
+
+  // The same role on two archives
+  $grant($this->archive, 'Viewer');
+  $grant($secondArchive, 'Viewer');
+  expect(archiveRoleNames($target, $this->archive))->toBe(['Viewer']);
+  expect(archiveRoleNames($target, $secondArchive))->toBe(['Viewer']);
+
+  // Changing it on one archive leaves the other alone
+  $grant($this->archive, 'Manager', 'update');
+  expect(archiveRoleNames($target, $this->archive))->toBe(['Manager']);
+  expect(archiveRoleNames($target, $secondArchive))->toBe(['Viewer']);
+
+  // The archive user list shows the role for that archive
+  $this->getJson("/api/archive/users/{$secondArchive->uuid}")
+    ->assertOk()
+    ->assertJsonFragment(['uuid' => $target->uuid, 'role' => __('roles.Viewer')]);
 });

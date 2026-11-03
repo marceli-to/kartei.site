@@ -6,6 +6,6 @@ export const getFavorites = async () => {
 }
 
 export const toggleFavorite = async (uuid) => {
-  const response = await api.get(`/favorite/toggle/${uuid}`);
+  const response = await api.post(`/favorite/toggle/${uuid}`);
   return response.data;
 }

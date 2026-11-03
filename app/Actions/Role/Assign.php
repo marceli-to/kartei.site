@@ -1,27 +1,22 @@
 <?php
 namespace App\Actions\Role;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 
 class Assign
 {
-  public function execute(User $user, $archiveId = NULL, $roleId): array
+  /**
+   * Give the user exactly one role for the given archive (NULL = account-wide).
+   * Roles the user holds for other archives stay untouched.
+   */
+  public function execute(User $user, ?int $archiveId, int $roleId): void
   {
-    // First, find any roles the user has for this archive
-    $existingRoles = $user->roles()
-      ->wherePivot('archive_id', $archiveId)
-      ->get();
+    $roles = $user->roles();
+    $archiveId === null
+      ? $roles->wherePivotNull('archive_id')->detach()
+      : $roles->wherePivot('archive_id', $archiveId)->detach();
 
-    // Detach them
-    foreach ($existingRoles as $role) {
-      $user->roles()->detach($role->id);
-    }
-
-    // Now attach the new one
-    $pivotData = [
-      $roleId => ['archive_id' => $archiveId]
-    ];
-
-    return $user->roles()->syncWithoutDetaching($pivotData);
+    $user->roles()->attach($roleId, ['archive_id' => $archiveId]);
+    $user->unsetRelation('roles');
+    $user->forgetCachedPermissions();
   }
 }

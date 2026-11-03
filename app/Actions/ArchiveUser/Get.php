@@ -6,7 +6,12 @@ class Get
 {
   public function execute(Archive $archive, $filter = FALSE)
   {
-    $users = $archive->users()->with('roles')->get();
+    // Only this archive's role, plus account-wide roles (Admin, Super Admin) for the filter below
+    $users = $archive->users()->with(['roles' => fn ($query) => $query
+      ->where(fn ($query) => $query
+        ->where('model_has_roles.archive_id', $archive->id)
+        ->orWhereNull('model_has_roles.archive_id'))
+    ])->get();
 
     // Return all users if filter is FALSE
     if (!$filter) {

@@ -135,5 +135,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // Favorite
   Route::get('/favorites', [FavoriteController::class, 'get']);
-  Route::get('/favorite/toggle/{record:uuid}', [FavoriteController::class, 'toggle']);
+  Route::post('/favorite/toggle/{record:uuid}', [FavoriteController::class, 'toggle']);
 });
