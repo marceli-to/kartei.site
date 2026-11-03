@@ -415,3 +415,16 @@ it('refuses to move files with path traversal in the name', function () {
   expect($moved)->toBeFalse();
   Storage::disk('public')->assertExists("archives/{$this->otherArchive->uuid}/secret_resized.jpg");
 });
+
+it('returns per-archive abilities that match the policy', function () {
+  $archivist = addMember($this->archive, Role::findByName('Archivist', 'web'), $this->admin, ['edit.card']);
+
+  Sanctum::actingAs($archivist);
+  $abilities = $this->getJson('/api/user/permissions')->assertOk()->json('archives');
+  expect($abilities)->toHaveKey($this->archive->uuid)->not->toHaveKey($this->otherArchive->uuid);
+  expect($abilities[$this->archive->uuid])->toBe(['view', 'updateRecord']);
+
+  Sanctum::actingAs($this->admin);
+  $abilities = $this->getJson('/api/user/permissions')->json('archives');
+  expect($abilities[$this->archive->uuid])->toBe(\App\Actions\UserPermission\ArchiveAbilities::ABILITIES);
+});

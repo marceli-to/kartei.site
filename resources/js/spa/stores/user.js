@@ -7,6 +7,8 @@ export const useUserStore = defineStore('user', {
     user: {},
     permissions: typeof window !== 'undefined' ? window.permissions || [] : [],
     roles: typeof window !== 'undefined' ? window.roles || [] : [],
+    // Per-archive abilities from ArchivePolicy: { [archiveUuid]: ['view', 'updateRecord', ...] }
+    archives: {},
     favorites: [],
     initialized: false
   }),
@@ -39,6 +41,7 @@ export const useUserStore = defineStore('user', {
         this.user = permissions.user;
         this.permissions = permissions.permissions;
         this.roles = permissions.roles;
+        this.archives = permissions.archives || {};
       } 
       catch (error) {
         console.error('Failed to fetch permissions and roles:', error);
@@ -58,6 +61,13 @@ export const useUserStore = defineStore('user', {
     can(permission) {
       if (this.isSuperAdmin) return true;
       return this.permissions.some(p => p.name === permission);
+    },
+
+    // Same rules as the API (ArchivePolicy). abilities: one name or a list (any of them)
+    canArchive(archiveUuid, abilities) {
+      if (this.isSuperAdmin) return true;
+      const granted = this.archives[archiveUuid] || [];
+      return [].concat(abilities).some(ability => granted.includes(ability));
     },
   }
 });

@@ -30,7 +30,7 @@
             </InputGroup>
           </div>
           <div class="flex flex-col gap-y-40">
-            <InputGroup class="relative">
+            <InputGroup v-if="userStore.can('create.archive')" class="relative">
               <Action 
                 label="Erstellen" 
                 variant="box"

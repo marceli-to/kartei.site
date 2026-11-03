@@ -1,55 +1,81 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/views/Home.vue';
-import Settings from '@/views/settings/Index.vue';
-import Archives from '@/views/archives/Index.vue';
-import ArchiveSettings from '@/views/archive/Index.vue';
-import ArchiveRecords from '@/views/records/Index.vue';
-import ArchiveRecordCreate from '@/views/records/Create.vue';
-import ArchiveRecordUpdate from '@/views/records/Update.vue';
+import { useUserStore } from '@/stores/user';
 
-// Error pages
-import Error401 from '@/views/error/401.vue';
-import Error403 from '@/views/error/403.vue';
-import Error404 from '@/views/error/404.vue';
-import Error419 from '@/views/error/419.vue';
-
-// Development
-import Users from '@/views/Users.vue';
-// import Archives from '@/views/Archives.vue';
-import Icons from '@/views/ui/Icons.vue';
-import Fonts from '@/views/ui/Fonts.vue';
-import Elements from '@/views/ui/Elements.vue';
-import Colors from '@/views/ui/Colors.vue';
-import Layouts from '@/views/ui/Layouts.vue';
+// Views are loaded on demand, each in its own chunk.
+//
+// meta.archiveAbility: the route's :uuid is an archive uuid and the user
+// needs one of these ArchivePolicy abilities for it (see stores/user.js).
+// meta.permission: a global permission (account level).
+const ARCHIVE_SETTINGS_ABILITIES = ['update', 'manageStructure', 'manageTemplate', 'manageTags', 'manageUsers', 'delete'];
 
 const routes = [
-  { path: '/archiv', name: 'home', component: Home },
-  { path: '/archiv/einstellungen', name: 'settings', component: Settings },
-  { path: '/archiv/meine-karteien', name: 'archives', component: Archives },
-  { path: '/archiv/kartei/einstellungen/:uuid?', name: 'archiveSettings', component: ArchiveSettings },
-  { path: '/archiv/kartei/karten/:uuid', name: 'archiveRecords', component: ArchiveRecords },
-  { path: '/archiv/kartei/karte/erstellen/:uuid', name: 'archiveRecordCreate', component: ArchiveRecordCreate },
-  { path: '/archiv/kartei/karte/bearbeiten/:uuid', name: 'archiveRecordUpdate', component: ArchiveRecordUpdate },
+  { path: '/archiv', name: 'home', component: () => import('@/views/Home.vue') },
+  { path: '/archiv/einstellungen', name: 'settings', component: () => import('@/views/settings/Index.vue') },
+  { path: '/archiv/meine-karteien', name: 'archives', component: () => import('@/views/archives/Index.vue') },
+  {
+    path: '/archiv/kartei/einstellungen/:uuid?',
+    name: 'archiveSettings',
+    component: () => import('@/views/archive/Index.vue'),
+    // Without uuid this page creates a new archive
+    meta: { archiveAbility: ARCHIVE_SETTINGS_ABILITIES, permissionWithoutUuid: 'create.archive' },
+  },
+  {
+    path: '/archiv/kartei/karten/:uuid',
+    name: 'archiveRecords',
+    component: () => import('@/views/records/Index.vue'),
+    meta: { archiveAbility: 'view' },
+  },
+  {
+    path: '/archiv/kartei/karte/erstellen/:uuid',
+    name: 'archiveRecordCreate',
+    component: () => import('@/views/records/Create.vue'),
+    meta: { archiveAbility: 'createRecord' },
+  },
+  // :uuid is the record's uuid here; the view checks the ability once the record is loaded
+  { path: '/archiv/kartei/karte/bearbeiten/:uuid', name: 'archiveRecordUpdate', component: () => import('@/views/records/Update.vue') },
 
   // Error pages
-  { path: '/error/401', name: '401', component: Error401 },
-  { path: '/error/403', name: '403', component: Error403 },
-  { path: '/error/404', name: '404', component: Error404 },
-  { path: '/error/419', name: '419', component: Error419 },
+  { path: '/error/401', name: '401', component: () => import('@/views/error/401.vue') },
+  { path: '/error/403', name: '403', component: () => import('@/views/error/403.vue') },
+  { path: '/error/404', name: '404', component: () => import('@/views/error/404.vue') },
+  { path: '/error/419', name: '419', component: () => import('@/views/error/419.vue') },
   { path: '/:catchAll(.*)', redirect: '/error/404' },
-
-  // ui/dev stuff
-  { path: '/archiv/benutzer', name: 'users', component: Users },
-  { path: '/archiv/icons', name: 'icons', component: Icons },
-  { path: '/archiv/fonts', name: 'fonts', component: Fonts },
-  { path: '/archiv/elements', name: 'elements', component: Elements },
-  { path: '/archiv/colors', name: 'colors', component: Colors },
-  { path: '/archiv/layouts', name: 'layouts', component: Layouts },
 ];
 
+// UI demo pages, only in development builds
+if (import.meta.env.DEV) {
+  routes.push(
+    { path: '/archiv/benutzer', name: 'users', component: () => import('@/views/Users.vue') },
+    { path: '/archiv/icons', name: 'icons', component: () => import('@/views/ui/Icons.vue') },
+    { path: '/archiv/fonts', name: 'fonts', component: () => import('@/views/ui/Fonts.vue') },
+    { path: '/archiv/elements', name: 'elements', component: () => import('@/views/ui/Elements.vue') },
+    { path: '/archiv/colors', name: 'colors', component: () => import('@/views/ui/Colors.vue') },
+    { path: '/archiv/layouts', name: 'layouts', component: () => import('@/views/ui/Layouts.vue') },
+  );
+}
+
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+// Load permissions before the first view renders, then check route access
+router.beforeEach(async (to) => {
+  const userStore = useUserStore();
+  await userStore.initialize();
+
+  const { archiveAbility, permissionWithoutUuid } = to.meta;
+  const uuid = to.params.uuid;
+
+  if (permissionWithoutUuid && !uuid) {
+    return userStore.can(permissionWithoutUuid) || { name: '403' };
+  }
+
+  if (archiveAbility && uuid) {
+    return userStore.canArchive(uuid, archiveAbility) || { name: '403' };
+  }
+
+  return true;
 });
 
 export default router;

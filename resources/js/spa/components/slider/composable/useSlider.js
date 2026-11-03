@@ -8,9 +8,14 @@ export function useSlider(initialSlides) {
   
   // Filter sections based on permissions
   const slides = computed(() => {
-    return allSlidesRef.value.filter(section =>
-      !section.permission || userStore.can(section.permission)
-    );
+    // permission: a global permission name, or a function returning a boolean
+    // (e.g. a per-archive check via userStore.canArchive)
+    return allSlidesRef.value.filter(section => {
+      if (!section.permission) return true;
+      return typeof section.permission === 'function'
+        ? section.permission()
+        : userStore.can(section.permission);
+    });
   });
   
   function handleSlideChange(newIndex) {

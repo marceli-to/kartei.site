@@ -8,6 +8,7 @@ class Sync
   {
     // Detach any existing relationship with this archive
     $user->archives()->detach($archiveId);
+    $user->flushArchiveMemberships();
 
     // Sync with new pivot data
     return $user->archives()->syncWithoutDetaching([

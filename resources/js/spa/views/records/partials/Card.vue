@@ -12,9 +12,10 @@
     <div class="border-y border-y-graphite">
       <div class="min-h-default flex items-center justify-between font-muoto-medium">
         <template v-if="record.display_number">
-          <router-link :to="{ name: 'archiveRecordUpdate', params: { uuid: record.uuid } }">
+          <router-link v-if="canEdit" :to="{ name: 'archiveRecordUpdate', params: { uuid: record.uuid } }">
             {{ record.display_number }}
           </router-link>
+          <span v-else>{{ record.display_number }}</span>
         </template>
         <Favorite :uuid="record.uuid" />
       </div>
@@ -30,6 +31,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useUserStore } from '@/stores/user';
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import ImageSlideshow from '@/components/media/Slideshow.vue';
@@ -41,6 +43,9 @@ const props = defineProps({
     required: true
   },
 });
+
+const userStore = useUserStore();
+const canEdit = computed(() => userStore.canArchive(props.record.archive?.uuid, 'updateRecord'));
 
 const media = computed(() => props.record.media || []);
 

@@ -157,12 +157,29 @@ class User extends Authenticatable implements MustVerifyEmail
     return false;
   }
 
+  /**
+   * Memberships (archive_user rows) keyed by archive id, loaded once per
+   * model instance: policies check them several times per request.
+   */
+  protected ?\Illuminate\Support\Collection $archiveMembershipCache = null;
+
   private function archiveMembership(Archive $archive): ?object
   {
-    return \DB::table('archive_user')
-      ->where('archive_id', $archive->id)
+    $this->archiveMembershipCache ??= \DB::table('archive_user')
       ->where('user_id', $this->id)
-      ->first(['role_id']);
+      ->get(['archive_id', 'role_id'])
+      ->keyBy('archive_id');
+
+    return $this->archiveMembershipCache->get($archive->id);
+  }
+
+  /**
+   * Call after changing this user's archive memberships.
+   */
+  public function flushArchiveMemberships(): static
+  {
+    $this->archiveMembershipCache = null;
+    return $this;
   }
 
   public function hasActiveSubscription(): bool

@@ -6,6 +6,8 @@ class Detach
 {
   public function execute(User $user, $archives): int
   {
-    return $user->archives()->detach($archives);
+    $detached = $user->archives()->detach($archives);
+    $user->flushArchiveMemberships();
+    return $detached;
   }
 }

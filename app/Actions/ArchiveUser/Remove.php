@@ -12,6 +12,7 @@ class Remove
   public function execute(User $user, Archive $archive): void
   {
     $user->archives()->detach($archive->id);
+    $user->flushArchiveMemberships();
 
     $user->roles()->wherePivot('archive_id', $archive->id)->detach();
 

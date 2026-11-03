@@ -8,6 +8,7 @@ class Attach
   {
     // Detach any existing entry for this archive
     $user->archives()->detach($archiveId);
+    $user->flushArchiveMemberships();
 
     // Attach without metadata if the user is 'Super Admin' or 'Admin'
     if ($user->hasRole('Super Admin') || $user->hasRole('Admin')) {

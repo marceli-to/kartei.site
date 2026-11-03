@@ -49,7 +49,6 @@ watchEffect(() => {
 
   <Toast />
   <Dialog />
-  <User />
 
   <!-- Global overlay (always mounted, shows when activeCount > 0) -->
   <LoadingOverlay />
@@ -62,7 +61,6 @@ import { useUserStore } from '@/stores/user';
 import { useTheme } from '@/composables/useTheme';
 import { useGlobalLoading } from '@/composables/useGlobalLoading';
 
-import User from '@/components/User.vue';
 import Toast from '@/components/toast/Toast.vue';
 import Dialog from '@/components/dialog/Dialog.vue';
 import Header from '@/components/layout/Header.vue';

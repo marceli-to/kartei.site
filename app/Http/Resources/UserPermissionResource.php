@@ -2,6 +2,7 @@
 namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Actions\UserPermission\ArchiveAbilities;
 
 class UserPermissionResource extends JsonResource
 {
@@ -24,6 +25,8 @@ class UserPermissionResource extends JsonResource
         ])
         ->unique('name')
         ->values(),
+      // Per-archive abilities (ArchivePolicy), keyed by archive uuid
+      'archives' => (object) (new ArchiveAbilities())->execute($this->resource),
     ];
   }
 }

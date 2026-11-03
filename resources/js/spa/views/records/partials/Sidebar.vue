@@ -55,7 +55,7 @@
 
     </div>
 
-    <InputGroup class="sticky bottom-20">
+    <InputGroup v-if="canEditSettings" class="sticky bottom-20">
       <Action
         label="Voreinstellungen"
         variant="box"
@@ -66,7 +66,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
+import { useUserStore } from '@/stores/user';
 
 import InputSearch from '@/components/forms/Search.vue';
 import InputSelect from '@/components/forms/Select.vue';
@@ -92,6 +93,11 @@ const props = defineProps({
     default: () => []
   }
 });
+
+const userStore = useUserStore();
+const canEditSettings = computed(() => userStore.canArchive(props.uuid, [
+  'update', 'manageStructure', 'manageTemplate', 'manageTags', 'manageUsers', 'delete',
+]));
 
 const emit = defineEmits(['update:modelValue']);
 

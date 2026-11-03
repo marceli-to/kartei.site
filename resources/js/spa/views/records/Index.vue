@@ -31,9 +31,10 @@
         </template>
         <template v-else>
           <div v-if="records.length === 0">
-            <router-link :to="{ name: 'archiveRecordCreate', params: { uuid } }">
+            <router-link v-if="canCreate" :to="{ name: 'archiveRecordCreate', params: { uuid } }">
               <Skeleton />
             </router-link>
+            <Skeleton v-else />
           </div>
           <div v-else class="text-center py-20">
             <p class="text-gray-500">Keine Ergebnisse gefunden.</p>
@@ -46,6 +47,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
@@ -87,14 +89,23 @@ const archive = ref(null)
 const records = ref([])
 const categoryHierarchy = ref([])
 
-const actionLinks = [
-  {
-    type: 'link',
-    label: 'Karte',
-    icon: IconPlus,
-    to: { name: 'archiveRecordCreate', params: { uuid: uuid.value } },
-    router: true,
-  },
+const userStore = useUserStore()
+const canCreate = computed(() => userStore.canArchive(uuid.value, 'createRecord'))
+
+const createLink = {
+  type: 'link',
+  label: 'Karte',
+  icon: IconPlus,
+  to: { name: 'archiveRecordCreate', params: { uuid: uuid.value } },
+  router: true,
+}
+
+const actionLinks = computed(() => [
+  ...(canCreate.value ? [createLink] : []),
+  ...otherActionLinks,
+])
+
+const otherActionLinks = [
   {
     type: 'button',
     label: 'Ordnen',

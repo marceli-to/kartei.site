@@ -14,6 +14,7 @@ class Delete
 
     // remove archives
     $user->archives()->detach();
+    $user->flushArchiveMemberships();
 
     return $user->delete();
   }

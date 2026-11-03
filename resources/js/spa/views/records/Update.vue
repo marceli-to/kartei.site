@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
@@ -116,6 +116,7 @@ import { useToastStore } from '@/components/toast/stores/toast'
 import { useDialogStore } from '@/components/dialog/stores/dialog'
 import { getArchiveMeta } from '@/services/api/archive'
 import { getRecord, updateRecord, deleteRecord } from '@/services/api/record'
+import { useUserStore } from '@/stores/user'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -165,14 +166,17 @@ const handleDelete = () => {
   })
 }
 
-const actionLinks = [
+const userStore = useUserStore()
+const canDelete = computed(() => !!record.value && userStore.canArchive(record.value.archive.uuid, 'deleteRecord'))
+
+const actionLinks = computed(() => canDelete.value ? [
   {
     type: 'button',
     label: 'Löschen',
     icon: IconCross,
     onClick: handleDelete,
   },
-];
+] : []);
 
 
 const {
@@ -240,8 +244,8 @@ const handleCancel = () => {
 onMounted(async () => {
   try {
     isLoading.value = true;
-    await loadRecordAndArchive(uuid.value);
-    populateForm();
+    const loaded = await loadRecordAndArchive(uuid.value);
+    if (loaded) populateForm();
   } 
   catch (error) {
     console.error(error);
@@ -253,6 +257,13 @@ onMounted(async () => {
 
 const loadRecordAndArchive = async (recordUuid) => {
   const recordData = await getRecord(recordUuid);
+
+  // The route only knows the record uuid; check the archive ability now
+  if (!userStore.canArchive(recordData.archive.uuid, 'updateRecord')) {
+    router.replace({ name: '403' });
+    return;
+  }
+
   const archiveMetaData = await getArchiveMeta(recordData.archive.uuid);
 
   record.value = recordData;
@@ -268,6 +279,7 @@ const loadRecordAndArchive = async (recordUuid) => {
 
   normalizeTagsData(archiveMetaData.tags);
   normalizeCategoryData(archiveMetaData.categories_registers);
+  return true;
 }
 
 const populateForm = () => {

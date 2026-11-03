@@ -16,6 +16,7 @@ import { usePageTitle } from '@/composables/usePageTitle';
 import { useSlider } from '@/components/slider/composable/useSlider';
 import { useRoute } from 'vue-router';
 import { getArchive } from '@/services/api/archive';
+import { useUserStore } from '@/stores/user';
 
 import SliderContainer from '@/components/slider/Container.vue';
 import SliderNavigationHeader from '@/components/slider/NavigationHeader.vue';
@@ -31,6 +32,11 @@ const route = useRoute();
 const uuid = computed(() => route.params.uuid || null);
 
 const { setTitle } = usePageTitle();
+const userStore = useUserStore();
+
+// Per-archive check; without uuid the page creates a new archive
+const allows = (ability) => () =>
+  uuid.value ? userStore.canArchive(uuid.value, ability) : userStore.can('create.archive');
 
 const archive = ref(null);
 const isLoading = ref(false);
@@ -41,12 +47,14 @@ const createSlides = () => [
     id: 'basic-information', 
     name: "Basisinformationen", 
     class: "w-3/12 min-w-3/12", 
+    permission: allows('update'),
     component: markRaw(BasicInformationComponent),
   },
   { 
     id: 'structure', 
     name: "Struktur", 
     class: "w-6/12 min-w-6/12", 
+    permission: allows('manageStructure'),
     component: markRaw(CategoryComponent),
     disabled: !uuid.value
   },
@@ -54,6 +62,7 @@ const createSlides = () => [
     id: 'card', 
     name: "Kartenvorlage", 
     class: "w-3/12 min-w-3/12", 
+    permission: allows('manageTemplate'),
     component: markRaw(CardComponent),
     disabled: !uuid.value
   },
@@ -61,7 +70,7 @@ const createSlides = () => [
     id: 'tags', 
     name: "Tags", 
     class: "w-3/12 min-w-3/12", 
-    permission: 'edit.tags',
+    permission: allows('manageTags'),
     component: markRaw(TagsComponent),
     disabled: !uuid.value
   },
@@ -69,7 +78,7 @@ const createSlides = () => [
     id: 'user', 
     name: "Benutzer", 
     class: "w-3/12 min-w-3/12", 
-    permission: 'edit.users',
+    permission: allows('manageUsers'),
     component: markRaw(UserComponent),
     disabled: !uuid.value
   },
@@ -77,6 +86,7 @@ const createSlides = () => [
     id: 'delete', 
     name: "Löschen", 
     class: "w-3/12 min-w-3/12", 
+    permission: allows('delete'),
     component: markRaw(DeleteComponent),
     disabled: !uuid.value
   }
