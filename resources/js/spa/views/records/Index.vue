@@ -19,20 +19,22 @@
       </ContentNavigation>
 
       <ContentMain>
-        <template v-if="filteredRecords.length > 0">
-          <div class="flex flex-wrap gap-x-16 gap-y-32">
+        <template v-if="records.length > 0">
+          <div
+            class="flex flex-wrap gap-x-16 gap-y-32 transition-opacity"
+            :class="{ 'opacity-50': isFiltering }">
             <Card
-              v-for="record in visibleRecords"
+              v-for="record in records"
               :key="record.uuid"
               :record="record"
               class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
             />
           </div>
-          <!-- Renders the next batch of cards when scrolled into view -->
-          <div v-if="visibleRecords.length < filteredRecords.length" ref="loadMoreSentinel" class="h-px" />
+          <!-- Loads the next page when scrolled into view -->
+          <div v-if="hasMore" ref="loadMoreSentinel" class="h-px" />
         </template>
         <template v-else>
-          <div v-if="records.length === 0">
+          <div v-if="archiveTotal === 0">
             <router-link v-if="canCreate" :to="{ name: 'archiveRecordCreate', params: { uuid } }">
               <Skeleton />
             </router-link>
@@ -48,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
@@ -86,10 +88,9 @@ const {
 
 const { setTitle } = usePageTitle()
 
-const isLoading = ref(false)
+const isLoading = ref(true)
 const archive = ref(null)
 const records = ref([])
-const categoryHierarchy = ref([])
 
 const userStore = useUserStore()
 const canCreate = computed(() => userStore.canArchive(uuid.value, 'createRecord'))
@@ -154,98 +155,105 @@ const filters = ref({
   selectedTags: []
 })
 
-// Helper to get all register UUIDs for selected categories
-const getAllowedCategoryUuids = computed(() => {
-  const allowed = new Set()
-  
-  // Add directly selected categories
-  filters.value.selectedCategories.forEach(categoryUuid => {
-    allowed.add(categoryUuid)
-    
-    // Find this category in hierarchy and add all its registers
-    const category = categoryHierarchy.value.find(cat => cat.uuid === categoryUuid)
-    if (category?.registers) {
-      category.registers.forEach(register => {
-        allowed.add(register.uuid)
-      })
-    }
-  })
-  
-  // Add directly selected registers
-  filters.value.selectedRegisters.forEach(registerUuid => {
-    allowed.add(registerUuid)
-  })
-  
-  return Array.from(allowed)
+// Filtering, sorting and paging run on the server
+const PER_PAGE = 48
+const page = ref(0)
+const lastPage = ref(1)
+const archiveTotal = ref(null)
+const isFiltering = ref(false)
+const isLoadingMore = ref(false)
+const hasMore = computed(() => page.value < lastPage.value)
+
+const listParams = () => ({
+  search: filters.value.searchQuery.trim() || undefined,
+  sort: filters.value.sortOrder,
+  categories: filters.value.selectedCategories,
+  registers: filters.value.selectedRegisters,
+  tags: filters.value.selectedTags,
+  per_page: PER_PAGE,
 })
 
-// Client-side filtering logic
-const filteredRecords = computed(() => {
-  let filtered = [...records.value]
+// Only the latest request may update the list (filters can change mid-flight)
+let requestId = 0
+let lastParamsKey = null
 
-  // Search filter
-  if (filters.value.searchQuery) {
-    const query = filters.value.searchQuery.toLowerCase()
-    filtered = filtered.filter(record => 
-      record.display_number?.toLowerCase().includes(query) ||
-      record.fields?.some(field => 
-        field.content?.toLowerCase().includes(query)
-      )
-    )
+const fetchPage = (pageNumber) => getRecords(
+  uuid.value,
+  { ...listParams(), page: pageNumber },
+  { meta: { skipLoading: true } }
+)
+
+const applyPage = (result, append) => {
+  records.value = append ? [...records.value, ...result.data] : result.data
+  page.value = result.meta.current_page
+  lastPage.value = result.meta.last_page
+  archiveTotal.value = result.meta.archive_total
+}
+
+const reload = async () => {
+  const key = JSON.stringify(listParams())
+  if (key === lastParamsKey) return
+  lastParamsKey = key
+
+  const id = ++requestId
+  isFiltering.value = true
+  try {
+    const result = await fetchPage(1)
+    if (id === requestId) applyPage(result, false)
   }
-
-  // Category + Register filter (hierarchical)
-  if (filters.value.selectedCategories.length > 0 || filters.value.selectedRegisters.length > 0) {
-    const allowedUuids = getAllowedCategoryUuids.value
-    filtered = filtered.filter(record => 
-      allowedUuids.includes(record.category?.uuid)
-    )
+  catch (error) {
+    // Let the same filters be tried again
+    if (id === requestId) lastParamsKey = null
+    console.error(error)
   }
-
-  // Tags filter
-  if (filters.value.selectedTags.length > 0) {
-    filtered = filtered.filter(record =>
-      record.tags?.some(tagUuid => 
-        filters.value.selectedTags.includes(tagUuid)
-      )
-    )
+  finally {
+    if (id === requestId) isFiltering.value = false
   }
+}
 
-  // Sort
-  filtered.sort((a, b) => {
-    switch(filters.value.sortOrder) {
-      case 'date':
-        return new Date(b.created_at) - new Date(a.created_at)
-      case 'created_at':
-        return new Date(b.created_at) - new Date(a.created_at)
-      case 'updated_at':
-        return new Date(b.updated_at) - new Date(a.updated_at)
-      case 'name':
-      default:
-        return a.display_number?.localeCompare(b.display_number) || 0
-    }
-  })
+const loadMore = async () => {
+  if (!hasMore.value || isLoadingMore.value || isFiltering.value) return
+  const id = requestId
+  isLoadingMore.value = true
+  try {
+    const result = await fetchPage(page.value + 1)
+    if (id === requestId) applyPage(result, true)
+  }
+  catch (error) {
+    console.error(error)
+  }
+  finally {
+    isLoadingMore.value = false
+  }
+  // The observer only reports changes: if the sentinel is still in view, check it again
+  await nextTick()
+  if (loadMoreSentinel.value) {
+    observer?.unobserve(loadMoreSentinel.value)
+    observer?.observe(loadMoreSentinel.value)
+  }
+}
 
-  return filtered
+// Wait for a pause in typing before searching; other filters apply at once
+let searchTimer = null
+watch(() => filters.value.searchQuery, () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(reload, 300)
 })
-
-// Render cards in batches: large archives would otherwise mount
-// hundreds of cards (with images) at once
-const BATCH_SIZE = 48
-const visibleCount = ref(BATCH_SIZE)
-const visibleRecords = computed(() => filteredRecords.value.slice(0, visibleCount.value))
-
-// Back to the first batch whenever the filters change
-watch(filters, () => { visibleCount.value = BATCH_SIZE }, { deep: true })
+watch(
+  () => [filters.value.sortOrder, filters.value.selectedCategories, filters.value.selectedRegisters, filters.value.selectedTags],
+  () => {
+    clearTimeout(searchTimer)
+    reload()
+  },
+  { deep: true }
+)
 
 const loadMoreSentinel = ref(null)
 let observer = null
 
 onMounted(() => {
   observer = new IntersectionObserver((entries) => {
-    if (entries.some(entry => entry.isIntersecting)) {
-      visibleCount.value += BATCH_SIZE
-    }
+    if (entries.some(entry => entry.isIntersecting)) loadMore()
   }, { rootMargin: '800px' })
 })
 
@@ -255,7 +263,10 @@ watch(loadMoreSentinel, (element, previous) => {
   if (element) observer?.observe(element)
 })
 
-onUnmounted(() => observer?.disconnect())
+onUnmounted(() => {
+  observer?.disconnect()
+  clearTimeout(searchTimer)
+})
 
 onMounted(async () => {
   try {
@@ -271,10 +282,11 @@ onMounted(async () => {
 })
 
 const loadData = async () => {
+  lastParamsKey = JSON.stringify(listParams())
   const [archiveData, archiveMetaData, recordsData] = await Promise.all([
       getArchive(uuid.value),
       getArchiveMeta(uuid.value),
-      getRecords(uuid.value)
+      fetchPage(1)
     ]);
 
     normalizeCategoryRegisterData({
@@ -284,11 +296,8 @@ const loadData = async () => {
     normalizeTagsData(archiveMetaData.tags);
     normalizeCategoryData(archiveMetaData.categories_registers);
 
-    // Store hierarchical category data for filtering
-    categoryHierarchy.value = archiveMetaData.categories_registers;
-
     archive.value = archiveData;
-    records.value = recordsData;
+    applyPage(recordsData, false);
 
     // Set title
     setTitle(archive.value.name)

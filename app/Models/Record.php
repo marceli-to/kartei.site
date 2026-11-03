@@ -61,7 +61,7 @@ class Record extends Model
    */
   /**
    * Position (0-based) within the category, when computed in bulk for a list
-   * (see withDisplayIndexes). The number is positional on purpose: it shifts
+   * (see Actions\Record\Get). The number is positional on purpose: it shifts
    * when an earlier record in the category is deleted.
    */
   protected ?int $displayIndex = null;
@@ -70,32 +70,6 @@ class Record extends Model
   {
     $this->displayIndex = $index;
     return $this;
-  }
-
-  /**
-   * Compute every record's position within its category with one query,
-   * instead of one query per record in getDisplayNumberAttribute.
-   */
-  public static function withDisplayIndexes(iterable $records, int $archiveId): void
-  {
-    $ordered = static::where('archive_id', $archiveId)
-      ->orderBy('category_id')
-      ->orderBy('created_at')
-      ->orderBy('id')
-      ->get(['id', 'category_id']);
-
-    // id => position within its category
-    $positions = [];
-    $counters = [];
-    foreach ($ordered as $row) {
-      $positions[$row->id] = $counters[$row->category_id] = ($counters[$row->category_id] ?? -1) + 1;
-    }
-
-    foreach ($records as $record) {
-      if (isset($positions[$record->id])) {
-        $record->setDisplayIndex($positions[$record->id]);
-      }
-    }
   }
 
   public function getDisplayNumberAttribute(): string
@@ -116,18 +90,21 @@ class Record extends Model
       return '';
     }
 
-    $paddedIndex = str_pad($index + 1, 4, '0', STR_PAD_LEFT);
+    return static::formatDisplayNumber($category, $archive, $index);
+  }
 
-    // Is this a sub-register (i.e., a register with a parent)?
-    if ($category->isRegister()) {
-      $parent = $category->parent;
-      $number = "{$category->number}.{$paddedIndex}";
-      $acronym = "{$archive->acronym}_{$parent->custom_id}_{$category->custom_id}";
-    } 
-    else {
-      $number = "{$category->number}.{$paddedIndex}";
-      $acronym = "{$archive->acronym}_{$category->custom_id}";
-    }
+  /**
+   * "<category number>.<position, 4 digits> / <acronym>_[<parent id>_]<category id>"
+   * $index is the 0-based position of the record within its category.
+   */
+  public static function formatDisplayNumber(Category $category, Archive $archive, int $index): string
+  {
+    $number = $category->number . '.' . str_pad($index + 1, 4, '0', STR_PAD_LEFT);
+
+    // A register (sub-category) also carries its parent's id
+    $acronym = $category->isRegister()
+      ? "{$archive->acronym}_{$category->parent->custom_id}_{$category->custom_id}"
+      : "{$archive->acronym}_{$category->custom_id}";
 
     return "{$number} / {$acronym}";
   }

@@ -12,23 +12,29 @@ use App\Actions\Record\Create as CreateRecordAction;
 use App\Actions\Record\Update as UpdateRecordAction;
 use App\Actions\Record\Delete as DeleteRecordAction;
 use App\Http\Requests\Record\StoreRequest;
+use App\Http\Requests\Record\IndexRequest;
 
 class RecordController extends Controller
 {
   /**
-   * Get records for a specific archive
-   *
-   * @param Archive $archive
-   * @return JsonResponse
+   * One page of an archive's records, filtered and sorted
    */
-  public function get(Archive $archive): JsonResponse
+  public function get(IndexRequest $request, Archive $archive): JsonResponse
   {
     $this->authorize('view', $archive);
-    return response()->json(
-      RecordResource::collection(
-        (new GetRecordAction())->execute(['archive_id' => $archive->id])
-      )
-    );
+    $result = (new GetRecordAction())->execute($archive, $request->validated());
+
+    return response()->json([
+      'data' => RecordResource::collection($result['records'])->resolve($request),
+      'meta' => [
+        'current_page' => $result['page'],
+        'last_page' => $result['last_page'],
+        'per_page' => $result['per_page'],
+        'total' => $result['total'],
+        // All records of the archive, regardless of filters
+        'archive_total' => $result['archive_total'],
+      ],
+    ]);
   }
 
   /**

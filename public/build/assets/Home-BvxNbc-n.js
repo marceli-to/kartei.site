@@ -1,1 +1,0 @@
-import{A as e,p as t}from"./vue.runtime.esm-bundler-DLV_yvWY.js";import{n}from"./spa-z-beMnrs.js";var r={};function i(n,r){return e(),t(`h1`,null,`Home`)}var a=n(r,[[`render`,i]]);export{a as default};

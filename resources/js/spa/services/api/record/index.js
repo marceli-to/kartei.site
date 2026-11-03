@@ -5,8 +5,10 @@ export const getRecord = async (uuid) => {
   return response.data;
 };
 
-export const getRecords = async (uuid) => {
-  const response = await api.get(`/records/${uuid}`);
+// One page of records: { data: [...], meta: { current_page, last_page, per_page, total, archive_total } }
+// params: { page, per_page, search, sort, categories: [], registers: [], tags: [] }
+export const getRecords = async (uuid, params = {}, config = {}) => {
+  const response = await api.get(`/records/${uuid}`, { params, ...config });
   return response.data;
 };
 
