@@ -17,18 +17,18 @@
     </template>
 
     <template v-if="viewState === 'createPermissions'">
-      <CreateUserPermissions 
+      <UserPermissions 
         :user="createdUser"
         :archiveUuid="archiveUuid"
-        @success="handleUserPermissionsCreated"
-        @cancel="resetView()" />
+        @success="handleUserPermissionsSaved" />
     </template>
 
     <template v-if="viewState === 'updatePermissions'">
-      <UpdateUserPermissions 
+      <UserPermissions 
         :user="selectedUser"
         :archiveUuid="archiveUuid"
-        @success="handleUserPermissionsUpdated"
+        cancelable
+        @success="handleUserPermissionsSaved"
         @cancel="resetView()" />
     </template>
 
@@ -58,8 +58,7 @@ import { getUserSubscription } from '@/services/api/user';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/users/partials/CreateUser.vue';
 import UpdateUser from '@/views/users/partials/UpdateUser.vue';
-import CreateUserPermissions from '@/views/users/partials/CreateUserPermissions.vue';
-import UpdateUserPermissions from '@/views/users/partials/UpdateUserPermissions.vue';
+import UserPermissions from '@/views/users/partials/UserPermissions.vue';
 import ListUsers from '@/views/users/partials/ListUsers.vue';
 import SubscriptionInfo from '@/views/users/components/SubscriptionInfo.vue';
 
@@ -159,7 +158,7 @@ const handleUserUpdated = () => {
   fetchUsers();
 };
 
-const handleUserPermissionsCreated = () => {
+const handleUserPermissionsSaved = () => {
   resetView();
   fetchUsers();
 };
@@ -168,11 +167,6 @@ const handleUserSelectedPermissions = (user) => {
   selectedUser.value = user;
   viewState.value = 'updatePermissions';
 }; 
-
-const handleUserPermissionsUpdated = () => {
-  resetView();
-  fetchUsers();
-};
 
 const handleUserDeleted = (deletedUserUuid) => {
   users.value = users.value.filter(user => user.uuid !== deletedUserUuid);

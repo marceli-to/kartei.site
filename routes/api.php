@@ -70,8 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // User permissions
   Route::get('/user/permissions', [UserPermissionController::class, 'get']);
-  Route::put('/user/permissions/store/{user:uuid}', [UserPermissionController::class, 'store']);
-  Route::put('/user/permissions/update/{user:uuid}', [UserPermissionController::class, 'update']);
+  Route::put('/user/permissions/{user:uuid}', [UserPermissionController::class, 'store']);
 
   // User invite
   Route::post('/user/invite/{user:uuid}', [UserInviteController::class, 'invite']);

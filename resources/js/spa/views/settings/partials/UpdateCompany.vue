@@ -6,58 +6,58 @@
     <div class="flex flex-col gap-y-48">
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Bezeichnung / Firma" id="name" required />
+          <InputLabel label="Bezeichnung / Firma" id="company_name" required />
           <InputText
             v-model="form.name"
-            id="name"
+            id="company_name"
             :error="errors.name"
             @update:error="errors.name = $event"
             :placeholder="errors.name ? errors.name : 'Bezeichnung / Firma'"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Strasse" id="street" required />
+          <InputLabel label="Strasse" id="company_street" required />
           <InputText
             v-model="form.street"
-            id="street"
+            id="company_street"
             :error="errors.street"
             @update:error="errors.street = $event"
             :placeholder="errors.street ? errors.street : 'Strasse'"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Hausnummer" id="street_number" />
+          <InputLabel label="Hausnummer" id="company_street_number" />
           <InputText
             v-model="form.street_number"
-            id="street_number"
+            id="company_street_number"
             :error="errors.street_number"
             @update:error="errors.street_number = $event"
             :placeholder="errors.street_number ? errors.street_number : 'Hausnummer'" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="PLZ" id="zip" required />
+          <InputLabel label="PLZ" id="company_zip" required />
           <InputText
             v-model="form.zip"
-            id="zip"
+            id="company_zip"
             :error="errors.zip"
             @update:error="errors.zip = $event"
             :placeholder="errors.zip ? errors.zip : 'PLZ'"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Ort" id="city" required />
+          <InputLabel label="Ort" id="company_city" required />
           <InputText
             v-model="form.city"
-            id="city"
+            id="company_city"
             :error="errors.city"
             @update:error="errors.city = $event"
             :placeholder="errors.city ? errors.city : 'Ort'"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Land" id="country" required />
+          <InputLabel label="Land" id="company_country" required />
           <InputSelect
-            id="country"
+            id="company_country"
             v-model="form.country"
             :options="countries"
             :error="errors.country"
@@ -70,7 +70,7 @@
     </div>
     <ButtonGroup>
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
-      <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
+      <ButtonPrimary type="button" @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
   </form>
 </template>

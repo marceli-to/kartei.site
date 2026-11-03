@@ -4,30 +4,30 @@
     class="w-full h-full flex flex-col justify-between">
     <div class="flex flex-col gap-y-20">
       <InputGroup>
-        <InputLabel label="Vorname" id="firstname" required />
+        <InputLabel label="Vorname" id="user_firstname" required />
         <InputText
           v-model="form.firstname"
-          id="firstname"
+          id="user_firstname"
           :error="errors.firstname"
           @update:error="errors.firstname = $event"
           :placeholder="errors.firstname ? errors.firstname : 'Vorname'"
           required />
       </InputGroup>
       <InputGroup>
-        <InputLabel label="Nachname" id="name" required />
+        <InputLabel label="Nachname" id="user_name" required />
         <InputText
           v-model="form.name"
-          id="name"
+          id="user_name"
           :error="errors.name"
           @update:error="errors.name = $event"
           :placeholder="errors.name ? errors.name : 'Nachname'"
           required />
       </InputGroup>
       <InputGroup>
-        <InputLabel label="E-Mail" id="email" required />
+        <InputLabel label="E-Mail" id="user_email" required />
         <InputText
           v-model="form.email"
-          id="email"
+          id="user_email"
           :error="errors.email"
           @update:error="errors.email = $event"
           :placeholder="errors.email ? errors.email : 'E-Mail'"
@@ -36,7 +36,7 @@
     </div>
     <ButtonGroup>
       <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
-      <ButtonPrimary @click="$emit('cancel')" label="Abbrechen" />
+      <ButtonPrimary type="button" @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
   </form>
 </template>

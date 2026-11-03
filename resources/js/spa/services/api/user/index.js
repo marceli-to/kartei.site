@@ -86,14 +86,9 @@ export const deleteUserCompany = async (uuid) => {
 }
 
 export const storePermissions = async (user, formData) => {
-  const response = await api.put(`/user/permissions/store/${user.uuid}`, formData);
+  const response = await api.put(`/user/permissions/${user.uuid}`, formData);
   return response.data;
 };
-
-export const updatePermissions = async (user, formData) => {
-  const response = await api.put(`/user/permissions/update/${user.uuid}`, formData);
-  return response.data;
-};  
 
 export const sendInvitation = async (user, archive) => {
   const response = await api.post(`/user/invite/${user.uuid}`, archive);

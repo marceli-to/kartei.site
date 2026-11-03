@@ -1,5 +1,5 @@
 <template>
-  <fieldset :class="wrapperClasses">
+  <fieldset ref="fieldset" :class="wrapperClasses">
     <label 
       v-for="option in options" 
       :key="option.value" 
@@ -57,6 +57,7 @@
 </template>
 
 <script setup>
+import { ref, nextTick } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -120,7 +121,18 @@ const isChecked = (value) => {
     : props.modelValue === value; // For single selection
 };
 
+const fieldset = ref(null);
+
+// The inputs show what modelValue says, so a change the parent declines is undone
+const syncInputs = () => {
+  fieldset.value?.querySelectorAll('input').forEach((input, index) => {
+    input.checked = isChecked(props.options[index].value);
+  });
+};
+
 const updateValue = (value) => {
+  nextTick(syncInputs);
+
   // Check if the option is disabled before updating
   const optionItem = props.options.find(opt => opt.value === value);
   if (optionItem && optionItem.disabled) {

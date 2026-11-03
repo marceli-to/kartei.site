@@ -206,7 +206,7 @@ it('blocks assigning a role on an archive the actor does not administer', functi
   $target = makeUser();
   Sanctum::actingAs($this->admin);
 
-  $this->putJson("/api/user/permissions/store/{$target->uuid}", [
+  $this->putJson("/api/user/permissions/{$target->uuid}", [
     'archive' => $this->otherArchive->uuid,
     'role' => Role::findByName('Manager', 'web')->id,
     'permissions' => [],
@@ -217,7 +217,7 @@ it('never lets the API hand out the Admin or Super Admin role', function (string
   Sanctum::actingAs($this->admin);
 
   // Includes granting it to oneself
-  $this->putJson("/api/user/permissions/store/{$this->admin->uuid}", [
+  $this->putJson("/api/user/permissions/{$this->admin->uuid}", [
     'archive' => $this->archive->uuid,
     'role' => Role::findByName($roleName, 'web')->id,
     'permissions' => [],
@@ -230,7 +230,7 @@ it('rejects unpublished permissions such as edit.users', function () {
   $target = makeUser();
   Sanctum::actingAs($this->admin);
 
-  $this->putJson("/api/user/permissions/store/{$target->uuid}", [
+  $this->putJson("/api/user/permissions/{$target->uuid}", [
     'archive' => $this->archive->uuid,
     'role' => Role::findByName('Manager', 'web')->id,
     'permissions' => [Permission::findByName('edit.users', 'web')->id],
@@ -241,7 +241,7 @@ it('lets an archive admin grant access to their own archive', function () {
   $target = makeUser();
   Sanctum::actingAs($this->admin);
 
-  $this->putJson("/api/user/permissions/store/{$target->uuid}", [
+  $this->putJson("/api/user/permissions/{$target->uuid}", [
     'archive' => $this->archive->uuid,
     'role' => Role::findByName('Archivist', 'web')->id,
     'permissions' => [Permission::findByName('edit.card', 'web')->id],
@@ -251,6 +251,46 @@ it('lets an archive admin grant access to their own archive', function () {
   expect($target->isMemberOf($this->archive))->toBeTrue();
   expect($target->hasArchivePermission($this->archive, 'edit.card'))->toBeTrue();
   expect($target->hasArchivePermission($this->otherArchive, 'edit.card'))->toBeFalse();
+});
+
+it('lists a user\'s role and permissions per archive the actor administers', function () {
+  $viewer = Role::findByName('Viewer', 'web');
+  $target = addMember($this->archive, $viewer, $this->admin, ['edit.card']);
+  // A membership on another tenant's archive stays hidden
+  $target->archives()->attach($this->otherArchive->id, ['role_id' => $viewer->id, 'added_by' => $this->otherAdmin->id, 'added_at' => now()]);
+  // A member without any permission is still listed
+  $bare = addMember($this->archive, $viewer, $this->admin);
+  Sanctum::actingAs($this->admin);
+
+  $this->getJson("/api/permissions/user/{$target->uuid}")
+    ->assertOk()
+    ->assertExactJson([
+      $this->archive->uuid => [
+        'role' => $viewer->id,
+        'permissions' => [Permission::findByName('edit.card', 'web')->id],
+      ],
+    ]);
+
+  $this->getJson("/api/permissions/user/{$bare->uuid}")
+    ->assertOk()
+    ->assertExactJson([$this->archive->uuid => ['role' => $viewer->id, 'permissions' => []]]);
+});
+
+it('rejects changing a user\'s email to one that is taken', function () {
+  $member = addMember($this->archive, Role::findByName('Viewer', 'web'), $this->admin);
+  Sanctum::actingAs($this->admin);
+
+  $this->putJson("/api/archive/user/{$member->uuid}", ['firstname' => 'Renamed', 'name' => $member->name, 'email' => $member->email])
+    ->assertOk();
+  $deleted = makeUser(['email' => 'gone@example.test']);
+  $deleted->delete();
+  foreach ([$this->otherAdmin->email, 'gone@example.test'] as $email) {
+    $this->putJson("/api/archive/user/{$member->uuid}", ['firstname' => 'Renamed', 'name' => $member->name, 'email' => $email])
+      ->assertUnprocessable()
+      ->assertJsonValidationErrors('email');
+  }
+
+  expect($member->fresh()->firstname)->toBe('Renamed');
 });
 
 it('blocks editing or deleting users of another tenant', function () {
@@ -459,8 +499,8 @@ it('changes a role on one archive without touching the user\'s other archives', 
   $target = makeUser();
   Sanctum::actingAs($this->admin);
 
-  $grant = fn (Archive $archive, string $role, string $action = 'store') => $this->putJson(
-    "/api/user/permissions/{$action}/{$target->uuid}",
+  $grant = fn (Archive $archive, string $role) => $this->putJson(
+    "/api/user/permissions/{$target->uuid}",
     ['archive' => $archive->uuid, 'role' => Role::findByName($role, 'web')->id, 'permissions' => []]
   )->assertOk();
 
@@ -471,7 +511,7 @@ it('changes a role on one archive without touching the user\'s other archives', 
   expect(archiveRoleNames($target, $secondArchive))->toBe(['Viewer']);
 
   // Changing it on one archive leaves the other alone
-  $grant($this->archive, 'Manager', 'update');
+  $grant($this->archive, 'Manager');
   expect(archiveRoleNames($target, $this->archive))->toBe(['Manager']);
   expect(archiveRoleNames($target, $secondArchive))->toBe(['Viewer']);
 
