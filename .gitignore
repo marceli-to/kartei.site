@@ -21,6 +21,5 @@ INSTALL.txt
 /public/robots.txt
 /composer.phar
 /.nova
-/composer.lock
 /public/.htaccess
 /audit

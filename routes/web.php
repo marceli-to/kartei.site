@@ -21,6 +21,6 @@ Route::get('/archiv/{any?}', function () {
 
 Route::get('/error/{any?}', function () {
   return view('archive');
-})->where('any', '.*')->middleware(['auth', 'verified'])->name('page.archive');
+})->where('any', '.*')->middleware(['auth', 'verified'])->name('page.error');
 
 require __DIR__.'/auth.php';
