@@ -26,7 +26,6 @@ class User extends Authenticatable implements MustVerifyEmail
   use HasPermissions;
 
   protected $fillable = [
-    'uuid',
     'firstname',
     'name',
     'email',
@@ -35,7 +34,6 @@ class User extends Authenticatable implements MustVerifyEmail
     'color_theme',
     'company_id',
     'email_verified_at',
-    'deleted_at',
   ];
 
   protected $hidden = [
@@ -100,6 +98,70 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->favorites()
       ->join('records', 'favorites.record_id', '=', 'records.id')
       ->pluck('records.uuid');
+  }
+
+  public function creator(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'created_by');
+  }
+
+  public function isSuperAdmin(): bool
+  {
+    return $this->hasRole('Super Admin');
+  }
+
+  /**
+   * Account owners (self-registered "Admin" role) or Super Admins.
+   * They can't be managed by other archive admins.
+   */
+  public function isAccountAdmin(): bool
+  {
+    return $this->hasRole(['Super Admin', 'Admin']);
+  }
+
+  public function isMemberOf(Archive $archive): bool
+  {
+    return $this->archiveMembership($archive) !== null;
+  }
+
+  /**
+   * Admins are attached to their archives without a pivot role.
+   */
+  public function isAdminOf(Archive $archive): bool
+  {
+    $membership = $this->archiveMembership($archive);
+    return $membership !== null
+      && $membership->role_id === null
+      && $this->hasRole('Admin');
+  }
+
+  /**
+   * Per-archive permissions are stored as "<permission>.<archive id>",
+   * e.g. "edit.card.12" (see UserPermission\Store).
+   */
+  public function hasArchivePermission(Archive $archive, string|array $permissions): bool
+  {
+    if (!$this->isMemberOf($archive)) {
+      return false;
+    }
+
+    $names = $this->permissions->pluck('name');
+
+    foreach ((array) $permissions as $permission) {
+      if ($names->contains($permission . '.' . $archive->id)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private function archiveMembership(Archive $archive): ?object
+  {
+    return \DB::table('archive_user')
+      ->where('archive_id', $archive->id)
+      ->where('user_id', $this->id)
+      ->first(['role_id']);
   }
 
   public function hasActiveSubscription(): bool

@@ -24,7 +24,7 @@ class UserController extends Controller
   public function update(UpdateRequest $request): JsonResponse
   {
     $user = (new UpdateUserAction())->execute(
-      $request->all(), 
+      $request->validated(), 
       auth()->user()
     );
 

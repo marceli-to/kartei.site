@@ -15,15 +15,18 @@ class Create
     $archive = (new FindArchiveAction())->execute($data['archive_id'], true);
     $data['archive_id'] = $archive->id;
 
-    // Find tags by uuid
+    // The uuid is generated, never taken from input
+    unset($data['uuid']);
+
+    // Find tags by uuid (only tags of this archive)
     if (isset($data['tags'])) {
-      $tags = Tag::whereIn('uuid', $data['tags'])->get();
+      $tags = Tag::where('archive_id', $archive->id)->whereIn('uuid', $data['tags'])->get();
       $data['tags'] = $tags;
     }
 
     // Find category by uuid
     if (isset($data['category'])) {
-      $category = Category::where('uuid', $data['category'])->first();
+      $category = Category::where('archive_id', $archive->id)->where('uuid', $data['category'])->firstOrFail();
       $data['category_id'] = $category->id;
     }
 

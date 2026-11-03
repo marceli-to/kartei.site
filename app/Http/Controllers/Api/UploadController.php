@@ -15,15 +15,20 @@ class UploadController extends Controller
     return response()->json(['files' => $files]);
   }
 
-  public function destroy($url) 
+  public function destroy(Request $request, $url) 
   {
-    (new DeleteImageAction())->execute($url);
-    return response()->json(200);
+    $deleted = (new DeleteImageAction())->execute($url, $request->user());
+    return response()->json($deleted ? 200 : 422, $deleted ? 200 : 422);
   }
 
   public function order(Request $request)
   {
-    (new OrderImageAction())->execute($request->positions);
+    $request->validate([
+      'positions' => 'required|array',
+      'positions.*.uuid' => 'required|string',
+      'positions.*.position' => 'required|integer',
+    ]);
+    (new OrderImageAction())->execute($request->positions, $request->user());
     return response()->noContent();
   }
 }

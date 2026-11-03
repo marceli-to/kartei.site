@@ -9,6 +9,12 @@ class Move
 
   public function execute(string $imageName, string $archiveUuid): bool
   {
+    // Only plain filenames from temp/ may be moved (no path traversal)
+    if ($imageName !== basename($imageName) || !preg_match('/^[A-Za-z0-9._-]+$/', $imageName) || str_contains($imageName, '..')) {
+      \Log::warning("Invalid image filename to move: $imageName");
+      return false;
+    }
+
     $sourcePath = "temp/{$imageName}";
     $destinationDir = "archives/{$archiveUuid}";
     $destinationPath = "{$destinationDir}/{$imageName}";

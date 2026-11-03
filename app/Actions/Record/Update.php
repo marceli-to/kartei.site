@@ -1,7 +1,6 @@
 <?php
 namespace App\Actions\Record;
 
-use App\Actions\Archive\Find as FindArchiveAction;
 use App\Actions\RecordImage\Create as CreateRecordImageAction;
 use App\Models\Record;
 use App\Models\RecordField;
@@ -13,21 +12,19 @@ class Update
 {
   public function execute(Record $record, array $data): Record
   {
-    // Archive
-    if (isset($data['archive_id'])) {
-      $archive = (new FindArchiveAction())->execute($data['archive_id'], true);
-      $data['archive_id'] = $archive->id;
-    }
+    // A record stays in its archive; tags and category must belong to it
+    unset($data['archive_id'], $data['uuid']);
+    $archiveId = $record->archive_id;
 
     // Tags
     if (isset($data['tags'])) {
-      $tags = Tag::whereIn('uuid', $data['tags'])->get();
+      $tags = Tag::where('archive_id', $archiveId)->whereIn('uuid', $data['tags'])->get();
       $record->tags()->sync($tags->pluck('id')->toArray());
     }
 
     // Category
     if (isset($data['category'])) {
-      $category = Category::where('uuid', $data['category'])->first();
+      $category = Category::where('archive_id', $archiveId)->where('uuid', $data['category'])->firstOrFail();
       $data['category_id'] = $category->id;
     }
 

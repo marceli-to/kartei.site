@@ -12,6 +12,9 @@ use App\Actions\Permission\Get as GetPermissionAction;
 use App\Http\Resources\UserPermissionResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Archive;
+use App\Http\Requests\UserPermission\StoreRequest;
+use Illuminate\Support\Facades\DB;
 
 class UserPermissionController extends Controller
 {
@@ -20,28 +23,36 @@ class UserPermissionController extends Controller
     return new UserPermissionResource($request->user());
   }
 
-  public function store(Request $request, User $user): UserResource
+  public function store(StoreRequest $request, User $user): UserResource
   {
-    $archive = (new FindArchiveAction())->execute($request->archive, true);
+    $archive = $this->authorizedArchive($request, $user);
 
-    if ($archive) {
-      (new AssignRoleAction())->execute($user, $archive->id, $request->role);
-      (new AttachArchiveUserAction())->execute($user, $archive->id, $request->role);
-      (new StoreUserPermissionAction())->execute($user, $archive->id, $request->permissions);
-    }
+    DB::transaction(function () use ($user, $archive, $request) {
+      (new AssignRoleAction())->execute($user, $archive->id, $request->integer('role'));
+      (new AttachArchiveUserAction())->execute($user, $archive->id, $request->integer('role'));
+      (new StoreUserPermissionAction())->execute($user, $archive->id, $request->input('permissions', []));
+    });
+
     return new UserResource($user);
   }
-  
-  public function update(Request $request, User $user): UserResource
-  {
-    $archive = (new FindArchiveAction())->execute($request->archive, true);
 
-    if ($archive) {
-      (new AssignRoleAction())->execute($user, $archive->id, $request->role);
-      (new SyncArchiveUserAction())->execute($user, $archive->id, $request->role);
-      (new StoreUserPermissionAction())->execute($user, $archive->id, $request->permissions,);
-    }
-    
+  public function update(StoreRequest $request, User $user): UserResource
+  {
+    $archive = $this->authorizedArchive($request, $user);
+
+    DB::transaction(function () use ($user, $archive, $request) {
+      (new AssignRoleAction())->execute($user, $archive->id, $request->integer('role'));
+      (new SyncArchiveUserAction())->execute($user, $archive->id, $request->integer('role'));
+      (new StoreUserPermissionAction())->execute($user, $archive->id, $request->input('permissions', []));
+    });
+
     return new UserResource($user);
+  }
+
+  private function authorizedArchive(StoreRequest $request, User $user): Archive
+  {
+    $archive = (new FindArchiveAction())->execute($request->input('archive'), true);
+    $this->authorize('assignToArchive', [$user, $archive]);
+    return $archive;
   }
 }

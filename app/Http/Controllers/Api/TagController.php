@@ -21,6 +21,7 @@ class TagController extends Controller
    */
   public function get(Archive $archive): AnonymousResourceCollection
   {
+    $this->authorize('view', $archive);
     return TagResource::collection(
       (new GetTagAction())->execute($archive)
     );
@@ -28,6 +29,7 @@ class TagController extends Controller
 
   public function store(Request $request, Archive $archive): AnonymousResourceCollection
   {
+    $this->authorize('manageTags', $archive);
     (new UpdateOrCreateTagAction())->execute(
       $request->tags,
       $archive
@@ -41,6 +43,7 @@ class TagController extends Controller
    */
   public function destroy(Tag $tag)
   {
+    $this->authorize('manageTags', $tag->archive);
     (new DeleteTagAction())->execute($tag);
     return response()->json([
       'success' => true

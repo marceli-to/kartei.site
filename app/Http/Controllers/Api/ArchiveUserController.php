@@ -13,6 +13,7 @@ use App\Actions\User\Update as UpdateUserAction;
 use App\Actions\User\Delete as DeleteUserAction;
 use App\Actions\User\Related as RelatedAction;
 use App\Actions\ArchiveUser\Get as GetArchiveUserAction;
+use App\Actions\ArchiveUser\Remove as RemoveArchiveUserAction;
 use App\Models\User;
 use App\Models\Archive;
 
@@ -26,6 +27,7 @@ class ArchiveUserController extends Controller
    */
   public function get(Archive $archive): AnonymousResourceCollection
   {
+    $this->authorize('manageUsers', $archive);
     return ArchiveUsersResource::collection(
       (new GetArchiveUserAction())->execute($archive, TRUE)
     );
@@ -39,6 +41,7 @@ class ArchiveUserController extends Controller
    */
   public function find(Request $request, User $user): UserResource
   {
+    $this->authorize('view', $user);
     return new UserResource($user);
   }
   
@@ -50,11 +53,15 @@ class ArchiveUserController extends Controller
    */
   public function create(StoreRequest $request): UserResource
   {
+    $this->authorize('create', User::class);
     return new UserResource(
       (new CreateUserAction())->execute(
         array_merge(
-          ['password' => config('user.welcome_password')],
-          $request->all()
+          $request->validated(),
+          [
+            'password' => config('user.welcome_password'),
+            'created_by' => $request->user()->id,
+          ]
         )
       )
     );
@@ -69,7 +76,8 @@ class ArchiveUserController extends Controller
    */
   public function update(StoreRequest $request, User $user): UserResource
   {
-    (new UpdateUserAction())->execute($request->all(), $user);
+    $this->authorize('update', $user);
+    (new UpdateUserAction())->execute($request->safe()->only(['firstname', 'name', 'email']), $user);
     return new UserResource($user);
   }
 
@@ -93,7 +101,23 @@ class ArchiveUserController extends Controller
    */
   public function destroy(Request $request, User $user): Response
   {
-    (new DeleteUserAction())->execute($user);
+    $this->authorize('delete', $user);
+    $actor = $request->user();
+
+    // The creator (or a Super Admin) deletes the account itself
+    if ($actor->can('update', $user)) {
+      (new DeleteUserAction())->execute($user);
+      return response()->noContent();
+    }
+
+    // Other admins only remove the user from the archives they administer
+    $archives = $user->archives()->get()
+      ->filter(fn (Archive $archive) => $actor->isAdminOf($archive));
+
+    foreach ($archives as $archive) {
+      (new RemoveArchiveUserAction())->execute($user, $archive);
+    }
+
     return response()->noContent();
   }
 

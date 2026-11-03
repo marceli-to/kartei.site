@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use App\Models\Archive;
 use App\Actions\Permission\Get as GetPermissionAction;
 
 class PermissionController extends Controller
@@ -35,6 +36,9 @@ class PermissionController extends Controller
 
   public function getByUser(Request $request, User $user): JsonResponse
   {
+    $this->authorize('view', $user);
+    $actor = $request->user();
+
     $permissions = (new GetPermissionAction())->execute(
       [
         'user' => $user->id,
@@ -42,6 +46,15 @@ class PermissionController extends Controller
         'group_by_archive_id' => true,
       ]
     );
+
+    // Only reveal the target's permissions for archives the actor administers
+    if (!$actor->isSuperAdmin()) {
+      $allowed = $actor->archives()->get()
+        ->filter(fn (Archive $archive) => $actor->isAdminOf($archive))
+        ->pluck('uuid');
+      $permissions = $permissions->only($allowed->all());
+    }
+
     return response()->json($permissions);
   }
 }

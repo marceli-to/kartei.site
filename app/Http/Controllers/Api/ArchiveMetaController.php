@@ -19,6 +19,7 @@ class ArchiveMetaController extends Controller
    */
   public function get(Request $request, Archive $archive)
   {
+    $this->authorize('view', $archive);
     $settings = (new GetArchiveSettingsAction())->execute(
       $archive
     );

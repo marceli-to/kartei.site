@@ -91,6 +91,7 @@ class ArchiveController extends Controller
    */
   public function find(Archive $archive): JsonResponse
   {
+    $this->authorize('view', $archive);
     return response()->json(
       new ArchiveResource(
         $archive->load('company', 'media')
@@ -106,7 +107,9 @@ class ArchiveController extends Controller
    */
   public function create(StoreRequest $request): JsonResponse
   {
-    $archive = (new CreateArchiveAction())->execute($request->except('image'));
+    $this->authorize('create', Archive::class);
+    $this->authorizeCompany($request);
+    $archive = (new CreateArchiveAction())->execute($request->only(['name', 'acronym', 'company']));
     (new CreateArchiveImageAction())->execute($request->image[0], $archive);
     (new AttachArchiveUserAction())->execute(auth()->user(), $archive->id);
     return response()->json(
@@ -123,7 +126,9 @@ class ArchiveController extends Controller
    */
   public function update(StoreRequest $request, Archive $archive): JsonResponse
   {
-    $archive = (new UpdateArchiveAction())->execute($request->except('image'), $archive);
+    $this->authorize('update', $archive);
+    $this->authorizeCompany($request);
+    $archive = (new UpdateArchiveAction())->execute($request->only(['name', 'acronym', 'company']), $archive);
     (new CreateArchiveImageAction())->execute($request->image[0], $archive);
     return response()->json(
       new ArchiveResource($archive->load('company', 'media'))
@@ -138,6 +143,7 @@ class ArchiveController extends Controller
    */
   public function destroy(Archive $archive): JsonResponse
   {
+    $this->authorize('delete', $archive);
     (new DeleteArchiveAction())->execute($archive);
     if ($archive->media) {
       (new DeleteArchiveImageAction())->execute($archive);
@@ -145,5 +151,20 @@ class ArchiveController extends Controller
     return response()->json([
       'success' => true
     ]);
+  }
+
+  /**
+   * The archive may only be linked to a company the user belongs to.
+   */
+  private function authorizeCompany(StoreRequest $request): void
+  {
+    $company = $request->input('company');
+    $user = $request->user();
+
+    if (!$company || $user->isSuperAdmin()) {
+      return;
+    }
+
+    abort_unless($user->companies()->where('uuid', $company)->exists(), 403);
   }
 }

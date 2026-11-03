@@ -18,6 +18,7 @@ class ArchiveSettingsController extends Controller
    */
   public function get(Request $request, Archive $archive)
   {
+    $this->authorize('view', $archive);
     $archiveSettings = (new GetArchiveSettingsAction())->execute($archive);
     return response()->json($archiveSettings);
   }
@@ -30,6 +31,7 @@ class ArchiveSettingsController extends Controller
    */
   public function store(Request $request, Archive $archive)
   {
+    $this->authorize('manageTemplate', $archive);
     $archive = (new UpdateOrCreateArchiveSettingsAction())->execute($request->all(), $archive);
     return response()->json($archive->settings);
   }
@@ -42,6 +44,7 @@ class ArchiveSettingsController extends Controller
    */
   public function destroy($uuid, Archive $archive)
   {
+    $this->authorize('manageTemplate', $archive);
     (new DeleteFieldAction())->execute($uuid, $archive);
     return response()->json([
       'success' => true

@@ -29,6 +29,7 @@ class FavoriteController extends Controller
    */
   public function toggle(Record $record)
   {
+    $this->authorize('view', $record->archive);
     (new ToggleAction())->execute($record->id);
     return response()->noContent();
   }

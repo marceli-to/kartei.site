@@ -23,6 +23,7 @@ class RecordController extends Controller
    */
   public function get(Archive $archive): JsonResponse
   {
+    $this->authorize('view', $archive);
     return response()->json(
       RecordResource::collection(
         (new GetRecordAction())->execute(['archive_id' => $archive->id])
@@ -39,6 +40,7 @@ class RecordController extends Controller
   
   public function find(Record $record): JsonResponse
   {
+    $this->authorize('view', $record->archive);
     return response()->json(
       RecordResource::make(
         (new FindRecordAction())->execute($record)
@@ -54,6 +56,8 @@ class RecordController extends Controller
    */
   public function create(StoreRequest $request): JsonResponse
   {
+    $archive = Archive::where('uuid', $request->input('archive_id'))->firstOrFail();
+    $this->authorize('createRecord', $archive);
     $record = (new CreateRecordAction())->execute($request->all());
     return response()->json(
       RecordResource::make($record)
@@ -69,7 +73,9 @@ class RecordController extends Controller
    */
   public function update(Record $record, Request $request): JsonResponse
   {
-    $record = (new UpdateRecordAction())->execute($record, $request->all());
+    $this->authorize('updateRecord', $record->archive);
+    // A record can't be moved to another archive
+    $record = (new UpdateRecordAction())->execute($record, $request->except(['archive_id', 'uuid']));
     return response()->json(
       RecordResource::make($record)
     );
@@ -83,6 +89,7 @@ class RecordController extends Controller
    */
   public function destroy(Record $record): JsonResponse
   {
+    $this->authorize('deleteRecord', $record->archive);
     (new DeleteRecordAction())->execute($record);
     return response()->json([
       'success' => true

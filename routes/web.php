@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,9 +11,6 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-// TestController
-Route::get('/permissions', [UserController::class, 'index']);
 
 Route::view('/', 'home')->name('page.home');
 Route::view('/auf-wiedersehen', 'goodbye')->name('page.goodbye');

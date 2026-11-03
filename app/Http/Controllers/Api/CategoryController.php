@@ -22,6 +22,7 @@ class CategoryController extends Controller
    */
   public function get(Request $request, Archive $archive)
   {
+    $this->authorize('view', $archive);
     return CategoryResource::collection(
       (new GetCategoriesAction())->execute($archive)
     );
@@ -35,6 +36,7 @@ class CategoryController extends Controller
    */
   public function store(Request $request, Archive $archive)
   {
+    $this->authorize('manageStructure', $archive);
     (new UpdateOrCreateCategoryAction())->execute($request->all(), $archive);
     $category = $archive->categories()
       ->with('registers')
@@ -50,6 +52,7 @@ class CategoryController extends Controller
    */
   public function destroy(Category $category)
   {
+    $this->authorize('manageStructure', $category->archive);
     (new DeleteCategoryAction())->execute($category);
     return response()->noContent();
   }
@@ -62,6 +65,7 @@ class CategoryController extends Controller
    */
   public function destroyRegister(Category $category)
   {
+    $this->authorize('manageStructure', $category->archive);
     (new DeleteRegisterAction())->execute($category);
     return response()->noContent();
   }

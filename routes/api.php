@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\DummyController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ArchiveController;
 use App\Http\Controllers\Api\ArchiveUserController;
@@ -71,7 +70,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
   // User permissions
   Route::get('/user/permissions', [UserPermissionController::class, 'get']);
-  Route::get('/user/permissions/{user:uuid}', [UserPermissionController::class, 'getByUser']);
   Route::put('/user/permissions/store/{user:uuid}', [UserPermissionController::class, 'store']);
   Route::put('/user/permissions/update/{user:uuid}', [UserPermissionController::class, 'update']);
 
