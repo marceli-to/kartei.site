@@ -6,7 +6,7 @@
       v-if="!isLoading">
 
       <!-- Info box -->
-      <template v-if="(!hasCategories && isActive) || (infoBox.isActive && isActive)">
+      <template v-if="isInfoOpen">
         <InfoBox class="!-top-0 !-right-16 w-4/12">
           <InfoStructure />
         </InfoBox>
@@ -142,7 +142,7 @@
 </template>
 
 <script setup>
-import { ref, toRef, onMounted, toRaw } from 'vue';
+import { ref, onMounted, toRaw } from 'vue';
 
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -194,9 +194,10 @@ const props = defineProps({
   }
 });
 
-const infoBox = useInfoBox({
-  isActive: toRef(true),
-  condition: hasCategories
+// Opens by itself while the archive has no categories yet
+const { isOpen: isInfoOpen } = useInfoBox({
+  active: () => props.isActive,
+  auto: () => !isLoading.value && !hasCategories.value,
 });
 
 const form = ref({

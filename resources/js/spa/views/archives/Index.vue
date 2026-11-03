@@ -36,9 +36,8 @@
                 variant="box"
                 :to="{ name: 'archiveSettings' }"
                 :icon="{ name: 'Plus', position: 'right' }" />
-                <template v-if="!hasArchive">
-                  <InfoBox 
-                    v-if="infoBox.isActive"
+                <template v-if="isInfoOpen">
+                  <InfoBox
                     class="absolute !top-0 !-right-16 !w-auto min-h-default !py-0 flex items-center"
                     :closable="false">
                     <InfoCreateArchive />
@@ -68,7 +67,7 @@
   </div>
 </template>
 <script setup>
-import { ref, toRef, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
@@ -106,9 +105,10 @@ const layoutOptions = [
   { value: 'grid', label: 'Gitter' },
 ];
 
-const infoBox = useInfoBox({
-  isActive: toRef(true),
-  condition: hasArchive
+// Points to "Erstellen" while there is no archive yet
+const { isOpen: isInfoOpen } = useInfoBox({
+  active: () => !hasArchive.value,
+  auto: true,
 });
 
 onMounted(async () => {

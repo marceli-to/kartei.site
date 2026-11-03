@@ -6,7 +6,7 @@
       v-if="!isLoading">
 
       <!-- Info box -->
-      <template v-if="infoBox.isActive">
+      <template v-if="isInfoOpen">
         <InfoBox>
           <InfoProfile />
         </InfoBox>
@@ -107,7 +107,7 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted, toRef } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getUserProfile, updateUserProfile, updatePassword } from '@/services/api/user';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
@@ -133,11 +133,8 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const isSaving = ref(false);
-const hasInfo = ref(true);
-
-const infoBox = useInfoBox({
-  isActive: toRef(props, 'isActive'),
-  condition: hasInfo
+const { isOpen: isInfoOpen } = useInfoBox({
+  active: () => props.isActive,
 });
 
 const form = ref({

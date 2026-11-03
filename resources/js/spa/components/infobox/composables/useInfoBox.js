@@ -1,55 +1,32 @@
-import { watch, computed } from 'vue';
+import { watch, computed, toValue, onBeforeUnmount } from 'vue';
 import { useInfoIconStore } from '@/components/infobox/stores/info';
 
+let nextId = 0;
+
 /**
- * Consolidated composable for managing the info box system
- * 
- * @param {Object} options - Configuration options
- * @param {Ref<boolean>|boolean} options.isActive - Component active state
- * @param {Ref<boolean>|boolean} options.condition - Condition that must be false to show info
- * @param {boolean} options.immediate - Whether to run the effect immediately (default: true)
- * @returns {Object} - Methods and components for the info box system
+ * Connects a view's info box to the lightbulb icon in the header.
+ *
+ * @param {Object} options
+ * @param {Ref<boolean>|Function} options.active - The view is visible and has info to show
+ * @param {Ref<boolean>|Function} [options.auto] - Open the box without a click,
+ *   e.g. while something essential is missing
+ * @returns {{ isOpen: ComputedRef<boolean> }} - Whether this view should show its box
  */
-export function useInfoBox(options) {
-  const { 
-    isActive, 
-    condition, 
-    immediate = true 
-  } = options;
-  
-  // Get the info icon store
-  const infoIcon = useInfoIconStore();
-  
-  // Convert values to refs if they aren't already
-  const isActiveRef = typeof isActive === 'boolean' ? ref(isActive) : isActive;
-  const conditionRef = typeof condition === 'boolean' ? ref(condition) : condition;
-  
-  // Function to update the icon state based on conditions
-  const updateState = () => {
-    const shouldActivate = isActiveRef.value && !conditionRef.value;
-    infoIcon.setActive(shouldActivate);
-    return shouldActivate;
-  };
-  
-  // Watch for changes in either condition and update icon accordingly
-  const stopWatch = watch(
-    [isActiveRef, conditionRef],
-    updateState,
-    { immediate }
+export function useInfoBox({ active, auto = false }) {
+  const store = useInfoIconStore();
+  const id = `info-${nextId++}`;
+
+  watch(
+    () => [toValue(active), toValue(auto)],
+    ([isActive, isAuto]) => {
+      isActive ? store.register(id, isAuto) : store.unregister(id);
+    },
+    { immediate: true }
   );
-  
-  // Return everything needed to manage info boxes
+
+  onBeforeUnmount(() => store.unregister(id));
+
   return {
-    // Properties
-    isActive: computed(() => infoIcon.isActive),
-    
-    // Methods
-    updateState,
-    hide: () => infoIcon.setActive(false),
-    show: () => infoIcon.setActive(true),
-    toggle: () => infoIcon.toggle(),
-    
-    // Cleanup
-    stopWatch
+    isOpen: computed(() => toValue(active) && store.isOpen),
   };
 }

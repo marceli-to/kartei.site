@@ -6,7 +6,7 @@
       v-if="!isLoading">
 
       <!-- Info box -->
-      <template v-if="(!hasSubscription && isActive) || (infoBox.isActive && isActive)">
+      <template v-if="isInfoOpen">
         <InfoBox class="pb-24">
           <InfoSubscription />
         </InfoBox>
@@ -58,7 +58,7 @@
   </Slide>
 </template>
 <script setup>
-import { ref, toRef, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
 import { getUserSubscription, updateUserSubscription } from '@/services/api/user';
 import { payment_intervals } from '@/data/payment_intervals';
@@ -88,9 +88,10 @@ const isSaving = ref(false);
 const subscriptions = ref([]);
 const hasSubscription = ref(false);
 
-const infoBox = useInfoBox({
-  isActive: toRef(props, 'isActive'),
-  condition: hasSubscription
+// Opens by itself while there is no subscription yet
+const { isOpen: isInfoOpen } = useInfoBox({
+  active: () => props.isActive,
+  auto: () => !isLoading.value && !hasSubscription.value,
 });
 
 const form = ref({

@@ -1,12 +1,12 @@
 <template>
-  <div v-if="infoIcon.isActive" :class="[
+  <div :class="[
       defaultClass,
       classes
     ]">
     <div class="relative">
       <a 
         href=""
-        @click.prevent="infoIcon.setActive(false)"
+        @click.prevent="infoIcon.close()"
         class="absolute right-0 top-0"
         v-if="closable">
         <IconCross variant="small" />

@@ -19,14 +19,17 @@
           <div class="flex justify-end gap-x-48">
             <button 
               type="button" 
-              class="mt-20 group"
+              class="mt-20 group disabled:cursor-default"
+              :disabled="!infoIcon.isAvailable"
+              :aria-pressed="infoIcon.isOpen"
+              aria-label="Info"
               @click="infoIcon.toggle">
-              <template v-if="infoIcon.isActive">
+              <template v-if="infoIcon.isOpen">
                 <IconInfo variant="active" classes="theme-color-text" />
               </template>
               <template v-else>
-                <IconInfo classes="group-hover:hidden" />
-                <IconInfo variant="active" classes="hidden group-hover:block" />
+                <IconInfo classes="group-enabled:group-hover:hidden" />
+                <IconInfo variant="active" classes="hidden group-enabled:group-hover:block" />
               </template>
             </button>
 
