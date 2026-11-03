@@ -12,7 +12,11 @@
 - [x] SPA follows per-archive abilities (`userStore.canArchive`), route guards, lazy-loaded routes
 - [x] Performance: record list in a constant 11 queries (was one per record), new indexes, main JS bundle 640 kB → 97 kB
 - [x] Slim Laravel 11+ structure (`bootstrap/app.php`, `AppServiceProvider`, `routes/console.php`)
-- [x] Test suite green (74 tests, in-memory SQLite)
+- [x] Favorite toggle is a POST
+- [x] Roles per archive: changing a role on one archive keeps the others; `model_has_roles` key includes `archive_id` (migration `2026_11_03_140000`)
+- [x] Dead files removed (seo config, `Sidebar-New.vue`, `InviteUser.vue`, Cards/Grid icons)
+- [x] Record list paginated on the server (48 per page, search/filters/sort in the API, infinite scroll)
+- [x] Test suite green (80 tests, in-memory SQLite)
 
 ## Servers (before going live)
 
@@ -21,11 +25,8 @@
 ## Next
 
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
-- [ ] Favorite toggle is a GET route that changes data → POST
-- [ ] `Role/Assign` detaches a role from every archive, not only the edited one
 - [ ] Merge duplicate Vue components: Create/UpdateUserPermissions, record Create/Update, Address/BillingAddress, the two delete views
-- [ ] Dead files: `config/seo.php`, `Sidebar-New.vue`, `InviteUser.vue`, unused icons
-- [ ] Later: server-side pagination of the record list (search/filters would move into the API)
+- [ ] Search input in the record sidebar has no accessible label (`aria-label` isn't passed through by `components/forms/Search.vue`)
 
 ## Archive cover image (Titelbild)
 
