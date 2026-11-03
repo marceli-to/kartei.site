@@ -11,7 +11,6 @@ use App\Actions\Archive\Create as CreateArchiveAction;
 use App\Actions\Archive\Update as UpdateArchiveAction;
 use App\Actions\Archive\Delete as DeleteArchiveAction;
 use App\Actions\ArchiveImage\Create as CreateArchiveImageAction;
-use App\Actions\ArchiveImage\Delete as DeleteArchiveImageAction;
 use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use App\Http\Requests\Archive\StoreRequest;
 use App\Models\User;
@@ -145,9 +144,6 @@ class ArchiveController extends Controller
   {
     $this->authorize('delete', $archive);
     (new DeleteArchiveAction())->execute($archive);
-    if ($archive->media) {
-      (new DeleteArchiveImageAction())->execute($archive);
-    }
     return response()->json([
       'success' => true
     ]);
