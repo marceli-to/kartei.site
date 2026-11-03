@@ -30,7 +30,8 @@ class StoreUploadRequest extends FormRequest
         'required',
         'file',
         'mimes:jpeg,png,gif,webp', // Allowed file types
-        'max:10240', // Max file size in KB (10MB)
+        'max:' . config('media.max_upload_mb') * 1024, // Max file size in KB
+        'dimensions:max_width=' . config('media.max_dimension') . ',max_height=' . config('media.max_dimension'),
       ],
     ];
   }
@@ -44,9 +45,11 @@ class StoreUploadRequest extends FormRequest
       'files.required' => 'No files were uploaded.',
       'files.array' => 'The files must be provided as an array.',
       'files.*.required' => 'One or more files are missing.',
-      'files.*.file' => 'The uploaded item must be a valid file.',
+      'files.*.file' => 'Die Datei konnte nicht hochgeladen werden (möglicherweise zu gross).',
+      'files.*.uploaded' => 'Die Datei konnte nicht hochgeladen werden (möglicherweise zu gross).',
       'files.*.mimes' => 'Only JPEG, PNG, GIF, and WEBP files are allowed.',
-      'files.*.max' => 'Each file must not exceed 10MB in size.',
+      'files.*.max' => 'Die Datei darf höchstens ' . config('media.max_upload_mb') . ' MB gross sein.',
+      'files.*.dimensions' => 'Das Bild darf höchstens ' . config('media.max_dimension') . ' Pixel breit bzw. hoch sein.',
     ];
   }
 }

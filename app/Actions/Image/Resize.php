@@ -10,6 +10,13 @@ class Resize
 
   public function execute(string $sourcePath, string $destinationPath): array
   {
+    // Decoding large images (e.g. 32 MB, 60+ megapixels) needs far more
+    // memory than a normal request
+    $memoryLimit = config('media.resize_memory_limit');
+    if ($memoryLimit) {
+      ini_set('memory_limit', $memoryLimit);
+    }
+
     // Load the image from the source path
     $image = Image::load($sourcePath);
 

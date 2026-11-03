@@ -1,10 +1,11 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import { useToastStore } from '@/components/toast/stores/toast'
+import { MAX_UPLOAD_BYTES } from '@/config/upload'
 
 export function useFileUpload(options = {}) {
   const {
-    maxSize = 10 * 1024 * 1024, // 10MB
+    maxSize = MAX_UPLOAD_BYTES,
     allowedTypes = ['image/*', 'application/pdf'],
     uploadUrl = '/api/upload',
     multiple = true
@@ -31,7 +32,7 @@ export function useFileUpload(options = {}) {
     const errors = []
 
     if (file.size > maxSize) {
-      errors.push(`File "${file.name}" exceeds maximum size of ${maxSize / (1024 * 1024)}MB`)
+      errors.push(`Die Datei "${file.name}" ist grösser als ${maxSize / (1024 * 1024)} MB`)
     }
 
     const isTypeAllowed = allowedTypes.some(type => {

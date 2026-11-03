@@ -130,3 +130,18 @@ it('keeps archive template fields when settings are saved without them', functio
   expect($settings['has_images'])->toBeFalse();
   expect($settings['record_fields'])->toHaveCount(1);
 });
+
+it('accepts image uploads up to the configured limit', function () {
+  \Illuminate\Support\Facades\Storage::fake('public');
+  Sanctum::actingAs(bugfixUser());
+  $max = config('media.max_upload_mb');
+  expect($max)->toBeGreaterThanOrEqual(32);
+
+  $this->postJson('/api/upload', [
+    'files' => [\Illuminate\Http\UploadedFile::fake()->image('big.jpg', 800, 600)->size(($max - 1) * 1024)],
+  ])->assertOk()->assertJsonCount(1, 'files');
+
+  $this->postJson('/api/upload', [
+    'files' => [\Illuminate\Http\UploadedFile::fake()->image('too-big.jpg', 800, 600)->size(($max + 1) * 1024)],
+  ])->assertUnprocessable()->assertJsonValidationErrors('files.0');
+});

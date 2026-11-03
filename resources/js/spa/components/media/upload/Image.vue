@@ -66,12 +66,13 @@
 import { computed, watch, onMounted } from 'vue'
 import { useFileUpload, normalizeImageEntry } from '@/components/media/upload/composable/useFileUpload.js';
 import ImageList from '@/components/media/upload/List.vue';
+import { MAX_UPLOAD_BYTES } from '@/config/upload';
 import IconImage from '@/components/icons/Image.vue';
 
 const props = defineProps({
   maxSize: {
     type: Number,
-    default: 10 * 1024 * 1024 // 10MB
+    default: MAX_UPLOAD_BYTES
   },
   allowedTypes: {
     type: Array,

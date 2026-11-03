@@ -18,7 +18,7 @@ class StoreRequest extends FormRequest
       'image.*.original_name' => 'required|string|max:255',
       'image.*.name' => 'required|string|max:255',
       'image.*.mime_type' => 'required|string|in:image/png,image/jpeg,image/gif,image/webp',
-      'image.*.size' => 'required|integer|max:10485760',
+      'image.*.size' => 'required|integer|max:' . config('media.max_upload_mb') * 1024 * 1024,
       'image.*.aspect_ratio' => 'required|string|in:portrait,landscape,square'
     ];
   }
