@@ -3,7 +3,9 @@
     <div class="w-full h-full flex flex-col justify-between">
       <!-- Content -->
       <div>
-        <p>Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt, auch Ihre Karteien mit allen Karten und Bildern.</p>
+        <p>
+          Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt<template v-if="ownedArchivesCount">, auch Ihre {{ ownedArchivesCount === 1 ? 'Kartei' : ownedArchivesCount + ' Karteien' }} mit allen Karten und Bildern</template>.
+        </p>
         <p v-if="subscriptionEndsAt">Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong>.</p>
       </div>
 
@@ -35,6 +37,7 @@ const toast = useToastStore();
 
 const isDeleting = ref(false);
 const subscriptionEndsAt = ref(null);
+const ownedArchivesCount = ref(0);
 
 defineProps({
   isActive: {
@@ -46,6 +49,13 @@ defineProps({
 const redirectAfterDeletion = '/auf-wiedersehen';
 
 onMounted(async () => {
+  try {
+    ownedArchivesCount.value = (await getOwnedArchives()).data.length;
+  }
+  catch (error) {
+    console.error(error);
+  }
+
   try {
     const subscription = await getUserSubscription();
     const endsAt = subscription?.data?.ends_at;

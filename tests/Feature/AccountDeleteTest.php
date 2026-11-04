@@ -91,3 +91,14 @@ it('lists the archives that would be deleted with the account', function () {
       ['uuid' => $owned->uuid, 'name' => 'Eigene', 'records_count' => 2],
     ]]);
 });
+
+it('lists no archives for an account without the Admin role', function () {
+  $member = accountUser();
+  $archive = Archive::create(['name' => 'Kartei', 'acronym' => 'KA']);
+  $member->archives()->attach($archive->id);
+
+  \Laravel\Sanctum\Sanctum::actingAs($member);
+  $this->getJson('/api/user/owned-archives')
+    ->assertOk()
+    ->assertExactJson(['data' => []]);
+});

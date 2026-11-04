@@ -11,7 +11,9 @@ class RoleResource extends JsonResource
   {
     return [
       'id' => $this->id,
-      'name' => __('roles.' . $this->name),
+      // name is the key the SPA checks (e.g. "Super Admin"), label is for display
+      'name' => $this->name,
+      'label' => __('roles.' . $this->name),
     ];
   }
 }

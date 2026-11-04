@@ -39,7 +39,7 @@
         :isLoading="isLoadingUsers"
         @user-selected="handleUserSelected"
         @create-user="viewState = 'creating'"
-        :class="{ 'opacity-50 pointer-events-none': showSubscriptionInfo }" />
+        :canCreate="!showSubscriptionInfo" />
 
       <SubscriptionInfo 
         v-if="showSubscriptionInfo"

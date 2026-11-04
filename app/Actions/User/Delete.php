@@ -3,7 +3,7 @@ namespace App\Actions\User;
 use App\Actions\Archive\Delete as DeleteArchiveAction;
 use App\Models\Archive;
 use App\Models\User;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Delete
@@ -37,7 +37,7 @@ class Delete
   public function ownedArchives(User $user): Collection
   {
     if (!$user->hasRole('Admin')) {
-      return collect();
+      return new Collection();
     }
 
     return $user->archives()

@@ -7,9 +7,11 @@
         aria-label="Suche" />
     </div>
     <div class="mt-15">
+      <!-- Only adding is blocked without a subscription or seats; existing users stay editable -->
       <Action 
         label="Benutzer/in" 
         :icon="{ name: 'Plus', position: 'center' }"
+        :disabled="!canCreate"
         @click="$emit('create-user')" />
     </div>
     <div class="flex flex-col gap-y-20">
@@ -46,6 +48,10 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false
+  },
+  canCreate: {
+    type: Boolean,
+    default: true
   }
 });
 

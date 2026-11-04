@@ -10,6 +10,7 @@
         </ul>
       </div>
     </template>
+    <p v-else>Es werden keine Karteien gelöscht, da Sie keine Kartei als Administrator/in verwalten.</p>
     <p>Diese Aktion kann nicht rückgängig gemacht werden.</p>
   </div>
 </template>

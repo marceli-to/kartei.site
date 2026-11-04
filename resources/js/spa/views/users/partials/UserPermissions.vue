@@ -81,7 +81,7 @@
           v-if="cancelable"
           type="button"
           label="Abbrechen"
-          @click="emit('cancel')" />
+          @click="cancel" />
       </template>
     </ButtonGroup>
   </form>
@@ -204,6 +204,12 @@ function confirmDiscard() {
   });
 }
 
+// Leaving with unsaved changes asks first, as switching archives does
+async function cancel() {
+  if (isDirty.value && !(await confirmDiscard())) return;
+  emit('cancel');
+}
+
 async function save() {
   if (!canSave.value) return;
 
@@ -260,7 +266,7 @@ onMounted(async () => {
     ]);
 
     archives.value = archiveList;
-    roleOptions.value = roles.data.map(role => ({ value: role.id, label: role.name }));
+    roleOptions.value = roles.data.map(role => ({ value: role.id, label: role.label }));
 
     for (const role of Object.values(rolesWithPermissions)) {
       roleDefaults.value[role.id] = role.permissions.map(p => p.id);

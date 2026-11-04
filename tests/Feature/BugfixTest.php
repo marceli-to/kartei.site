@@ -154,3 +154,17 @@ it('rejects an unknown payment interval with a validation error', function () {
     'payment_method' => 'card',
   ])->assertUnprocessable()->assertJsonValidationErrors('payment_interval');
 });
+
+it('returns the raw role name next to the translated label', function () {
+  $user = User::create([
+    'firstname' => 'Test', 'name' => 'Super', 'email' => 'super-role@example.test',
+    'password' => 'secret-password', 'email_verified_at' => now(),
+  ]);
+  $user->assignRole('Super Admin');
+
+  \Laravel\Sanctum\Sanctum::actingAs($user);
+  $roles = $this->getJson('/api/user/permissions')->assertOk()->json('roles');
+
+  expect($roles[0]['name'])->toBe('Super Admin');
+  expect($roles[0]['label'])->toBe('Super Admin');
+});
