@@ -35,7 +35,7 @@
 - [x] Found in the browser test: Super Admin not recognised in the SPA (`RoleResource` now `name` + translated `label`), user list blocked at the seat limit (only "Benutzer/in" is disabled now), "Abbrechen" in permissions asks before discarding
 - [x] German validation attribute names (Kürzel, Hausnummer, …; `city` is "Ort"); toast layer lets header clicks through, sits above dialogs, aria-live
 - [x] Form errors shown in the label (`InputLabel` `error` prop), placeholders keep their text, errors clear on first change, `aria-invalid`; `composables/useFormErrors.js` used by all 10 forms
-- [x] Test suite green (89 tests)
+- [x] Test suite green (90 tests); ESLint and Prettier clean
 - [x] Review bugs: `handleApiError` keeps its message on the error (`error.userMessage`), `notifyError(error, fallback)` toasts it unless the user was redirected or the request was aborted; 401 -> "Sitzung abgelaufen" page -> login (419 page merged into it); 419 refreshes the CSRF cookie and retries once; 403/404 only go to the error page for GET requests
 - [x] Theme saves queued (latest click wins) and reverted on failure; upload errors toasted (422 reason), no `NaN%`, reorder only on a real move (`@update`), no drag flicker, uploads through the `api` instance (no timeout, own progress bar); `normalizeImageEntry` naming documented (not swapped: follows the media columns)
 - [x] Accessibility: real buttons instead of `javascript:;`/`href=""` anchors (Password toggle, Search clear, Collapsible with `aria-expanded`, InfoBox close), `aria-label` on all icon-only buttons/links; `Password`/`Search`/`Select` pass attributes to the input (`inheritAttrs: false`); radio groups get a `legend` and a visible keyboard focus; dialog moves focus in, traps Tab, restores focus, no close after a drag out of the panel
@@ -59,6 +59,7 @@
 
 ## Next
 
+- [ ] `npm audit`: 22 advisories (high: `axios`, `vue`, `vite`, `postcss`, `nanoid`, `follow-redirects`, `form-data`, …), all with fixes available; run `npm audit fix`, rebuild, then the browser smoke test (Playwright scripts in `/tmp/kartei-pw`, see Claude memory)
 - [ ] Slider: check Tab focus stays in the active slide and disabled entries on a new archive (deep links and "Admin creating an archive lands on its settings" verified 2026-11-04)
 - [ ] Slider layout uses hard-coded offsets that offset each other (`mt-48`/`mt-58`/`-top-60`/`pt-38`, `Slide` `pull` = `-top-24`, `-top-4` in the delete views); clean up together
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
@@ -67,7 +68,7 @@
 
 ## Vue review: open points
 
-Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
+All done (4 November 2026). Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
 
 ## Archive cover image (Titelbild)
 
