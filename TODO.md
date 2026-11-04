@@ -51,6 +51,8 @@
 - [x] Tooling: ESLint (`eslint.config.js`, eslint-plugin-vue recommended + eslint-config-prettier) and Prettier (`.prettierrc.json`: semicolons, single quotes, 120 columns, one attribute per line, `bracketSameLine`, Tailwind class sorting incl. `classes`/`wrapperClasses`/… props); `npm run lint`, `npm run format`, `npm run format:check`; whole SPA formatted once, 16 screens pixel-identical before/after
 - [x] Keyboard focus visible on `AppButton` and the upload zone (`focus-visible` outline instead of `!outline-none`)
 - [x] Bug found on the way: an address without house number failed with a 500 (`addresses.street_number` was NOT NULL); migration makes it nullable, test added
+- [x] `npm audit fix`: 22 -> 8 advisories (`axios`, `vue`, `vite`, `postcss`, `nanoid`, `follow-redirects`, `form-data`, … updated); the 8 left are `minimatch` inside ESLint (dev only, npm's "fix" would downgrade ESLint to 4.0), left as is. Build, lint, tests and a browser smoke test (archive, structure, card template, record with image, edit, delete, company, subscription) all fine
+- [x] Removed the unused `App\Http\Requests\User\StoreRequest` (users are created via `ArchiveUserController`)
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
 ## Servers (before going live)
@@ -59,11 +61,10 @@
 
 ## Next
 
-- [ ] `npm audit`: 22 advisories (high: `axios`, `vue`, `vite`, `postcss`, `nanoid`, `follow-redirects`, `form-data`, …), all with fixes available; run `npm audit fix`, rebuild, then the browser smoke test (Playwright scripts in `/tmp/kartei-pw`, see Claude memory)
 - [ ] Slider: check Tab focus stays in the active slide and disabled entries on a new archive (deep links and "Admin creating an archive lands on its settings" verified 2026-11-04)
 - [ ] Slider layout uses hard-coded offsets that offset each other (`mt-48`/`mt-58`/`-top-60`/`pt-38`, `Slide` `pull` = `-top-24`, `-top-4` in the delete views); clean up together
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
-- [ ] `App\Http\Requests\User\StoreRequest` is imported in `UserController` but unused
+- [ ] Subscription form shows no field errors (no `useFormErrors`): saving without a plan (new account) only toasts "Fehler beim Ändern des Abonnements."
 - [ ] Countries are stored as German names; switch to ISO codes (with a data migration) once billing/invoices need it
 
 ## Vue review: open points

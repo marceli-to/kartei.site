@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
-use App\Http\Requests\User\StoreRequest;
 use App\Http\Resources\UserResource;
 use App\Actions\User\Update as UpdateUserAction;
 use App\Actions\User\UpdatePassword as UpdatePasswordAction;
