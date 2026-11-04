@@ -1,25 +1,20 @@
 <template>
-  <SliderContainer 
-    :slides="slides" 
-    :initialActiveIndex="0"
-    :navigationVariant="'box'"
-    @slide-change="handleSlideChange">
-    <template #navigationTitle>
-      <SliderNavigationHeader :title="'Voreinstellungen'" :uuid="uuid" :archive="archive" />
+  <Slider :slides="slides" navigationVariant="box">
+    <template #header>
+      <SliderHeader title="Voreinstellungen" :uuid="uuid" />
     </template>
-  </SliderContainer>
+  </Slider>
 </template>
 
 <script setup>
-import { markRaw, watch, ref, computed } from 'vue';
+import { markRaw, watch, computed } from 'vue';
 import { usePageTitle } from '@/composables/usePageTitle';
-import { useSlider } from '@/components/slider/composable/useSlider';
 import { useRoute } from 'vue-router';
 import { getArchive } from '@/services/api/archive';
 import { useUserStore } from '@/stores/user';
 
-import SliderContainer from '@/components/slider/Container.vue';
-import SliderNavigationHeader from '@/components/slider/NavigationHeader.vue';
+import Slider from '@/components/slider/Slider.vue';
+import SliderHeader from '@/components/slider/Header.vue';
 
 import BasicInformationComponent from '@/views/archive/BasicInformation.vue';
 import CategoryComponent from '@/views/archive/Category.vue';
@@ -38,11 +33,10 @@ const userStore = useUserStore();
 const allows = (ability) => () =>
   uuid.value ? userStore.canArchive(uuid.value, ability) : userStore.can('create.archive');
 
-const archive = ref(null);
-const isLoading = ref(false);
+// The other slides need a saved archive
+const isNew = () => !uuid.value;
 
-// Create initial slides configuration
-const createSlides = () => [
+const slides = [
   { 
     id: 'basic-information', 
     name: "Basisinformationen", 
@@ -56,7 +50,7 @@ const createSlides = () => [
     class: "w-6/12 min-w-6/12", 
     permission: allows('manageStructure'),
     component: markRaw(CategoryComponent),
-    disabled: !uuid.value
+    disabled: isNew
   },
   { 
     id: 'card', 
@@ -64,7 +58,7 @@ const createSlides = () => [
     class: "w-3/12 min-w-3/12", 
     permission: allows('manageTemplate'),
     component: markRaw(CardComponent),
-    disabled: !uuid.value
+    disabled: isNew
   },
   { 
     id: 'tags', 
@@ -72,7 +66,7 @@ const createSlides = () => [
     class: "w-3/12 min-w-3/12", 
     permission: allows('manageTags'),
     component: markRaw(TagsComponent),
-    disabled: !uuid.value
+    disabled: isNew
   },
   { 
     id: 'user', 
@@ -80,7 +74,7 @@ const createSlides = () => [
     class: "w-3/12 min-w-3/12", 
     permission: allows('manageUsers'),
     component: markRaw(UserComponent),
-    disabled: !uuid.value
+    disabled: isNew
   },
   { 
     id: 'delete', 
@@ -88,33 +82,21 @@ const createSlides = () => [
     class: "w-3/12 min-w-3/12", 
     permission: allows('delete'),
     component: markRaw(DeleteComponent),
-    disabled: !uuid.value
+    disabled: isNew
   }
 ];
 
-// Initialize slider with slides
-const initialSlides = createSlides();
-const { slides, handleSlideChange, updateSlides } = useSlider(initialSlides);
-
 const fetchArchive = async () => {
   try {
-    isLoading.value = true;
-    const response = await getArchive(uuid.value);
-    archive.value = response;
-    setTitle(archive.value.name);
+    const archive = await getArchive(uuid.value);
+    setTitle(archive.name);
   }
   catch (error) {
     console.error(error);
-  } 
-  finally {
-    isLoading.value = false;
   }
 };
 
-// Watch for changes in route uuid parameter and update slides accordingly
 watch(uuid, () => {
-  const updatedSlides = createSlides();
-  updateSlides(updatedSlides);
   if (uuid.value) {
     fetchArchive();
   }

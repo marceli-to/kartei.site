@@ -2,7 +2,7 @@
   <template v-if="!isLoading">
     <Header :title="pageTitle" />
     <router-view v-slot="{ Component }">
-      <component :is="Component" :key="route.fullPath" ref="pageComponent" />
+      <component :is="Component" :key="route.path" ref="pageComponent" />
     </router-view>
     <Toast />
     <Dialog />
@@ -44,7 +44,7 @@ watchEffect(() => {
   <Header :title="pageTitle" />
 
   <router-view v-slot="{ Component }">
-    <component :is="Component" :key="route.fullPath" ref="pageComponent" />
+    <component :is="Component" :key="route.path" ref="pageComponent" />
   </router-view>
 
   <Toast />

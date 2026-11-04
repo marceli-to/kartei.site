@@ -71,6 +71,7 @@ import { handleApiError } from '@/services/api/error'
 import { getUserCompanies } from '@/services/api/user';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useUserStore } from '@/stores/user';
 
 import ImageUpload from '@/components/media/upload/Image.vue';
 import InputGroup from '@/components/forms/Group.vue';
@@ -158,7 +159,10 @@ const handleSubmit = async () => {
       form.value.uuid = response.uuid;
       form.value.image = [response.image];
 
-      // Push the new uuid to route here:
+      // The per-archive permissions are loaded once; fetch them again so
+      // the route guard and the slides know about the new archive
+      await useUserStore().fetchPermissions();
+
       router.push({ 
         name: 'archiveSettings', 
         params: { uuid: response.uuid }

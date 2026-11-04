@@ -1,16 +1,11 @@
 <template>
-  <SliderContainer 
-    :slides="slides" 
-    :initialActiveIndex="0"
-    @slide-change="handleSlideChange">
-  </SliderContainer>
+  <Slider :slides="slides" />
 </template>
 
 <script setup>
 import { markRaw } from 'vue';
 import { usePageTitle } from '@/composables/usePageTitle';
-import { useSlider } from '@/components/slider/composable/useSlider';
-import SliderContainer from '@/components/slider/Container.vue';
+import Slider from '@/components/slider/Slider.vue';
 import ProfileComponent from '@/views/settings/Profile.vue';
 import AddressComponent from '@/views/settings/Address.vue';
 import BillingAddressComponent from '@/views/settings/BillingAddress.vue';
@@ -24,7 +19,7 @@ const { setTitle } = usePageTitle();
 setTitle('Einstellungen');
 
 // Define all possible slides with their permissions and components
-const allSlides = [
+const slides = [
   { 
     id: 'profile', 
     name: "Profil", 
@@ -62,7 +57,7 @@ const allSlides = [
   { 
     id: 'user', 
     name: "Benutzer", 
-    class: "w-3/12", 
+    class: "w-3/12 min-w-3/12", 
     permission: 'edit.users',
     component: markRaw(UserComponent)
   },
@@ -79,6 +74,4 @@ const allSlides = [
     component: markRaw(AccountDeleteComponent)
   }
 ];
-
-const { slides, handleSlideChange } = useSlider(allSlides);
 </script>

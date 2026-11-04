@@ -1,4 +1,3 @@
-<!-- NavigationHeader.vue -->
 <template>
   <h2 class="flex justify-between items-center mb-38 mr-8">
     <span>{{ title }}</span>
@@ -13,18 +12,15 @@ import IconCross from '@/components/icons/Cross.vue';
 
 const props = defineProps({
   title: { type: String, default: 'Voreinstellungen' },
+  // Archive uuid; without it (new archive) the cross leads back to the archive list
   uuid: {
     type: String,
-    default: null
-  },
-  archive: {
-    type: Object,
     default: null
   }
 });
 
 const linkTarget = computed(() =>
-  props.archive
+  props.uuid
     ? { name: 'archiveRecords', params: { uuid: props.uuid } }
     : { name: 'archives' }
 );
