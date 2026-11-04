@@ -1,11 +1,14 @@
 <template>
+  <!-- The layer lets clicks through to the header; only the toasts themselves catch them.
+       Above the dialog (z-[9999]), so errors from a dialog action stay visible. -->
   <div 
-    v-if="toasts.length" 
-    class="fixed z-[9999] text-sm w-full text-black font-muoto-medium top-0 left-0 px-16">
-    <a 
-      href="javascript:;" 
+    class="fixed z-[10000] text-sm w-full text-black font-muoto-medium top-0 left-0 px-16 pointer-events-none"
+    role="status"
+    aria-live="polite">
+    <button 
+      type="button"
       :class="[
-        'bg-graphite text-center min-h-32 mb-4 flex items-center justify-center max-page ml-auto',
+        'pointer-events-auto w-full bg-graphite text-center min-h-32 mb-4 flex items-center justify-center',
         { '!bg-lime': toast.type === 'success' },
         { '!bg-flame text-white': toast.type === 'error' },
         { '!bg-ice': toast.type === 'info' },
@@ -14,7 +17,7 @@
       title="Meldung verbergen"
       v-for="toast in toasts" :key="toast.id">
       {{ toast.message }}
-    </a>
+    </button>
   </div>
 </template>
 
