@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, markRaw } from 'vue';
+import { useToastStore } from '@/stores/toast';
+import { notifyError } from '@/services/api/error';
 
 // Labels stay empty so Dialog.vue can fall back to its German defaults
 const defaults = () => ({
@@ -48,7 +50,39 @@ export const useDialogStore = defineStore('dialog', () => {
     }, 300);
   };
 
+  /**
+   * Ask, then delete. The dialog stays open (busy) while action() runs.
+   *
+   *   dialogStore.confirmDelete({
+   *     title: 'Karte löschen', message: '…',
+   *     action: () => deleteRecord(uuid),
+   *     success: 'Karte gelöscht',          // toast, optional
+   *     failure: 'Fehler beim Löschen',     // fallback text for notifyError()
+   *     then: () => router.push(…),         // after a successful delete, optional
+   *   });
+   */
+  const confirmDelete = ({ action, success = '', failure = 'Fehler beim Löschen.', then = null, confirmLabel = 'Löschen', ...dialogContent }) => {
+    show({
+      ...dialogContent,
+      confirmLabel,
+      cancelLabel: 'Abbrechen',
+      onCancel: () => {},
+      onConfirm: async () => {
+        try {
+          await action();
+        }
+        catch (error) {
+          notifyError(error, failure);
+          return;
+        }
+        if (success) useToastStore().show(success, 'success');
+        await then?.();
+      },
+    });
+  };
+
   return {
+    confirmDelete,
     isVisible,
     isBusy,
     content,

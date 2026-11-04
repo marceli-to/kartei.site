@@ -48,7 +48,7 @@
 import { ref, onMounted, nextTick, toRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeTags, getTags, deleteTag } from '@/services/api/tags';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 import Slide from '@/components/slider/Slide.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import InputText from '@/components/forms/Text.vue';

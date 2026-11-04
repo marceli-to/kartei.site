@@ -54,14 +54,14 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { getRelatedUsers, getArchiveUsers } from '@/services/api/archiveUser';
-import { getUserSubscription } from '@/services/api/user';
+import { getUserSubscription } from '@/services/api/subscription';
 import { notifyError } from '@/services/api/error';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/users/partials/CreateUser.vue';
 import UpdateUser from '@/views/users/partials/UpdateUser.vue';
 import UserPermissions from '@/views/users/partials/UserPermissions.vue';
 import ListUsers from '@/views/users/partials/ListUsers.vue';
-import SubscriptionInfo from '@/views/users/components/SubscriptionInfo.vue';
+import SubscriptionInfo from '@/views/users/partials/SubscriptionInfo.vue';
 
 const route = useRoute();
 const archiveUuid = ref(route.params.uuid || null);

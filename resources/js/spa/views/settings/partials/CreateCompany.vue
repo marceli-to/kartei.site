@@ -73,7 +73,7 @@
 <script setup>
 import { ref } from 'vue';
 import { countries } from '@/config/countries';
-import { createUserCompany } from '@/services/api/user';
+import { createUserCompany } from '@/services/api/company';
 import { useFormErrors } from '@/composables/useFormErrors';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';

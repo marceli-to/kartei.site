@@ -41,6 +41,7 @@
 - [x] Accessibility: real buttons instead of `javascript:;`/`href=""` anchors (Password toggle, Search clear, Collapsible with `aria-expanded`, InfoBox close), `aria-label` on all icon-only buttons/links; `Password`/`Search`/`Select` pass attributes to the input (`inheritAttrs: false`); radio groups get a `legend` and a visible keyboard focus; dialog moves focus in, traps Tab, restores focus, no close after a drag out of the panel
 - [x] All failed requests reach the user: `notifyError()` in every catch block, no `console.error` left in the SPA (favorites load stays silent on purpose)
 - [x] Dead code and dependencies: removed `views/Archives.vue`, `ContentExample.vue`, the old `users/partials/SubscriptionInfo.vue`, `ChevronUp.vue`, the commented `App.vue` block and the title wiring, unused upload helpers; `Sort` uses `isAscending` for its label; `package.json` without the mix scripts, `vue-axios` and `uuid`, Alpine once, `axios` in `dependencies`; the SPA shell loads only `spa.js` (Alpine only on Blade pages); Tailwind spacing generated (identical CSS)
+- [x] Structure (small items): `utils/numbering.js` (alpha numbering continues with AA, AB, … after Z), `dialogStore.confirmDelete()` for the confirm → delete → toast pattern; stores in `stores/`, shared composables in `composables/`, view parts in `partials/`; `Subscriptioninfo.vue` was tracked with a lower-case "i" (would break a case-sensitive build), now `users/partials/SubscriptionInfo.vue`, the plan list is `settings/partials/PlanInfo.vue`; API: company/subscription/permission calls in their own modules, own account delete is `deleteAccount()`
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
 ## Servers (before going live)
@@ -61,12 +62,9 @@ Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Ve
 
 ### Structure and duplication
 - [ ] Merge: record Create/Update (`RecordForm.vue` + `useArchiveMeta()`), Address/BillingAddress (`AddressForm.vue`), Create/UpdateCompany, Create/UpdateUser, the two delete views, 401/403/404 pages
-- [ ] `formatNumber`/`toRoman` duplicated in `Category.vue` and `StructureDialog.vue` -> `utils/numbering.js`; confirm-then-delete helper
 - [ ] Split `archive/Category.vue` (~540 lines): `useStructureForm`, `StructureRow`, `StructurePreview`
 - [ ] Icons: 23 files with mixed `class`/`classes` props (`Tiles`, `List` ignore it) -> one `<Icon name variant>`; buttons: Primary/Auth/Action/Sort -> one `Button` with variants (`Action.vue` template duplicated)
 - [ ] `ImageUpload`: one `v-model` instead of `modelValue` + `existingImages` (three copies of the list)
-- [ ] Folders: `partials/` vs `components/` in views, stores/composables inside component folders, `media/upload/composable` (singular); two `SubscriptionInfo.vue`
-- [ ] API layer: `deleteUser`/`updateUser` in two modules, `user/index.js` mixes company/theme/address/subscription
 
 ### Tooling
 - [ ] Prettier/ESLint config and one run (semicolons, quotes, attribute order)

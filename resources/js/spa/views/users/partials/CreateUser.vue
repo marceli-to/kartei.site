@@ -44,7 +44,7 @@
 <script setup>
 import { ref } from 'vue';
 import { createUser } from '@/services/api/archiveUser';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';

@@ -68,9 +68,9 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { notifyError } from '@/services/api/error'
-import { getUserCompanies } from '@/services/api/user';
+import { getUserCompanies } from '@/services/api/company';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 import { useUserStore } from '@/stores/user';
 import { useFormErrors } from '@/composables/useFormErrors';
 

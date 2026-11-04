@@ -158,6 +158,7 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import IconSettings from '@/components/icons/Settings.vue';
 import IconPlus from '@/components/icons/Plus.vue';
+import { formatNumber } from '@/utils/numbering';
 
 const props = defineProps({
   onConfirm: {
@@ -215,32 +216,4 @@ const exampleRegisters = ref([
   { title: 'Platzhalter', id: 'PL' },
   { title: 'Blindtext', id: 'BL' }
 ]);
-
-const formatNumber = (index, type = 'decimal', isCategory = false) => {
-  switch (type) {
-    case 'alpha': {
-      const char = String.fromCharCode(65 + index);
-      return isCategory ? char + '.' : char.toLowerCase();
-    }
-    case 'roman':
-      return isCategory ? toRoman(index + 1) + '.' : toRoman(index + 1);
-    default:
-      return isCategory ? `${index + 1}.` : `${index + 1}`;
-  }
-};
-
-const toRoman = (num) => {
-  const romans = [
-    ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
-    ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
-    ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
-  ];
-  return romans.reduce((acc, [letter, value]) => {
-    while (num >= value) {
-      acc += letter;
-      num -= value;
-    }
-    return acc;
-  }, '');
-};
 </script>

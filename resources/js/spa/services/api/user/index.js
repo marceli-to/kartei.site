@@ -6,6 +6,7 @@ export const getUserPermissions = async () => {
 }
 
 // Archives that are deleted together with the account
+
 export const getOwnedArchives = async () => {
   const response = await api.get('/user/owned-archives');
   return response.data;
@@ -46,21 +47,6 @@ export const updateUserBillingAddress = async (addressData) => {
   return response.data;
 };
 
-export const getUserSubscription = async () => {
-  const response = await api.get('/user/subscription');
-  return response.data;
-}
-
-export const updateUserSubscription = async (subscriptionData) => {
-  const response = await api.put('/user/subscription', subscriptionData);
-  return response.data;
-}
-
-export const deleteUser = async () => {
-  const response = await api.delete('/user');
-  return response.data;
-}
-
 export const getUserTheme = async () => {
   const response = await api.get('/user/theme');
   return response.data;
@@ -71,32 +57,8 @@ export const updateUserTheme = async (themeData) => {
   return response.data;
 }
 
-export const getUserCompanies = async () => {
-  const response = await api.get('/user/companies');
+// Deletes the logged-in user's own account (and the archives they own)
+export const deleteAccount = async () => {
+  const response = await api.delete('/user');
   return response.data;
 }
-
-export const createUserCompany = async (companyData) => {
-  const response = await api.post('/user/company', companyData);
-  return response.data;
-}
-
-export const updateUserCompany = async (companyData) => {
-  const response = await api.put(`/user/company/${companyData.uuid}`, companyData);
-  return response.data;
-}
-
-export const deleteUserCompany = async (uuid) => {
-  const response = await api.delete(`/user/company/${uuid}`);
-  return response.data;
-}
-
-export const storePermissions = async (user, formData) => {
-  const response = await api.put(`/user/permissions/${user.uuid}`, formData);
-  return response.data;
-};
-
-export const sendInvitation = async (user, archive) => {
-  const response = await api.post(`/user/invite/${user.uuid}`, archive);
-  return response.data;
-};

@@ -18,7 +18,7 @@
 </template>
 <script setup>
 import IconCross from '@/components/icons/Cross.vue';
-import { useInfoIconStore } from '@/components/infobox/stores/info';
+import { useInfoIconStore } from '@/stores/info';
 const infoIcon = useInfoIconStore();
 
 const props = defineProps({

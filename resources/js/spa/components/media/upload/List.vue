@@ -34,7 +34,7 @@ import draggable from 'vuedraggable';
 import IconCross from '@/components/icons/Cross.vue';
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 const toast = useToastStore();
 
 const props = defineProps({

@@ -91,11 +91,12 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
-import { useToastStore } from '@/components/toast/stores/toast';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
+import { useToastStore } from '@/stores/toast';
+import { useDialogStore } from '@/stores/dialog';
 import { getRoles, getRolesWithPermissions } from '@/services/api/role';
 import { getPermissions, getPermissionsByUser } from '@/services/api/permission';
-import { storePermissions, sendInvitation } from '@/services/api/user';
+import { storePermissions } from '@/services/api/permission';
+import { sendInvitation } from '@/services/api/archiveUser';
 import { getArchivesByAdmin, getArchive } from '@/services/api/archive';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';

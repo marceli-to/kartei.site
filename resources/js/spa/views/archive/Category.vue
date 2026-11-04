@@ -145,9 +145,9 @@
 import { ref, onMounted, toRaw } from 'vue';
 
 import { useRoute } from 'vue-router';
-import { useToastStore } from '@/components/toast/stores/toast';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
-import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
+import { useToastStore } from '@/stores/toast';
+import { useDialogStore } from '@/stores/dialog';
+import { useInfoBox } from '@/composables/useInfoBox';
 import { getCategories, storeCategory, deleteCategory, deleteRegister } from '@/services/api/category';
 import draggable from 'vuedraggable';
 import IconSettings from '@/components/icons/Settings.vue';
@@ -163,6 +163,7 @@ import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoStructure from '@/views/archive/partials/StructureInfo.vue';
 import { notifyError } from '@/services/api/error';
+import { formatNumber } from '@/utils/numbering';
 
 // Stable drag keys per row object. custom_id can be empty or duplicated
 // ("Bilder" and "Bibliothek" both become "BI") and changes while typing.
@@ -382,28 +383,13 @@ const removeCategory = async (cIdx) => {
     return;
   }
 
-  // Show confirmation dialog
-  dialogStore.show({
+  dialogStore.confirmDelete({
     title: 'Kategorie löschen',
     message: `Möchten Sie die Kategorie "${category.name}" wirklich löschen? Alle zugehörigen Register werden ebenfalls gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.`,
-    confirmLabel: 'Löschen',
-    cancelLabel: 'Abbrechen',
-    type: 'danger',
-    onConfirm: async () => {
-      try {
-        // Call API to delete category
-        await deleteCategory(category.uuid);
-        
-        // Remove from local form
-        form.value.categories.splice(cIdx, 1);
-        
-        // Show success message
-        toast.show('Kategorie erfolgreich gelöscht', 'success');
-      } catch (error) {
-        notifyError(error, 'Fehler beim Löschen der Kategorie');
-      }
-    },
-    onCancel: () => {}
+    action: () => deleteCategory(category.uuid),
+    then: () => form.value.categories.splice(cIdx, 1),
+    success: 'Kategorie erfolgreich gelöscht',
+    failure: 'Fehler beim Löschen der Kategorie',
   });
 };
 
@@ -417,28 +403,13 @@ const removeRegister = async (cIdx, rIdx) => {
     return;
   }
 
-  // Show confirmation dialog
-  dialogStore.show({
+  dialogStore.confirmDelete({
     title: 'Register löschen',
     message: `Möchten Sie das Register "${register.name}" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.`,
-    confirmLabel: 'Löschen',
-    cancelLabel: 'Abbrechen',
-    type: 'danger',
-    onConfirm: async () => {
-      try {
-        // Call API to delete register
-        await deleteRegister(register.uuid);
-        
-        // Remove from local form
-        category.registers.splice(rIdx, 1);
-        
-        // Show success message
-        toast.show('Register erfolgreich gelöscht', 'success');
-      } catch (error) {
-        notifyError(error, 'Fehler beim Löschen des Registers');
-      }
-    },
-    onCancel: () => {}
+    action: () => deleteRegister(register.uuid),
+    then: () => category.registers.splice(rIdx, 1),
+    success: 'Register erfolgreich gelöscht',
+    failure: 'Fehler beim Löschen des Registers',
   });
 };
 
@@ -459,34 +430,6 @@ const applyAutoId = (item) => {
 };
 
 const cloneRegister = (original) => ({ ...original });
-
-const formatNumber = (index, type = 'decimal', isCategory = false) => {
-  switch (type) {
-    case 'alpha': {
-      const char = String.fromCharCode(65 + index);
-      return isCategory ? char + '.' : char.toLowerCase();
-    }
-    case 'roman':
-      return isCategory ? toRoman(index + 1) + '.' : toRoman(index + 1);
-    default:
-      return isCategory ? `${index + 1}.` : `${index + 1}`;
-  }
-};
-
-const toRoman = (num) => {
-  const romans = [
-    ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
-    ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
-    ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
-  ];
-  return romans.reduce((acc, [letter, value]) => {
-    while (num >= value) {
-      acc += letter;
-      num -= value;
-    }
-    return acc;
-  }, '');
-};
 
 const showStructureDialog = () => {
   dialogStore.show({

@@ -60,9 +60,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { findUser, updateUser, deleteUser } from '@/services/api/archiveUser';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
+import { useDialogStore } from '@/stores/dialog';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
@@ -140,23 +140,12 @@ const submit = async () => {
 };
 
 const showDeleteDialog = () => {
-  dialogStore.show({
+  dialogStore.confirmDelete({
     title: `Möchten Sie den Benutzer/in "${form.value.firstname} ${form.value.name}" wirklich löschen?`,
-    confirmLabel: 'Löschen',
-    cancelLabel: 'Abbrechen',
-    onConfirm: handleDelete,
-    onCancel: () => {}
+    action: () => deleteUser(props.uuid),
+    then: () => emit('user-deleted', props.uuid),
+    success: 'Benutzer/in erfolgreich gelöscht.',
+    failure: 'Fehler beim Löschen des Benutzers.',
   });
-};
-
-const handleDelete = async () => {
-  try {
-    await deleteUser(props.uuid);
-    toast.show('Benutzer/in erfolgreich gelöscht.', 'success');
-    emit('user-deleted', props.uuid);
-  }
-  catch (error) {
-    notifyError(error, 'Fehler beim Löschen des Benutzers.');
-  }
 };
 </script>

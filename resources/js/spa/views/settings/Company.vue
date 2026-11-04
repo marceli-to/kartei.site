@@ -50,9 +50,9 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 import { notifyError } from '@/services/api/error';
-import { getUserCompanies } from '@/services/api/user';
+import { getUserCompanies } from '@/services/api/company';
 import Slide from '@/components/slider/Slide.vue';
 import InputSearch from '@/components/forms/Search.vue';
 import Action from '@/components/buttons/Action.vue';

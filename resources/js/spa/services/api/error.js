@@ -1,4 +1,4 @@
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 
 let globalRouter = null
 

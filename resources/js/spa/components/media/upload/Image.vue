@@ -63,7 +63,7 @@
 
 <script setup>
 import { computed, watch, onMounted } from 'vue'
-import { useFileUpload, normalizeImageEntry } from '@/components/media/upload/composable/useFileUpload.js';
+import { useFileUpload, normalizeImageEntry } from '@/composables/useFileUpload.js';
 import ImageList from '@/components/media/upload/List.vue';
 import { MAX_UPLOAD_BYTES } from '@/config/upload';
 import IconImage from '@/components/icons/Image.vue';

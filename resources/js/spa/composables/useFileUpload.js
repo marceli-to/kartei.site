@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import api from '@/services/api/axios'
 import { notifyError } from '@/services/api/error'
-import { useToastStore } from '@/components/toast/stores/toast'
+import { useToastStore } from '@/stores/toast'
 import { MAX_UPLOAD_BYTES } from '@/config/upload'
 
 export function useFileUpload(options = {}) {

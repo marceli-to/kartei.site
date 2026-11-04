@@ -87,7 +87,7 @@
 import { ref, onMounted, nextTick, toRaw } from 'vue';
 import draggable from 'vuedraggable';
 import { useRoute } from 'vue-router';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useToastStore } from '@/stores/toast';
 import { getArchiveSettings, storeArchiveSettings, deleteArchiveSettingsField } from '@/services/api/archive';
 
 import Slide from '@/components/slider/Slide.vue';

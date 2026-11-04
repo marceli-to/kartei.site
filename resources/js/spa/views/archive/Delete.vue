@@ -24,8 +24,8 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { deleteArchive } from '@/services/api/archive';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
-import { useToastStore } from '@/components/toast/stores/toast';
+import { useDialogStore } from '@/stores/dialog';
+import { useToastStore } from '@/stores/toast';
 import { useUserStore } from '@/stores/user';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';

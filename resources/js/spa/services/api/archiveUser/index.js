@@ -30,3 +30,7 @@ export const getArchiveUsers = async (uuid) => {
   return response.data;
 };
 
+export const sendInvitation = async (user, archive) => {
+  const response = await api.post(`/user/invite/${user.uuid}`, archive);
+  return response.data;
+};

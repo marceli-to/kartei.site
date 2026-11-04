@@ -8,7 +8,7 @@
       <!-- Info box -->
       <template v-if="isInfoOpen">
         <InfoBox class="pb-24">
-          <InfoSubscription />
+          <PlanInfo />
         </InfoBox>
       </template>
 
@@ -63,17 +63,17 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
-import { getUserSubscription, updateUserSubscription } from '@/services/api/user';
+import { getUserSubscription, updateUserSubscription } from '@/services/api/subscription';
 import { paymentIntervals } from '@/config/paymentIntervals';
-import { useToastStore } from '@/components/toast/stores/toast';
-import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
+import { useToastStore } from '@/stores/toast';
+import { useInfoBox } from '@/composables/useInfoBox';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputRadioGroup from '@/components/forms/RadioGroup.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
-import InfoSubscription from '@/views/settings/partials/SubscriptionInfo.vue';
+import PlanInfo from '@/views/settings/partials/PlanInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
 import { notifyError } from '@/services/api/error';
 

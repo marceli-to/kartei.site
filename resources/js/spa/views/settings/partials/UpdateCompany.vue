@@ -79,9 +79,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { countries } from '@/config/countries';
-import { updateUserCompany, deleteUserCompany } from '@/services/api/user';
+import { updateUserCompany, deleteUserCompany } from '@/services/api/company';
 import { useFormErrors } from '@/composables/useFormErrors';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
+import { useDialogStore } from '@/stores/dialog';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputSelect from '@/components/forms/Select.vue';
@@ -138,24 +138,13 @@ const mapCompanyToForm = () => {
 };
 
 const showDeleteDialog = () => {
-  dialogStore.show({
+  // The parent removes the company from the list and confirms, so only emit once it's gone
+  dialogStore.confirmDelete({
     title: `Möchten Sie die Firma "${form.value.name}" wirklich löschen?`,
-    confirmLabel: 'Löschen',
-    cancelLabel: 'Abbrechen',
-    onConfirm: handleDelete,
-    onCancel: () => {}
+    action: () => deleteUserCompany(props.company.uuid),
+    then: () => emit('delete', props.company.uuid),
+    failure: 'Fehler beim Löschen der Firma.',
   });
-};
-
-// The parent removes the company from the list and confirms, so only emit once it's gone
-const handleDelete = async () => {
-  try {
-    await deleteUserCompany(props.company.uuid);
-    emit('delete', props.company.uuid);
-  }
-  catch (error) {
-    notifyError(error, 'Fehler beim Löschen der Firma.');
-  }
 };
 
 const submit = async () => {

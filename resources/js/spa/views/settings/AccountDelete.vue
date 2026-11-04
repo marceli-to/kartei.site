@@ -24,8 +24,9 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { deleteUser, getUserSubscription, getOwnedArchives } from '@/services/api/user';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
+import { deleteAccount, getOwnedArchives } from '@/services/api/user';
+import { getUserSubscription } from '@/services/api/subscription';
+import { useDialogStore } from '@/stores/dialog';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
@@ -69,7 +70,7 @@ async function handleDelete() {
   isDeleting.value = true;
 
   try {
-    await deleteUser();
+    await deleteAccount();
   }
   catch (error) {
     notifyError(error, 'Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.');

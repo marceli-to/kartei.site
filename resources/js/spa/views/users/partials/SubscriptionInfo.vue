@@ -8,7 +8,7 @@
         Sie haben noch kein Abonnement. Um Benutzer hinzuzufügen, müssen Sie ein Abonnement erstellen.
       </p>
       <router-link 
-        :to="{ name: 'settings' }"
+        :to="{ name: 'settings', query: { section: 'subscription' } }"
         class="font-muoto-medium flex items-center gap-x-4 mt-4">
         <IconChevronRight variant="tiny" />
         Abonnement erstellen

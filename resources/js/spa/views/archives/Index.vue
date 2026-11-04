@@ -75,7 +75,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
+import { useInfoBox } from '@/composables/useInfoBox';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
 import { getByUser } from '@/services/api/archive';

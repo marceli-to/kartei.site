@@ -109,8 +109,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUserProfile, updateUserProfile, updatePassword } from '@/services/api/user';
-import { useToastStore } from '@/components/toast/stores/toast';
-import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
+import { useToastStore } from '@/stores/toast';
+import { useInfoBox } from '@/composables/useInfoBox';
 import { useFormErrors } from '@/composables/useFormErrors';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';

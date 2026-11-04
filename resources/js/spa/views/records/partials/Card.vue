@@ -35,7 +35,7 @@ import { useUserStore } from '@/stores/user';
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import ImageSlideshow from '@/components/media/Slideshow.vue';
-import Favorite from '@/views/records/components/Favorite.vue';
+import Favorite from '@/views/records/partials/Favorite.vue';
 
 const props = defineProps({
   record: {

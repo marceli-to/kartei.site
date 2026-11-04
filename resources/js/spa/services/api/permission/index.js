@@ -14,3 +14,8 @@ export const getPermissionsByUser = async (user) => {
   const response = await api.get(`/permissions/user/${user.uuid}`);
   return response.data;
 };
+
+export const storePermissions = async (user, formData) => {
+  const response = await api.put(`/user/permissions/${user.uuid}`, formData);
+  return response.data;
+};

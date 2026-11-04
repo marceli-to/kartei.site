@@ -1,5 +1,5 @@
 import { watch, computed, toValue, onBeforeUnmount } from 'vue';
-import { useInfoIconStore } from '@/components/infobox/stores/info';
+import { useInfoIconStore } from '@/stores/info';
 
 let nextId = 0;
 

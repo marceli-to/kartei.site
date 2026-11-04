@@ -58,7 +58,7 @@
 </template>
 <script setup>
 import { useToggleSidebar } from '@/composables/useToggleSidebar';
-import { useInfoIconStore } from '@/components/infobox/stores/info';
+import { useInfoIconStore } from '@/stores/info';
 import { usePageTitle } from '@/composables/usePageTitle';
 import IconLogo from '@/components/icons/Logo.vue';
 import IconInfo from '@/components/icons/Info.vue';
