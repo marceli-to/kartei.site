@@ -18,33 +18,33 @@
         <!-- Personal details -->
         <div class="flex flex-col gap-y-20">
           <InputGroup>
-            <InputLabel label="Vorname" id="firstname" required />
+            <InputLabel label="Vorname" id="firstname" required :error="errors.firstname" />
             <InputText
               v-model="form.firstname"
               id="firstname"
               :error="errors.firstname"
               @update:error="errors.firstname = $event"
-              :placeholder="errors.firstname ? errors.firstname : 'Vorname'"
+              placeholder="Vorname"
               aria-label="Vorname" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Name" id="name" required />
+            <InputLabel label="Name" id="name" required :error="errors.name" />
             <InputText
               v-model="form.name"
               id="name"
               :error="errors.name"
               @update:error="errors.name = $event"
-              :placeholder="errors.name ? errors.name : 'Nachname'"
+              placeholder="Nachname"
               aria-label="Nachname" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="E-Mail-Adresse" id="email" required />
+            <InputLabel label="E-Mail-Adresse" id="email" required :error="errors.email" />
             <InputText
               v-model="form.email"
               id="email"
               :error="errors.email"
               @update:error="errors.email = $event"
-              :placeholder="errors.email ? errors.email : 'E-Mail-Adresse'"
+              placeholder="E-Mail-Adresse"
               aria-label="E-Mail-Adresse" />
           </InputGroup>
         </div>
@@ -64,22 +64,22 @@
               <InputPassword
                 id="current_password"
                 v-model="auth.current_password"
-                :error="errors.current_password"
-                @update:error="errors.current_password = $event"
+                :error="passwordErrors.current_password"
+                @update:error="passwordErrors.current_password = $event"
                 placeholder="Aktuelles Passwort"
                 aria-label="Aktuelles Passwort" />
               <InputPassword
                 id="new_password"
                 v-model="auth.new_password"
-                :error="errors.new_password"
-                @update:error="errors.new_password = $event"
+                :error="passwordErrors.new_password"
+                @update:error="passwordErrors.new_password = $event"
                 placeholder="Neues Passwort"
                 aria-label="Neues Passwort" />
               <InputPassword
                 id="new_password_confirmation"
                 v-model="auth.new_password_confirmation"
-                :error="errors.new_password_confirmation"
-                @update:error="errors.new_password_confirmation = $event"
+                :error="passwordErrors.new_password_confirmation"
+                @update:error="passwordErrors.new_password_confirmation = $event"
                 placeholder="Neues Passwort wiederholen"
                 aria-label="Passwort wiederholen" />
               <ButtonAuth 
@@ -111,6 +111,7 @@ import { ref, onMounted } from 'vue';
 import { getUserProfile, updateUserProfile, updatePassword } from '@/services/api/user';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
+import { useFormErrors } from '@/composables/useFormErrors';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
@@ -150,12 +151,15 @@ const auth = ref({
   new_password_confirmation: '',
 });
 
-const errors = ref({
-  firstname: null,
-  name: null,
-  email: null,
-});
+// Profile and password are saved separately, so they keep separate errors
+const { errors, setErrors, clearErrors } = useFormErrors(['firstname', 'name', 'email']);
+const {
+  errors: passwordErrors,
+  setErrors: setPasswordErrors,
+  clearErrors: clearPasswordErrors,
+} = useFormErrors(['current_password', 'new_password', 'new_password_confirmation']);
 
+// All password messages, listed above the fields (they share one label)
 const authErrors = ref([]);
 
 onMounted(async () => {
@@ -180,6 +184,7 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
     const userData = await updateUserProfile(form.value);
     if (userData.email_changed) {
       toast.show('E-Mail-Adresse wurde geändert, wir haben einen neuen Verifizierungslink geschickt.', 'success');
@@ -189,11 +194,8 @@ const handleSubmit = async () => {
     }
   } 
   catch (error) {
-    errors.value = {
-      firstname: error.response?.data?.errors?.firstname?.[0],
-      name: error.response?.data?.errors?.name?.[0],
-      email: error.response?.data?.errors?.email?.[0],
-    };
+    setErrors(error);
+    toast.show('Fehler beim Speichern des Profils.', 'error');
   }
   finally {
     isSaving.value = false;
@@ -202,39 +204,20 @@ const handleSubmit = async () => {
 
 const handleAuthSubmit = async () => {
   try {
-    authErrors.value = []; // Clear previous errors
+    authErrors.value = [];
+    clearPasswordErrors();
     // Don't set isLoading here - it hides the form and disconnects it from DOM
-    const passwordData = await updatePassword(auth.value);
+    await updatePassword(auth.value);
     toast.show('Passwort wurde erfolgreich geändert.', 'success');
     auth.value.current_password = '';
     auth.value.new_password = '';
     auth.value.new_password_confirmation = '';
   } 
   catch (error) {
+    setPasswordErrors(error);
     const errorData = error.response?.data?.errors || {};
-    
-    // Set individual field errors
-    errors.value.current_password = errorData.current_password?.[0] || null;
-    errors.value.new_password = errorData.new_password?.[0] || null;
-    errors.value.new_password_confirmation = errorData.new_password_confirmation?.[0] || null;
-    
-    // Collect all errors into the array
-    authErrors.value = [];
-    
-    // Add current_password errors
-    if (errorData.current_password) {
-      authErrors.value.push(...errorData.current_password);
-    }
-    
-    // Add new_password errors
-    if (errorData.new_password) {
-      authErrors.value.push(...errorData.new_password);
-    }
-    
-    // Add new_password_confirmation errors
-    if (errorData.new_password_confirmation) {
-      authErrors.value.push(...errorData.new_password_confirmation);
-    }
+    authErrors.value = ['current_password', 'new_password', 'new_password_confirmation']
+      .flatMap(field => errorData[field] || []);
 
     toast.show('Es ist ein Fehler aufgetreten.', 'error', 5000);
   }

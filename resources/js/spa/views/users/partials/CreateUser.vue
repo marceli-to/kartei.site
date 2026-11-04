@@ -4,33 +4,33 @@
     class="w-full h-full flex flex-col justify-between">
     <div class="flex flex-col gap-y-20">
       <InputGroup>
-        <InputLabel label="Vorname" id="user_firstname" required />
+        <InputLabel label="Vorname" id="user_firstname" required :error="errors.firstname" />
         <InputText
           v-model="form.firstname"
           id="user_firstname"
           :error="errors.firstname"
           @update:error="errors.firstname = $event"
-          :placeholder="errors.firstname ? errors.firstname : 'Vorname'"
+          placeholder="Vorname"
           required />
       </InputGroup>
       <InputGroup>
-        <InputLabel label="Nachname" id="user_name" required />
+        <InputLabel label="Nachname" id="user_name" required :error="errors.name" />
         <InputText
           v-model="form.name"
           id="user_name"
           :error="errors.name"
           @update:error="errors.name = $event"
-          :placeholder="errors.name ? errors.name : 'Nachname'"
+          placeholder="Nachname"
           required />
       </InputGroup>
       <InputGroup>
-        <InputLabel label="E-Mail" id="user_email" required />
+        <InputLabel label="E-Mail" id="user_email" required :error="errors.email" />
         <InputText
           v-model="form.email"
           id="user_email"
           :error="errors.email"
           @update:error="errors.email = $event"
-          :placeholder="errors.email ? errors.email : 'E-Mail'"
+          placeholder="E-Mail"
           required />
       </InputGroup>
     </div>
@@ -45,6 +45,7 @@
 import { ref } from 'vue';
 import { createUser } from '@/services/api/archiveUser';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useFormErrors } from '@/composables/useFormErrors';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
@@ -62,15 +63,12 @@ const form = ref({
   email: '',
 });
 
-const errors = ref({
-  firstname: null,
-  name: null,
-  email: null,
-});
+const { errors, setErrors, clearErrors } = useFormErrors(['firstname', 'name', 'email']);
 
 const submit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
     const userData = {
       ...form.value
     };
@@ -79,11 +77,7 @@ const submit = async () => {
     emit('success', response);
   }
   catch (error) {
-    errors.value = {
-      firstname: error.response?.data?.errors?.firstname?.[0],
-      name: error.response?.data?.errors?.name?.[0],
-      email: error.response?.data?.errors?.email?.[0],
-    };
+    setErrors(error);
     toast.show('Fehler beim Erstellen des Benutzers.', 'error');
   }
   finally {

@@ -6,37 +6,37 @@
     <div class="flex flex-col gap-y-32">
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Vorname" id="user_firstname" required />
+          <InputLabel label="Vorname" id="user_firstname" required :error="errors.firstname" />
           <InputText 
             v-model="form.firstname" 
             id="user_firstname" 
             :error="errors.firstname" 
             @update:error="errors.firstname = $event" 
-            :placeholder="errors.firstname ? errors.firstname : 'Vorname'" 
+            placeholder="Vorname" 
             required 
           />
         </InputGroup>
 
         <InputGroup>
-          <InputLabel label="Nachname" id="user_name" required />
+          <InputLabel label="Nachname" id="user_name" required :error="errors.name" />
           <InputText 
             v-model="form.name" 
             id="user_name" 
             :error="errors.name" 
             @update:error="errors.name = $event" 
-            :placeholder="errors.name ? errors.name : 'Nachname'" 
+            placeholder="Nachname" 
             required 
           />
         </InputGroup>
 
         <InputGroup>
-          <InputLabel label="E-Mail" id="user_email" required />
+          <InputLabel label="E-Mail" id="user_email" required :error="errors.email" />
           <InputText 
             v-model="form.email" 
             id="user_email" 
             :error="errors.email" 
             @update:error="errors.email = $event" 
-            :placeholder="errors.email ? errors.email : 'E-Mail'" 
+            placeholder="E-Mail" 
             required 
           />
         </InputGroup>
@@ -61,6 +61,7 @@
 import { ref, onMounted } from 'vue';
 import { findUser, updateUser, deleteUser } from '@/services/api/archiveUser';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useFormErrors } from '@/composables/useFormErrors';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
@@ -95,11 +96,7 @@ const form = ref({
   email: '',
 });
 
-const errors = ref({
-  firstname: null,
-  name: null,
-  email: null,
-});
+const { errors, setErrors, clearErrors } = useFormErrors(['firstname', 'name', 'email']);
 
 onMounted(async () => {
   try {
@@ -124,13 +121,7 @@ onMounted(async () => {
 const submit = async () => {
   try {
     isSaving.value = true;
-    
-    // Reset errors before submission
-    errors.value = {
-      firstname: null,
-      name: null,
-      email: null,
-    };
+    clearErrors();
     
     const userData = { ...form.value };
     const response = await updateUser(props.uuid, userData);
@@ -139,11 +130,7 @@ const submit = async () => {
     emit('success', response);
   } 
   catch (error) {
-    errors.value = {
-      firstname: error.response?.data?.errors?.firstname?.[0],
-      name: error.response?.data?.errors?.name?.[0],
-      email: error.response?.data?.errors?.email?.[0],
-    };
+    setErrors(error);
     
     toast.show('Fehler beim Aktualisieren des Benutzers.', 'error');
   } finally {

@@ -6,61 +6,62 @@
     <div class="flex flex-col gap-y-48">
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Bezeichnung / Firma" id="company_name" required />
+          <InputLabel label="Bezeichnung / Firma" id="company_name" required :error="errors.name" />
           <InputText
             v-model="form.name"
             id="company_name"
             :error="errors.name"
             @update:error="errors.name = $event"
-            :placeholder="errors.name ? errors.name : 'Bezeichnung / Firma'"
+            placeholder="Bezeichnung / Firma"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Strasse" id="company_street" required />
+          <InputLabel label="Strasse" id="company_street" required :error="errors.street" />
           <InputText
             v-model="form.street"
             id="company_street"
             :error="errors.street"
             @update:error="errors.street = $event"
-            :placeholder="errors.street ? errors.street : 'Strasse'"
+            placeholder="Strasse"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Hausnummer" id="company_street_number" />
+          <InputLabel label="Hausnummer" id="company_street_number" :error="errors.street_number" />
           <InputText
             v-model="form.street_number"
             id="company_street_number"
             :error="errors.street_number"
             @update:error="errors.street_number = $event"
-            :placeholder="errors.street_number ? errors.street_number : 'Hausnummer'" />
+            placeholder="Hausnummer" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="PLZ" id="company_zip" required />
+          <InputLabel label="PLZ" id="company_zip" required :error="errors.zip" />
           <InputText
             v-model="form.zip"
             id="company_zip"
             :error="errors.zip"
             @update:error="errors.zip = $event"
-            :placeholder="errors.zip ? errors.zip : 'PLZ'"
+            placeholder="PLZ"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Ort" id="company_city" required />
+          <InputLabel label="Ort" id="company_city" required :error="errors.city" />
           <InputText
             v-model="form.city"
             id="company_city"
             :error="errors.city"
             @update:error="errors.city = $event"
-            :placeholder="errors.city ? errors.city : 'Ort'"
+            placeholder="Ort"
             required />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Land" id="company_country" required />
+          <InputLabel label="Land" id="company_country" required :error="errors.country" />
           <InputSelect
             id="company_country"
             v-model="form.country"
             :options="countries"
             :error="errors.country"
+            @update:error="errors.country = $event"
           />
         </InputGroup>
       </div>
@@ -80,6 +81,7 @@ import { ref, onMounted } from 'vue';
 import { countries } from '@/config/countries';
 import { updateUserCompany, deleteUserCompany } from '@/services/api/user';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useFormErrors } from '@/composables/useFormErrors';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
@@ -111,14 +113,7 @@ const form = ref({
   country: 'Schweiz',
 });
 
-const errors = ref({
-  name: null,
-  street: null,
-  street_number: null,
-  zip: null,
-  city: null,
-  country: null,
-});
+const { errors, setErrors, clearErrors } = useFormErrors(['name', 'street', 'street_number', 'zip', 'city', 'country']);
 
 // Initialize form with company data when component is mounted
 onMounted(async () => {
@@ -168,18 +163,12 @@ const handleDelete = async () => {
 const submit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
     const response = await updateUserCompany(form.value);
     emit('success', response.data);
   }
   catch (error) {
-    errors.value = {
-      name: error.response?.data?.errors?.name?.[0],
-      street: error.response?.data?.errors?.street?.[0],
-      street_number: error.response?.data?.errors?.street_number?.[0],
-      zip: error.response?.data?.errors?.zip?.[0],
-      city: error.response?.data?.errors?.city?.[0],
-      country: error.response?.data?.errors?.country?.[0],
-    };
+    setErrors(error);
     toast.show('Fehler beim Speichern der Firma.', 'error');
   }
   finally {

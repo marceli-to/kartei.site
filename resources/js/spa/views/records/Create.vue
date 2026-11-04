@@ -29,9 +29,7 @@
               <div class="w-3/12">
                 <div class="relative flex flex-col gap-20 -top-24">
                   <InputGroup>
-                    <InputLabel 
-                      :label="errors.category ? errors.category : 'Ordnung'" 
-                      :class="errors.category ? 'text-flame' : ''" />
+                    <InputLabel label="Ordnung" :error="errors.category" />
                     <InputSelectButtons
                       v-model="form.category"
                       :multiple="false"
@@ -118,6 +116,7 @@ import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
 import { getArchive, getArchiveMeta } from '@/services/api/archive'
 import { createRecord } from '@/services/api/record'
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useFormErrors } from '@/composables/useFormErrors';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -175,13 +174,11 @@ const form = ref({
   fields: []
 })
 
-const errors = ref({
-  category: null,
-})
+const { errors, setErrors, clearErrors } = useFormErrors(['category'])
 
 const handleSubmit = async () => {
   isSaving.value = true
-  errors.value = { category: null }
+  clearErrors()
   const recordData = {
     archive_id: uuid.value,
     tags: form.value.tags,
@@ -195,9 +192,7 @@ const handleSubmit = async () => {
     router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
   }
   catch (error) {
-    errors.value = {
-      category: error.response?.data?.errors?.category?.[0],
-    }
+    setErrors(error)
     toast.show(error.response?.data?.message || 'Fehler beim Speichern der Karte.', 'error');
   }
   finally {

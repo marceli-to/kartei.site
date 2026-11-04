@@ -10,72 +10,73 @@
 
         <div class="flex flex-col gap-y-20">
           <InputGroup>
-            <InputLabel label="Bezeichnung / Firma" id="billing_company" />
+            <InputLabel label="Bezeichnung / Firma" id="billing_company" :error="errors.billing_company" />
             <InputText
               v-model="form.billing_company"
               id="billing_company"
               :error="errors.billing_company"
               @update:error="errors.billing_company = $event"
-              :placeholder="errors.billing_company ? errors.billing_company : 'Bezeichnung / Firma'"
+              placeholder="Bezeichnung / Firma"
               aria-label="Bezeichnung / Firma" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Adresszusatz" id="billing_byline" />
+            <InputLabel label="Adresszusatz" id="billing_byline" :error="errors.billing_byline" />
             <InputText
               v-model="form.billing_byline"
               id="billing_byline"
               :error="errors.billing_byline"
               @update:error="errors.billing_byline = $event"
-              :placeholder="errors.billing_byline ? errors.billing_byline : 'Adresszusatz'"
+              placeholder="Adresszusatz"
               aria-label="Adresszusatz" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Strasse" id="billing_street" required />
+            <InputLabel label="Strasse" id="billing_street" required :error="errors.billing_street" />
             <InputText
               v-model="form.billing_street"
               id="billing_street"
               :error="errors.billing_street"
               @update:error="errors.billing_street = $event"
-              :placeholder="errors.billing_street ? errors.billing_street : 'Strasse'"
+              placeholder="Strasse"
               aria-label="Strasse" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Hausnummer" id="billing_street_number" />
+            <InputLabel label="Hausnummer" id="billing_street_number" :error="errors.billing_street_number" />
             <InputText
               v-model="form.billing_street_number"
               id="billing_street_number"
               :error="errors.billing_street_number"
               @update:error="errors.billing_street_number = $event"
-              :placeholder="errors.billing_street_number ? errors.billing_street_number : 'Hausnummer'"
+              placeholder="Hausnummer"
               aria-label="Hausnummer" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="PLZ" id="billing_zip" required />
+            <InputLabel label="PLZ" id="billing_zip" required :error="errors.billing_zip" />
             <InputText
               v-model="form.billing_zip"
               id="billing_zip"
               :error="errors.billing_zip"
               @update:error="errors.billing_zip = $event"
-              :placeholder="errors.billing_zip ? errors.billing_zip : 'PLZ'"
+              placeholder="PLZ"
               aria-label="PLZ" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Ort" id="billing_city" required />
+            <InputLabel label="Ort" id="billing_city" required :error="errors.billing_city" />
             <InputText
               v-model="form.billing_city"
               id="billing_city"
               :error="errors.billing_city"
               @update:error="errors.billing_city = $event"
-              :placeholder="errors.billing_city ? errors.billing_city : 'Ort'"
+              placeholder="Ort"
               aria-label="Ort" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Land" id="billing_country" required />
+            <InputLabel label="Land" id="billing_country" required :error="errors.billing_country" />
             <InputSelect
               id="billing_country"
               v-model="form.billing_country"
               :options="countries"
               :error="errors.billing_country"
+              @update:error="errors.billing_country = $event"
             />
           </InputGroup>
         </div>
@@ -96,6 +97,7 @@ import { ref, onMounted } from 'vue';
 import { getUserBillingAddress, updateUserBillingAddress } from '@/services/api/user';
 import { countries } from '@/config/countries';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useFormErrors } from '@/composables/useFormErrors';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
@@ -126,14 +128,14 @@ const form = ref({
   billing_country: 'Schweiz'
 });
 
-const errors = ref({
-  billing_company: null,
-  billing_byline: null,
-  billing_street: null,
-  billing_street_number: null,
-  billing_zip: null,
-  billing_city: null,
-  billing_country: null
+const { errors, setErrors, clearErrors } = useFormErrors({
+  billing_company: 'company',
+  billing_byline: 'byline',
+  billing_street: 'street',
+  billing_street_number: 'street_number',
+  billing_zip: 'zip',
+  billing_city: 'city',
+  billing_country: 'country',
 });
 
 onMounted(async () => {
@@ -159,6 +161,7 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
     const data = {
       company: form.value.billing_company,
       byline: form.value.billing_byline,
@@ -172,15 +175,7 @@ const handleSubmit = async () => {
     toast.show('Rechnungsadresse erfolgreich geändert.', 'success');
   } 
   catch (error) {
-    errors.value = {
-      billing_company: error.response?.data?.errors?.company?.[0],
-      billing_byline: error.response?.data?.errors?.byline?.[0],
-      billing_street: error.response?.data?.errors?.street?.[0],
-      billing_street_number: error.response?.data?.errors?.street_number?.[0],
-      billing_zip: error.response?.data?.errors?.zip?.[0],
-      billing_city: error.response?.data?.errors?.city?.[0],
-      billing_country: error.response?.data?.errors?.country?.[0],
-    }
+    setErrors(error);
     toast.show('Fehler beim Speichern der Rechnungsadresse.', 'error');
   }
   finally {

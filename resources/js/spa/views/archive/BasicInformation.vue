@@ -20,35 +20,36 @@
           />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Name" id="name" required />
+          <InputLabel label="Name" id="name" required :error="errors.name" />
           <InputText
             v-model="form.name"
             id="name"
             :error="errors.name"
             @update:error="errors.name = $event"
-            :placeholder="errors.name ? errors.name : 'Name'"
+            placeholder="Name"
             aria-label="Name" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Kürzel (max. 5 Zeichen)" id="acronym" required />
+          <InputLabel label="Kürzel (max. 5 Zeichen)" id="acronym" required :error="errors.acronym" />
           <InputText
             v-model="form.acronym"
             id="acronym"
             :error="errors.acronym"
             @update:error="errors.acronym = $event"
-            :placeholder="errors.acronym ? errors.acronym : 'Kürzel'"
+            placeholder="Kürzel"
             :classes="'uppercase placeholder:normal-case'"
             :maxLength="5"
-            aria-label="acronym" />
+            aria-label="Kürzel" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Kunde" id="company" />
+          <InputLabel label="Kunde" id="company" :error="errors.company" />
           <InputSelect
             id="company"
             placeholder="Bitte wählen..."
             v-model="form.company"
             :options="companies"
             :error="errors.company"
+            @update:error="errors.company = $event"
           />
         </InputGroup>
       </div>
@@ -72,6 +73,7 @@ import { getUserCompanies } from '@/services/api/user';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useUserStore } from '@/stores/user';
+import { useFormErrors } from '@/composables/useFormErrors';
 
 import ImageUpload from '@/components/media/upload/Image.vue';
 import InputGroup from '@/components/forms/Group.vue';
@@ -107,12 +109,7 @@ const form = ref({
   image: null
 });
 
-const errors = ref({
-  name: null,
-  acronym: null,
-  company: null,
-  image: null
-});
+const { errors, setErrors, clearErrors } = useFormErrors(['name', 'acronym', 'company', 'image']);
 
 // Watch for changes in route.params.uuid
 watch(() => route.params.uuid, (newUuid) => {
@@ -152,6 +149,7 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
 
     if (!uuid.value) {
       const response = await createArchive(form.value);
@@ -177,11 +175,7 @@ const handleSubmit = async () => {
   } 
   catch (error) {
     console.error(error);
-    errors.value = {
-      name: error.response?.data?.errors?.name?.[0],
-      acronym: error.response?.data?.errors?.acronym?.[0],
-      image: error.response?.data?.errors?.image?.[0]
-    }
+    setErrors(error);
     toast.show('Fehler beim Speichern der Kartei.', 'error');
   }
   finally {
@@ -223,11 +217,6 @@ const fetchCompanies = async () => {
 };
 
 const resetView = () => {
-  errors.value = {
-    name: null,
-    acronym: null,
-    company: null,
-    image: null
-  };
+  clearErrors();
 };
 </script>

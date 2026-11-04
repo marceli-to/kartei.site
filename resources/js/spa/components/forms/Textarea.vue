@@ -3,8 +3,8 @@
     :id="id"
     :value="modelValue"
     :maxlength="maxLength"
-    @input="$emit('update:modelValue', $event.target.value)"
-    @focus="$emit('update:error', '')"
+    @input="onInput"
+    :aria-invalid="error ? 'true' : undefined"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
@@ -52,7 +52,13 @@ const props = defineProps({
   }
 });
 
-defineEmits(['update:modelValue', 'update:error']);
+const emit = defineEmits(['update:modelValue', 'update:error']);
+
+// The error stays until the value changes, so it can still be read while fixing it
+const onInput = (event) => {
+  emit('update:modelValue', event.target.value);
+  if (props.error) emit('update:error', '');
+};
 
 const defaultClasses = 'appearance-none w-full text-md !ring-0 min-h-default px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white';
 </script>

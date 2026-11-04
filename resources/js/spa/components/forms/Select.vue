@@ -3,15 +3,15 @@
     <select
       :id="id"
       :value="modelValue"
-      @change="$emit('update:modelValue', $event.target.value)"
+      @change="onChange"
+      :aria-invalid="error ? 'true' : undefined"
       :class="[
         selectClasses,
         { '!bg-flame !border-flame !text-white': error },
       ]">
       <option v-if="placeholder" 
         disabled 
-        value=""
-        selected="!modelValue">
+        value="">
         {{ placeholder }}
       </option>
 
@@ -86,5 +86,10 @@ const chevronClasses = computed(() => {
     : 'absolute inset-y-0 right-8 flex items-center pointer-events-none text-black';
 });
 
-defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'update:error']);
+
+const onChange = (event) => {
+  emit('update:modelValue', event.target.value);
+  if (props.error) emit('update:error', '');
+};
 </script>

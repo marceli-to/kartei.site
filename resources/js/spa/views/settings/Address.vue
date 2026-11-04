@@ -9,72 +9,73 @@
       <!-- Form elements -->
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Bezeichnung / Firma" id="company" />
+          <InputLabel label="Bezeichnung / Firma" id="company" :error="errors.company" />
           <InputText
             v-model="form.company"
             id="company"
             :error="errors.company"
             @update:error="errors.company = $event"
-            :placeholder="errors.company ? errors.company : 'Bezeichnung / Firma'"
+            placeholder="Bezeichnung / Firma"
             aria-label="Bezeichnung / Firma" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Adresszusatz" id="byline" />
+          <InputLabel label="Adresszusatz" id="byline" :error="errors.byline" />
           <InputText
             v-model="form.byline"
             id="byline"
             :error="errors.byline"
             @update:error="errors.byline = $event"
-            :placeholder="errors.byline ? errors.byline : 'Adresszusatz'"
+            placeholder="Adresszusatz"
             aria-label="Adresszusatz" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Strasse" id="street" required />
+          <InputLabel label="Strasse" id="street" required :error="errors.street" />
           <InputText
             v-model="form.street"
             id="street"
             :error="errors.street"
             @update:error="errors.street = $event"
-            :placeholder="errors.street ? errors.street : 'Strasse'"
+            placeholder="Strasse"
             aria-label="Strasse" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Hausnummer" id="street_number" />
+          <InputLabel label="Hausnummer" id="street_number" :error="errors.street_number" />
           <InputText
             v-model="form.street_number"
             id="street_number"
             :error="errors.street_number"
             @update:error="errors.street_number = $event"
-            :placeholder="errors.street_number ? errors.street_number : 'Hausnummer'"
+            placeholder="Hausnummer"
             aria-label="Hausnummer" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="PLZ" id="zip" required />
+          <InputLabel label="PLZ" id="zip" required :error="errors.zip" />
           <InputText
             v-model="form.zip"
             id="zip"
             :error="errors.zip"
             @update:error="errors.zip = $event"
-            :placeholder="errors.zip ? errors.zip : 'PLZ'"
+            placeholder="PLZ"
             aria-label="PLZ" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Ort" id="city" required />
+          <InputLabel label="Ort" id="city" required :error="errors.city" />
           <InputText
             v-model="form.city"
             id="city"
             :error="errors.city"
             @update:error="errors.city = $event"
-            :placeholder="errors.city ? errors.city : 'Ort'"
+            placeholder="Ort"
             aria-label="Ort" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Land" id="country" required />
+          <InputLabel label="Land" id="country" required :error="errors.country" />
           <InputSelect
             id="country"
             v-model="form.country"
             :options="countries"
             :error="errors.country"
+            @update:error="errors.country = $event"
           />
         </InputGroup>
       </div>
@@ -94,6 +95,7 @@ import { ref, onMounted } from 'vue';
 import { getUserAddress, updateUserAddress } from '@/services/api/user';
 import { countries } from '@/config/countries';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { useFormErrors } from '@/composables/useFormErrors';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
@@ -124,15 +126,7 @@ const form = ref({
   country: 'Schweiz'
 });
 
-const errors = ref({
-  company: null,
-  byline: null,
-  street: null,
-  street_number: null,
-  zip: null,
-  city: null,
-  country: null
-});
+const { errors, setErrors, clearErrors } = useFormErrors(['company', 'byline', 'street', 'street_number', 'zip', 'city', 'country']);
 
 onMounted(async () => {
   try {
@@ -151,19 +145,12 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
     const response = await updateUserAddress(form.value);
     toast.show('Adresse erfolgreich gespeichert.', 'success');
   } 
   catch (error) {
-    errors.value = {
-      company: error.response?.data?.errors?.company?.[0],
-      byline: error.response?.data?.errors?.byline?.[0],
-      street: error.response?.data?.errors?.street?.[0],
-      street_number: error.response?.data?.errors?.street_number?.[0],
-      zip: error.response?.data?.errors?.zip?.[0],
-      city: error.response?.data?.errors?.city?.[0],
-      country: error.response?.data?.errors?.country?.[0],
-    }
+    setErrors(error);
     toast.show('Fehler beim Speichern des Adressen.', 'error');
   }
   finally {
