@@ -51,6 +51,7 @@ import InputText from '@/components/forms/Text.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
+import { notifyError } from '@/services/api/error';
 
 const toast = useToastStore();
 const emit = defineEmits(['success', 'cancel']);
@@ -78,7 +79,7 @@ const submit = async () => {
   }
   catch (error) {
     setErrors(error);
-    toast.show('Fehler beim Erstellen des Benutzers.', 'error');
+    notifyError(error, 'Fehler beim Erstellen des Benutzers.');
   }
   finally {
     isSaving.value = false;

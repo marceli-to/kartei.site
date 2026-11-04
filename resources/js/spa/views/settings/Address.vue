@@ -103,6 +103,7 @@ import InputSelect from '@/components/forms/Select.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
+import { notifyError } from '@/services/api/error';
 
 const toast = useToastStore();
 
@@ -135,7 +136,7 @@ onMounted(async () => {
     form.value = { ...form.value, ...response.data };
   } 
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Die Adresse konnte nicht geladen werden.');
   }
   finally {
     isLoading.value = false;
@@ -151,7 +152,7 @@ const handleSubmit = async () => {
   } 
   catch (error) {
     setErrors(error);
-    toast.show('Fehler beim Speichern des Adressen.', 'error');
+    notifyError(error, 'Fehler beim Speichern des Adressen.');
   }
   finally {
     isSaving.value = false;

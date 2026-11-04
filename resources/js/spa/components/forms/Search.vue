@@ -1,10 +1,11 @@
 <template>
   <div class="relative">
     <input
+      v-bind="$attrs"
+      :id="id || undefined"
       :type="type"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
-      @focus="$emit('update:error', '')"
       :placeholder="placeholder"
       :class="[
         defaultClasses,
@@ -12,15 +13,17 @@
       ]"
     >
     <template v-if="modelValue">
-      <a 
-        href="javascript:;"
-        @click.prevent="$emit('update:modelValue', '')"
+      <button
+        type="button"
+        @click="$emit('update:modelValue', '')"
+        class="absolute right-8 top-1/2 -translate-y-1/2 text-black"
+        aria-label="Suchfeld leeren"
         title="Suchfeld leeren">
-        <IconCross variant="small" class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
-      </a>
+        <IconCross variant="small" />
+      </button>
     </template>
     <template v-else>
-      <IconMagnifier class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+      <IconMagnifier aria-hidden="true" class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
     </template>
   </div>
 </template>
@@ -28,6 +31,9 @@
 <script setup>
 import IconMagnifier from '@/components/icons/Magnifier.vue';
 import IconCross from '@/components/icons/Cross.vue';
+
+// aria-label etc. belong on the input, not the wrapper
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps({
   modelValue: {
@@ -46,10 +52,6 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  error: {
-    type: String,
-    default: ''
-  },
   classes: {
     type: [String, Object, Array],
     default: ''
@@ -60,5 +62,5 @@ const props = defineProps({
 const defaultClasses = 'w-full min-h-default text-md !ring-0 px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black placeholder:text-black';
 
 // Define emits
-defineEmits(['update:modelValue', 'update:error']);
+defineEmits(['update:modelValue']);
 </script>

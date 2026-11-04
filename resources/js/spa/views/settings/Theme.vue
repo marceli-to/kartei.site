@@ -9,6 +9,7 @@
         <InputGroup>
           <InputLabel label="Hintergrund" />
           <InputSelectButtons
+            legend="Hintergrund"
             v-model="theme.color_scheme"
             name="color_scheme"
             wrapperClasses="w-full flex gap-x-8"
@@ -19,6 +20,7 @@
         <InputGroup>
           <InputLabel label="Auszeichnungsfarbe" />
           <InputSelectButtons
+            legend="Auszeichnungsfarbe"
             v-model="theme.color_theme"
             name="color_theme"
             wrapperClasses="w-full grid grid-cols-2 gap-8"

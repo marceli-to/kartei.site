@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { getUserPermissions } from '@/services/api/user';
 import { getFavorites } from '@/services/api/favorite';
+import { notifyError } from '@/services/api/error';
 
 let initializing = null;
 
@@ -48,7 +49,7 @@ export const useUserStore = defineStore('user', {
         return true;
       } 
       catch (error) {
-        console.error('Failed to fetch permissions and roles:', error);
+        notifyError(error, 'Ihre Berechtigungen konnten nicht geladen werden.');
         return false;
       }
     },
@@ -58,8 +59,8 @@ export const useUserStore = defineStore('user', {
         const favorites = await getFavorites();
         this.favorites = favorites;
       } 
-      catch (error) {
-        console.error('Failed to fetch favorites:', error);
+      catch {
+        // Not worth a message: the hearts just show as empty
       }
     },
 

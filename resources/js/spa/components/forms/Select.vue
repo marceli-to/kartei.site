@@ -1,6 +1,7 @@
 <template>
   <div :class="wrapperClasses">
     <select
+      v-bind="$attrs"
       :id="id"
       :value="modelValue"
       @change="onChange"
@@ -31,6 +32,9 @@
 <script setup>
 import IconChevronDown from '@/components/icons/ChevronDown.vue';
 import { computed } from 'vue';
+
+// aria-label, name ... belong on the select, not the wrapper
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps({
   id: {

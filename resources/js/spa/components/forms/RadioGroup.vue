@@ -3,6 +3,7 @@
     'flex flex-col gap-y-8': variant === 'default',
     'flex flex-col first-of-type:border-t first-of-type:border-t-graphite': variant === 'reduced',
     }">
+    <legend v-if="legend" class="sr-only">{{ legend }}</legend>
     <label 
       :class="computedClasses"
       v-for="option in options" 
@@ -37,6 +38,11 @@ const props = defineProps({
     type: String,
     required: true
   },
+  // Name of the group for screen readers (the visible InputLabel sits outside the fieldset)
+  legend: {
+    type: String,
+    default: ''
+  },
   options: {
     type: Array,
     required: true,
@@ -64,7 +70,8 @@ const props = defineProps({
 });
 
 const computedClasses = computed(() => {
-  const baseClasses = 'min-h-default pr-8 flex items-center justify-between cursor-pointer group';
+  // The radio itself is sr-only, so the row shows the keyboard focus
+  const baseClasses = 'min-h-default pr-8 flex items-center justify-between cursor-pointer group has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-black dark:has-[:focus-visible]:outline-white';
   const variantClasses = props.variant === 'default' 
     ? 'border-y border-graphite' 
     : 'border-b border-graphite';

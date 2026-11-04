@@ -91,8 +91,8 @@ const fetchArchive = async () => {
     const archive = await getArchive(uuid.value);
     setTitle(archive.name);
   }
-  catch (error) {
-    console.error(error);
+  catch {
+    // Only the page title; the slides report their own load errors
   }
 };
 

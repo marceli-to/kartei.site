@@ -74,7 +74,6 @@
 import { ref } from 'vue';
 import { countries } from '@/config/countries';
 import { createUserCompany } from '@/services/api/user';
-import { useToastStore } from '@/components/toast/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
@@ -82,8 +81,8 @@ import InputSelect from '@/components/forms/Select.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
+import { notifyError } from '@/services/api/error';
 
-const toast = useToastStore();
 const emit = defineEmits(['success', 'cancel']);
 
 const isSaving = ref(false);
@@ -109,7 +108,7 @@ const submit = async () => {
   catch (error) {
     setErrors(error);
     
-    toast.show('Fehler beim Erstellen der Firma.', 'error');
+    notifyError(error, 'Fehler beim Erstellen der Firma.');
   }
   finally {
     isSaving.value = false;

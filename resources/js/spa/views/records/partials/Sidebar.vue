@@ -23,6 +23,7 @@
       <InputGroup v-if="categories.length > 0">
         <InputLabel label="Kategorien" id="category" />
         <InputSelectButtons
+          legend="Kategorien"
           v-model="localSelectedCategories"
           :multiple="true"
           name="categories"
@@ -34,6 +35,7 @@
       <InputGroup v-if="registers.length > 0">
         <InputLabel label="Register" id="register" />
         <InputSelectButtons
+          legend="Register"
           v-model="localSelectedRegisters"
           :multiple="true"
           name="registers"
@@ -45,6 +47,7 @@
       <InputGroup v-if="tags.length > 0">
         <InputLabel label="Tags" id="tags" />
         <InputSelectButtons
+          legend="Tags"
           v-model="localSelectedTags"
           :multiple="true"
           name="tags"

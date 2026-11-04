@@ -30,6 +30,7 @@ import { useUserStore } from '@/stores/user';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
+import { notifyError } from '@/services/api/error';
 
 const dialogStore = useDialogStore();
 const toast = useToastStore();
@@ -54,8 +55,7 @@ async function handleDelete() {
     await deleteArchive(uuid.value);
   }
   catch (error) {
-    console.error(error);
-    toast.show('Es ist ein Fehler beim Löschen der Kartei aufgetreten.', 'error');
+    notifyError(error, 'Es ist ein Fehler beim Löschen der Kartei aufgetreten.');
     isDeleting.value = false;
     return;
   }

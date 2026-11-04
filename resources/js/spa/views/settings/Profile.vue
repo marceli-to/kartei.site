@@ -122,6 +122,7 @@ import ButtonAuth from '@/components/buttons/Auth.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoProfile from '@/views/settings/partials/ProfileInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
+import { notifyError } from '@/services/api/error';
 
 const toast = useToastStore();
 
@@ -174,7 +175,7 @@ onMounted(async () => {
     }
   } 
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Das Profil konnte nicht geladen werden.');
   } 
   finally {
     isLoading.value = false;
@@ -195,7 +196,7 @@ const handleSubmit = async () => {
   } 
   catch (error) {
     setErrors(error);
-    toast.show('Fehler beim Speichern des Profils.', 'error');
+    notifyError(error, 'Fehler beim Speichern des Profils.');
   }
   finally {
     isSaving.value = false;
@@ -219,7 +220,7 @@ const handleAuthSubmit = async () => {
     authErrors.value = ['current_password', 'new_password', 'new_password_confirmation']
       .flatMap(field => errorData[field] || []);
 
-    toast.show('Es ist ein Fehler aufgetreten.', 'error', 5000);
+    notifyError(error, 'Es ist ein Fehler aufgetreten.');
   }
 };
 

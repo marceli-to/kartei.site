@@ -1,7 +1,7 @@
 <template>
   <h2 class="flex justify-between items-center mb-38 mr-8">
     <span>{{ title }}</span>
-    <router-link :to="linkTarget">
+    <router-link :to="linkTarget" aria-label="Schliessen">
       <IconCross variant="small" />
     </router-link>
   </h2>

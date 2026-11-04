@@ -3,10 +3,13 @@
     v-for="(item, index) in items"
     :key="item.uuid"
     class="border-b border-b-graphite first:border-t first:border-t-graphite">
-    <a
-      href="javascript:;"
+    <!-- Only categories with registers open; the others are plain rows -->
+    <component
+      :is="item.registers.length > 0 ? 'button' : 'div'"
+      :type="item.registers.length > 0 ? 'button' : undefined"
+      :aria-expanded="item.registers.length > 0 ? !!isOpen[index] : undefined"
       @click="toggle(index)"
-      class="min-h-default flex items-center justify-between">
+      class="w-full text-left min-h-default flex items-center justify-between">
       <span class="flex font-muoto-medium">
         <span class="w-48">{{ item.number }}.</span>
         <span>{{ item.name }}</span>
@@ -15,7 +18,7 @@
         :class="isOpen[index] ? 'rotate-180' : ''" 
         class="transition-transform"
         v-if="item.registers.length > 0" />
-    </a>
+    </component>
 
     <div 
       class="border-t border-t-graphite"

@@ -3,7 +3,7 @@
     v-if="!isLoading"
     class="flex flex-grow w-full relative">
     <Actions :links="actionLinks">
-      <router-link :to="{ name: 'archives' }" v-if="uuid">
+      <router-link :to="{ name: 'archives' }" v-if="uuid" aria-label="Zurück zu Meine Karteien">
         <IconChevronLeft variant="small-bold" />
       </router-link>
     </Actions>
@@ -38,7 +38,7 @@
         </template>
         <template v-else>
           <div v-if="archiveTotal === 0">
-            <router-link v-if="canCreate" :to="{ name: 'archiveRecordCreate', params: { uuid } }">
+            <router-link v-if="canCreate" :to="{ name: 'archiveRecordCreate', params: { uuid } }" aria-label="Erste Karte erstellen">
               <Skeleton />
             </router-link>
             <Skeleton v-else />

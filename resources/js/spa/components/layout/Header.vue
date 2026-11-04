@@ -41,7 +41,10 @@
               <IconProfile variant="active" classes="hidden group-hover:block" />
             </router-link>
             <button 
+              type="button"
               class="w-28 h-24 mt-33 flex items-center justify-center"
+              :aria-label="isOpen ? 'Menü schliessen' : 'Menü öffnen'"
+              :aria-expanded="isOpen"
               @click="toggle">
               <IconCross v-if="isOpen" />
               <IconBurger v-else />

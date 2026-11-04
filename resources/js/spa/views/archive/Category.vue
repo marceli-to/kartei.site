@@ -19,6 +19,7 @@
             <button 
               type="button" 
               class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
+              aria-label="Ordnungsstruktur einstellen"
               @click="showStructureDialog">
               <IconSettings />
             </button>
@@ -35,6 +36,7 @@
             <button 
               type="button" 
               class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
+              aria-label="Ordnungsstruktur einstellen"
               @click="showStructureDialog">
               <IconSettings />
             </button>
@@ -68,6 +70,7 @@
                   <button 
                     type="button" 
                     class="absolute right-8 top-12"
+                    :aria-label="`Kategorie ${cIdx + 1} entfernen`"
                     @click="removeCategory(cIdx)"
                     >
                     <IconCross variant="small" />
@@ -98,6 +101,7 @@
                       <button 
                         type="button" 
                         class="absolute right-8 top-12"
+                        :aria-label="`Register ${rIdx + 1} entfernen`"
                         @click="removeRegister(cIdx, rIdx)"
                         >
                         <IconCross variant="small" />
@@ -158,6 +162,7 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoStructure from '@/views/archive/partials/StructureInfo.vue';
+import { notifyError } from '@/services/api/error';
 
 // Stable drag keys per row object. custom_id can be empty or duplicated
 // ("Bilder" and "Bibliothek" both become "BI") and changes while typing.
@@ -244,7 +249,7 @@ const fetchStructure = async () => {
     id_type.value = categories[0]?.custom_id_type ?? 'auto';
   } 
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Die Struktur konnte nicht geladen werden.');
   } 
   finally {
     isLoading.value = false;
@@ -292,8 +297,7 @@ const handleSubmit = async () => {
     toast.show('Ordnung erfolgreich gespeichert', 'success');
   } 
   catch (error) {
-    toast.show('Fehler beim Speichern der Ordnung', 'error');
-    console.error(error);
+    notifyError(error, 'Fehler beim Speichern der Ordnung');
   } 
   finally {
     isSaving.value = false;
@@ -396,8 +400,7 @@ const removeCategory = async (cIdx) => {
         // Show success message
         toast.show('Kategorie erfolgreich gelöscht', 'success');
       } catch (error) {
-        console.error('Error deleting category:', error);
-        toast.show('Fehler beim Löschen der Kategorie', 'error');
+        notifyError(error, 'Fehler beim Löschen der Kategorie');
       }
     },
     onCancel: () => {}
@@ -432,8 +435,7 @@ const removeRegister = async (cIdx, rIdx) => {
         // Show success message
         toast.show('Register erfolgreich gelöscht', 'success');
       } catch (error) {
-        console.error('Error deleting register:', error);
-        toast.show('Fehler beim Löschen des Registers', 'error');
+        notifyError(error, 'Fehler beim Löschen des Registers');
       }
     },
     onCancel: () => {}

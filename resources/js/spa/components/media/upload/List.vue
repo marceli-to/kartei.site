@@ -14,6 +14,7 @@
            <button
             v-if="editable"
             type="button"
+            aria-label="Bild löschen"
             @click="deleteImage((element.url), index)"
             class="absolute top-0 right-0 p-8 hover:bg-snow"
           >

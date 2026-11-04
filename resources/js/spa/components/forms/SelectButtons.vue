@@ -1,5 +1,6 @@
 <template>
   <fieldset ref="fieldset" :class="wrapperClasses">
+    <legend v-if="legend" class="sr-only">{{ legend }}</legend>
     <label 
       v-for="option in options" 
       :key="option.value" 
@@ -19,6 +20,8 @@
         :class="[
           borderClasses,
           'min-h-default w-full flex items-center justify-between text-md text-graphite hover:text-black dark:hover:text-white transition-all select-none cursor-pointer px-8',
+          // The input is sr-only, so the button shows the keyboard focus
+          'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-black dark:peer-focus-visible:outline-white',
           classes,
           isChecked(option.value) ? getActiveClass(option.value) : '',
           option.disabled ? disabledClasses : ''
@@ -67,6 +70,11 @@ const props = defineProps({
   name: {
     type: String,
     required: true
+  },
+  // Name of the group for screen readers (the visible InputLabel sits outside the fieldset)
+  legend: {
+    type: String,
+    default: ''
   },
   options: {
     type: Array,

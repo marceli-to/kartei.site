@@ -17,6 +17,7 @@
         <InputGroup>
           <InputLabel label="Lizenz" id="subscription" required />
           <InputRadioGroup
+            legend="Lizenz"
             v-model="form.subscription"
             name="subscription"
             :options="subscriptions"
@@ -25,6 +26,7 @@
         <InputGroup>
           <InputLabel label="Abrechnung" id="payment_interval" required />
           <InputRadioGroup
+            legend="Abrechnung"
             v-model="form.payment_interval"
             name="payment_interval"
             :options="paymentIntervals"
@@ -33,6 +35,7 @@
         <InputGroup>
           <InputLabel label="Zahlungsart" id="payment_method" required />
           <InputRadioGroup
+            legend="Zahlungsart"
             v-model="form.payment_method"
             name="payment_method"
             :options="[{
@@ -72,6 +75,7 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoSubscription from '@/views/settings/partials/SubscriptionInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
+import { notifyError } from '@/services/api/error';
 
 // Dev-only reminder in the template; never shown in production builds
 const isDev = import.meta.env.DEV;
@@ -124,7 +128,7 @@ onMounted(async () => {
     }
   } 
   catch (error) {
-    console.log(error);
+    notifyError(error, 'Das Abonnement konnte nicht geladen werden.');
   }
   finally {
     isLoading.value = false;
@@ -139,7 +143,7 @@ const handleSubmit = async () => {
     toast.show('Abonnement erfolgreich gespeichert.', 'success');
   } 
   catch (error) {
-    toast.show('Fehler beim Ändern des Abonnements.', 'error');
+    notifyError(error, 'Fehler beim Ändern des Abonnements.');
   }
   finally {
     isSaving.value = false;

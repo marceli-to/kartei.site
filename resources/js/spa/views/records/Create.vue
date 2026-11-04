@@ -3,7 +3,8 @@
     <Actions>
       <router-link 
         :to="{ name: 'archiveRecords', params: { uuid: uuid } }"
-        v-if="uuid">
+        v-if="uuid"
+        aria-label="Zurück zur Kartei">
         <IconChevronLeft variant="small-bold" />
       </router-link>
     </Actions>
@@ -31,6 +32,7 @@
                   <InputGroup>
                     <InputLabel label="Ordnung" :error="errors.category" />
                     <InputSelectButtons
+                      legend="Ordnung"
                       v-model="form.category"
                       :multiple="false"
                       name="categoriesRegisters"
@@ -43,6 +45,7 @@
                   <InputGroup>
                     <InputLabel label="Tags" />
                     <InputSelectButtons
+                      legend="Tags"
                       v-model="form.tags"
                       :multiple="true"
                       name="tags"
@@ -114,7 +117,6 @@ import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
 import { getArchive, getArchiveMeta } from '@/services/api/archive'
 import { createRecord } from '@/services/api/record'
-import { useToastStore } from '@/components/toast/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
@@ -131,12 +133,12 @@ import ImageUpload from '@/components/media/upload/Image.vue'
 import ImageCard from '@/components/media/Card.vue'
 import IconImage from '@/components/icons/Image.vue'
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
+import { notifyError } from '@/services/api/error'
 
 const router = useRouter()
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
 
-const toast = useToastStore();
 
 const {
   categories,
@@ -192,7 +194,7 @@ const handleSubmit = async () => {
   }
   catch (error) {
     setErrors(error)
-    toast.show(error.response?.data?.message || 'Fehler beim Speichern der Karte.', 'error');
+    notifyError(error, error.response?.data?.message || 'Fehler beim Speichern der Karte.');
   }
   finally {
     isSaving.value = false
@@ -208,7 +210,7 @@ onMounted(async () => {
     await loadData();
   } 
   catch (error) {
-    console.error(error)
+    notifyError(error, 'Die Kartei konnte nicht geladen werden.')
   } 
   finally {
     isLoading.value = false

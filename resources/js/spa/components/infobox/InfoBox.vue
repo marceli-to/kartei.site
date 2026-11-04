@@ -4,13 +4,14 @@
       classes
     ]">
     <div class="relative">
-      <a 
-        href=""
-        @click.prevent="infoIcon.close()"
+      <button
+        type="button"
+        @click="infoIcon.close()"
         class="absolute right-0 top-0"
+        aria-label="Hinweis schliessen"
         v-if="closable">
         <IconCross variant="small" />
-      </a>
+      </button>
       <slot />
     </div>
   </div>

@@ -38,6 +38,8 @@
 - [x] Test suite green (89 tests)
 - [x] Review bugs: `handleApiError` keeps its message on the error (`error.userMessage`), `notifyError(error, fallback)` toasts it unless the user was redirected or the request was aborted; 401 -> "Sitzung abgelaufen" page -> login (419 page merged into it); 419 refreshes the CSRF cookie and retries once; 403/404 only go to the error page for GET requests
 - [x] Theme saves queued (latest click wins) and reverted on failure; upload errors toasted (422 reason), no `NaN%`, reorder only on a real move (`@update`), no drag flicker, uploads through the `api` instance (no timeout, own progress bar); `normalizeImageEntry` naming documented (not swapped: follows the media columns)
+- [x] Accessibility: real buttons instead of `javascript:;`/`href=""` anchors (Password toggle, Search clear, Collapsible with `aria-expanded`, InfoBox close), `aria-label` on all icon-only buttons/links; `Password`/`Search`/`Select` pass attributes to the input (`inheritAttrs: false`); radio groups get a `legend` and a visible keyboard focus; dialog moves focus in, traps Tab, restores focus, no close after a drag out of the panel
+- [x] All failed requests reach the user: `notifyError()` in every catch block, no `console.error` left in the SPA (favorites load stays silent on purpose)
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
 ## Servers (before going live)
@@ -55,12 +57,6 @@
 ## Vue review: open points
 
 Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
-
-### Cross-cutting (accessibility, consistency)
-- [ ] `javascript:;` / `href=""` anchors used as buttons: Password toggle, Search clear, Collapsible, InfoBox close; icon-only buttons without `aria-label` (remove buttons in Category/Card/Tags, slider close, upload delete, burger menu, error page back links)
-- [ ] Wrapper-root inputs swallow attributes: `Password`, `Search`, `Select` need `inheritAttrs: false` + `v-bind="$attrs"` on the input (search fields have no accessible name)
-- [ ] Load/save errors that only reach the console: show a toast with `notifyError()` (done in Theme, upload, Favorite, records list, Company, users Index, BasicInformation; ~15 left: `grep -rn console.error resources/js/spa`)
-- [ ] Focus: no focus ring on `sr-only` radios (`RadioGroup`, `SelectButtons`), no `<legend>`; dialog has no focus trap/restore, closes on mouseup after a drag from inside
 
 ### Structure and duplication
 - [ ] Merge: record Create/Update (`RecordForm.vue` + `useArchiveMeta()`), Address/BillingAddress (`AddressForm.vue`), Create/UpdateCompany, Create/UpdateUser, the two delete views, 401/403/404 pages

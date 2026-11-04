@@ -26,6 +26,7 @@
               <button 
                 type="button" 
                 class="absolute right-8 top-1/2 -translate-y-1/2"
+                :aria-label="`Tag ${index + 1} entfernen`"
                 @click="remove(index)">
                 <IconCross variant="small" />
               </button>
@@ -55,6 +56,7 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Action from '@/components/buttons/Action.vue';
 import IconCross from '@/components/icons/Cross.vue';
+import { notifyError } from '@/services/api/error';
 
 const toast = useToastStore();
 
@@ -99,7 +101,7 @@ onMounted(async () => {
     }
   } 
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Die Tags konnten nicht geladen werden.');
   }
   finally {
     isLoading.value = false;
@@ -117,8 +119,7 @@ const handleSubmit = async () => {
     toast.show('Tag/s erfolgreich gespeichert.', 'success');
   } 
   catch (error) { 
-    console.error(error);
-    toast.show('Fehler beim Speichern der Tags.', 'error');
+    notifyError(error, 'Fehler beim Speichern der Tags.');
   }
   finally {
     isSaving.value = false;
@@ -133,8 +134,7 @@ const fetchTags = async () => {
     setTags(response?.data);
   } 
   catch (error) {
-    console.error(error);
-    toast.show('Tags konnten nicht geladen werden.', 'error');
+    notifyError(error, 'Tags konnten nicht geladen werden.');
   }
 };
 
@@ -153,8 +153,7 @@ const remove = async (index) => {
       await deleteTag(tagUuid);
     } 
     catch (error) {
-      console.error(error);
-      toast.show('Fehler beim Löschen des Tags.', 'error');
+      notifyError(error, 'Fehler beim Löschen des Tags.');
       return;
     }
   }

@@ -80,7 +80,6 @@
 import { ref, onMounted } from 'vue';
 import { countries } from '@/config/countries';
 import { updateUserCompany, deleteUserCompany } from '@/services/api/user';
-import { useToastStore } from '@/components/toast/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import InputLabel from '@/components/forms/Label.vue';
@@ -89,8 +88,8 @@ import InputSelect from '@/components/forms/Select.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
+import { notifyError } from '@/services/api/error';
 
-const toast = useToastStore();
 const dialogStore = useDialogStore();
 const emit = defineEmits(['success', 'cancel', 'delete']);
 
@@ -155,8 +154,7 @@ const handleDelete = async () => {
     emit('delete', props.company.uuid);
   }
   catch (error) {
-    console.error(error);
-    toast.show('Fehler beim Löschen der Firma.', 'error');
+    notifyError(error, 'Fehler beim Löschen der Firma.');
   }
 };
 
@@ -169,7 +167,7 @@ const submit = async () => {
   }
   catch (error) {
     setErrors(error);
-    toast.show('Fehler beim Speichern der Firma.', 'error');
+    notifyError(error, 'Fehler beim Speichern der Firma.');
   }
   finally {
     isSaving.value = false;

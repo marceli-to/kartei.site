@@ -26,14 +26,13 @@
 import { ref, onMounted } from 'vue';
 import { deleteUser, getUserSubscription, getOwnedArchives } from '@/services/api/user';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
-import { useToastStore } from '@/components/toast/stores/toast';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
 import Slide from '@/components/slider/Slide.vue';
+import { notifyError } from '@/services/api/error';
 
 const dialogStore = useDialogStore();
-const toast = useToastStore();
 
 const isDeleting = ref(false);
 const subscriptionEndsAt = ref(null);
@@ -53,7 +52,7 @@ onMounted(async () => {
     ownedArchivesCount.value = (await getOwnedArchives()).data.length;
   }
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Die Karteien konnten nicht geladen werden.');
   }
 
   try {
@@ -61,8 +60,8 @@ onMounted(async () => {
     const endsAt = subscription?.data?.ends_at;
     if (endsAt) subscriptionEndsAt.value = new Date(endsAt).toLocaleDateString('de-CH');
   }
-  catch (error) {
-    console.error(error);
+  catch {
+    // Only the note about the subscription end is missing then
   }
 });
 
@@ -73,8 +72,7 @@ async function handleDelete() {
     await deleteUser();
   }
   catch (error) {
-    console.error(error);
-    toast.show('Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.', 'error');
+    notifyError(error, 'Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.');
     isDeleting.value = false;
     return;
   }
@@ -90,8 +88,7 @@ async function showDialog() {
     archives = (await getOwnedArchives()).data;
   }
   catch (error) {
-    console.error(error);
-    toast.show('Die Karteien konnten nicht geladen werden.', 'error');
+    notifyError(error, 'Die Karteien konnten nicht geladen werden.');
     return;
   }
 

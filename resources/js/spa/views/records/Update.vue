@@ -4,7 +4,8 @@
     <Actions :links="actionLinks">
       <router-link 
         :to="{ name: 'archiveRecords', params: { uuid: record.archive.uuid } }"
-        v-if="record && record.archive && record.archive.uuid">
+        v-if="record && record.archive && record.archive.uuid"
+        aria-label="Zurück zur Kartei">
         <IconChevronLeft variant="small-bold" />
       </router-link>
     </Actions>
@@ -31,6 +32,7 @@
                   <InputGroup>
                     <InputLabel label="Ordnung" :error="errors.category" />
                     <InputSelectButtons
+                      legend="Ordnung"
                       v-model="form.category"
                       :multiple="false"
                       name="categoriesRegisters"
@@ -43,6 +45,7 @@
                   <InputGroup>
                     <InputLabel label="Tags" />
                     <InputSelectButtons
+                      legend="Tags"
                       v-model="form.tags"
                       :multiple="true"
                       name="tags"
@@ -134,6 +137,7 @@ import ImageCard from '@/components/media/Card.vue'
 import IconImage from '@/components/icons/Image.vue'
 import IconCross from '@/components/icons/Cross.vue'
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
+import { notifyError } from '@/services/api/error'
 
 const router = useRouter()
 const route = useRoute()
@@ -155,8 +159,7 @@ const handleDelete = () => {
         toast.show('Karte erfolgreich gelöscht', 'success')
         router.push({ name: 'archiveRecords', params: { uuid: record.value.archive.uuid } })
       } catch (error) {
-        console.error('Error deleting record:', error)
-        toast.show('Fehler beim Löschen der Karte', 'error')
+        notifyError(error, 'Fehler beim Löschen der Karte')
       }
     },
     onCancel: () => {}
@@ -230,9 +233,8 @@ const handleSubmit = async () => {
     router.push({ name: 'archiveRecords', params: { uuid: record.value.archive.uuid } })
   } 
   catch (error) {
-    console.error(error)
     setErrors(error)
-    toast.show(error.response?.data?.message || 'Fehler beim Speichern der Karte.', 'error')
+    notifyError(error, error.response?.data?.message || 'Fehler beim Speichern der Karte.')
   } 
   finally {
     isSaving.value = false
@@ -249,7 +251,7 @@ onMounted(async () => {
     if (loaded) populateForm();
   } 
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Die Karte konnte nicht geladen werden.');
   } 
   finally {
     isLoading.value = false;

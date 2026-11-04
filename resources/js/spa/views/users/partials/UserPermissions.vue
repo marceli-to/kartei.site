@@ -7,6 +7,7 @@
       <InputGroup v-if="!archiveUuid">
         <InputLabel label="Kartei" id="archive_selection" />
         <InputSelectButtons
+          legend="Kartei"
           id="archive_selection"
           :modelValue="selected"
           @update:modelValue="selectArchive"
@@ -53,6 +54,7 @@
           <InputGroup v-for="group in permissionGroups" :key="group.key">
             <InputLabel :label="group.label" :id="`permissions_${group.key}`" />
             <InputSelectButtons
+              :legend="group.label"
               :id="`permissions_${group.key}`"
               v-model="form.permissions"
               :multiple="true"
@@ -103,6 +105,7 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
 import IconCheckmark from '@/components/icons/Checkmark.vue';
+import { notifyError } from '@/services/api/error';
 
 // New assignments start with the role giving the least access
 const DEFAULT_ROLE_NAME = 'Viewer';
@@ -231,8 +234,7 @@ async function save() {
     isDone.value = true;
   }
   catch (error) {
-    console.error('Failed to save permissions:', error);
-    toast.show('Fehler beim Speichern der Berechtigungen.', 'error');
+    notifyError(error, 'Fehler beim Speichern der Berechtigungen.');
   }
   finally {
     isSaving.value = false;
@@ -247,8 +249,7 @@ async function invite() {
     toast.show('Einladungslink wurde versendet.', 'success');
   }
   catch (error) {
-    console.error('Failed to send invitation:', error);
-    toast.show('Fehler beim Versenden des Einladungslinks.', 'error');
+    notifyError(error, 'Fehler beim Versenden des Einladungslinks.');
   }
   finally {
     isSending.value = false;
@@ -287,8 +288,7 @@ onMounted(async () => {
     }
   }
   catch (error) {
-    console.error('Failed to load permissions:', error);
-    toast.show('Fehler beim Laden der Berechtigungen.', 'error');
+    notifyError(error, 'Fehler beim Laden der Berechtigungen.');
   }
   finally {
     isLoading.value = false;

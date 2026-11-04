@@ -20,6 +20,7 @@
         
         <InputGroup>
           <InputSelectButtons
+            legend="Kategorie"
             v-model="numerals_category_type"
             name="numerals-category"
             labelClasses="font-muoto-medium"
@@ -30,6 +31,7 @@
         <InputGroup>
           <InputLabel label="Register" />
           <InputSelectButtons
+            legend="Register"
             v-model="numerals_register_type"
             name="numerals-register"
             wrapperClasses="flex flex-col gap-y-8"
@@ -39,6 +41,7 @@
         <InputGroup>
           <InputLabel label="ID" />
           <InputSelectButtons
+            legend="ID"
             v-model="id_type"
             name="id-type"
             wrapperClasses="flex flex-col gap-y-8"

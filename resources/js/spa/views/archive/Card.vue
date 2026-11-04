@@ -16,6 +16,7 @@
           </ImageCard>
           <InputGroup>
             <InputSelectButtons
+              legend="Bildfeld"
               v-model="form.has_images"
               name="image"
               wrapperClasses="flex flex-col gap-y-8"
@@ -64,6 +65,7 @@
                 <button 
                   type="button" 
                   class="absolute right-8 top-12"
+                  :aria-label="`Textfeld ${index + 1} entfernen`"
                   @click="remove(index)">
                   <IconCross variant="small" />
                 </button>
@@ -100,6 +102,7 @@ import ImageCard from '@/components/media/Card.vue';
 import IconImage from '@/components/icons/Image.vue';
 import IconCross from '@/components/icons/Cross.vue';
 import Action from '@/components/buttons/Action.vue';
+import { notifyError } from '@/services/api/error';
 
 const toast = useToastStore();
 
@@ -158,7 +161,7 @@ onMounted(async () => {
       }
     } 
     catch (error) {
-      console.error(error);
+      notifyError(error, 'Die Kartenvorlage konnte nicht geladen werden.');
     }
     finally {
       isLoading.value = false;
@@ -188,7 +191,7 @@ const handleSubmit = async () => {
     toast.show('Kartenvorlage erfolgreich gespeichert.', 'success');
   }
   catch (error) {
-    toast.show('Fehler beim Speichern der Kartenvorlage.', 'error');
+    notifyError(error, 'Fehler beim Speichern der Kartenvorlage.');
   } 
   finally {
     isSaving.value = false;
@@ -210,8 +213,7 @@ const remove = async (index) => {
       await deleteArchiveSettingsField(fieldUuid, uuid.value);
     } 
     catch (error) {
-      console.error(error);
-      toast.show('Fehler beim Löschen des Textfelds.', 'error');
+      notifyError(error, 'Fehler beim Löschen des Textfelds.');
       return;
     }
   }

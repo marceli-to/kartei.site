@@ -11,22 +11,25 @@
       <div
         v-if="isVisible"
         class="fixed inset-0 z-[9999] overflow-y-auto"
-        @click="handleBackdropClick"
+        @mousedown="onPointerDown"
+        @click="onBackdropClick"
       >
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/80 transition-opacity duration-200"></div>
         <!-- Dialog -->
         <div class="flex min-h-full items-center justify-center p-4 relative">
           <div
+            ref="panel"
+            tabindex="-1"
             :class="[
-              'relative w-full transform overflow-hidden bg-white dark:text-black p-24 text-left shadow-xl transition-all',
+              'relative w-full transform overflow-hidden bg-white dark:text-black p-24 text-left shadow-xl transition-all outline-none',
               getSizeClass(content.size)
             ]"
             role="dialog"
             aria-modal="true"
             :aria-labelledby="content.title ? 'dialog-title' : null"
             :aria-describedby="content.message ? 'dialog-desc' : null"
-            @click.stop>
+            @keydown.tab="trapFocus">
             <button
               type="button"
               class="absolute right-24 top-24"
@@ -95,7 +98,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import ButtonGroup from '@/components/buttons/Group.vue';
@@ -115,6 +118,56 @@ onMounted(() => {
   window.addEventListener('keydown', handleKey);
   onUnmounted(() => window.removeEventListener('keydown', handleKey));
 });
+
+const panel = ref(null);
+
+// Focus moves into the dialog when it opens and back to where it was
+// (usually the button that opened it) when it closes
+let returnFocusTo = null;
+watch(isVisible, async (visible) => {
+  if (visible) {
+    returnFocusTo = document.activeElement;
+    await nextTick();
+    panel.value?.focus();
+  }
+  else if (returnFocusTo?.isConnected) {
+    returnFocusTo.focus();
+    returnFocusTo = null;
+  }
+});
+
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// Tab and Shift+Tab cycle inside the dialog
+const trapFocus = (event) => {
+  const items = [...panel.value.querySelectorAll(FOCUSABLE)].filter(el => el.offsetParent !== null);
+  if (!items.length) {
+    event.preventDefault();
+    return;
+  }
+  const first = items[0];
+  const last = items[items.length - 1];
+  const active = document.activeElement;
+  if (event.shiftKey && (active === first || active === panel.value)) {
+    event.preventDefault();
+    last.focus();
+  }
+  else if (!event.shiftKey && active === last) {
+    event.preventDefault();
+    first.focus();
+  }
+};
+
+// Only a click that starts and ends outside the panel closes the dialog;
+// selecting text inside and releasing the mouse outside must not
+let pressedInside = false;
+const onPointerDown = (event) => {
+  pressedInside = !!panel.value?.contains(event.target);
+};
+const onBackdropClick = (event) => {
+  if (pressedInside || panel.value?.contains(event.target)) return;
+  handleBackdropClick();
+};
 
 const getSizeClass = (size) => {
   switch (size) {

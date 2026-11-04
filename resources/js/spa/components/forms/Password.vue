@@ -1,6 +1,7 @@
 <template>
   <div class="relative">
     <input
+      v-bind="$attrs"
       :id="id"
       :type="type"
       :value="modelValue"
@@ -12,24 +13,28 @@
         props.classes,
         { '!bg-flame !border-flame placeholder:!text-white': error },
       ]">
-      <a 
-        href="javascript:;"
+      <button
+        type="button"
         @click="toggleType" 
         class="absolute inset-y-0 right-8 flex items-center text-graphite"
-        title="Passwort anzeigen">
+        :aria-label="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'"
+        :title="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'">
         <template v-if="type === 'text'">
           <IconEye variant="enabled" />
         </template>
         <template v-else>
           <IconEye variant="disabled" />
         </template>
-      </a>
+      </button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import IconEye from '@/components/icons/Eye.vue';
+
+// aria-label, autocomplete, name ... belong on the input, not the wrapper
+defineOptions({ inheritAttrs: false });
 
 const type = ref('password');
 

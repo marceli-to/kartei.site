@@ -69,6 +69,7 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
+import { notifyError } from '@/services/api/error';
 
 const toast = useToastStore();
 const dialogStore = useDialogStore();
@@ -111,7 +112,7 @@ onMounted(async () => {
     };
   }
   catch (error) {
-    console.error('Failed to fetch user data:', error);
+    notifyError(error, 'Die Benutzerdaten konnten nicht geladen werden.');
   }
   finally {
     isLoading.value = false;
@@ -132,7 +133,7 @@ const submit = async () => {
   catch (error) {
     setErrors(error);
     
-    toast.show('Fehler beim Aktualisieren des Benutzers.', 'error');
+    notifyError(error, 'Fehler beim Aktualisieren des Benutzers.');
   } finally {
     isSaving.value = false;
   }
@@ -155,8 +156,7 @@ const handleDelete = async () => {
     emit('user-deleted', props.uuid);
   }
   catch (error) {
-    console.error(error);
-    toast.show('Fehler beim Löschen des Benutzers.', 'error');
+    notifyError(error, 'Fehler beim Löschen des Benutzers.');
   }
 };
 </script>
