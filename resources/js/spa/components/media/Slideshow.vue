@@ -34,9 +34,11 @@
 
   </div>
 </template>
+<script>
+// Per-instance id for the navigation button selectors (several slideshows per page)
+let nextId = 1
+</script>
 <script setup>
-import { ref } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
@@ -44,7 +46,7 @@ import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
 import Image from '@/components/media/Image.vue';
 
-const uniqueId = uuidv4()
+const uniqueId = nextId++
 const prevButton = `.swiper-button-prev-${uniqueId}`
 const nextButton = `.swiper-button-next-${uniqueId}`
 

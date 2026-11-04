@@ -1,3 +1,3 @@
 <x-layout.head />
   @yield('content')
-<x-layout.footer />
+<x-layout.footer spa />

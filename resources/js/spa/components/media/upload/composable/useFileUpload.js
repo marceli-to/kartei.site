@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import api from '@/services/api/axios'
 import { notifyError } from '@/services/api/error'
 import { useToastStore } from '@/components/toast/stores/toast'
@@ -20,10 +20,7 @@ export function useFileUpload(options = {}) {
   const uploadProgress = ref(0)
   const hasError = ref(false)
   const validationErrors = ref([])
-  const retryQueue = ref([])
   const uploadedFiles = ref([])
-
-  const isUploaded = computed(() => uploadedFiles.value.length > 0)
 
   const toggleDrag = (value) => {
     isDragging.value = value
@@ -107,7 +104,6 @@ export function useFileUpload(options = {}) {
     } 
     catch (error) {
       hasError.value = true
-      retryQueue.value = [...retryQueue.value, ...files]
       // 422: the server's reason (type, size, ...), otherwise the status text
       const serverMessage = error.response?.status === 422 ? error.response.data?.message : null
       notifyError(error, serverMessage || 'Das Hochladen ist fehlgeschlagen.')
@@ -159,25 +155,6 @@ export function useFileUpload(options = {}) {
     fileInput.value?.click()
   }
 
-  const retryFailed = async () => {
-    const files = [...retryQueue.value]
-    retryQueue.value = []
-    hasError.value = false
-    await uploadFiles(files)
-  }
-
-  const reset = () => {
-    uploadedFiles.value = []
-    retryQueue.value = []
-    hasError.value = false
-    validationErrors.value = []
-    isUploading.value = false
-    uploadProgress.value = 0
-    if (fileInput.value) {
-      fileInput.value.value = ''
-    }
-  }
-
   return {
     fileInput,
     isDragging,
@@ -185,13 +162,10 @@ export function useFileUpload(options = {}) {
     uploadProgress,
     hasError,
     validationErrors,
-    isUploaded,
     uploadedFiles,
     handleDrop,
     handleFileSelect,
     triggerFileInput,
-    retryFailed,
-    reset,
     normalizeImageEntry
   }
 }

@@ -6,8 +6,7 @@
       :class="[classes, {
         '!border-[var(--theme-color)] text-[var(--theme-color)]': isDragging,
         '!border-flame': hasError,
-        'bg-snow': isUploading,
-        '': isUploaded
+        'bg-snow': isUploading
       }]"
       role="button"
       tabindex="0"
@@ -113,13 +112,10 @@ const {
   uploadProgress,
   hasError,
   validationErrors,
-  isUploaded,
   uploadedFiles,
   handleDrop,
   handleFileSelect,
-  triggerFileInput,
-  retryFailed,
-  reset
+  triggerFileInput
 } = useFileUpload({
   maxSize: props.maxSize,
   allowedTypes: props.allowedTypes,
@@ -158,23 +154,4 @@ const onDragLeave = (event) => {
 const handleImagesChange = (images) => {
   uploadedFiles.value = [...images];
 };
-
-// Computed display of maximum size
-const maxSizeMB = computed(() => props.maxSize / (1024 * 1024))
-
-// Computed display of allowed types
-const allowedTypesDisplay = computed(() => {
-  return props.allowedTypes
-    .map(type => type.replace('*', 'all'))
-    .join(', ')
-})
-
-// Formated file size
-const formatFileSize = (bytes) => {
-  if (bytes === 0) return '0 Bytes'
-  const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
 </script>

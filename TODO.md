@@ -40,6 +40,7 @@
 - [x] Theme saves queued (latest click wins) and reverted on failure; upload errors toasted (422 reason), no `NaN%`, reorder only on a real move (`@update`), no drag flicker, uploads through the `api` instance (no timeout, own progress bar); `normalizeImageEntry` naming documented (not swapped: follows the media columns)
 - [x] Accessibility: real buttons instead of `javascript:;`/`href=""` anchors (Password toggle, Search clear, Collapsible with `aria-expanded`, InfoBox close), `aria-label` on all icon-only buttons/links; `Password`/`Search`/`Select` pass attributes to the input (`inheritAttrs: false`); radio groups get a `legend` and a visible keyboard focus; dialog moves focus in, traps Tab, restores focus, no close after a drag out of the panel
 - [x] All failed requests reach the user: `notifyError()` in every catch block, no `console.error` left in the SPA (favorites load stays silent on purpose)
+- [x] Dead code and dependencies: removed `views/Archives.vue`, `ContentExample.vue`, the old `users/partials/SubscriptionInfo.vue`, `ChevronUp.vue`, the commented `App.vue` block and the title wiring, unused upload helpers; `Sort` uses `isAscending` for its label; `package.json` without the mix scripts, `vue-axios` and `uuid`, Alpine once, `axios` in `dependencies`; the SPA shell loads only `spa.js` (Alpine only on Blade pages); Tailwind spacing generated (identical CSS)
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
 ## Servers (before going live)
@@ -67,12 +68,7 @@ Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Ve
 - [ ] Folders: `partials/` vs `components/` in views, stores/composables inside component folders, `media/upload/composable` (singular); two `SubscriptionInfo.vue`
 - [ ] API layer: `deleteUser`/`updateUser` in two modules, `user/index.js` mixes company/theme/address/subscription
 
-### Dead code and dependencies
-- [ ] Delete `views/Archives.vue`, `dialog/ContentExample.vue`, `users/partials/SubscriptionInfo.vue`, `icons/ChevronUp.vue`, the commented block in `App.vue` and its title wiring (`pageComponent`, Header `title` prop)
-- [ ] Unused props: `Primary.submitting`, `Sort.isAscending`, `Search.id`/`error`; unused upload helpers (`retryFailed`, `reset`, `formatFileSize`, …)
-- [ ] `package.json`: drop the `mix` scripts and `vue-axios`, `alpinejs` listed twice, `uuid` -> `crypto.randomUUID()`, `axios` to `dependencies`
-- [ ] Upload files use plain axios (no loading/error handling); Alpine loaded on the SPA shell (`footer.blade.php`)
-- [ ] `tailwind.config.js`: 250 hand-written spacing entries (generate with a loop)
+### Tooling
 - [ ] Prettier/ESLint config and one run (semicolons, quotes, attribute order)
 
 ## Archive cover image (Titelbild)

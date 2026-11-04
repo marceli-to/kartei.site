@@ -70,10 +70,4 @@ const { isOpen, toggle, hide } = useToggleSidebar();
 const infoIcon = useInfoIconStore();
 
 const { title } = usePageTitle();
-defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
-});
 </script>
