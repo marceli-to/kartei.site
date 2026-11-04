@@ -82,7 +82,7 @@ import Action from '@/components/buttons/Action.vue';
 const props = defineProps({
   uuid: { type: String, required: true },
   disabled: Boolean,
-  modelValue: Object,
+  modelValue: { type: Object, required: true },
   categories: {
     type: Array,
     default: () => []

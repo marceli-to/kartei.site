@@ -8,7 +8,7 @@
   </figure>
 </template>
 <script setup>
-const props = defineProps({
+defineProps({
   classes: {
     type: String,
     default: ''

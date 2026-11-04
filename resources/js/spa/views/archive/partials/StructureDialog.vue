@@ -87,15 +87,16 @@ const props = defineProps({
     type: Function,
     default: () => {}
   },
-  numerals_category_type: {
+  // The current settings; the dialog edits copies and hands them to onConfirm
+  categoryType: {
     type: String,
     default: 'decimal'
   },
-  numerals_register_type: {
+  registerType: {
     type: String,
     default: 'decimal'
   },
-  id_type: {
+  idType: {
     type: String,
     default: 'auto'
   }
@@ -121,9 +122,9 @@ const numerals_register = [
   { label: '[...]I, [...]II, [...]III, [...]IV, ...', value: 'roman' },
 ];
 
-const numerals_category_type = ref(props.numerals_category_type);
-const numerals_register_type = ref(props.numerals_register_type);
-const id_type = ref(props.id_type);
+const numerals_category_type = ref(props.categoryType);
+const numerals_register_type = ref(props.registerType);
+const id_type = ref(props.idType);
 
 const ids = [
   { label: 'Anfangsbuchstaben (2)', value: 'auto' },

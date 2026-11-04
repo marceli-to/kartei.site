@@ -1,7 +1,7 @@
 <template>
-  <!-- Address fields shared by the address, billing address and company forms.
-       form and errors belong to the parent form and are changed in place
-       (v-model per field, errors cleared on first change). -->
+  <!-- Address fields shared by the address, billing address and company forms:
+       <AddressFields v-model:form="form" v-model:errors="errors" />
+       The fields are edited in place; an error clears on the field's first change. -->
   <div class="flex flex-col gap-y-20">
     <InputGroup v-for="field in fields" :key="field.key">
       <InputLabel
@@ -35,15 +35,10 @@ import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputSelect from '@/components/forms/Select.vue';
 
+const form = defineModel('form', { type: Object, required: true });
+const errors = defineModel('errors', { type: Object, required: true });
+
 const props = defineProps({
-  form: {
-    type: Object,
-    required: true
-  },
-  errors: {
-    type: Object,
-    required: true
-  },
   // Keeps ids unique when two address forms are on the same page
   idPrefix: {
     type: String,

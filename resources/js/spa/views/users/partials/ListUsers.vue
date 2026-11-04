@@ -15,13 +15,13 @@
         @click="$emit('create-user')" />
     </div>
     <div class="flex flex-col gap-y-20">
-      <div v-for="(users, role) in groupedUsers" :key="role">
+      <div v-for="(roleUsers, role) in groupedUsers" :key="role">
         <h3 class="text-sm mb-4 block">
           {{ role || 'Andere' }}
         </h3>
         <div class="flex flex-col gap-y-8">
           <Action 
-            v-for="user in users" 
+            v-for="user in roleUsers" 
             :key="user.uuid"
             :label="`${user.firstname} ${user.name}`"
             :icon="{ name: 'ChevronRight' }"
@@ -56,7 +56,7 @@ const props = defineProps({
 });
 
 // Emits
-const emit = defineEmits(['user-selected', 'create-user']);
+defineEmits(['user-selected', 'create-user']);
 
 const filteredUsers = computed(() => {
   if (!props.users || !Array.isArray(props.users)) return [];

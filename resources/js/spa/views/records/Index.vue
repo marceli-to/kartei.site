@@ -76,7 +76,6 @@ const uuid = ref(route.params.uuid || null)
 
 const {
   categories,
-  categoriesRegisters,
   registers,
   tags,
   loadArchiveMeta

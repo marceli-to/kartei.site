@@ -142,7 +142,7 @@ const loadArchives = async () => {
     archives.value = await getByUser(userStore.user.uuid);
     hasArchive.value = archives.value.length > 0;
   }
-  catch (error) {
+  catch {
     // Shown in the page (with a retry button), no toast on top
     loadFailed.value = true;
   }

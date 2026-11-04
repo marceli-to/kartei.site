@@ -19,7 +19,7 @@
 <script setup>
 import Icon from '@/components/icons/Icon.vue';
 
-const props = defineProps({
+defineProps({
   hasSubscription: {
     type: Boolean,
     required: true

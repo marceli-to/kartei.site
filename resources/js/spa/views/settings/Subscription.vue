@@ -61,7 +61,7 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
 import { getUserSubscription, updateUserSubscription } from '@/services/api/subscription';
 import { paymentIntervals } from '@/config/paymentIntervals';

@@ -21,7 +21,7 @@ import { useInfoIconStore } from '@/stores/info';
 import Icon from '@/components/icons/Icon.vue';
 const infoIcon = useInfoIconStore();
 
-const props = defineProps({
+defineProps({
   classes: {
     type: [String],
     default: ''

@@ -59,7 +59,8 @@
             <div>
               <StructureRow
                 class="mb-32"
-                :row="category"
+                v-model:name="category.name"
+                v-model:custom-id="category.custom_id"
                 label="Kategorie"
                 :position="cIdx + 1"
                 :number="categoryNumber(cIdx)"
@@ -78,7 +79,8 @@
                 <template #item="{ element: register, index: rIdx }">
                   <StructureRow
                     class="mb-8 last:mb-32"
-                    :row="register"
+                    v-model:name="register.name"
+                    v-model:custom-id="register.custom_id"
                     label="Register"
                     :position="rIdx + 1"
                     :number="registerNumber(cIdx, rIdx)"
@@ -246,9 +248,9 @@ const showStructureDialog = () => {
     hideDefaultActions: true,
     size: 'xlarge',
     props: {
-      numerals_category_type: numeralsCategory.value,
-      numerals_register_type: numeralsRegister.value,
-      id_type: idType.value,
+      categoryType: numeralsCategory.value,
+      registerType: numeralsRegister.value,
+      idType: idType.value,
       onConfirm: ({ category, register, idType: newIdType }) => {
         numeralsCategory.value = category;
         numeralsRegister.value = register;

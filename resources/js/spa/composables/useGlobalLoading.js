@@ -1,18 +1,9 @@
 import { ref, computed } from 'vue';
 
+// Number of running requests/tasks; the overlay shows while it is above 0
 const activeCount = ref(0);
-const minShowMs = 150; // avoid flicker on very fast ops
-let visibleSince = 0;
-let hideTimer = null;
 
 function show() {
-  if (hideTimer) {
-    clearTimeout(hideTimer);
-    hideTimer = null;
-  }
-  if (activeCount.value === 0) {
-    visibleSince = performance.now();
-  }
   activeCount.value += 1;
 }
 

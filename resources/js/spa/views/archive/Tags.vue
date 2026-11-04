@@ -60,7 +60,7 @@ import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();
 
-const props = defineProps({
+defineProps({
   isActive: {
     type: Boolean,
     default: false

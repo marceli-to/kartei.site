@@ -118,7 +118,7 @@ const image_options = [
   { value: false, label: 'Ohne Bildfeld' }
 ];
 
-const props = defineProps({
+defineProps({
   isActive: {
     type: Boolean,
     default: false

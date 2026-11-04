@@ -6,7 +6,7 @@
     </div>
     <div class="w-6/12 relative">
       <InputText
-        v-model="row.name"
+        v-model="name"
         :placeholder="placeholder"
         :aria-label="`${label} ${position} Titel`"
         @blur="$emit('blur')" />
@@ -20,7 +20,7 @@
     </div>
     <div class="w-3/12">
       <InputText
-        v-model="row.custom_id"
+        v-model="customId"
         :aria-label="`${label} ${position} Kürzel`"
         :readonly="readonly" />
     </div>
@@ -31,12 +31,11 @@ import InputText from '@/components/forms/Text.vue';
 import InputStatic from '@/components/forms/Static.vue';
 import Icon from '@/components/icons/Icon.vue';
 
-// row is the category or register object of the structure form, edited in place
+// Title and Kürzel of a category or register: v-model:name, v-model:custom-id
+const name = defineModel('name', { type: String, default: '' });
+const customId = defineModel('customId', { type: String, default: '' });
+
 defineProps({
-  row: {
-    type: Object,
-    required: true
-  },
   number: {
     type: String,
     required: true

@@ -5,7 +5,7 @@
     </div>
     <nav 
       class="w-10/12 min-w-10/12 ml-8 relative" 
-      v-if="links">
+      v-if="links.length">
       <ul class="flex justify-start gap-x-44 2xl:gap-x-16 leading-none">
         <li 
           v-for="(item, idx) in links" 
@@ -41,10 +41,11 @@
 <script setup>
 import Icon from '@/components/icons/Icon.vue'
 
-const props = defineProps({
+// [{ type: 'link' | 'button', label, icon, iconVariant?, to?, router?, onClick?, disabled? }]
+defineProps({
   links: {
     type: Array,
-    required: false,
+    default: () => [],
   },
 })
 </script>

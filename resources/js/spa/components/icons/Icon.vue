@@ -9,7 +9,7 @@
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
     focusable="false"
-    v-html="icon.body" />
+    v-html="icon.body" /><!-- eslint-disable-line vue/no-v-html -- static SVG from registry.js -->
 </template>
 <script setup>
 import { computed } from 'vue';

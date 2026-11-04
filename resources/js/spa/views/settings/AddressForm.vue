@@ -5,7 +5,7 @@
       class="w-full h-full flex flex-col justify-between"
       v-if="!isLoading">
 
-      <AddressFields :form="form" :errors="errors" :idPrefix="config.idPrefix" />
+      <AddressFields v-model:form="form" v-model:errors="errors" :idPrefix="config.idPrefix" />
 
       <!-- Actions -->
       <div v-if="isActive">

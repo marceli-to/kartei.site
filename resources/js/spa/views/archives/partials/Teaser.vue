@@ -26,7 +26,7 @@ import Image from '@/components/media/Image.vue';
 import Collapsible from '@/components/Collapsible.vue';
 import Icon from '@/components/icons/Icon.vue';
 
-const props = defineProps({
+defineProps({
   archive: {
     type: Object,
     required: true

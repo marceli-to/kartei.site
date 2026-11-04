@@ -66,7 +66,7 @@ async function handleDelete() {
 
 // Loaded when the dialog opens, so the list is current (archives may have changed meanwhile)
 async function showDialog() {
-  let archives = [];
+  let archives;
   try {
     archives = (await getOwnedArchives()).data;
   }

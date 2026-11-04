@@ -3,7 +3,7 @@
     @submit.prevent="submit" 
     class="w-full h-full flex flex-col justify-between">
     <div class="flex flex-col gap-y-48">
-      <AddressFields :form="form" :errors="errors" idPrefix="company_" nameField="name" />
+      <AddressFields v-model:form="form" v-model:errors="errors" idPrefix="company_" nameField="name" />
       <div v-if="company">
         <AppButton label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
       </div>

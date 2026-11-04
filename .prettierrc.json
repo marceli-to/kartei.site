@@ -1,0 +1,21 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 120,
+  "tabWidth": 2,
+  "singleAttributePerLine": true,
+  "bracketSameLine": true,
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindConfig": "./tailwind.config.js",
+  "tailwindAttributes": [
+    "classes",
+    "wrapperClasses",
+    "labelClasses",
+    "borderClasses",
+    "activeClass",
+    "disabledClasses",
+    "defaultClass"
+  ]
+}

@@ -39,7 +39,7 @@ import InputLabel from '@/components/forms/Label.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import Slide from '@/components/slider/Slide.vue';
 
-const props = defineProps({
+defineProps({
   isActive: {
     type: Boolean,
     default: false

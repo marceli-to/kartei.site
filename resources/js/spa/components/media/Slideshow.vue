@@ -7,8 +7,6 @@
         nextEl: nextButton
       }"
       :loop="true"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange"
       class="border border-graphite aspect-square"
     >
 
@@ -36,7 +34,7 @@
 </template>
 <script>
 // Per-instance id for the navigation button selectors (several slideshows per page)
-let nextId = 1
+const instances = { count: 0 }
 </script>
 <script setup>
 import { Navigation } from 'swiper/modules';
@@ -45,12 +43,12 @@ import 'swiper/css';
 import Image from '@/components/media/Image.vue';
 import Icon from '@/components/icons/Icon.vue';
 
-const uniqueId = nextId++
+const uniqueId = ++instances.count
 const prevButton = `.swiper-button-prev-${uniqueId}`
 const nextButton = `.swiper-button-next-${uniqueId}`
 
 
-const props = defineProps({
+defineProps({
   slides: {
     type: Array,
     required: true
@@ -59,9 +57,4 @@ const props = defineProps({
 
 const modules = [Navigation];
 
-const onSwiper = (swiper) => {
-};
-
-const onSlideChange = () => {
-};
 </script>
