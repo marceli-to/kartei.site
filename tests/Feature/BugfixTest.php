@@ -212,3 +212,26 @@ it('converts stored country names to ISO codes and back', function () {
   expect($known->fresh()->country)->toBe('Österreich');
   expect($address->fresh()->country)->toBe('Schweiz');
 });
+
+it('lists the registers in structure order, category by category', function () {
+  $user = bugfixUser();
+  $archive = Archive::create(['name' => 'Kartei', 'acronym' => 'KA']);
+  $user->archives()->attach($archive->id);
+  Sanctum::actingAs($user);
+
+  $make = fn ($name, $order, $parent = null) => Category::create([
+    'number' => '1', 'name' => $name, 'custom_id' => 'X', 'order' => $order,
+    'archive_id' => $archive->id, 'parent_id' => $parent?->id,
+  ]);
+  $first = $make('A', 0);
+  $second = $make('B', 1);
+  // Created out of order, and each register's `order` is its position in its own category
+  $make('B.1', 0, $second);
+  $make('A.2', 1, $first);
+  $make('A.1', 0, $first);
+  $make('B.2', 1, $second);
+
+  $this->getJson("/api/archive/meta/{$archive->uuid}")
+    ->assertOk()
+    ->assertJsonPath('registers.*.name', ['A.1', 'A.2', 'B.1', 'B.2']);
+});

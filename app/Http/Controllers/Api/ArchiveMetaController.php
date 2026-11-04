@@ -28,13 +28,14 @@ class ArchiveMetaController extends Controller
       $archive->categories()->get()
     );
 
+    $categoriesWithRegisters = $archive->categories()->with('registers')->get();
+
+    // In structure order: the registers of the first category, then the next one's, …
     $registers = RegisterResource::collection(
-      $archive->registers()->get()
+      $categoriesWithRegisters->flatMap->registers
     );
 
-     $categoriesRegisters = CategoryResource::collection(
-      $archive->categories()->with('registers')->get()
-    );
+    $categoriesRegisters = CategoryResource::collection($categoriesWithRegisters);
 
     $tags = TagResource::collection(
       (new GetTagAction())->execute($archive)

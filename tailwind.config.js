@@ -93,6 +93,7 @@ export default {
         'sm': '0.875rem', // 14px
         'md': '1.063rem', // 17px
         'lg': '2.25rem', // 36px
+        'title': '1.75rem', // 28px, cap height = x-height of the logo
         'huge': '12rem', // 128px
       },
     },

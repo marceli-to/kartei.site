@@ -11,7 +11,7 @@
           </router-link>
         </div>
         <div class="w-7/12">
-          <h1 class="ml-8 mt-22 font-otto-regular text-lg">
+          <h1 class="ml-8 mt-30 font-otto-regular text-title">
             {{ title }}
           </h1>
         </div>
