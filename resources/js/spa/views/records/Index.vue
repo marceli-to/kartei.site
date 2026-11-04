@@ -60,7 +60,7 @@ import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
 import { getArchive, getArchiveMeta } from '@/services/api/archive'
 import { getRecords } from '@/services/api/record'
-import { useToastStore } from '@/components/toast/stores/toast'
+import { notifyError } from '@/services/api/error'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -80,7 +80,6 @@ import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
 
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
-const toast = useToastStore()
 
 const {
   categories,
@@ -180,15 +179,22 @@ const listParams = () => ({
   per_page: PER_PAGE,
 })
 
-// Only the latest request may update the list (filters can change mid-flight)
+// Only the latest request may update the list (filters can change mid-flight).
+// A new search also aborts the requests still running for the old one.
 let requestId = 0
 let lastParamsKey = null
+let controller = new AbortController()
 
 const fetchPage = (pageNumber) => getRecords(
   uuid.value,
   { ...listParams(), page: pageNumber },
-  { meta: { skipLoading: true } }
+  { meta: { skipLoading: true }, signal: controller.signal }
 )
+
+const abortRunning = () => {
+  controller.abort()
+  controller = new AbortController()
+}
 
 const applyPage = (result, append) => {
   records.value = append ? [...records.value, ...result.data] : result.data
@@ -202,6 +208,7 @@ const reload = async () => {
   if (key === lastParamsKey) return
   lastParamsKey = key
 
+  abortRunning()
   const id = ++requestId
   isFiltering.value = true
   try {
@@ -213,8 +220,10 @@ const reload = async () => {
   }
   catch (error) {
     // Let the same filters be tried again
-    if (id === requestId) lastParamsKey = null
-    console.error(error)
+    if (id === requestId) {
+      lastParamsKey = null
+      notifyError(error, 'Die Karten konnten nicht geladen werden.')
+    }
   }
   finally {
     if (id === requestId) isFiltering.value = false
@@ -230,11 +239,10 @@ const loadMore = async () => {
     if (id === requestId) applyPage(result, true)
   }
   catch (error) {
-    console.error(error)
     // Re-observing would retry at once and keep failing; wait for the button instead
     if (id === requestId) {
       loadMoreFailed.value = true
-      toast.show('Weitere Karten konnten nicht geladen werden.', 'error')
+      notifyError(error, 'Weitere Karten konnten nicht geladen werden.')
     }
     return
   }
@@ -285,6 +293,7 @@ watch(loadMoreSentinel, (element, previous) => {
 })
 
 onUnmounted(() => {
+  controller.abort()
   observer?.disconnect()
   clearTimeout(searchTimer)
 })
@@ -295,7 +304,7 @@ onMounted(async () => {
     await loadData()
   } 
   catch (error) {
-    console.error(error)
+    notifyError(error, 'Die Kartei konnte nicht geladen werden.')
   } 
   finally {
     isLoading.value = false

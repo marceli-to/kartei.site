@@ -51,6 +51,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useToastStore } from '@/components/toast/stores/toast';
+import { notifyError } from '@/services/api/error';
 import { getUserCompanies } from '@/services/api/user';
 import Slide from '@/components/slider/Slide.vue';
 import InputSearch from '@/components/forms/Search.vue';
@@ -83,10 +84,10 @@ const filteredCompanies = computed(() => {
   // Apply search filter if search term exists
   if (search.value) {
     const searchTerm = search.value.toLowerCase().trim();
-    result = result.filter(company => 
-      company.name.toLowerCase().includes(searchTerm) ||
-      company.street.toLowerCase().includes(searchTerm) ||
-      company.city.toLowerCase().includes(searchTerm)
+    // street and city are optional
+    result = result.filter(company =>
+      [company.name, company.street, company.city]
+        .some(value => (value ?? '').toLowerCase().includes(searchTerm))
     );
   }
   
@@ -138,7 +139,7 @@ onMounted(async () => {
     companies.value = response.data;
   } 
   catch (error) {
-    console.log(error);
+    notifyError(error, 'Die Firmen konnten nicht geladen werden.');
   } 
   finally {
     isLoading.value = false;

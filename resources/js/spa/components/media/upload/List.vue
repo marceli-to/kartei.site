@@ -4,7 +4,7 @@
       v-model="localImages"
       :item-key="imageKey"
       :class="multiple ? 'grid grid-cols-12 gap-20' : ''"
-      @end="onDragEnd">
+      @update="onReorder">
       <template #item="{ element, index }">
         <ImageCard :class="multiple ? 'col-span-6 xl:col-span-4 cursor-move' : ''">
           <Image
@@ -27,7 +27,8 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import axios from 'axios';
+import api from '@/services/api/axios';
+import { notifyError } from '@/services/api/error';
 import draggable from 'vuedraggable';
 import IconCross from '@/components/icons/Cross.vue';
 import ImageCard from '@/components/media/Card.vue';
@@ -66,8 +67,8 @@ watch(
 // Stable key per image: saved images have a uuid, new uploads a unique url
 const imageKey = (image) => image.uuid || image.resized_name || image.url;
 
-// Emit the updated order when drag ends
-const onDragEnd = async () => {
+// Emit and save the new order; @update only fires when an image actually moved
+const onReorder = async () => {
   emit('update:images', [...localImages.value]);
 
   // Only saved images (with a uuid) have a position in the database
@@ -78,11 +79,10 @@ const onDragEnd = async () => {
   if (!positions.length) return;
 
   try {
-    await axios.put('/api/upload/order', { positions });
+    await api.put('/upload/order', { positions });
     toast.show('Reihenfolge gespeichert', 'success');
   } catch (error) {
-    console.error('Failed to update image order:', error);
-    toast.show('Reihenfolge konnte nicht gespeichert werden', 'error');
+    notifyError(error, 'Reihenfolge konnte nicht gespeichert werden');
   }
 };
 
@@ -90,7 +90,7 @@ const onDragEnd = async () => {
 const deleteImage = async (url, index) => {
   try {
     // Call the delete API
-    await axios.delete(`/api/upload${url}`);
+    await api.delete(`/upload${url}`);
 
     // Emit a new list without the image (no in-place mutation)
     localImages.value = localImages.value.filter((_, i) => i !== index);
@@ -100,8 +100,7 @@ const deleteImage = async (url, index) => {
     toast.show('Bild gelöscht', 'success');
   } 
   catch (error) {
-    console.error('Failed to delete image:', error);
-    toast.show('Bild konnte nicht gelöscht werden', 'error');
+    notifyError(error, 'Bild konnte nicht gelöscht werden');
   }
 };
 </script>

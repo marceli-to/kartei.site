@@ -53,8 +53,8 @@ const imageData = computed(() =>
   media.value.map(item => ({
     src: item.url,
     alt: item.alt || '',
-    width: item.width || 'auto',
-    height: item.height || 'auto'
+    width: item.width || undefined,
+    height: item.height || undefined
   }))
 );
 

@@ -16,7 +16,7 @@
       @keydown.space.prevent="triggerFileInput"
       @keydown.enter.prevent="triggerFileInput"
       @dragover.prevent="isDragging = true"
-      @dragleave.prevent="isDragging = false"
+      @dragleave.prevent="onDragLeave"
       @drop.prevent="handleDrop"
       v-if="multiple || uploadedFiles.length === 0">
       <input
@@ -80,7 +80,7 @@ const props = defineProps({
   },
   uploadUrl: {
     type: String,
-    default: '/api/upload'
+    default: '/upload'
   },
   multiple: {
     type: Boolean,
@@ -145,6 +145,14 @@ onMounted(() => {
     uploadedFiles.value = [...normalized]
   }
 })
+
+// dragleave also fires when the pointer moves onto a child (icon, text);
+// only stop the highlight when it leaves the drop zone itself
+const onDragLeave = (event) => {
+  if (!event.currentTarget.contains(event.relatedTarget)) {
+    isDragging.value = false;
+  }
+};
 
 // Reordered or deleted in the list: replace the array so the watcher emits
 const handleImagesChange = (images) => {

@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import api from '@/services/api/axios'
+import { notifyError } from '@/services/api/error'
 import { useToastStore } from '@/components/toast/stores/toast'
 import { MAX_UPLOAD_BYTES } from '@/config/upload'
 
@@ -7,7 +8,7 @@ export function useFileUpload(options = {}) {
   const {
     maxSize = MAX_UPLOAD_BYTES,
     allowedTypes = ['image/*', 'application/pdf'],
-    uploadUrl = '/api/upload',
+    uploadUrl = '/upload',
     multiple = true
   } = options;
 
@@ -84,12 +85,18 @@ export function useFileUpload(options = {}) {
     files.forEach(file => formData.append('files[]', file))
 
     try {
-      const response = await axios.post(uploadUrl, formData, {
+      const response = await api.post(uploadUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
+        // Own progress bar instead of the global overlay; no 10 s limit for big files
+        meta: { skipLoading: true },
+        timeout: 0,
         onUploadProgress: (event) => {
-          uploadProgress.value = Math.round((event.loaded * 100) / event.total)
+          // total is missing when the browser can't compute it
+          if (event.total) {
+            uploadProgress.value = Math.round((event.loaded * 100) / event.total)
+          }
         }
       });
 
@@ -101,7 +108,9 @@ export function useFileUpload(options = {}) {
     catch (error) {
       hasError.value = true
       retryQueue.value = [...retryQueue.value, ...files]
-      console.error(error);
+      // 422: the server's reason (type, size, ...), otherwise the status text
+      const serverMessage = error.response?.status === 422 ? error.response.data?.message : null
+      notifyError(error, serverMessage || 'Das Hochladen ist fehlgeschlagen.')
     } 
     finally {
       isUploading.value = false
@@ -187,6 +196,10 @@ export function useFileUpload(options = {}) {
   }
 }
 
+// Field names follow the media table: name = the file name the user uploaded,
+// original_name / resized_name = the stored files (full size / resized).
+// Upload responses use name for the stored file and original_name for the
+// user's file name, hence the swap for fresh uploads.
 export function normalizeImageEntry(entry) {
   if ('resized' in entry) {
     return {

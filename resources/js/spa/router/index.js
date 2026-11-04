@@ -38,7 +38,6 @@ const routes = [
   { path: '/error/401', name: '401', component: () => import('@/views/error/401.vue') },
   { path: '/error/403', name: '403', component: () => import('@/views/error/403.vue') },
   { path: '/error/404', name: '404', component: () => import('@/views/error/404.vue') },
-  { path: '/error/419', name: '419', component: () => import('@/views/error/419.vue') },
   { path: '/:catchAll(.*)', redirect: '/error/404' },
 ];
 

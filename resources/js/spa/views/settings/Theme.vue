@@ -14,7 +14,7 @@
             wrapperClasses="w-full flex gap-x-8"
             labelClasses="w-full"
             :options="colorSchemes"
-            @update:modelValue="saveThemeChanges" />
+            @update:modelValue="saveTheme" />
         </InputGroup>
         <InputGroup>
           <InputLabel label="Auszeichnungsfarbe" />
@@ -23,14 +23,14 @@
             name="color_theme"
             wrapperClasses="w-full grid grid-cols-2 gap-8"
             :options="colorThemes"
-            @update:modelValue="saveThemeChanges" />
+            @update:modelValue="saveTheme" />
         </InputGroup>
       </div>
     </div>
   </Slide>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { useTheme } from '@/composables/useTheme';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -48,19 +48,11 @@ const props = defineProps({
 const { 
   theme, 
   isLoading, 
-  isSaving, 
   colorSchemes, 
   colorThemes, 
   fetchTheme, 
   saveTheme 
 } = useTheme();
-
-// Function to save theme changes
-const saveThemeChanges = async () => {
-  if (!isSaving.value) {
-    await saveTheme();
-  }
-};
 
 onMounted(() => {
   fetchTheme();

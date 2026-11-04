@@ -1,15 +1,18 @@
 <template>
-  <button @click="toggle" 
-    :aria-label="isFavorite ? 
-    'Favorisiert' : 
-    'Favorisieren'">
+  <button
+    type="button"
+    @click="toggle"
+    aria-label="Favorit"
+    :aria-pressed="isFavorite"
+    :aria-busy="isSaving">
     <IconHeart v-if="isFavorite" />
     <IconHeart v-else variant="outline" />
   </button>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { notifyError } from '@/services/api/error';
 import { toggleFavorite } from '@/services/api/favorite';
 import IconHeart from '@/components/icons/Heart.vue';
 import { useUserStore } from '@/stores/user';
@@ -27,7 +30,13 @@ const isFavorite = computed(() => {
   return userStore.favorites.includes(props.uuid);
 });
 
+// The API toggles, so a second click before the first answer would undo it
+const isSaving = ref(false);
+
 const toggle = async () => {
+  if (isSaving.value) return;
+  isSaving.value = true;
+
   const currentlyFavorite = isFavorite.value;
 
   // Optimistically update store
@@ -42,13 +51,16 @@ const toggle = async () => {
     await toggleFavorite(props.uuid);
   } 
   catch (error) {
-
     if (currentlyFavorite) {
       userStore.favorites.push(props.uuid);
     } 
     else {
       userStore.favorites = userStore.favorites.filter(id => id !== props.uuid);
     }
+    notifyError(error, 'Der Favorit konnte nicht gespeichert werden.');
+  }
+  finally {
+    isSaving.value = false;
   }
 };
 

@@ -60,7 +60,6 @@
                     <template v-if="settings.has_images">
                       <ImageUpload
                         :allowedTypes="['image/*']"
-                        uploadUrl="/api/upload"
                         :multiple="true"
                         v-model="form.media"
                         :existingImages="form.media"

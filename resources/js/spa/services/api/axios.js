@@ -30,11 +30,32 @@ api.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  async (error) => {
     if (error.config && error.config.__usesGlobalLoading) {
       hide();
     }
-    handleApiError(error, 'Fehler bei der Anfrage.');
+
+    // Aborted on purpose (AbortController), nothing to report
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
+
+    // 419: the CSRF token is stale (e.g. the tab was open for a long time).
+    // Fetch a fresh XSRF-TOKEN cookie and send the request once more, so the
+    // form input survives. If the session itself is gone, the retry gets a 401.
+    if (error.response?.status === 419 && error.config && !error.config.__retried419) {
+      try {
+        await axios.get('/sanctum/csrf-cookie');
+        return await api({ ...error.config, __retried419: true });
+      }
+      catch (retryError) {
+        // The retry went through this interceptor already
+        if (retryError.config?.__retried419) return Promise.reject(retryError);
+        error = retryError;
+      }
+    }
+
+    handleApiError(error);
     return Promise.reject(error);
   }
 );

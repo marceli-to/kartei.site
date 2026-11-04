@@ -12,7 +12,6 @@
           <InputLabel label="Titelbild" id="image" required />
           <ImageUpload
             :allowedTypes="['image/*']"
-            uploadUrl="/api/upload"
             :multiple="false"
             v-model="form.image"
             :existingImages="form.image"
@@ -68,7 +67,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { handleApiError } from '@/services/api/error'
+import { notifyError } from '@/services/api/error'
 import { getUserCompanies } from '@/services/api/user';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -94,7 +93,7 @@ const props = defineProps({
 });
 
 const companies = ref([]);
-const isLoading = ref(false);
+const isLoading = ref(true);
 const isSaving = ref(false);
 
 const route = useRoute();
@@ -111,15 +110,8 @@ const form = ref({
 
 const { errors, setErrors, clearErrors } = useFormErrors(['name', 'acronym', 'company', 'image']);
 
-// Watch for changes in route.params.uuid
-watch(() => route.params.uuid, (newUuid) => {
-  if (newUuid !== uuid.value) {
-    uuid.value = newUuid || null;
-    if (uuid.value) {
-      fetchArchive();
-    }
-  }
-}, { immediate: true });
+// No route.params.uuid watcher: pages are keyed by route.path, so a new
+// uuid (e.g. after creating) mounts a new page that loads it in onMounted
 
 // Watch for changes if "isActive"
 watch(() => props.isActive, (newVal) => {
@@ -139,7 +131,7 @@ onMounted(async () => {
     }
   } 
   catch (error) {
-    console.error(error);
+    notifyError(error, 'Die Kartei konnte nicht geladen werden.');
   }
   finally {
     isLoading.value = false;
@@ -153,9 +145,12 @@ const handleSubmit = async () => {
 
     if (!uuid.value) {
       const response = await createArchive(form.value);
+      // Saved: from here on nothing may report a failure, or the user
+      // would save again and create the archive twice
       uuid.value = response.uuid;
       form.value.uuid = response.uuid;
       form.value.image = [response.image];
+      toast.show('Kartei erfolgreich gespeichert.', 'success');
 
       // The per-archive permissions are loaded once; fetch them again so
       // the route guard and the slides know about the new archive
@@ -165,18 +160,15 @@ const handleSubmit = async () => {
         name: 'archiveSettings', 
         params: { uuid: response.uuid }
       });
-
-      toast.show('Kartei erfolgreich gespeichert.', 'success');
     } 
     else {
-      const response = await updateArchive(form.value);
+      await updateArchive(form.value);
       toast.show('Kartei erfolgreich aktualisiert.', 'success');
     }
   } 
   catch (error) {
-    console.error(error);
     setErrors(error);
-    toast.show('Fehler beim Speichern der Kartei.', 'error');
+    notifyError(error, 'Fehler beim Speichern der Kartei.');
   }
   finally {
     isSaving.value = false;
@@ -199,7 +191,8 @@ const fetchArchive = async () => {
     }
   } 
   catch (error) {
-    handleApiError(error);
+    // 403/404 already went to the error page via the interceptor
+    notifyError(error, 'Die Kartei konnte nicht geladen werden.');
   }
 };
 

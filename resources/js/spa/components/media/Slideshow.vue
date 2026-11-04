@@ -12,23 +12,23 @@
       class="border border-graphite aspect-square"
     >
 
-      <swiper-slide v-for="slide in slides">
+      <swiper-slide v-for="(slide, index) in slides" :key="slide.src">
         <Image 
           :src="slide.src"
-          :alt="slide.alt || 'Slide'"
-          :width="slide.width || 'auto'"
-          :height="slide.height || 'auto'"
+          :alt="slide.alt || `Bild ${index + 1} von ${slides.length}`"
+          :width="slide.width"
+          :height="slide.height"
           :spacing="'m-40'" 
         />
       </swiper-slide>
 
     </swiper>
 
-    <button :class="`swiper-button-prev swiper-button-prev-${uniqueId} absolute left-0 top-1/2 -translate-y-1/2 z-10 size-40 flex justify-center items-center`">
+    <button type="button" aria-label="Vorheriges Bild" :class="`swiper-button-prev swiper-button-prev-${uniqueId} absolute left-0 top-1/2 -translate-y-1/2 z-10 size-40 flex justify-center items-center`">
       <IconChevronLeft variant="small" />
     </button>
 
-    <button :class="`swiper-button-next swiper-button-next-${uniqueId} absolute right-0 top-1/2 -translate-y-1/2 z-10 size-40 flex justify-center items-center`">
+    <button type="button" aria-label="Nächstes Bild" :class="`swiper-button-next swiper-button-next-${uniqueId} absolute right-0 top-1/2 -translate-y-1/2 z-10 size-40 flex justify-center items-center`">
       <IconChevronRight variant="small" />
     </button>
 

@@ -36,6 +36,9 @@
 - [x] German validation attribute names (Kürzel, Hausnummer, …; `city` is "Ort"); toast layer lets header clicks through, sits above dialogs, aria-live
 - [x] Form errors shown in the label (`InputLabel` `error` prop), placeholders keep their text, errors clear on first change, `aria-invalid`; `composables/useFormErrors.js` used by all 10 forms
 - [x] Test suite green (89 tests)
+- [x] Review bugs: `handleApiError` keeps its message on the error (`error.userMessage`), `notifyError(error, fallback)` toasts it unless the user was redirected or the request was aborted; 401 -> "Sitzung abgelaufen" page -> login (419 page merged into it); 419 refreshes the CSRF cookie and retries once; 403/404 only go to the error page for GET requests
+- [x] Theme saves queued (latest click wins) and reverted on failure; upload errors toasted (422 reason), no `NaN%`, reorder only on a real move (`@update`), no drag flicker, uploads through the `api` instance (no timeout, own progress bar); `normalizeImageEntry` naming documented (not swapped: follows the media columns)
+- [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
 ## Servers (before going live)
 
@@ -53,22 +56,10 @@
 
 Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
 
-### Bugs not fixed yet
-- [ ] API errors: `handleApiError`'s message is discarded (axios interceptor); 401 shows an error page instead of the login; 419 loses form input
-- [ ] Theme: second click while saving is ignored, failed save not reverted (`useTheme`, `Theme.vue`)
-- [ ] Upload: failures only show a red icon, `NaN%` progress when `event.total` is missing, reorder saves on `@end` even without a move (use `@update`), drag flicker (`dragleave` on children), `name`/`original_name` look swapped in `normalizeImageEntry`
-- [ ] Favorite: no in-flight guard, no error toast (`records/components/Favorite.vue`)
-- [ ] Record list: stale requests ignored but not aborted (AbortController)
-- [ ] Company search throws on a company without street/city (`settings/Company.vue`)
-- [ ] BasicInformation: archive fetched up to 3 times, dead `route.params.uuid` watcher; partial success after create reports a failure
-- [ ] `isLoading` starts `false` (flash of empty content): Theme, Company, users Index subscription warning
-- [ ] "Meine Karteien": failed load shows an empty page, no message
-- [ ] `ButtonPrimary` has no `loading` prop (passed by `UserPermissions`); Slideshow `v-for` without `:key`, English alt "Slide"; `<img width="auto">`
-
 ### Cross-cutting (accessibility, consistency)
 - [ ] `javascript:;` / `href=""` anchors used as buttons: Password toggle, Search clear, Collapsible, InfoBox close; icon-only buttons without `aria-label` (remove buttons in Category/Card/Tags, slider close, upload delete, burger menu, error page back links)
 - [ ] Wrapper-root inputs swallow attributes: `Password`, `Search`, `Select` need `inheritAttrs: false` + `v-bind="$attrs"` on the input (search fields have no accessible name)
-- [ ] Load/save errors that only reach the console (~20 places): show a toast
+- [ ] Load/save errors that only reach the console: show a toast with `notifyError()` (done in Theme, upload, Favorite, records list, Company, users Index, BasicInformation; ~15 left: `grep -rn console.error resources/js/spa`)
 - [ ] Focus: no focus ring on `sr-only` radios (`RadioGroup`, `SelectButtons`), no `<legend>`; dialog has no focus trap/restore, closes on mouseup after a drag from inside
 
 ### Structure and duplication

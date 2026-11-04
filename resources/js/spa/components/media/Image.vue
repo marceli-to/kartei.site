@@ -27,13 +27,14 @@ const props = defineProps({
     type: String,
     default: 'm-20'
   },
+  // Pixel sizes; left out when unknown ("auto" is not a valid attribute value)
   width: {
     type: [String, Number],
-    default: 'auto'
+    default: undefined
   },
   height: {
     type: [String, Number],
-    default: 'auto'
+    default: undefined
   }
 });
 </script>

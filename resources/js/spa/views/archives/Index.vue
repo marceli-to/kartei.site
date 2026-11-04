@@ -65,6 +65,10 @@
         <div v-else-if="archives.length > 0" class="text-center py-20">
           <p class="text-gray-500">Keine Ergebnisse gefunden.</p>
         </div>
+        <div v-else-if="loadFailed" class="flex flex-col items-center gap-y-20 py-20">
+          <p class="text-gray-500">Die Karteien konnten nicht geladen werden.</p>
+          <ButtonPrimary type="button" label="Erneut versuchen" @click="loadArchives" />
+        </div>
       </ContentMain>
     </div>
   </div>
@@ -82,6 +86,7 @@ import InputSelect from '@/components/forms/Select.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
+import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
 import Teaser from '@/views/archives/partials/Teaser.vue';
@@ -95,6 +100,7 @@ const sortOrder = ref('name');
 const layout = ref('list');
 const hasArchive = ref(true);
 const archives = ref([]);
+const loadFailed = ref(false);
 
 const sortOrderOptions = [
   { value: 'name', label: 'Name' },
@@ -123,12 +129,13 @@ const { isOpen: isInfoOpen } = useInfoBox({
   auto: true,
 });
 
-onMounted(async () => {
+const loadArchives = async () => {
+  loadFailed.value = false;
   try {
+    // initialize() retries when the permissions failed to load before
     await userStore.initialize();
-
-    if (!userStore.user || !userStore.user.uuid) {
-      console.error('User not properly authenticated');
+    if (!userStore.user?.uuid) {
+      loadFailed.value = true;
       return;
     }
 
@@ -136,7 +143,10 @@ onMounted(async () => {
     hasArchive.value = archives.value.length > 0;
   }
   catch (error) {
-    console.error(error);
+    // Shown in the page (with a retry button), no toast on top
+    loadFailed.value = true;
   }
-});
+};
+
+onMounted(loadArchives);
 </script>

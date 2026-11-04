@@ -2,8 +2,8 @@
   <button 
     :type="type" 
     :class="computedClasses"
-    :disabled="disabled"
-    :aria-label="label">
+    :disabled="disabled || loading"
+    :aria-busy="loading || undefined">
     {{ label }}
     <slot />
   </button>
@@ -28,9 +28,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  submitting: {
+  // A request is running: disabled and marked busy
+  loading: {
     type: Boolean,
-    default: true
+    default: false
   },
   variant: {
     type: String,

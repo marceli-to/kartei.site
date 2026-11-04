@@ -55,6 +55,7 @@ import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { getRelatedUsers, getArchiveUsers } from '@/services/api/archiveUser';
 import { getUserSubscription } from '@/services/api/user';
+import { notifyError } from '@/services/api/error';
 import Slide from '@/components/slider/Slide.vue';
 import CreateUser from '@/views/users/partials/CreateUser.vue';
 import UpdateUser from '@/views/users/partials/UpdateUser.vue';
@@ -69,9 +70,10 @@ const createdUser = ref(null);
 const selectedUser = ref(null);
 const users = ref([]);
 const viewState = ref('listing');
-const isLoadingUsers = ref(false);
+// true until the first load, so the subscription note doesn't flash
+const isLoadingUsers = ref(true);
 const subscription = ref(null);
-const isLoadingSubscription = ref(false);
+const isLoadingSubscription = ref(true);
 
 const props = defineProps({
   isActive: {
@@ -89,7 +91,8 @@ const maxUsersReached = computed(() => {
 });
 
 const showSubscriptionInfo = computed(() => {
-  if (!props.isActive || isLoadingSubscription.value) return false;
+  // The seat limit needs both the subscription and the user count
+  if (!props.isActive || isLoadingSubscription.value || isLoadingUsers.value) return false;
   return !hasSubscription.value || maxUsersReached.value;
 });
 
@@ -116,7 +119,7 @@ const fetchSubscription = async () => {
     const response = await getUserSubscription();
     subscription.value = response.data || null;
   } catch (error) {
-    console.error('Failed to fetch subscription:', error);
+    notifyError(error, 'Das Abonnement konnte nicht geladen werden.');
   } finally {
     isLoadingSubscription.value = false;
   }
@@ -136,7 +139,7 @@ const fetchUsers = async () => {
     users.value = response.data || [];
   } 
   catch (error) {
-    console.error('Failed to fetch users:', error);
+    notifyError(error, 'Die Benutzer/innen konnten nicht geladen werden.');
   }
   finally {
     isLoadingUsers.value = false;
