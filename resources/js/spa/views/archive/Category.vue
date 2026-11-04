@@ -63,7 +63,7 @@
                   <InputText
                     v-model="category.name"
                     :placeholder="`Kategorie ${cIdx + 1}`"
-                    @blur="onCategoryNameBlur(category)"
+                    @blur="applyAutoId(category)"
                   />
                   <button 
                     type="button" 
@@ -75,9 +75,7 @@
                 </div>
                 <div class="w-3/12">
                   <InputText
-                    :model-value="category._localId"
-                    @update:model-value="val => category._localId = val"
-                    @blur="() => onCategoryIdBlur(category)"
+                    v-model="category.custom_id"
                     :readonly="id_type === 'auto'"
                   />
                 </div>
@@ -96,7 +94,7 @@
                       <InputStatic>{{ formatNumber(cIdx, numerals_category, true) + formatNumber(rIdx, numerals_register, false) }}</InputStatic>
                     </div>
                     <div class="w-6/12 relative">
-                      <InputText v-model="register.name" @blur="onRegisterNameBlur(register)" />
+                      <InputText v-model="register.name" @blur="applyAutoId(register)" />
                       <button 
                         type="button" 
                         class="absolute right-8 top-12"
@@ -107,9 +105,7 @@
                     </div>
                     <div class="w-3/12">
                       <InputText
-                        :model-value="register._localId"
-                        @update:model-value="val => register._localId = val"
-                        @blur="() => onRegisterIdBlur(register)"
+                        v-model="register.custom_id"
                         :readonly="id_type === 'auto'"
                       />
                     </div>
@@ -177,11 +173,12 @@ const dialogStore = useDialogStore();
 
 const toast = useToastStore();
 const isSaving = ref(false);
-const isLoading = ref(false);
-const hasCategories = ref(false);
-
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
+
+// Loading from the first render, so the info box doesn't flash open before the fetch
+const isLoading = ref(!!uuid.value);
+const hasCategories = ref(false);
 
 const numerals_category = ref('decimal'); // decimal, roman, alpha
 const numerals_register = ref('decimal'); // decimal, roman, alpha
@@ -207,7 +204,6 @@ const form = ref({
   categories: [
     {
       custom_id: '',
-      _localId: '',
       name: '',
       uuid: null,
       registers: []
@@ -217,7 +213,6 @@ const form = ref({
 
 onMounted(async () => {
   if (uuid.value) {
-    isLoading.value = true;
     await fetchStructure();
   }
 });
@@ -229,23 +224,24 @@ const fetchStructure = async () => {
       response.data.map(category => ({
           name: category.name,
           custom_id: category.custom_id ?? '',
-          _localId: category.custom_id ?? '',
           uuid: category.uuid,
           registers: (category.registers || []).map(register => ({
             name: register.name,
             custom_id: register.custom_id ?? '',
-            _localId: register.custom_id ?? '',
             uuid: register.uuid
           }))
         }))
       : [];
 
     form.value.categories = mapped.length > 0 ? mapped : [emptyCategory()];
-    hasCategories.value = mapped.length > 0 || false;
+    hasCategories.value = mapped.length > 0;
 
-    numerals_category.value = response.data[0]?.numeral_type ?? 'decimal';
-    numerals_register.value = response.data[0]?.numeral_type ?? 'decimal';
-    id_type.value = response.data[0]?.custom_id_type ?? 'auto';
+    // Registers store their own numeral type; read it from the first register there is
+    const categories = Array.isArray(response.data) ? response.data : [];
+    const firstRegister = categories.flatMap(category => category.registers || [])[0];
+    numerals_category.value = categories[0]?.numeral_type ?? 'decimal';
+    numerals_register.value = firstRegister?.numeral_type ?? numerals_category.value;
+    id_type.value = categories[0]?.custom_id_type ?? 'auto';
   } 
   catch (error) {
     console.error(error);
@@ -260,6 +256,12 @@ const handleSubmit = async () => {
 
   try {
     cleanForm();
+
+    // Enter submits without a blur, so auto IDs may not be derived yet
+    form.value.categories.forEach(category => {
+      applyAutoId(category);
+      category.registers.forEach(applyAutoId);
+    });
 
     const payload = form.value.categories.map((category, cIdx) => {
       const categoryNumber = formatNumber(cIdx, numerals_category.value);
@@ -283,10 +285,7 @@ const handleSubmit = async () => {
       };
     });
 
-    if (!validatePayload(payload)) {
-      isSaving.value = false;
-      return;
-    }
+    if (!validatePayload(payload)) return;
 
     const response = await storeCategory(uuid.value, payload);
     updateForm(response.data);
@@ -316,7 +315,7 @@ const validatePayload = (payload) => {
   });
 
   if (!isValid) {
-    toast.show('Fehler: Bitte fülle alle Felder aus (Nummer, Titel, Kürzel)', 'error');
+    toast.show('Fehler: Bitte füllen Sie alle Felder aus (Nummer, Titel, Kürzel)', 'error');
   }
 
   return isValid;
@@ -339,6 +338,8 @@ const updateForm = (data) => {
     }
   });
 
+  hasCategories.value = data.length > 0;
+
   // add an empty category if none exist
   if (form.value.categories.length === 0) {
     form.value.categories.push(emptyCategory());
@@ -358,7 +359,6 @@ const cleanForm = () => {
 const emptyCategory = () => ({
   name: '',
   custom_id: '',
-  _localId: '',
   uuid: null,
   registers: []
 });
@@ -395,17 +395,12 @@ const removeCategory = async (cIdx) => {
         
         // Show success message
         toast.show('Kategorie erfolgreich gelöscht', 'success');
-        
-        dialogStore.hide();
       } catch (error) {
         console.error('Error deleting category:', error);
         toast.show('Fehler beim Löschen der Kategorie', 'error');
-        dialogStore.hide();
       }
     },
-    onCancel: () => {
-      dialogStore.hide();
-    }
+    onCancel: () => {}
   });
 };
 
@@ -436,17 +431,12 @@ const removeRegister = async (cIdx, rIdx) => {
         
         // Show success message
         toast.show('Register erfolgreich gelöscht', 'success');
-        
-        dialogStore.hide();
       } catch (error) {
         console.error('Error deleting register:', error);
         toast.show('Fehler beim Löschen des Registers', 'error');
-        dialogStore.hide();
       }
     },
-    onCancel: () => {
-      dialogStore.hide();
-    }
+    onCancel: () => {}
   });
 };
 
@@ -456,35 +446,14 @@ const addRegisterToLastCategory = () => {
   category.registers.push({
     name: '',
     custom_id: '',
-    _localId: '',
     uuid: null
   });
 };
 
-const onCategoryNameBlur = (category) => {
+// In auto mode the ID is the first two letters of the name (category or register)
+const applyAutoId = (item) => {
   if (id_type.value !== 'auto') return;
-  const autoId = category.name.slice(0, 2).toUpperCase();
-  category.custom_id = autoId;
-  category._localId = autoId;
-};
-
-const onCategoryIdBlur = (category) => {
-  if (id_type.value === 'manual') {
-    category.custom_id = category._localId;
-  }
-};
-
-const onRegisterNameBlur = (register) => {
-  if (id_type.value !== 'auto') return;
-  const autoId = register.name.slice(0, 2).toUpperCase();
-  register.custom_id = autoId;
-  register._localId = autoId;
-};
-
-const onRegisterIdBlur = (register) => {
-  if (id_type.value === 'manual') {
-    register.custom_id = register._localId;
-  }
+  item.custom_id = item.name.slice(0, 2).toUpperCase();
 };
 
 const cloneRegister = (original) => ({ ...original });
@@ -521,8 +490,6 @@ const showStructureDialog = () => {
   dialogStore.show({
     component: StructureDialog,
     hideDefaultActions: true,
-    confirmLabel: 'Löschen',
-    cancelLabel: 'Abbrechen',
     size: 'xlarge',
     props: {
       numerals_category_type: numerals_category.value,

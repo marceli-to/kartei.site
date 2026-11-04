@@ -42,7 +42,7 @@
             variant="reduced" />
         </InputGroup>
       </div>
-      <div>
+      <div v-if="isDev">
         <div class="font-muoto-medium text-flame border border-flame p-8 text-center">
           To do: implement payment with stripe
         </div>
@@ -72,6 +72,9 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoSubscription from '@/views/settings/partials/SubscriptionInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
+
+// Dev-only reminder in the template; never shown in production builds
+const isDev = import.meta.env.DEV;
 
 const toast = useToastStore();
 

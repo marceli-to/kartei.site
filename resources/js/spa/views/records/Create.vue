@@ -152,7 +152,7 @@ const {
 
 const { setTitle } = usePageTitle()
 
-const isLoading = ref(false)
+const isLoading = ref(true)
 const isSaving = ref(false)
 
 const archive = ref(null)
@@ -181,6 +181,7 @@ const errors = ref({
 
 const handleSubmit = async () => {
   isSaving.value = true
+  errors.value = { category: null }
   const recordData = {
     archive_id: uuid.value,
     tags: form.value.tags,
@@ -197,7 +198,7 @@ const handleSubmit = async () => {
     errors.value = {
       category: error.response?.data?.errors?.category?.[0],
     }
-    toast.show('Fehler beim Speichern der Kartei.', 'error');
+    toast.show(error.response?.data?.message || 'Fehler beim Speichern der Karte.', 'error');
   }
   finally {
     isSaving.value = false
@@ -210,7 +211,6 @@ const handleCancel = () => {
 
 onMounted(async () => {
   try {
-    isLoading.value = true;
     await loadData();
   } 
   catch (error) {

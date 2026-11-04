@@ -2,11 +2,13 @@ import { defineStore } from 'pinia';
 import { getUserPermissions } from '@/services/api/user';
 import { getFavorites } from '@/services/api/favorite';
 
+let initializing = null;
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: {},
-    permissions: typeof window !== 'undefined' ? window.permissions || [] : [],
-    roles: typeof window !== 'undefined' ? window.roles || [] : [],
+    permissions: [],
+    roles: [],
     // Per-archive abilities from ArchivePolicy: { [archiveUuid]: ['view', 'updateRecord', ...] }
     archives: {},
     favorites: [],
@@ -20,21 +22,22 @@ export const useUserStore = defineStore('user', {
   },
 
   actions: {
-    async initialize() {
-      if (this.initialized) return;
-
-      try {
-        await this.fetchPermissions();
-        await this.fetchFavorites();
-      } 
-      catch (error) {
-        console.error('Initialization error:', error);
-      } 
-      finally {
-        this.initialized = true;
+    // App.vue and the router guard both call this on load; share one run
+    initialize() {
+      if (this.initialized) return Promise.resolve();
+      if (!initializing) {
+        initializing = (async () => {
+          // Only counts as initialized once the permissions are in: after a failed
+          // request the next navigation tries again instead of showing 403 for good
+          if (!(await this.fetchPermissions())) return;
+          this.initialized = true;
+          await this.fetchFavorites();
+        })().finally(() => { initializing = null; });
       }
+      return initializing;
     },
 
+    // Returns whether the permissions were loaded
     async fetchPermissions() {
       try {
         const permissions = await getUserPermissions();
@@ -42,9 +45,11 @@ export const useUserStore = defineStore('user', {
         this.permissions = permissions.permissions;
         this.roles = permissions.roles;
         this.archives = permissions.archives || {};
+        return true;
       } 
       catch (error) {
         console.error('Failed to fetch permissions and roles:', error);
+        return false;
       }
     },
 

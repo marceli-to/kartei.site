@@ -194,7 +194,7 @@ function confirmDiscard() {
   return new Promise(resolve => {
     dialogStore.show({
       title: 'Ungespeicherte Änderungen',
-      message: 'Du hast ungespeicherte Änderungen. Möchtest du diese verwerfen?',
+      message: 'Sie haben ungespeicherte Änderungen. Möchten Sie diese verwerfen?',
       confirmLabel: 'Verwerfen',
       cancelLabel: 'Abbrechen',
       size: 'small',

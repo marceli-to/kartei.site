@@ -21,7 +21,7 @@
         <InputGroup>
           <InputSelectButtons
             v-model="numerals_category_type"
-            name="sections"
+            name="numerals-category"
             labelClasses="font-muoto-medium"
             wrapperClasses="flex flex-col gap-y-8"
             :options="numerals_category" />
@@ -31,7 +31,7 @@
           <InputLabel label="Register" />
           <InputSelectButtons
             v-model="numerals_register_type"
-            name="sections"
+            name="numerals-register"
             wrapperClasses="flex flex-col gap-y-8"
             :options="numerals_register" />
         </InputGroup>
@@ -40,7 +40,7 @@
           <InputLabel label="ID" />
           <InputSelectButtons
             v-model="id_type"
-            name="sections"
+            name="id-type"
             wrapperClasses="flex flex-col gap-y-8"
             :options="ids" />
         </InputGroup>

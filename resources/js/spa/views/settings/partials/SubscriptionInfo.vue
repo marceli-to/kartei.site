@@ -22,12 +22,12 @@
       <li>Fr. 12.00 / Benutzer / in + Monat</li>
     </ul>
     <p class="ml-16 my-24">
-      Für individuelle Unternehmens- lösungen kontaktieren Sie uns: 
+      Für individuelle Unternehmenslösungen kontaktieren Sie uns: 
       <a 
-        href="mailto:lösungen@kartei.site"
+        href="mailto:loesungen@kartei.site"
         title="Kontaktieren Sie uns"
         class="underline underline-offset-2 hover:no-underline">
-        lösungen@kartei.site
+        loesungen@kartei.site
       </a>
     </p>
     <div>

@@ -55,19 +55,22 @@
       </ContentNavigation>
       <ContentMain>
         <div 
-          v-if="archives.length > 0"
+          v-if="filteredArchives.length > 0"
           class="flex flex-wrap gap-x-16 gap-y-32">
           <Teaser 
             :archive="archive" 
             class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
-            v-for="archive in archives" :key="archive.uuid" />
+            v-for="archive in filteredArchives" :key="archive.uuid" />
+        </div>
+        <div v-else-if="archives.length > 0" class="text-center py-20">
+          <p class="text-gray-500">Keine Ergebnisse gefunden.</p>
         </div>
       </ContentMain>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
@@ -104,6 +107,15 @@ const layoutOptions = [
   { value: 'list', label: 'Liste' },
   { value: 'grid', label: 'Gitter' },
 ];
+
+// Search by name or Kürzel, in the browser (the list is not paginated)
+const filteredArchives = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  if (!query) return archives.value;
+  return archives.value.filter(archive =>
+    [archive.name, archive.acronym].some(value => value?.toLowerCase().includes(query))
+  );
+});
 
 // Points to "Erstellen" while there is no archive yet
 const { isOpen: isInfoOpen } = useInfoBox({

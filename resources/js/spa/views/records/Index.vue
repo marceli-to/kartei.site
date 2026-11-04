@@ -30,8 +30,11 @@
               class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
             />
           </div>
-          <!-- Loads the next page when scrolled into view -->
-          <div v-if="hasMore" ref="loadMoreSentinel" class="h-px" />
+          <!-- Loads the next page when scrolled into view; stops after a failed request -->
+          <div v-if="hasMore && !loadMoreFailed" ref="loadMoreSentinel" class="h-px" />
+          <div v-if="hasMore && loadMoreFailed" class="flex justify-center pt-32">
+            <ButtonPrimary type="button" label="Weitere Karten laden" @click="retryLoadMore" />
+          </div>
         </template>
         <template v-else>
           <div v-if="archiveTotal === 0">
@@ -57,6 +60,7 @@ import { usePageTitle } from '@/composables/usePageTitle'
 import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
 import { getArchive, getArchiveMeta } from '@/services/api/archive'
 import { getRecords } from '@/services/api/record'
+import { useToastStore } from '@/components/toast/stores/toast'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -64,6 +68,7 @@ import Skeleton from '@/views/records/partials/Skeleton.vue'
 import Card from '@/views/records/partials/Card.vue'
 import Sidebar from '@/views/records/partials/Sidebar.vue'
 import Actions from '@/views/records/partials/Actions.vue'
+import ButtonPrimary from '@/components/buttons/Primary.vue'
 import IconPlus from '@/components/icons/Plus.vue'
 import IconReorder from '@/components/icons/Reorder.vue'
 import IconTiles from '@/components/icons/Tiles.vue'
@@ -75,6 +80,7 @@ import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
 
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
+const toast = useToastStore()
 
 const {
   categories,
@@ -162,6 +168,7 @@ const lastPage = ref(1)
 const archiveTotal = ref(null)
 const isFiltering = ref(false)
 const isLoadingMore = ref(false)
+const loadMoreFailed = ref(false)
 const hasMore = computed(() => page.value < lastPage.value)
 
 const listParams = () => ({
@@ -199,7 +206,10 @@ const reload = async () => {
   isFiltering.value = true
   try {
     const result = await fetchPage(1)
-    if (id === requestId) applyPage(result, false)
+    if (id === requestId) {
+      applyPage(result, false)
+      loadMoreFailed.value = false
+    }
   }
   catch (error) {
     // Let the same filters be tried again
@@ -221,6 +231,12 @@ const loadMore = async () => {
   }
   catch (error) {
     console.error(error)
+    // Re-observing would retry at once and keep failing; wait for the button instead
+    if (id === requestId) {
+      loadMoreFailed.value = true
+      toast.show('Weitere Karten konnten nicht geladen werden.', 'error')
+    }
+    return
   }
   finally {
     isLoadingMore.value = false
@@ -231,6 +247,11 @@ const loadMore = async () => {
     observer?.unobserve(loadMoreSentinel.value)
     observer?.observe(loadMoreSentinel.value)
   }
+}
+
+const retryLoadMore = () => {
+  loadMoreFailed.value = false
+  loadMore()
 }
 
 // Wait for a pause in typing before searching; other filters apply at once

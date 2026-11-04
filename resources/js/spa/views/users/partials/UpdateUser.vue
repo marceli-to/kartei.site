@@ -156,16 +156,20 @@ const showDeleteDialog = () => {
     title: `Möchten Sie den Benutzer/in "${form.value.firstname} ${form.value.name}" wirklich löschen?`,
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
-    onConfirm: () => {
-      handleDelete();
-    },
-    onCancel: () => {
-    }
+    onConfirm: handleDelete,
+    onCancel: () => {}
   });
 };
 
-const handleDelete = () => {
-  deleteUser(props.uuid);
-  emit('user-deleted', props.uuid);
+const handleDelete = async () => {
+  try {
+    await deleteUser(props.uuid);
+    toast.show('Benutzer/in erfolgreich gelöscht.', 'success');
+    emit('user-deleted', props.uuid);
+  }
+  catch (error) {
+    console.error(error);
+    toast.show('Fehler beim Löschen des Benutzers.', 'error');
+  }
 };
 </script>

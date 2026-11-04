@@ -44,7 +44,7 @@ export function useFileUpload(options = {}) {
     })
 
     if (!isTypeAllowed) {
-      errors.push(`File type "${file.type}" is not allowed`)
+      errors.push(`Der Dateityp von "${file.name}" ist nicht erlaubt`)
     }
 
     return {

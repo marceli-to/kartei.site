@@ -17,9 +17,9 @@
         <div class="flex flex-col gap-y-8">
           <InputGroup
             class="relative"
-            v-for="(tag, index) in form.tags" :key="index">
+            v-for="(tag, index) in form.tags" :key="rowKey(tag)">
             <InputText
-              v-model="form.tags[index].name"
+              v-model="tag.name"
               :placeholder="`Tag ${index + 1}`"
               aria-label="Tag"
               :ref="el => inputRefs[index] = el" />
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, toRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeTags, getTags, deleteTag } from '@/services/api/tags';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -69,19 +69,31 @@ const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
 const isSaving = ref(false);
-const isLoading = ref(false);
+const isLoading = ref(!!uuid.value);
 const inputRefs = ref([]);
 
+const emptyTag = () => ({ uuid: null, name: '' });
+
+// Always show at least one (empty) row
+const setTags = (tags) => {
+  form.value.tags = tags?.length ? tags : [emptyTag()];
+};
+
+// Stable keys per row object: index keys reuse the wrong input after a removal
+const rowKeys = new WeakMap();
+let nextRowKey = 1;
+const rowKey = (row) => {
+  const raw = toRaw(row);
+  if (!rowKeys.has(raw)) rowKeys.set(raw, nextRowKey++);
+  return rowKeys.get(raw);
+};
+
 const form = ref({
-  tags: [{
-    uuid: null,
-    name: ''
-  }]
+  tags: [emptyTag()]
 });
 
 onMounted(async () => {
   try {
-    isLoading.value = true;
     if (uuid.value) {
       await fetchTags();
     }
@@ -100,7 +112,7 @@ const handleSubmit = async () => {
     const validTags = form.value.tags.filter(tag => tag.name.trim() !== '');
     const response = await storeTags(uuid.value, validTags);
     if (response?.data) {
-      form.value.tags = response.data;
+      setTags(response.data);
     }
     toast.show('Tag/s erfolgreich gespeichert.', 'success');
   } 
@@ -118,23 +130,20 @@ const fetchTags = async () => {
   
   try {
     const response = await getTags(uuid.value);
-    if (response?.data) {
-      form.value.tags = response.data;
-    }
+    setTags(response?.data);
   } 
   catch (error) {
-    
+    console.error(error);
+    toast.show('Tags konnten nicht geladen werden.', 'error');
   }
 };
 
 const add = async () => {
-  form.value.tags.push({
-    uuid: null,
-    name: ''
-  });
+  form.value.tags.push(emptyTag());
   await nextTick();
+  // InputText's root element is the <input> itself
   const lastIndex = form.value.tags.length - 1;
-  inputRefs.value[lastIndex]?.$el?.querySelector('input')?.focus();
+  inputRefs.value[lastIndex]?.$el?.focus();
 }
 
 const remove = async (index) => {
@@ -146,11 +155,13 @@ const remove = async (index) => {
     catch (error) {
       console.error(error);
       toast.show('Fehler beim Löschen des Tags.', 'error');
+      return;
     }
   }
   form.value.tags.splice(index, 1);
+  inputRefs.value.length = form.value.tags.length;
   if (form.value.tags.length === 0) {
-    form.value.tags.push({ uuid: null, name: '' });
+    form.value.tags.push(emptyTag());
   }
 };
 

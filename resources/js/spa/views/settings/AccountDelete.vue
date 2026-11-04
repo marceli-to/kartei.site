@@ -4,8 +4,7 @@
       <!-- Content -->
       <div>
         <p>Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
-        <p>Ihre Abonnement läuft noch bis zum <strong>{{ new Date().toLocaleDateString() }}</strong></p>
-        <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
+        <p v-if="subscriptionEndsAt">Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong>.</p>
       </div>
 
       <!-- Actions -->
@@ -22,22 +21,21 @@
   </Slide>
 </template>
 <script setup>
-import { ref } from 'vue';
-import { deleteUser } from '@/services/api/user';
+import { ref, onMounted } from 'vue';
+import { deleteUser, getUserSubscription } from '@/services/api/user';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useToastStore } from '@/components/toast/stores/toast';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const dialogStore = useDialogStore();
 const toast = useToastStore();
 
-const error = ref(null);
 const isDeleting = ref(false);
+const subscriptionEndsAt = ref(null);
 
-const props = defineProps({
+defineProps({
   isActive: {
     type: Boolean,
     default: false
@@ -45,42 +43,44 @@ const props = defineProps({
 });
 
 const redirectAfterDeletion = '/auf-wiedersehen';
-const redirectDelay = 2000;
+
+onMounted(async () => {
+  try {
+    const subscription = await getUserSubscription();
+    const endsAt = subscription?.data?.ends_at;
+    if (endsAt) subscriptionEndsAt.value = new Date(endsAt).toLocaleDateString('de-CH');
+  }
+  catch (error) {
+    console.error(error);
+  }
+});
 
 async function handleDelete() {
   isDeleting.value = true;
-  
+
   try {
     await deleteUser();
-    dialogStore.hide();
-    toast.show('Ihr Konto wurde erfolgreich gelöscht. Sie werden in Kürze weitergeleitet.', 'success');
-    
-    setTimeout(() => {
-      window.location.href = redirectAfterDeletion;
-    }, redirectDelay);
-  } 
-  catch (err) {
-    console.log(err);
-    toast.show('Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.', 'error');
-  } 
-  finally {
-    isDeleting.value = false;
   }
+  catch (error) {
+    console.error(error);
+    toast.show('Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.', 'error');
+    isDeleting.value = false;
+    return;
+  }
+
+  // The session is gone: leave the SPA right away (isDeleting stays true until then)
+  window.location.href = redirectAfterDeletion;
 }
 
 function showDialog() {
-  
   dialogStore.show({
-    title: 'Möchten Sie ihr Konto wirklich löschen?',
-    component: AccountDeleteDialog,
+    title: 'Möchten Sie Ihr Konto wirklich löschen?',
+    message: 'Diese Aktion kann nicht rückgängig gemacht werden.',
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
     size: 'medium',
-    onConfirm: () => {
-      handleDelete();
-    },
-    onCancel: () => {
-    }
+    onConfirm: handleDelete,
+    onCancel: () => {}
   });
 }
 </script>

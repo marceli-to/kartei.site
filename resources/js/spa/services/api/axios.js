@@ -19,14 +19,8 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    // For request errors, we need to check if this request would have used loading
-    // Since the error happens before __usesGlobalLoading is set, we check the same condition
-    if (!(error.config?.meta && error.config.meta.skipLoading)) {
-      hide();
-    }
-    return Promise.reject(error);
-  }
+  // No show() has run for a request that failed before being sent, so nothing to hide
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(

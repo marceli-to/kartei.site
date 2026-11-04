@@ -20,7 +20,7 @@
         </router-link>
       </li>
       <li>
-        <a href="">Startseite</a>
+        <a href="/">Startseite</a>
       </li>
       <li>
         <a href="">Kontakt</a>
@@ -32,13 +32,14 @@
         <a href="">Datenschutz</a>
       </li>
       <li>
-        <a 
-          href="/logout" 
-          class="gap-x-12"
-          title="Abmelden">
-          <IconChevronRight variant="small" />
-          Abmelden
-        </a>
+        <!-- POST, so another site can't log the user out with a link -->
+        <form method="post" action="/logout">
+          <input type="hidden" name="_token" :value="csrfToken">
+          <button type="submit" class="gap-x-12">
+            <IconChevronRight variant="small" />
+            Abmelden
+          </button>
+        </form>
       </li>
     </ul>
   </nav>
@@ -47,8 +48,9 @@
 <script setup>
 import IconChevronRight from '@/components/icons/ChevronRight.vue';
 
-// Use props instead of the composable directly
-const props = defineProps({
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+defineProps({
   isOpen: {
     type: Boolean,
     default: false
@@ -59,7 +61,8 @@ const props = defineProps({
 defineEmits(['toggle']);
 </script>
 <style scoped>
-nav a {
+nav a,
+nav button {
   @apply font-muoto-medium leading-none w-full py-16 border-b border-b-black dark:border-b-white flex items-center hover:text-graphite dark:hover:text-black transition-all;
 }
 </style>

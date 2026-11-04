@@ -25,7 +25,7 @@
             id="byline"
             :error="errors.byline"
             @update:error="errors.byline = $event"
-            :placeholder="errors.byline ? errors.nbylineame : 'Adresszusatz'"
+            :placeholder="errors.byline ? errors.byline : 'Adresszusatz'"
             aria-label="Adresszusatz" />
         </InputGroup>
         <InputGroup>
@@ -115,7 +115,7 @@ const isLoading = ref(false);
 const isSaving = ref(false);
 
 const form = ref({
-  name: '',
+  company: '',
   byline: '',
   street: '',
   street_number: '',
@@ -138,7 +138,7 @@ onMounted(async () => {
   try {
     isLoading.value = true;
     const response = await getUserAddress();
-    form.value = response.data;
+    form.value = { ...form.value, ...response.data };
   } 
   catch (error) {
     console.error(error);

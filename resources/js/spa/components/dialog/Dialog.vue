@@ -37,7 +37,7 @@
             <div class="flex flex-col gap-y-24 mx-auto">
 
               <!-- Title -->
-              <h3 v-if="content.title" class="font-muoto-medium">
+              <h3 v-if="content.title" id="dialog-title" class="font-muoto-medium">
                 {{ content.title }}
               </h3>
 
@@ -45,7 +45,7 @@
               <div>
 
                 <!-- Simple message -->
-                <p v-if="content.message">
+                <p v-if="content.message" id="dialog-desc">
                   {{ content.message }}
                 </p>
                 <!-- ! Simple message -->
@@ -71,11 +71,13 @@
                     <ButtonPrimary 
                       :label="content.confirmLabel || 'Speichern'"
                       type="button"
+                      :disabled="isBusy"
                       @click="handleConfirm"
                       v-if="content.onConfirm" />
                     <ButtonPrimary 
                       :label="content.cancelLabel || 'Abbrechen'" 
                       type="button"
+                      :disabled="isBusy"
                       @click="handleCancel"
                       v-if="content.onCancel" />
                   </ButtonGroup>
@@ -101,7 +103,7 @@ import ButtonPrimary from '@/components/buttons/Primary.vue';
 import IconCross from '@/components/icons/Cross.vue';
 
 const dialogStore = useDialogStore();
-const { isVisible, content } = storeToRefs(dialogStore);
+const { isVisible, isBusy, content, version } = storeToRefs(dialogStore);
 const { hide } = dialogStore;
 
 onMounted(() => {
@@ -129,14 +131,26 @@ const getSizeClass = (size) => {
   }
 };
 
-const handleConfirm = () => {
-  if (content.value.onConfirm) {
-    content.value.onConfirm();
+// onConfirm may be async: keep the dialog open (and busy) until it settles.
+// Returning false keeps it open; a dialog opened by onConfirm itself is left alone.
+const handleConfirm = async () => {
+  if (isBusy.value) return;
+  const current = version.value;
+  let result;
+  isBusy.value = true;
+  try {
+    result = await content.value.onConfirm?.();
   }
-  hide();
+  finally {
+    if (version.value === current) {
+      isBusy.value = false;
+      if (result !== false) hide();
+    }
+  }
 };
 
 const handleCancel = () => {
+  if (isBusy.value) return;
   if (content.value.onCancel) {
     content.value.onCancel();
   }
@@ -144,6 +158,7 @@ const handleCancel = () => {
 };
 
 const handleBackdropClick = () => {
+  if (isBusy.value) return;
   if (content.value.onCancel) {
     handleCancel();
   } 

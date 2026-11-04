@@ -2,10 +2,10 @@
   <div class="bg-[var(--theme-color)] text-sm p-8 mt-32">
     <div>
       <p v-if="hasSubscription && maxUsersReached">
-        Die maximale Anzahl von Benutzern für dein Abonnement ist erreicht. Um weitere Benutzer hinzuzufügen, musst du dein Abonnement upgraden.
+        Die maximale Anzahl von Benutzern für Ihr Abonnement ist erreicht. Um weitere Benutzer hinzuzufügen, müssen Sie Ihr Abonnement upgraden.
       </p>
       <p v-else-if="!hasSubscription">
-        Du hast noch kein Abonnement. Um Benutzer hinzuzufügen, musst du ein Abonnement erstellen.
+        Sie haben noch kein Abonnement. Um Benutzer hinzuzufügen, müssen Sie ein Abonnement erstellen.
       </p>
       <router-link 
         :to="{ name: 'settings' }"

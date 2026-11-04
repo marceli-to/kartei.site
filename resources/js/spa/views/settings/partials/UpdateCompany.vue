@@ -148,17 +148,21 @@ const showDeleteDialog = () => {
     title: `Möchten Sie die Firma "${form.value.name}" wirklich löschen?`,
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
-    onConfirm: () => {
-      handleDelete();
-    },
-    onCancel: () => {
-    }
+    onConfirm: handleDelete,
+    onCancel: () => {}
   });
 };
 
-const handleDelete = () => {
-  deleteUserCompany(props.company.uuid);
-  emit('delete', props.company.uuid);
+// The parent removes the company from the list and confirms, so only emit once it's gone
+const handleDelete = async () => {
+  try {
+    await deleteUserCompany(props.company.uuid);
+    emit('delete', props.company.uuid);
+  }
+  catch (error) {
+    console.error(error);
+    toast.show('Fehler beim Löschen der Firma.', 'error');
+  }
 };
 
 const submit = async () => {

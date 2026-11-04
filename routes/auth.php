@@ -30,5 +30,5 @@ Route::middleware('auth')->group(function () {
     ->middleware('throttle:6,1')
     ->name('auth.verification.send');
   Route::put('password', [PasswordController::class, 'update'])->name('auth.password.update');
-  Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])->name('auth.logout');
+  Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('auth.logout');
 });

@@ -36,7 +36,7 @@
             id="acronym"
             :error="errors.acronym"
             @update:error="errors.acronym = $event"
-            :placeholder="errors.acronym ? errors.name : 'Kürzel'"
+            :placeholder="errors.acronym ? errors.acronym : 'Kürzel'"
             :classes="'uppercase placeholder:normal-case'"
             :maxLength="5"
             aria-label="acronym" />

@@ -12,7 +12,7 @@
       <ContentNavigation>
         <Sidebar
           v-model="filters"
-          :uuid="uuid"
+          :uuid="record.archive.uuid"
           :categories="categories"
           :registers="registers"
           :tags="tags"
@@ -84,14 +84,14 @@
                   <InputLabel label="Beschreibung" />
                   <InputGroup 
                     class="flex flex-col gap-y-8"
-                    v-if="settings.record_fields.length > 0">
+                    v-if="form.fields.length > 0">
                     <InputTextarea
-                      v-for="(value, index) in settings.record_fields"
-                      :key="index"
-                      v-model="form.fields[index].content"
+                      v-for="(field, index) in form.fields"
+                      :key="field.uuid"
+                      v-model="field.content"
                       :id="'field-' + index"
-                      :placeholder="value.placeholder"
-                      :aria-label="'field-' + index" />
+                      :placeholder="field.placeholder"
+                      :aria-label="field.placeholder" />
                   </InputGroup>
                 </div>
               </div>
@@ -152,17 +152,13 @@ const handleDelete = () => {
       try {
         await deleteRecord(record.value.uuid)
         toast.show('Karte erfolgreich gelöscht', 'success')
-        dialogStore.hide()
         router.push({ name: 'archiveRecords', params: { uuid: record.value.archive.uuid } })
       } catch (error) {
         console.error('Error deleting record:', error)
         toast.show('Fehler beim Löschen der Karte', 'error')
-        dialogStore.hide()
       }
     },
-    onCancel: () => {
-      dialogStore.hide()
-    }
+    onCancel: () => {}
   })
 }
 
@@ -191,7 +187,7 @@ const {
 
 const { setTitle } = usePageTitle()
 
-const isLoading = ref(false)
+const isLoading = ref(true)
 const isSaving = ref(false)
 
 const archive = ref(null)
@@ -231,6 +227,7 @@ const handleSubmit = async () => {
   } 
   catch (error) {
     console.error(error)
+    toast.show(error.response?.data?.message || 'Fehler beim Speichern der Karte.', 'error')
   } 
   finally {
     isSaving.value = false
@@ -243,7 +240,6 @@ const handleCancel = () => {
 
 onMounted(async () => {
   try {
-    isLoading.value = true;
     const loaded = await loadRecordAndArchive(uuid.value);
     if (loaded) populateForm();
   } 
@@ -294,23 +290,15 @@ const populateForm = () => {
   };
 }
 
+// One field per setting, in settings order. Empty fields are not stored, so the
+// record's own list can have gaps or a different order; match by uuid instead.
 const mergeSettingFields = (existingFields, settingFields) => {
-  const fieldMap = new Map();
+  const byUuid = new Map(existingFields.map(field => [field.uuid, field]));
 
-  existingFields.forEach(field => {
-    fieldMap.set(field.uuid, { ...field });
-  });
-
-  settingFields.forEach(setting => {
-    if (!fieldMap.has(setting.uuid)) {
-      fieldMap.set(setting.uuid, {
-        uuid: setting.uuid,
-        placeholder: setting.placeholder,
-        content: null
-      });
-    }
-  });
-
-  return Array.from(fieldMap.values());
+  return settingFields.map(setting => ({
+    uuid: setting.uuid,
+    placeholder: setting.placeholder,
+    content: byUuid.get(setting.uuid)?.content ?? null
+  }));
 }
 </script>

@@ -41,7 +41,7 @@
         <div>
           <draggable 
             v-model="form.record_fields" 
-            item-key="uuid" 
+            :item-key="rowKey" 
             class="flex flex-col gap-y-8" 
             handle=".drag-handle"
             :animation="200"
@@ -82,7 +82,7 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, toRaw } from 'vue';
 import draggable from 'vuedraggable';
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/components/toast/stores/toast';
@@ -107,7 +107,7 @@ const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
 const isSaving = ref(false);
-const isLoading = ref(false);
+const isLoading = ref(!!uuid.value);
 
 const inputRefs = ref([]);
 
@@ -123,33 +123,42 @@ const props = defineProps({
   }
 });
 
-const emptyField = {
+// A fresh object each time: a shared one would keep whatever was typed into it
+const emptyField = (order = 0) => ({
   uuid: '',
   placeholder: '',
-  order: 0
+  order
+});
+
+// Stable drag keys per row object; new fields have no uuid yet
+const rowKeys = new WeakMap();
+let nextRowKey = 1;
+const rowKey = (row) => {
+  const raw = toRaw(row);
+  if (!rowKeys.has(raw)) rowKeys.set(raw, nextRowKey++);
+  return rowKeys.get(raw);
 };
 
 const form = ref({
   has_images: true,
-  record_fields: [emptyField]
+  record_fields: [emptyField()]
 });
 
 onMounted(async () => {
   if (uuid.value) {
-    isLoading.value = true;
     try {
       const response = await getArchiveSettings(uuid.value);
       form.value.has_images = response.has_images;
 
       if (!response.record_fields || response.record_fields.length === 0) {
-        form.value.record_fields = [emptyField];
+        form.value.record_fields = [emptyField()];
       }
       else {
         form.value.record_fields = response.record_fields;
       }
     } 
     catch (error) {
-      console.log(error);
+      console.error(error);
     }
     finally {
       isLoading.value = false;
@@ -161,7 +170,6 @@ onMounted(async () => {
 const handleSubmit = async () => {
   isSaving.value = true;
   try {
-    isSaving.value = true;
     const validFields = form.value.record_fields.filter(field => field.placeholder.trim() !== '');
     const payload = {
       has_images: form.value.has_images,
@@ -170,11 +178,11 @@ const handleSubmit = async () => {
 
     const response = await storeArchiveSettings(uuid.value, payload);
 
-    if (response?.record_fields.length > 0) {
+    if (response?.record_fields?.length > 0) {
       form.value.record_fields = response.record_fields;
     }
     else {
-      form.value.record_fields = [emptyField];
+      form.value.record_fields = [emptyField()];
     }
 
     toast.show('Kartenvorlage erfolgreich gespeichert.', 'success');
@@ -188,14 +196,11 @@ const handleSubmit = async () => {
 };
 
 const add = async () => {
-  form.value.record_fields.push({
-    uuid: '',
-    placeholder: '',
-    order: form.value.record_fields.length
-  });
+  form.value.record_fields.push(emptyField(form.value.record_fields.length));
   await nextTick();
+  // InputText's root element is the <input> itself
   const lastIndex = form.value.record_fields.length - 1;
-  inputRefs.value[lastIndex]?.$el?.querySelector('input')?.focus();
+  inputRefs.value[lastIndex]?.$el?.focus();
 };
 
 const remove = async (index) => {
@@ -205,12 +210,14 @@ const remove = async (index) => {
       await deleteArchiveSettingsField(fieldUuid, uuid.value);
     } 
     catch (error) {
+      console.error(error);
       toast.show('Fehler beim Löschen des Textfelds.', 'error');
+      return;
     }
   }
   form.value.record_fields.splice(index, 1);
   if (form.value.record_fields.length === 0) {
-    form.value.record_fields.push(emptyField);
+    form.value.record_fields.push(emptyField());
   }
 };
 

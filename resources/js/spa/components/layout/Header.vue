@@ -33,10 +33,13 @@
               </template>
             </button>
 
-            <a href="" class="mt-20 group">
+            <router-link
+              :to="{ name: 'settings', query: { section: 'profile' } }"
+              class="mt-20 group"
+              aria-label="Profil">
               <IconProfile classes="group-hover:hidden" />
               <IconProfile variant="active" classes="hidden group-hover:block" />
-            </a>
+            </router-link>
             <button 
               class="w-28 h-24 mt-33 flex items-center justify-center"
               @click="toggle">

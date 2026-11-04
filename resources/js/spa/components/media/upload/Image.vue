@@ -11,7 +11,7 @@
       }]"
       role="button"
       tabindex="0"
-      aria-label="Upload files"
+      aria-label="Bilder hochladen"
       @click="triggerFileInput"
       @keydown.space.prevent="triggerFileInput"
       @keydown.enter.prevent="triggerFileInput"
@@ -46,7 +46,7 @@
         </template>
         <template v-else>
           <div class="text-sm mt-8">
-            Click or drag & drop to upload an image
+            Klicken oder Bild hierher ziehen
           </div>
         </template>
       </div>
