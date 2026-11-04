@@ -11,6 +11,8 @@ This file contains project-specific configuration for Claude Code.
 ```bash
 npm run dev          # Vite dev server
 npm run build        # Build assets (public/build is committed)
+npm run lint         # ESLint (resources/js)
+npm run format       # Prettier --write (resources/js); format:check for CI
 php artisan test     # Pest, in-memory SQLite (phpunit.xml), never the dev DB
 ```
 

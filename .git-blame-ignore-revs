@@ -1,0 +1,3 @@
+# One-off formatting run (Prettier + ESLint --fix); skipped by git blame
+# (GitHub reads this file; locally: git config blame.ignoreRevsFile .git-blame-ignore-revs)
+36880c5c62d6eebbb523253f7253ed09a2114872
