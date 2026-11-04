@@ -43,6 +43,25 @@ class UserController extends Controller
     return response()->noContent();
   }
 
+  /**
+   * Archives that are deleted together with the account (shown before deleting it)
+   */
+  public function ownedArchives(Request $request): JsonResponse
+  {
+    $archives = (new DeleteUserAction())->ownedArchives($request->user())
+      ->loadCount('records')
+      ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)
+      ->values();
+
+    return response()->json([
+      'data' => $archives->map(fn ($archive) => [
+        'uuid' => $archive->uuid,
+        'name' => $archive->name,
+        'records_count' => $archive->records_count,
+      ]),
+    ]);
+  }
+
   public function destroy(Request $request): Response
   {
     (new DeleteUserAction())->execute(auth()->user());

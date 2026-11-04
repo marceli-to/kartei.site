@@ -5,6 +5,12 @@ export const getUserPermissions = async () => {
   return response.data;
 }
 
+// Archives that are deleted together with the account
+export const getOwnedArchives = async () => {
+  const response = await api.get('/user/owned-archives');
+  return response.data;
+};
+
 export const getUserProfile = async () => {
   const response = await api.get('/user/profile');
   return response.data;

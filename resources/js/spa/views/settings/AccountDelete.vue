@@ -3,7 +3,7 @@
     <div class="w-full h-full flex flex-col justify-between">
       <!-- Content -->
       <div>
-        <p>Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
+        <p>Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt, auch Ihre Karteien mit allen Karten und Bildern.</p>
         <p v-if="subscriptionEndsAt">Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong>.</p>
       </div>
 
@@ -22,11 +22,12 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { deleteUser, getUserSubscription } from '@/services/api/user';
+import { deleteUser, getUserSubscription, getOwnedArchives } from '@/services/api/user';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useToastStore } from '@/components/toast/stores/toast';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
+import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
 import Slide from '@/components/slider/Slide.vue';
 
 const dialogStore = useDialogStore();
@@ -72,10 +73,22 @@ async function handleDelete() {
   window.location.href = redirectAfterDeletion;
 }
 
-function showDialog() {
+// Loaded when the dialog opens, so the list is current (archives may have changed meanwhile)
+async function showDialog() {
+  let archives = [];
+  try {
+    archives = (await getOwnedArchives()).data;
+  }
+  catch (error) {
+    console.error(error);
+    toast.show('Die Karteien konnten nicht geladen werden.', 'error');
+    return;
+  }
+
   dialogStore.show({
     title: 'Möchten Sie Ihr Konto wirklich löschen?',
-    message: 'Diese Aktion kann nicht rückgängig gemacht werden.',
+    component: AccountDeleteDialog,
+    props: { archives },
     confirmLabel: 'Löschen',
     cancelLabel: 'Abbrechen',
     size: 'medium',

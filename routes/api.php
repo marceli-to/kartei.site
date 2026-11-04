@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('/user/profile', [UserController::class, 'find']);
   Route::put('/user/profile', [UserController::class, 'update']);
   Route::post('/user/password', [UserController::class, 'password']);
+  Route::get('/user/owned-archives', [UserController::class, 'ownedArchives']);
   Route::delete('/user', [UserController::class, 'destroy']);
 
   // User addresses
