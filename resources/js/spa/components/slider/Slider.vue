@@ -58,11 +58,14 @@
           class="ml-8 flex h-20 items-center justify-between font-muoto-medium leading-none"
           :class="{ 'opacity-20': index !== activeIndex }">
           <span>{{ item.name }}</span>
+          <!-- Only the active slide's button is a Tab stop; the ones on the following slides are a mouse shortcut -->
           <button
-            v-if="index >= activeIndex && index < visibleSlides.length - 1"
+            v-if="canGoNext && index >= activeIndex && index < visibleSlides.length - 1"
             type="button"
             title="Nächster Abschnitt"
             aria-label="Nächster Abschnitt"
+            :tabindex="index === activeIndex ? undefined : -1"
+            :aria-hidden="index === activeIndex ? undefined : 'true'"
             class="mr-16"
             @click="next">
             <Icon
@@ -141,6 +144,15 @@ const firstSelectable = () => visibleSlides.value.find((slide) => !slide.disable
 
 const activeId = ref(isSelectable(route.query.section) ? route.query.section : firstSelectable());
 const activeIndex = computed(() => visibleSlides.value.findIndex((slide) => slide.id === activeId.value));
+const canGoNext = computed(() => isSelectable(visibleSlides.value[activeIndex.value + 1]?.id));
+
+// A link to a hidden or disabled section shows another slide; keep the URL in line
+function syncQuery() {
+  if (route.query.section && route.query.section !== activeId.value) {
+    router.replace({ query: { ...route.query, section: activeId.value ?? undefined } });
+  }
+}
+syncQuery();
 
 function go(id) {
   if (!isSelectable(id) || id === activeId.value) return;
@@ -160,9 +172,9 @@ const prev = () => step(-1);
 watch(
   () => route.query.section,
   (section) => {
-    if (section && section !== activeId.value && isSelectable(section)) {
-      activeId.value = section;
-    }
+    if (!section || section === activeId.value) return;
+    if (isSelectable(section)) activeId.value = section;
+    else syncQuery();
   },
 );
 
@@ -170,6 +182,7 @@ watch(
 watch(visibleSlides, () => {
   if (!isSelectable(activeId.value)) {
     activeId.value = firstSelectable();
+    syncQuery();
   }
 });
 

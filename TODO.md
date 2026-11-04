@@ -52,6 +52,7 @@
 - [x] Keyboard focus visible on `AppButton` and the upload zone (`focus-visible` outline instead of `!outline-none`)
 - [x] Bug found on the way: an address without house number failed with a 500 (`addresses.street_number` was NOT NULL); migration makes it nullable, test added
 - [x] `npm audit fix`: 22 -> 8 advisories (`axios`, `vue`, `vite`, `postcss`, `nanoid`, `follow-redirects`, `form-data`, … updated); the 8 left are `minimatch` inside ESLint (dev only, npm's "fix" would downgrade ESLint to 4.0), left as is. Build, lint, tests and a browser smoke test (archive, structure, card template, record with image, edit, delete, company, subscription) all fine
+- [x] Slider checked in the browser: Tab focus stays in the active slide (`inert`), disabled entries on a new archive, enabled right after saving it. Fixed: the "Nächster Abschnitt" arrows of the following slides were extra Tab stops (now mouse-only, `tabindex=-1`), arrows hidden when the next slide is disabled, a link to a hidden/disabled/unknown section now corrects `?section=`
 - [x] Removed the unused `App\Http\Requests\User\StoreRequest` (users are created via `ArchiveUserController`)
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
@@ -61,7 +62,6 @@
 
 ## Next
 
-- [ ] Slider: check Tab focus stays in the active slide and disabled entries on a new archive (deep links and "Admin creating an archive lands on its settings" verified 2026-11-04)
 - [ ] Slider layout uses hard-coded offsets that offset each other (`mt-48`/`mt-58`/`-top-60`/`pt-38`, `Slide` `pull` = `-top-24`, `-top-4` in the delete views); clean up together
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 - [ ] Subscription form shows no field errors (no `useFormErrors`): saving without a plan (new account) only toasts "Fehler beim Ändern des Abonnements."
