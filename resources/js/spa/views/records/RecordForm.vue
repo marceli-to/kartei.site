@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-grow w-full relative">
-    <Actions>
+    <Actions :links="actionLinks">
       <router-link 
-        :to="{ name: 'archiveRecords', params: { uuid: uuid } }"
-        v-if="uuid"
+        :to="{ name: 'archiveRecords', params: { uuid: archiveUuid } }"
+        v-if="archiveUuid"
         aria-label="Zurück zur Kartei">
         <IconChevronLeft variant="small-bold" />
       </router-link>
@@ -11,8 +11,9 @@
     <div class="flex mt-106 min-h-full w-full">
       <ContentNavigation>
         <Sidebar
+          v-if="archiveUuid"
           v-model="filters"
-          :uuid="uuid"
+          :uuid="archiveUuid"
           :categories="categories"
           :registers="registers"
           :tags="tags"
@@ -87,14 +88,14 @@
                   <InputLabel label="Beschreibung" />
                   <InputGroup 
                     class="flex flex-col gap-y-8"
-                    v-if="settings.record_fields.length > 0">
+                    v-if="form.fields.length > 0">
                     <InputTextarea
-                      v-for="(value, index) in settings.record_fields"
-                      :key="index"
-                      v-model="form.fields[index].content"
+                      v-for="(field, index) in form.fields"
+                      :key="field.uuid"
+                      v-model="field.content"
                       :id="'field-' + index"
-                      :placeholder="value.placeholder"
-                      :aria-label="'field-' + index" />
+                      :placeholder="field.placeholder"
+                      :aria-label="field.placeholder" />
                   </InputGroup>
                 </div>
               </div>
@@ -111,13 +112,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+// One view for creating and editing a record:
+// - archiveRecordCreate: /archiv/kartei/karte/erstellen/:uuid (archive uuid)
+// - archiveRecordUpdate: /archiv/kartei/karte/bearbeiten/:uuid (record uuid)
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
-import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
-import { getArchive, getArchiveMeta } from '@/services/api/archive'
-import { createRecord } from '@/services/api/record'
-import { useFormErrors } from '@/composables/useFormErrors';
+import { useArchiveMeta } from '@/views/records/composables/useArchiveMeta'
+import { useFormErrors } from '@/composables/useFormErrors'
+import { useDialogStore } from '@/stores/dialog'
+import { useUserStore } from '@/stores/user'
+import { getArchive } from '@/services/api/archive'
+import { getRecord, createRecord, updateRecord, deleteRecord } from '@/services/api/record'
+import { notifyError } from '@/services/api/error'
 
 import ContentNavigation from '@/components/layout/ContentNavigation.vue'
 import ContentMain from '@/components/layout/ContentMain.vue'
@@ -132,35 +139,32 @@ import InputTextarea from '@/components/forms/Textarea.vue'
 import ImageUpload from '@/components/media/upload/Image.vue'
 import ImageCard from '@/components/media/Card.vue'
 import IconImage from '@/components/icons/Image.vue'
+import IconCross from '@/components/icons/Cross.vue'
 import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
-import { notifyError } from '@/services/api/error'
 
 const router = useRouter()
 const route = useRoute()
-const uuid = ref(route.params.uuid || null)
+const dialogStore = useDialogStore()
+const userStore = useUserStore()
+const { setTitle } = usePageTitle()
 
+const isEdit = route.name === 'archiveRecordUpdate'
+const record = ref(null)
+const archiveUuid = ref(isEdit ? null : route.params.uuid)
 
 const {
   categories,
   categoriesRegisters,
   registers,
   tags,
-  normalizeCategoryRegisterData,
-  normalizeCategoryData,
-  normalizeTagsData
-} = useNormalizeData();
-
-const { setTitle } = usePageTitle()
+  settings,
+  loadArchiveMeta
+} = useArchiveMeta()
 
 const isLoading = ref(true)
 const isSaving = ref(false)
 
-const archive = ref(null)
-const settings = ref({
-  has_images: null,
-  record_fields: []
-})
-
+// The sidebar is shown for orientation only (disabled)
 const filters = ref({
   searchQuery: '',
   sortOrder: 'name',
@@ -177,11 +181,31 @@ const form = ref({
 
 const { errors, setErrors, clearErrors } = useFormErrors(['category'])
 
+const backToList = () => router.push({ name: 'archiveRecords', params: { uuid: archiveUuid.value } })
+
+const canDelete = computed(() => isEdit && !!record.value && userStore.canArchive(archiveUuid.value, 'deleteRecord'))
+
+const actionLinks = computed(() => canDelete.value ? [
+  {
+    type: 'button',
+    label: 'Löschen',
+    icon: IconCross,
+    onClick: () => dialogStore.confirmDelete({
+      title: 'Karte löschen',
+      message: 'Möchten Sie diese Karte wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
+      action: () => deleteRecord(record.value.uuid),
+      then: backToList,
+      success: 'Karte erfolgreich gelöscht',
+      failure: 'Fehler beim Löschen der Karte',
+    }),
+  },
+] : [])
+
 const handleSubmit = async () => {
   isSaving.value = true
   clearErrors()
   const recordData = {
-    archive_id: uuid.value,
+    archive_id: archiveUuid.value,
     tags: form.value.tags,
     category: form.value.category,
     fields: form.value.fields,
@@ -189,58 +213,76 @@ const handleSubmit = async () => {
   }
 
   try {
-    await createRecord(recordData)
-    router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
+    if (isEdit) {
+      await updateRecord(record.value.uuid, recordData)
+    }
+    else {
+      await createRecord(recordData)
+    }
+    backToList()
   }
   catch (error) {
     setErrors(error)
-    notifyError(error, error.response?.data?.message || 'Fehler beim Speichern der Karte.');
+    notifyError(error, error.response?.data?.message || 'Fehler beim Speichern der Karte.')
   }
   finally {
     isSaving.value = false
   }
 }
 
-const handleCancel = () => {
-  router.push({ name: 'archiveRecords', params: { uuid: uuid.value } })
-}
+const handleCancel = backToList
 
 onMounted(async () => {
   try {
-    await loadData();
-  } 
+    if (isEdit) {
+      await loadRecord(route.params.uuid)
+    }
+    else {
+      const [archive] = await Promise.all([getArchive(archiveUuid.value), loadArchiveMeta(archiveUuid.value)])
+      setTitle(archive.name)
+      form.value.fields = mergeSettingFields([], settings.value.record_fields)
+    }
+  }
   catch (error) {
-    notifyError(error, 'Die Kartei konnte nicht geladen werden.')
-  } 
+    notifyError(error, isEdit ? 'Die Karte konnte nicht geladen werden.' : 'Die Kartei konnte nicht geladen werden.')
+  }
   finally {
     isLoading.value = false
   }
-});
+})
 
-const loadData = async () => {
-  const [archiveData, archiveMetaData] = await Promise.all([
-    getArchive(uuid.value),
-    getArchiveMeta(uuid.value),
-  ])
+const loadRecord = async (recordUuid) => {
+  const recordData = await getRecord(recordUuid)
 
-  normalizeCategoryRegisterData({
-    categories: archiveMetaData.categories,
-    registers: archiveMetaData.registers
-  });
-  normalizeTagsData(archiveMetaData.tags);
-  normalizeCategoryData(archiveMetaData.categories_registers);
+  // The route only knows the record uuid; check the archive ability now
+  if (!userStore.canArchive(recordData.archive.uuid, 'updateRecord')) {
+    router.replace({ name: '403' })
+    return
+  }
 
-  archive.value = archiveData;
-  setTitle(archive.value.name);
+  await loadArchiveMeta(recordData.archive.uuid)
+  record.value = recordData
+  archiveUuid.value = recordData.archive.uuid
+  setTitle(recordData.archive.name)
 
-  // Pre-populate field structure based on settings
-  settings.value = archiveMetaData.settings;
-  settings.value.record_fields.forEach(field => {
-    form.value.fields.push({
-      uuid: field.uuid,
-      placeholder: field.placeholder,
-      content: null
-    })
-  })
+  const { category, tags, media, fields = [] } = recordData
+  form.value = {
+    category: category?.uuid || null,
+    tags,
+    media,
+    fields: mergeSettingFields(fields, settings.value.record_fields)
+  }
+}
+
+// One field per setting, in settings order. Empty fields are not stored, so the
+// record's own list can have gaps or a different order; match by uuid instead.
+const mergeSettingFields = (existingFields, settingFields = []) => {
+  const byUuid = new Map(existingFields.map(field => [field.uuid, field]))
+
+  return settingFields.map(setting => ({
+    uuid: setting.uuid,
+    placeholder: setting.placeholder,
+    content: byUuid.get(setting.uuid)?.content ?? null
+  }))
 }
 </script>

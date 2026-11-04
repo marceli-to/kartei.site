@@ -57,8 +57,8 @@ import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRoute } from 'vue-router'
 import { usePageTitle } from '@/composables/usePageTitle'
-import { useNormalizeData } from '@/views/records/composables/useNormalizeData'
-import { getArchive, getArchiveMeta } from '@/services/api/archive'
+import { useArchiveMeta } from '@/views/records/composables/useArchiveMeta'
+import { getArchive } from '@/services/api/archive'
 import { getRecords } from '@/services/api/record'
 import { notifyError } from '@/services/api/error'
 
@@ -86,10 +86,8 @@ const {
   categoriesRegisters,
   registers,
   tags,
-  normalizeCategoryRegisterData,
-  normalizeCategoryData,
-  normalizeTagsData
-} = useNormalizeData();
+  loadArchiveMeta
+} = useArchiveMeta();
 
 const { setTitle } = usePageTitle()
 
@@ -313,23 +311,14 @@ onMounted(async () => {
 
 const loadData = async () => {
   lastParamsKey = JSON.stringify(listParams())
-  const [archiveData, archiveMetaData, recordsData] = await Promise.all([
-      getArchive(uuid.value),
-      getArchiveMeta(uuid.value),
-      fetchPage(1)
-    ]);
+  const [archiveData, , recordsData] = await Promise.all([
+    getArchive(uuid.value),
+    loadArchiveMeta(uuid.value),
+    fetchPage(1)
+  ])
 
-    normalizeCategoryRegisterData({
-      categories: archiveMetaData.categories,
-      registers: archiveMetaData.registers
-    });
-    normalizeTagsData(archiveMetaData.tags);
-    normalizeCategoryData(archiveMetaData.categories_registers);
-
-    archive.value = archiveData;
-    applyPage(recordsData, false);
-
-    // Set title
-    setTitle(archive.value.name)
+  archive.value = archiveData
+  applyPage(recordsData, false)
+  setTitle(archive.value.name)
 }
 </script>

@@ -28,11 +28,11 @@ const routes = [
   {
     path: '/archiv/kartei/karte/erstellen/:uuid',
     name: 'archiveRecordCreate',
-    component: () => import('@/views/records/Create.vue'),
+    component: () => import('@/views/records/RecordForm.vue'),
     meta: { archiveAbility: 'createRecord' },
   },
   // :uuid is the record's uuid here; the view checks the ability once the record is loaded
-  { path: '/archiv/kartei/karte/bearbeiten/:uuid', name: 'archiveRecordUpdate', component: () => import('@/views/records/Update.vue') },
+  { path: '/archiv/kartei/karte/bearbeiten/:uuid', name: 'archiveRecordUpdate', component: () => import('@/views/records/RecordForm.vue') },
 
   // Error pages
   ...[401, 403, 404].map(status => ({
