@@ -77,7 +77,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { countries } from '@/data/countries';
+import { countries } from '@/config/countries';
 import { updateUserCompany, deleteUserCompany } from '@/services/api/user';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useDialogStore } from '@/components/dialog/stores/dialog';

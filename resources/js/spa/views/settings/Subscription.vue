@@ -27,7 +27,7 @@
           <InputRadioGroup
             v-model="form.payment_interval"
             name="payment_interval"
-            :options="payment_intervals"
+            :options="paymentIntervals"
             variant="reduced" />
         </InputGroup>
         <InputGroup>
@@ -61,7 +61,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
 import { getUserSubscription, updateUserSubscription } from '@/services/api/user';
-import { payment_intervals } from '@/data/payment_intervals';
+import { paymentIntervals } from '@/config/paymentIntervals';
 import { useToastStore } from '@/components/toast/stores/toast';
 import { useInfoBox } from '@/components/infobox/composables/useInfoBox';
 import InputGroup from '@/components/forms/Group.vue';

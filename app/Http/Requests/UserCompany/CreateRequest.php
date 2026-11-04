@@ -16,7 +16,7 @@ class CreateRequest extends FormRequest
       'street' => ['required', 'string'],
       'zip' => ['required', 'string'],
       'city' => ['required', 'string'],
-      'country' => ['required', 'string'],
+      'country' => ['required', 'string', 'max:255'],
     ];
   }
 }

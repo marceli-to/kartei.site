@@ -42,18 +42,6 @@ const routes = [
   { path: '/:catchAll(.*)', redirect: '/error/404' },
 ];
 
-// UI demo pages, only in development builds
-if (import.meta.env.DEV) {
-  routes.push(
-    { path: '/archiv/benutzer', name: 'users', component: () => import('@/views/Users.vue') },
-    { path: '/archiv/icons', name: 'icons', component: () => import('@/views/ui/Icons.vue') },
-    { path: '/archiv/fonts', name: 'fonts', component: () => import('@/views/ui/Fonts.vue') },
-    { path: '/archiv/elements', name: 'elements', component: () => import('@/views/ui/Elements.vue') },
-    { path: '/archiv/colors', name: 'colors', component: () => import('@/views/ui/Colors.vue') },
-    { path: '/archiv/layouts', name: 'layouts', component: () => import('@/views/ui/Layouts.vue') },
-  );
-}
-
 const router = createRouter({
   // No base: import.meta.env.BASE_URL is the asset path (/build/) with laravel-vite-plugin
   history: createWebHistory(),

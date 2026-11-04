@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Requests\UserSubscription;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateRequest extends FormRequest
   {
     return [
       'subscription' => ['required', 'exists:subscription_plans,uuid'],
-      'payment_interval' => ['required'],
+      'payment_interval' => ['required', Rule::in(['monthly', 'yearly'])],
       'payment_method' => ['required'],
     ];
   }

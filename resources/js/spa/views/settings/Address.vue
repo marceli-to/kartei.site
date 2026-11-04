@@ -92,7 +92,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getUserAddress, updateUserAddress } from '@/services/api/user';
-import { countries } from '@/data/countries';
+import { countries } from '@/config/countries';
 import { useToastStore } from '@/components/toast/stores/toast';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';

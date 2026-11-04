@@ -145,3 +145,12 @@ it('accepts image uploads up to the configured limit', function () {
     'files' => [\Illuminate\Http\UploadedFile::fake()->image('too-big.jpg', 800, 600)->size(($max + 1) * 1024)],
   ])->assertUnprocessable()->assertJsonValidationErrors('files.0');
 });
+
+it('rejects an unknown payment interval with a validation error', function () {
+  Sanctum::actingAs(bugfixUser());
+  $this->putJson('/api/user/subscription', [
+    'subscription' => $this->plan->uuid,
+    'payment_interval' => 'weekly',
+    'payment_method' => 'card',
+  ])->assertUnprocessable()->assertJsonValidationErrors('payment_interval');
+});

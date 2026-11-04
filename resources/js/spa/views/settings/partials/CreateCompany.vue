@@ -71,7 +71,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { countries } from '@/data/countries';
+import { countries } from '@/config/countries';
 import { createUserCompany } from '@/services/api/user';
 import { useToastStore } from '@/components/toast/stores/toast';
 import InputLabel from '@/components/forms/Label.vue';
