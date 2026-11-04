@@ -9,6 +9,9 @@ return [
   |
   | max_upload_mb: maximum size per image file. PHP's upload_max_filesize
   | and post_max_size must be at least as large (see public/.user.ini).
+  | post_max_size covers several images uploaded in one request. The
+  | Hostpoint Control Panel rewrites public/.user.ini without comments,
+  | which is why the notes live here.
   | Keep in sync with MAX_UPLOAD_MB in resources/js/spa/config/upload.js.
   |
   | max_dimension: images wider or taller than this (px) are rejected,
