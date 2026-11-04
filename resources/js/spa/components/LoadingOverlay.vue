@@ -1,42 +1,90 @@
 <template>
   <div
-    v-if="isActive"
-    class="fixed left-4 top-4 z-[9999] h-16 w-16 select-none">
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      class="h-16 w-16 text-gray-800">
-      <path
-        d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
-        class="spinner" />
-    </svg>
+    class="pointer-events-none fixed inset-x-0 top-0 z-[9999] h-2 select-none transition-opacity duration-200 motion-reduce:transition-none"
+    :class="isVisible ? 'opacity-100' : 'opacity-0'"
+    role="progressbar"
+    aria-label="Wird geladen"
+    :aria-hidden="!isVisible">
+    <div
+      class="theme-color h-full w-full origin-left transition-transform duration-200 ease-out motion-reduce:transition-none"
+      :style="{ transform: `scaleX(${progress})` }" />
   </div>
 </template>
 
 <script setup>
+import { ref, watch, onBeforeUnmount } from 'vue';
 import { useGlobalLoading } from '@/composables/useGlobalLoading';
+
 const { isActive } = useGlobalLoading();
-</script>
 
-<style scoped>
-.spinner {
-  transform-origin: center;
-  animation: spin 0.75s linear infinite;
+// Fast requests finish before the bar shows, so it doesn't flicker
+const SHOW_DELAY = 150;
+// How long the full bar stays before it fades out
+const FINISH_DELAY = 200;
+// The bar creeps towards this while loading; it only reaches the end when done
+const MAX_PROGRESS = 0.9;
+
+const isVisible = ref(false);
+const progress = ref(0);
+
+let showTimer = null;
+let trickleTimer = null;
+let finishTimer = null;
+
+function clearTimers() {
+  clearTimeout(showTimer);
+  clearInterval(trickleTimer);
+  clearTimeout(finishTimer);
+  showTimer = trickleTimer = finishTimer = null;
 }
 
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
+function start() {
+  clearTimeout(finishTimer);
+  finishTimer = null;
+
+  // Still on screen from the last load: keep going from where it is
+  if (isVisible.value) {
+    progress.value = Math.min(progress.value, MAX_PROGRESS);
+    trickle();
+    return;
   }
+
+  showTimer = setTimeout(() => {
+    showTimer = null;
+    isVisible.value = true;
+    progress.value = 0.1;
+    trickle();
+  }, SHOW_DELAY);
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s ease;
+// Slower the closer it gets, so a long load never looks finished
+function trickle() {
+  clearInterval(trickleTimer);
+  trickleTimer = setInterval(() => {
+    progress.value += (MAX_PROGRESS - progress.value) * 0.15;
+  }, 300);
 }
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+
+function finish() {
+  clearTimeout(showTimer);
+  showTimer = null;
+  clearInterval(trickleTimer);
+  trickleTimer = null;
+
+  if (!isVisible.value) return;
+
+  progress.value = 1;
+  finishTimer = setTimeout(() => {
+    finishTimer = null;
+    isVisible.value = false;
+    // Reset once faded out, so the next load starts from the left
+    setTimeout(() => {
+      if (!isVisible.value) progress.value = 0;
+    }, 200);
+  }, FINISH_DELAY);
 }
-</style>
+
+watch(isActive, (active) => (active ? start() : finish()), { immediate: true });
+
+onBeforeUnmount(clearTimers);
+</script>
