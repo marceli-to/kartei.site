@@ -22,6 +22,7 @@
 - [x] Demo data: `php artisan db:seed --class=DemoArchiveSeeder` (10 archives with categories, registers, records, tags, images; re-runnable)
 - [x] Payment interval validated (`monthly`/`yearly`, was a DB error); option lists moved from `data/` to `config/` (`countries.js`, `paymentIntervals.js`)
 - [x] Dev-only UI demo pages (`views/ui`) and the `Users.vue` stub removed
+- [x] Settings slider rewritten as one component (`components/slider/Slider.vue`, header `slider/Header.vue`): slides keyed by id, active slide in `?section=<id>`, `inert` on inactive slides, disabled menu buttons; pages keyed by `route.path` (query changes no longer remount); permissions refetched after creating an archive
 - [x] Test suite green (83 tests, in-memory SQLite)
 
 ## Servers (before going live)
@@ -30,6 +31,8 @@
 
 ## Next
 
+- [ ] Slider: check in the browser (deep link `?section=`, disabled entries on a new archive, Tab focus stays in the active slide, Admin creating an archive lands on its settings, not 403)
+- [ ] Slider layout uses hard-coded offsets that offset each other (`mt-48`/`mt-58`/`-top-60`/`pt-38`, `Slide` `pull` = `-top-24`, `-top-4` in the delete views); clean up together
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 - [ ] Merge duplicate Vue components: record Create/Update, Address/BillingAddress, the two delete views
 - [ ] `App\Http\Requests\User\StoreRequest` is imported in `UserController` but unused
