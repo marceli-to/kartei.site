@@ -1,72 +1,82 @@
 <template>
   <Slide :pull="true">
-    
-    <form 
-      @submit.prevent="handleSubmit"
-      class="w-full h-full flex flex-col justify-between"
-      v-if="!isLoading">
-
+    <form
+      v-if="!isLoading"
+      class="flex h-full w-full flex-col justify-between"
+      @submit.prevent="handleSubmit">
       <!-- Form elements -->
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Titelbild" id="image" required />
+          <InputLabel
+            id="image"
+            label="Titelbild"
+            required />
           <ImageUpload
-            :allowedTypes="['image/*']"
-            :multiple="false"
             v-model="form.image"
-            :error="errors.image"
-          />
+            :allowed-types="['image/*']"
+            :multiple="false"
+            :error="errors.image" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Name" id="name" required :error="errors.name" />
-          <InputText
-            v-model="form.name"
+          <InputLabel
             id="name"
+            label="Name"
+            required
+            :error="errors.name" />
+          <InputText
+            id="name"
+            v-model="form.name"
             :error="errors.name"
-            @update:error="errors.name = $event"
             placeholder="Name"
-            aria-label="Name" />
+            aria-label="Name"
+            @update:error="errors.name = $event" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Kürzel (max. 5 Zeichen)" id="acronym" required :error="errors.acronym" />
-          <InputText
-            v-model="form.acronym"
+          <InputLabel
             id="acronym"
+            label="Kürzel (max. 5 Zeichen)"
+            required
+            :error="errors.acronym" />
+          <InputText
+            id="acronym"
+            v-model="form.acronym"
             :error="errors.acronym"
-            @update:error="errors.acronym = $event"
             placeholder="Kürzel"
             :classes="'uppercase placeholder:normal-case'"
-            :maxLength="5"
-            aria-label="Kürzel" />
+            :max-length="5"
+            aria-label="Kürzel"
+            @update:error="errors.acronym = $event" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Kunde" id="company" :error="errors.company" />
+          <InputLabel
+            id="company"
+            label="Kunde"
+            :error="errors.company" />
           <InputSelect
             id="company"
-            placeholder="Bitte wählen..."
             v-model="form.company"
+            placeholder="Bitte wählen..."
             :options="companies"
             :error="errors.company"
-            @update:error="errors.company = $event"
-          />
+            @update:error="errors.company = $event" />
         </InputGroup>
       </div>
 
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <AppButton label="Speichern" :disabled="isSaving" />
+          <AppButton
+            label="Speichern"
+            :disabled="isSaving" />
         </ButtonGroup>
       </div>
-
     </form>
-
   </Slide>
 </template>
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { notifyError } from '@/services/api/error'
+import { notifyError } from '@/services/api/error';
 import { getUserCompanies } from '@/services/api/company';
 import { getArchive, createArchive, updateArchive } from '@/services/api/archive';
 import { useToastStore } from '@/stores/toast';
@@ -87,7 +97,7 @@ const toast = useToastStore();
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
+    default: false,
   },
 });
 
@@ -104,7 +114,7 @@ const form = ref({
   name: '',
   acronym: '',
   company: '',
-  image: null
+  image: null,
 });
 
 const { errors, setErrors, clearErrors } = useFormErrors(['name', 'acronym', 'company', 'image']);
@@ -113,11 +123,14 @@ const { errors, setErrors, clearErrors } = useFormErrors(['name', 'acronym', 'co
 // uuid (e.g. after creating) mounts a new page that loads it in onMounted
 
 // Watch for changes if "isActive"
-watch(() => props.isActive, (newVal) => {
-  if (!newVal) {
-    resetView();
-  }
-});
+watch(
+  () => props.isActive,
+  (newVal) => {
+    if (!newVal) {
+      resetView();
+    }
+  },
+);
 
 onMounted(async () => {
   try {
@@ -128,11 +141,9 @@ onMounted(async () => {
     if (uuid.value) {
       await fetchArchive();
     }
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Kartei konnte nicht geladen werden.');
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -155,28 +166,25 @@ const handleSubmit = async () => {
       // the route guard and the slides know about the new archive
       await useUserStore().fetchPermissions();
 
-      router.push({ 
-        name: 'archiveSettings', 
-        params: { uuid: response.uuid }
+      router.push({
+        name: 'archiveSettings',
+        params: { uuid: response.uuid },
       });
-    } 
-    else {
+    } else {
       await updateArchive(form.value);
       toast.show('Kartei erfolgreich aktualisiert.', 'success');
     }
-  } 
-  catch (error) {
+  } catch (error) {
     setErrors(error);
     notifyError(error, 'Fehler beim Speichern der Kartei.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };
 
 const fetchArchive = async () => {
   if (!uuid.value) return;
-  
+
   try {
     const response = await getArchive(uuid.value);
     if (response) {
@@ -185,11 +193,10 @@ const fetchArchive = async () => {
         name: response.name,
         acronym: response.acronym,
         company: response.company?.uuid ?? '',
-        image: [response.image]
+        image: [response.image],
       };
     }
-  } 
-  catch (error) {
+  } catch (error) {
     // 403/404 already went to the error page via the interceptor
     notifyError(error, 'Die Kartei konnte nicht geladen werden.');
   }
@@ -199,11 +206,10 @@ const fetchCompanies = async () => {
   const response = await getUserCompanies();
   if (Array.isArray(response)) {
     companies.value = response;
-  } 
-  else if (response?.data) {
-    companies.value = response.data.map(company => ({
+  } else if (response?.data) {
+    companies.value = response.data.map((company) => ({
       value: company.uuid,
-      label: company.name
+      label: company.name,
     }));
   }
 };

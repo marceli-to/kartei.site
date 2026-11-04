@@ -4,21 +4,19 @@
       v-bind="$attrs"
       :id="id"
       :value="modelValue"
-      @change="onChange"
       :aria-invalid="error ? 'true' : undefined"
-      :class="[
-        selectClasses,
-        { '!bg-flame !border-flame !text-white': error },
-      ]">
-      <option v-if="placeholder" 
-        disabled 
+      :class="[selectClasses, { '!border-flame !bg-flame !text-white': error }]"
+      @change="onChange">
+      <option
+        v-if="placeholder"
+        disabled
         value="">
         {{ placeholder }}
       </option>
 
-      <option 
-        v-for="option in options" 
-        :key="option.value" 
+      <option
+        v-for="option in options"
+        :key="option.value"
         :value="option.value">
         {{ option.label }}
       </option>
@@ -39,45 +37,45 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps({
   id: {
     type: String,
-    default: null
+    default: null,
   },
   modelValue: {
     type: [String, Number],
-    required: true
+    required: true,
   },
   placeholder: {
     type: String,
-    default: ''
+    default: '',
   },
   options: {
     type: Array,
     required: true,
     validator: (options) => {
-      return options.every(option => 
-        'value' in option && 'label' in option
-      )
-    }
+      return options.every((option) => 'value' in option && 'label' in option);
+    },
   },
   classes: {
     type: String,
-    default: ''
+    default: '',
   },
   error: {
     type: String,
-    default: ''
+    default: '',
   },
   variant: {
     type: String,
     default: 'default',
-    validator: (value) => ['default', 'box'].includes(value)
-  }
+    validator: (value) => ['default', 'box'].includes(value),
+  },
 });
 
 const wrapperClasses = 'relative';
 
-const defaultClasses = 'w-full min-h-default !bg-none appearance-none text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
+const defaultClasses =
+  'w-full min-h-default !bg-none appearance-none text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
 
-const boxClasses = 'w-full min-h-default !bg-none appearance-none text-md !ring-0 px-8 py-2 border border-graphite focus:border-black bg-white placeholder:font-muoto-italic placeholder:text-black';
+const boxClasses =
+  'w-full min-h-default !bg-none appearance-none text-md !ring-0 px-8 py-2 border border-graphite focus:border-black bg-white placeholder:font-muoto-italic placeholder:text-black';
 
 const selectClasses = computed(() => {
   const baseClasses = props.variant === 'box' ? boxClasses : defaultClasses;
@@ -85,7 +83,7 @@ const selectClasses = computed(() => {
 });
 
 const chevronClasses = computed(() => {
-  return props.variant === 'box' 
+  return props.variant === 'box'
     ? 'absolute inset-y-0 right-8 flex items-center pointer-events-none text-black'
     : 'absolute inset-y-0 right-8 flex items-center pointer-events-none text-black';
 });

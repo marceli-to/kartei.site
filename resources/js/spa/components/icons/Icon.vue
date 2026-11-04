@@ -24,12 +24,12 @@ const props = defineProps({
   name: {
     type: String,
     required: true,
-    validator: (value) => value in icons
+    validator: (value) => value in icons,
   },
   variant: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
 });
 
 const icon = computed(() => {

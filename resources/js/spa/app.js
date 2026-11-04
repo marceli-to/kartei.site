@@ -10,8 +10,8 @@ const pinia = createPinia();
 // proceed only if #app is present
 if (document.querySelector('#app')) {
   // Pinia first: the router guard reads the user store on the first navigation
-  app.use(pinia)
-  app.use(router)
-  registerApiErrorRouter(router)
-  app.mount('#app')
+  app.use(pinia);
+  app.use(router);
+  registerApiErrorRouter(router);
+  app.mount('#app');
 }

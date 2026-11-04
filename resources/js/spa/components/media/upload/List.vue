@@ -1,23 +1,25 @@
 <template>
-  <div v-if="images.length" :class="multiple ? 'mt-20' : ''">
+  <div
+    v-if="images.length"
+    :class="multiple ? 'mt-20' : ''">
     <draggable
       v-model="list"
       :item-key="imageKey"
       :class="multiple ? 'grid grid-cols-12 gap-20' : ''">
       <template #item="{ element, index }">
-        <ImageCard :class="multiple ? 'col-span-6 xl:col-span-4 cursor-move' : ''">
+        <ImageCard :class="multiple ? 'col-span-6 cursor-move xl:col-span-4' : ''">
           <Image
             :src="element.resized?.url || element.url"
-            :alt="element.resized?.original_name || element.original_name || element.name"
-          />
-           <button
+            :alt="element.resized?.original_name || element.original_name || element.name" />
+          <button
             v-if="editable"
             type="button"
             aria-label="Bild löschen"
-            @click="deleteImage((element.url), index)"
-            class="absolute top-0 right-0 p-8 hover:bg-snow"
-          >
-            <Icon name="cross" variant="small" />
+            class="absolute right-0 top-0 p-8 hover:bg-snow"
+            @click="deleteImage(element.url, index)">
+            <Icon
+              name="cross"
+              variant="small" />
           </button>
         </ImageCard>
       </template>
@@ -88,11 +90,13 @@ const deleteImage = async (url, index) => {
     // Call the delete API
     await api.delete(`/upload${url}`);
 
-    emit('update:images', props.images.filter((_, i) => i !== index));
+    emit(
+      'update:images',
+      props.images.filter((_, i) => i !== index),
+    );
 
     toast.show('Bild gelöscht', 'success');
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Bild konnte nicht gelöscht werden');
   }
 };
@@ -100,6 +104,6 @@ const deleteImage = async (url, index) => {
 
 <style scoped>
 .sortable-ghost {
-  @apply bg-graphite/10
+  @apply bg-graphite/10;
 }
 </style>

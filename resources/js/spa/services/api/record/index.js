@@ -1,4 +1,4 @@
-import api from '@/services/api/axios'
+import api from '@/services/api/axios';
 
 export const getRecord = async (uuid) => {
   const response = await api.get(`/record/${uuid}`);

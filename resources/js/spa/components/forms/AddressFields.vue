@@ -3,10 +3,12 @@
        <AddressFields v-model:form="form" v-model:errors="errors" />
        The fields are edited in place; an error clears on the field's first change. -->
   <div class="flex flex-col gap-y-20">
-    <InputGroup v-for="field in fields" :key="field.key">
+    <InputGroup
+      v-for="field in fields"
+      :key="field.key">
       <InputLabel
-        :label="field.label"
         :id="`${idPrefix}${field.key}`"
+        :label="field.label"
         :required="field.required"
         :error="errors[field.key]" />
       <InputSelect
@@ -42,13 +44,13 @@ const props = defineProps({
   // Keeps ids unique when two address forms are on the same page
   idPrefix: {
     type: String,
-    default: ''
+    default: '',
   },
   // Companies: "name" (required), no Adresszusatz; addresses: "company" + "byline"
   nameField: {
     type: String,
     default: 'company',
-    validator: (value) => ['company', 'name'].includes(value)
+    validator: (value) => ['company', 'name'].includes(value),
   },
 });
 

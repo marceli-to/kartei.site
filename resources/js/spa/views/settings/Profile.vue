@@ -1,10 +1,9 @@
 <template>
   <Slide :pull="true">
-    <form 
-      @submit.prevent="handleSubmit"
-      class="w-full h-full flex flex-col justify-between"
-      v-if="!isLoading">
-
+    <form
+      v-if="!isLoading"
+      class="flex h-full w-full flex-col justify-between"
+      @submit.prevent="handleSubmit">
       <!-- Info box -->
       <template v-if="isInfoOpen">
         <InfoBox>
@@ -14,95 +13,111 @@
 
       <!-- Form elements -->
       <div class="flex flex-col gap-y-48">
-
         <!-- Personal details -->
         <div class="flex flex-col gap-y-20">
           <InputGroup>
-            <InputLabel label="Vorname" id="firstname" required :error="errors.firstname" />
-            <InputText
-              v-model="form.firstname"
+            <InputLabel
               id="firstname"
+              label="Vorname"
+              required
+              :error="errors.firstname" />
+            <InputText
+              id="firstname"
+              v-model="form.firstname"
               :error="errors.firstname"
-              @update:error="errors.firstname = $event"
               placeholder="Vorname"
-              aria-label="Vorname" />
+              aria-label="Vorname"
+              @update:error="errors.firstname = $event" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="Name" id="name" required :error="errors.name" />
-            <InputText
-              v-model="form.name"
+            <InputLabel
               id="name"
+              label="Name"
+              required
+              :error="errors.name" />
+            <InputText
+              id="name"
+              v-model="form.name"
               :error="errors.name"
-              @update:error="errors.name = $event"
               placeholder="Nachname"
-              aria-label="Nachname" />
+              aria-label="Nachname"
+              @update:error="errors.name = $event" />
           </InputGroup>
           <InputGroup>
-            <InputLabel label="E-Mail-Adresse" id="email" required :error="errors.email" />
-            <InputText
-              v-model="form.email"
+            <InputLabel
               id="email"
+              label="E-Mail-Adresse"
+              required
+              :error="errors.email" />
+            <InputText
+              id="email"
+              v-model="form.email"
               :error="errors.email"
-              @update:error="errors.email = $event"
               placeholder="E-Mail-Adresse"
-              aria-label="E-Mail-Adresse" />
+              aria-label="E-Mail-Adresse"
+              @update:error="errors.email = $event" />
           </InputGroup>
         </div>
 
         <!-- Password -->
         <div class="flex flex-col gap-y-20">
           <template v-if="authErrors.length > 0">
-            <div class="text-sm font-muoto-italic text-flame">
-              <div v-for="(error, index) in authErrors" :key="index">
+            <div class="font-muoto-italic text-sm text-flame">
+              <div
+                v-for="(error, index) in authErrors"
+                :key="index">
                 {{ error }}
               </div>
             </div>
           </template>
           <InputGroup>
-            <InputLabel label="Passwort ändern" id="current_password" />
+            <InputLabel
+              id="current_password"
+              label="Passwort ändern" />
             <div class="flex flex-col gap-y-8">
               <InputPassword
                 id="current_password"
                 v-model="auth.current_password"
                 :error="passwordErrors.current_password"
-                @update:error="passwordErrors.current_password = $event"
                 placeholder="Aktuelles Passwort"
-                aria-label="Aktuelles Passwort" />
+                aria-label="Aktuelles Passwort"
+                @update:error="passwordErrors.current_password = $event" />
               <InputPassword
                 id="new_password"
                 v-model="auth.new_password"
                 :error="passwordErrors.new_password"
-                @update:error="passwordErrors.new_password = $event"
                 placeholder="Neues Passwort"
-                aria-label="Neues Passwort" />
+                aria-label="Neues Passwort"
+                @update:error="passwordErrors.new_password = $event" />
               <InputPassword
                 id="new_password_confirmation"
                 v-model="auth.new_password_confirmation"
                 :error="passwordErrors.new_password_confirmation"
-                @update:error="passwordErrors.new_password_confirmation = $event"
                 placeholder="Neues Passwort wiederholen"
-                aria-label="Passwort wiederholen" />
+                aria-label="Passwort wiederholen"
+                @update:error="passwordErrors.new_password_confirmation = $event" />
               <AppButton
                 variant="secondary"
                 type="button"
                 label="Passwort ändern"
                 @click.stop.prevent="handleAuthSubmit" />
-              <div class="text-sm font-muoto-italic text-graphite pl-8">
-                Das Passwort muss mindestens 8 Zeichen umfassen sowie Gross- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.
+              <div class="pl-8 font-muoto-italic text-sm text-graphite">
+                Das Passwort muss mindestens 8 Zeichen umfassen sowie Gross- und Kleinbuchstaben, Zahlen und
+                Sonderzeichen enthalten.
               </div>
             </div>
           </InputGroup>
         </div>
-
       </div>
 
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <AppButton label="Speichern" :disabled="isSaving" />
+          <AppButton
+            label="Speichern"
+            :disabled="isSaving" />
         </ButtonGroup>
       </div>
-
     </form>
   </Slide>
 </template>
@@ -128,8 +143,8 @@ const toast = useToastStore();
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const isLoading = ref(false);
@@ -172,11 +187,9 @@ onMounted(async () => {
       form.value.name = userData.name;
       form.value.email = userData.email;
     }
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Das Profil konnte nicht geladen werden.');
-  } 
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -188,16 +201,13 @@ const handleSubmit = async () => {
     const userData = await updateUserProfile(form.value);
     if (userData.email_changed) {
       toast.show('E-Mail-Adresse wurde geändert, wir haben einen neuen Verifizierungslink geschickt.', 'success');
-    }
-    else {
+    } else {
       toast.show('Änderungen gespeichert.', 'success');
     }
-  } 
-  catch (error) {
+  } catch (error) {
     setErrors(error);
     notifyError(error, 'Fehler beim Speichern des Profils.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };
@@ -212,15 +222,14 @@ const handleAuthSubmit = async () => {
     auth.value.current_password = '';
     auth.value.new_password = '';
     auth.value.new_password_confirmation = '';
-  } 
-  catch (error) {
+  } catch (error) {
     setPasswordErrors(error);
     const errorData = error.response?.data?.errors || {};
-    authErrors.value = ['current_password', 'new_password', 'new_password_confirmation']
-      .flatMap(field => errorData[field] || []);
+    authErrors.value = ['current_password', 'new_password', 'new_password_confirmation'].flatMap(
+      (field) => errorData[field] || [],
+    );
 
     notifyError(error, 'Es ist ein Fehler aufgetreten.');
   }
 };
-
 </script>

@@ -1,4 +1,4 @@
-import api from '@/services/api/axios'
+import api from '@/services/api/axios';
 
 export const findUser = async (uuid) => {
   const response = await api.get(`/archive/user/${uuid}`);
@@ -23,7 +23,7 @@ export const updateUser = async (uuid, userData) => {
 export const getRelatedUsers = async () => {
   const response = await api.get('/archive/users/related');
   return response.data;
-}
+};
 
 export const getArchiveUsers = async (uuid) => {
   const response = await api.get(`/archive/users/${uuid}`);

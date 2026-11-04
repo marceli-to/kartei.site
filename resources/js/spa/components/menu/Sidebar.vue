@@ -1,21 +1,21 @@
 <template>
   <nav
-    class="fixed top-12 right-0 z-80 bg-snow dark:bg-graphite pt-174 w-full max-w-[16rem] h-[calc(100dvh_-_0.75rem)]"
-    :class="{ 'opacity-100 visible': isOpen, 'opacity-0 invisible pointer-events-none': !isOpen }">
+    class="fixed right-0 top-12 z-80 h-[calc(100dvh_-_0.75rem)] w-full max-w-[16rem] bg-snow pt-174 dark:bg-graphite"
+    :class="{ 'visible opacity-100': isOpen, 'pointer-events-none invisible opacity-0': !isOpen }">
     <ul class="mx-16 border-t border-t-black dark:border-t-white">
       <li>
         <router-link
           :to="{ name: 'archives' }"
-          @click="$emit('toggle')"
-          :class="{ 'text-graphite dark:text-black': $route.name === 'archives' }">
+          :class="{ 'text-graphite dark:text-black': $route.name === 'archives' }"
+          @click="$emit('toggle')">
           Meine Karteien
         </router-link>
       </li>
       <li>
         <router-link
           :to="{ name: 'settings' }"
-          @click="$emit('toggle')"
-          :class="{ 'text-graphite dark:text-black': $route.name === 'settings' }">
+          :class="{ 'text-graphite dark:text-black': $route.name === 'settings' }"
+          @click="$emit('toggle')">
           Einstellungen
         </router-link>
       </li>
@@ -33,10 +33,19 @@
       </li>
       <li>
         <!-- POST, so another site can't log the user out with a link -->
-        <form method="post" action="/logout">
-          <input type="hidden" name="_token" :value="csrfToken">
-          <button type="submit" class="gap-x-12">
-            <Icon name="chevron-right" variant="small" />
+        <form
+          method="post"
+          action="/logout">
+          <input
+            type="hidden"
+            name="_token"
+            :value="csrfToken" />
+          <button
+            type="submit"
+            class="gap-x-12">
+            <Icon
+              name="chevron-right"
+              variant="small" />
             Abmelden
           </button>
         </form>
@@ -53,8 +62,8 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? 
 defineProps({
   isOpen: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // Define emits to communicate back to parent
@@ -63,6 +72,6 @@ defineEmits(['toggle']);
 <style scoped>
 nav a,
 nav button {
-  @apply font-muoto-medium leading-none w-full py-16 border-b border-b-black dark:border-b-white flex items-center hover:text-graphite dark:hover:text-black transition-all;
+  @apply flex w-full items-center border-b border-b-black py-16 font-muoto-medium leading-none transition-all hover:text-graphite dark:border-b-white dark:hover:text-black;
 }
 </style>

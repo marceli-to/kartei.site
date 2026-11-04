@@ -1,21 +1,28 @@
 <template>
-  <div class="flex flex-col gap-y-32 relative">
-    <router-link 
+  <div class="relative flex flex-col gap-y-32">
+    <router-link
       :to="{ name: 'archiveRecords', params: { uuid: archive.uuid } }"
-      class="block absolute top-8 right-8 z-10 size-24"
+      class="absolute right-8 top-8 z-10 block size-24"
       title="Kartei bearbeiten">
-      <Icon name="edit" class="text-graphite hover:text-black transition-colors w-full h-auto" />
+      <Icon
+        name="edit"
+        class="h-auto w-full text-graphite transition-colors hover:text-black" />
     </router-link>
     <ImageCard v-if="archive.image">
-      <Image :src="archive.image.url" alt="Titelbild" spacing="m-40" />
+      <Image
+        :src="archive.image.url"
+        alt="Titelbild"
+        spacing="m-40" />
     </ImageCard>
-    <div class="border-y border-y-graphite min-h-default flex items-center">
+    <div class="flex min-h-default items-center border-y border-y-graphite">
       <h2 class="font-otto-bold">
         {{ archive.name }}
       </h2>
     </div>
     <div>
-      <Collapsible :items="archive.categories" v-if="archive.categories" />
+      <Collapsible
+        v-if="archive.categories"
+        :items="archive.categories" />
     </div>
   </div>
 </template>
@@ -29,7 +36,7 @@ import Icon from '@/components/icons/Icon.vue';
 defineProps({
   archive: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 });
 </script>

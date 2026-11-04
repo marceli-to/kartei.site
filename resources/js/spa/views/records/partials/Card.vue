@@ -1,28 +1,29 @@
 <template>
   <div class="flex flex-col gap-y-32">
-    
-    <ImageSlideshow 
-      :slides="imageData" 
-      v-if="imageData.length > 1" />
-      
+    <ImageSlideshow
+      v-if="imageData.length > 1"
+      :slides="imageData" />
+
     <ImageCard v-else-if="imageData.length === 1">
       <Image v-bind="imageData[0]" />
     </ImageCard>
 
     <div class="border-y border-y-graphite">
-      <div class="min-h-default flex items-center justify-between font-muoto-medium">
+      <div class="flex min-h-default items-center justify-between font-muoto-medium">
         <template v-if="record.display_number">
-          <router-link v-if="canEdit" :to="{ name: 'archiveRecordUpdate', params: { uuid: record.uuid } }">
+          <router-link
+            v-if="canEdit"
+            :to="{ name: 'archiveRecordUpdate', params: { uuid: record.uuid } }">
             {{ record.display_number }}
           </router-link>
           <span v-else>{{ record.display_number }}</span>
         </template>
         <Favorite :uuid="record.uuid" />
       </div>
-      <div 
-        class="min-h-default py-3 border-t border-t-graphite"
+      <div
         v-for="(field, index) in record.fields"
-        :key="index">
+        :key="index"
+        class="min-h-default border-t border-t-graphite py-3">
         {{ field.content }}
       </div>
     </div>
@@ -40,7 +41,7 @@ import Favorite from '@/views/records/partials/Favorite.vue';
 const props = defineProps({
   record: {
     type: Object,
-    required: true
+    required: true,
   },
 });
 
@@ -50,12 +51,11 @@ const canEdit = computed(() => userStore.canArchive(props.record.archive?.uuid, 
 const media = computed(() => props.record.media || []);
 
 const imageData = computed(() =>
-  media.value.map(item => ({
+  media.value.map((item) => ({
     src: item.url,
     alt: item.alt || '',
     width: item.width || undefined,
-    height: item.height || undefined
-  }))
+    height: item.height || undefined,
+  })),
 );
-
 </script>

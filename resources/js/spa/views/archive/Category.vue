@@ -1,41 +1,40 @@
 <template>
   <Slide>
-    <form 
-      class="w-full h-full flex flex-col justify-between pb-24 relative before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite before:-z-1 after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite after:-z-1"
-      @submit.prevent="handleSubmit"
-      v-if="!isLoading">
-
+    <form
+      v-if="!isLoading"
+      class="before:-z-1 after:-z-1 relative flex h-full w-full flex-col justify-between pb-24 before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite"
+      @submit.prevent="handleSubmit">
       <!-- Info box -->
       <template v-if="isInfoOpen">
-        <InfoBox class="!-top-0 !-right-16 w-4/12">
+        <InfoBox class="!-right-16 !-top-0 w-4/12">
           <InfoStructure />
         </InfoBox>
       </template>
 
       <!-- Categories and Registers -->
       <div class="w-full">
-        <div class="flex gap-x-16 mb-32">
+        <div class="mb-32 flex gap-x-16">
           <div class="w-3/12">
-            <button 
-              type="button" 
-              class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
+            <button
+              type="button"
+              class="flex min-h-default w-full items-center justify-start border-y border-y-graphite"
               aria-label="Ordnungsstruktur einstellen"
               @click="showStructureDialog">
               <Icon name="settings" />
             </button>
           </div>
           <div class="w-6/12">
-            <Action 
+            <Action
               type="button"
-              label="Kategorie" 
+              label="Kategorie"
               classes="!font-muoto-medium"
               :icon="{ name: 'Plus', variant: 'small-bold', position: 'center' }"
               @click="addCategory" />
           </div>
           <div class="w-3/12">
-            <button 
-              type="button" 
-              class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
+            <button
+              type="button"
+              class="flex min-h-default w-full items-center justify-start border-y border-y-graphite"
               aria-label="Ordnungsstruktur einstellen"
               @click="showStructureDialog">
               <Icon name="settings" />
@@ -43,24 +42,30 @@
           </div>
         </div>
 
-        <div class="flex gap-x-17 mb-4">
-          <InputLabel label="Nr." class="w-3/12 !mb-0" />
-          <InputLabel label="Titel" class="w-6/12 !mb-0" />
-          <InputLabel label="Kürzel" class="w-3/12 !mb-0" />
+        <div class="mb-4 flex gap-x-17">
+          <InputLabel
+            label="Nr."
+            class="!mb-0 w-3/12" />
+          <InputLabel
+            label="Titel"
+            class="!mb-0 w-6/12" />
+          <InputLabel
+            label="Kürzel"
+            class="!mb-0 w-3/12" />
         </div>
 
-        <draggable 
-          v-model="categories" 
-          group="categories" 
-          :item-key="rowKey" 
-          class="flex flex-col" 
+        <draggable
+          v-model="categories"
+          group="categories"
+          :item-key="rowKey"
+          class="flex flex-col"
           handle=".drag-handle">
           <template #item="{ element: category, index: cIdx }">
             <div>
               <StructureRow
-                class="mb-32"
                 v-model:name="category.name"
                 v-model:custom-id="category.custom_id"
+                class="mb-32"
                 label="Kategorie"
                 :position="cIdx + 1"
                 :number="categoryNumber(cIdx)"
@@ -69,18 +74,18 @@
                 @blur="applyAutoId(category)"
                 @remove="removeCategory(cIdx)" />
 
-              <draggable 
-                v-model="category.registers" 
-                group="registers" 
-                :item-key="rowKey" 
-                :clone="cloneRegister" 
-                class="flex flex-col" 
+              <draggable
+                v-model="category.registers"
+                group="registers"
+                :item-key="rowKey"
+                :clone="cloneRegister"
+                class="flex flex-col"
                 handle=".drag-handle">
                 <template #item="{ element: register, index: rIdx }">
                   <StructureRow
-                    class="mb-8 last:mb-32"
                     v-model:name="register.name"
                     v-model:custom-id="register.custom_id"
+                    class="mb-8 last:mb-32"
                     label="Register"
                     :position="rIdx + 1"
                     :number="registerNumber(cIdx, rIdx)"
@@ -93,10 +98,10 @@
           </template>
         </draggable>
 
-        <div class="flex gap-x-17 mb-8">
+        <div class="mb-8 flex gap-x-17">
           <div class="w-3/12">&nbsp;</div>
           <div class="w-6/12">
-            <Action 
+            <Action
               type="button"
               label="Register"
               :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
@@ -108,7 +113,10 @@
 
       <!-- Buttons -->
       <ButtonGroup class="relative z-10">
-        <AppButton type="submit" label="Speichern" :loading="isSaving" />
+        <AppButton
+          type="submit"
+          label="Speichern"
+          :loading="isSaving" />
       </ButtonGroup>
     </form>
   </Slide>
@@ -138,8 +146,8 @@ import AppButton from '@/components/buttons/Button.vue';
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const toast = useToastStore();
@@ -177,11 +185,9 @@ onMounted(async () => {
   if (!uuid) return;
   try {
     await load();
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Struktur konnte nicht geladen werden.');
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -191,15 +197,12 @@ const handleSubmit = async () => {
   try {
     if (await save()) {
       toast.show('Ordnung erfolgreich gespeichert', 'success');
-    }
-    else {
+    } else {
       toast.show('Fehler: Bitte füllen Sie alle Felder aus (Nummer, Titel, Kürzel)', 'error');
     }
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Fehler beim Speichern der Ordnung');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };
@@ -259,8 +262,8 @@ const showStructureDialog = () => {
       },
       onCancel: () => {
         dialogStore.hide();
-      }
-    }
+      },
+    },
   });
 };
 </script>

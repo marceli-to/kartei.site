@@ -6,7 +6,14 @@ import { useUserStore } from '@/stores/user';
 // meta.archiveAbility: the route's :uuid is an archive uuid and the user
 // needs one of these ArchivePolicy abilities for it (see stores/user.js).
 // meta.permission: a global permission (account level).
-const ARCHIVE_SETTINGS_ABILITIES = ['update', 'manageStructure', 'manageTemplate', 'manageTags', 'manageUsers', 'delete'];
+const ARCHIVE_SETTINGS_ABILITIES = [
+  'update',
+  'manageStructure',
+  'manageTemplate',
+  'manageTags',
+  'manageUsers',
+  'delete',
+];
 
 const routes = [
   { path: '/archiv', name: 'home', component: () => import('@/views/Home.vue') },
@@ -32,10 +39,14 @@ const routes = [
     meta: { archiveAbility: 'createRecord' },
   },
   // :uuid is the record's uuid here; the view checks the ability once the record is loaded
-  { path: '/archiv/kartei/karte/bearbeiten/:uuid', name: 'archiveRecordUpdate', component: () => import('@/views/records/RecordForm.vue') },
+  {
+    path: '/archiv/kartei/karte/bearbeiten/:uuid',
+    name: 'archiveRecordUpdate',
+    component: () => import('@/views/records/RecordForm.vue'),
+  },
 
   // Error pages
-  ...[401, 403, 404].map(status => ({
+  ...[401, 403, 404].map((status) => ({
     path: `/error/${status}`,
     name: String(status),
     component: () => import('@/views/error/ErrorPage.vue'),

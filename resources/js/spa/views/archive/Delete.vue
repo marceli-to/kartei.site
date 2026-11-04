@@ -1,5 +1,9 @@
 <template>
-  <DeleteSlide label="Kartei löschen" :isActive="isActive" :disabled="isDeleting" @delete="showDialog">
+  <DeleteSlide
+    label="Kartei löschen"
+    :is-active="isActive"
+    :disabled="isDeleting"
+    @delete="showDialog">
     <p>Mit dem Löschen dieser Kartei werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
   </DeleteSlide>
 </template>
@@ -25,8 +29,8 @@ const isDeleting = ref(false);
 defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 async function handleDelete() {
@@ -34,8 +38,7 @@ async function handleDelete() {
 
   try {
     await deleteArchive(uuid.value);
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Es ist ein Fehler beim Löschen der Kartei aufgetreten.');
     isDeleting.value = false;
     return;
@@ -54,7 +57,7 @@ function showDialog() {
     cancelLabel: 'Abbrechen',
     size: 'medium',
     onConfirm: handleDelete,
-    onCancel: () => {}
+    onCancel: () => {},
   });
 }
 </script>

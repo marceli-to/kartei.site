@@ -1,17 +1,21 @@
 <template>
-  <div class="flex justify-center items-center text-center font-otto-bold text-lg text-flame">
+  <div class="flex items-center justify-center text-center font-otto-bold text-lg text-flame">
     <div>
-      <h1 class="text-huge font-otto-regular">{{ status }}</h1>
+      <h1 class="font-otto-regular text-huge">{{ status }}</h1>
       <p class="text-center">
-        {{ page.message }}<br>
+        {{ page.message }}<br />
         <template v-if="status === 401">
           Sie werden in {{ countdown }} Sekunde<span v-if="countdown !== 1">n</span> weitergeleitet.
         </template>
         <template v-else>
           Keine Sorge, hier geht es zurück:
-          <span class="flex justify-center mt-16">
-            <router-link :to="{ name: 'archives' }" aria-label="Zurück zu Meine Karteien">
-              <Icon name="chevron-left" variant="large-rounded" />
+          <span class="mt-16 flex justify-center">
+            <router-link
+              :to="{ name: 'archives' }"
+              aria-label="Zurück zu Meine Karteien">
+              <Icon
+                name="chevron-left"
+                variant="large-rounded" />
             </router-link>
           </span>
         </template>
@@ -28,8 +32,8 @@ import Icon from '@/components/icons/Icon.vue';
 const props = defineProps({
   status: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const PAGES = {

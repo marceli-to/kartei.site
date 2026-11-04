@@ -1,9 +1,9 @@
 import { useToastStore } from '@/stores/toast';
 
-let globalRouter = null
+let globalRouter = null;
 
 export function registerApiErrorRouter(routerInstance) {
-  globalRouter = routerInstance
+  globalRouter = routerInstance;
 }
 
 /**

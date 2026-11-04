@@ -1,12 +1,17 @@
 <template>
   <button
     type="button"
-    @click="toggle"
     aria-label="Favorit"
     :aria-pressed="isFavorite"
-    :aria-busy="isSaving">
-    <Icon name="heart" v-if="isFavorite" />
-    <Icon name="heart" v-else variant="outline" />
+    :aria-busy="isSaving"
+    @click="toggle">
+    <Icon
+      v-if="isFavorite"
+      name="heart" />
+    <Icon
+      v-else
+      name="heart"
+      variant="outline" />
   </button>
 </template>
 
@@ -20,8 +25,8 @@ import Icon from '@/components/icons/Icon.vue';
 const props = defineProps({
   uuid: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const userStore = useUserStore();
@@ -41,27 +46,22 @@ const toggle = async () => {
 
   // Optimistically update store
   if (currentlyFavorite) {
-    userStore.favorites = userStore.favorites.filter(id => id !== props.uuid);
-  } 
-  else {
+    userStore.favorites = userStore.favorites.filter((id) => id !== props.uuid);
+  } else {
     userStore.favorites.push(props.uuid);
   }
 
   try {
     await toggleFavorite(props.uuid);
-  } 
-  catch (error) {
+  } catch (error) {
     if (currentlyFavorite) {
       userStore.favorites.push(props.uuid);
-    } 
-    else {
-      userStore.favorites = userStore.favorites.filter(id => id !== props.uuid);
+    } else {
+      userStore.favorites = userStore.favorites.filter((id) => id !== props.uuid);
     }
     notifyError(error, 'Der Favorit konnte nicht gespeichert werden.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };
-
 </script>

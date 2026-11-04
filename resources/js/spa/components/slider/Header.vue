@@ -1,8 +1,12 @@
 <template>
-  <h2 class="flex justify-between items-center mb-38 mr-8">
+  <h2 class="mb-38 mr-8 flex items-center justify-between">
     <span>{{ title }}</span>
-    <router-link :to="linkTarget" aria-label="Schliessen">
-      <Icon name="cross" variant="small" />
+    <router-link
+      :to="linkTarget"
+      aria-label="Schliessen">
+      <Icon
+        name="cross"
+        variant="small" />
     </router-link>
   </h2>
 </template>
@@ -15,13 +19,11 @@ const props = defineProps({
   // Archive uuid; without it (new archive) the cross leads back to the archive list
   uuid: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
 });
 
 const linkTarget = computed(() =>
-  props.uuid
-    ? { name: 'archiveRecords', params: { uuid: props.uuid } }
-    : { name: 'archives' }
+  props.uuid ? { name: 'archiveRecords', params: { uuid: props.uuid } } : { name: 'archives' },
 );
 </script>

@@ -21,7 +21,7 @@ export function useInfoBox({ active, auto = false }) {
     ([isActive, isAuto]) => {
       isActive ? store.register(id, isAuto) : store.unregister(id);
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   onBeforeUnmount(() => store.unregister(id));

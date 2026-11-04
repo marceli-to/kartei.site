@@ -1,21 +1,21 @@
 <template>
   <Slide :pull="viewState !== 'listing'">
     <template v-if="viewState === 'creating'">
-      <CompanyForm 
-        @success="handleCompanyCreated" 
+      <CompanyForm
+        @success="handleCompanyCreated"
         @cancel="resetView()" />
     </template>
     <template v-else-if="viewState === 'updating'">
-      <CompanyForm 
+      <CompanyForm
         :company="selectedCompany"
         @delete="handleCompanyDeleted"
-        @success="handleCompanyUpdated" 
+        @success="handleCompanyUpdated"
         @cancel="resetView()" />
     </template>
     <template v-else-if="viewState === 'listing'">
-      <div 
-        class="flex flex-col gap-y-32" 
-        v-if="!isLoading">
+      <div
+        v-if="!isLoading"
+        class="flex flex-col gap-y-32">
         <div>
           <InputSearch
             v-model="search"
@@ -23,20 +23,20 @@
             aria-label="Suche" />
         </div>
         <div>
-          <Action 
-            label="Kunde/Kundin" 
+          <Action
+            label="Kunde/Kundin"
             :icon="{ name: 'Plus', position: 'center' }"
             @click="viewState = 'creating'" />
         </div>
         <div>
-          <Sort 
-            :isAscending="isAscending" 
+          <Sort
+            :is-ascending="isAscending"
             @toggle="sort">
             A&thinsp;–&thinsp;Z
           </Sort>
           <div class="flex flex-col gap-y-8">
-            <Action 
-              v-for="company in filteredCompanies" 
+            <Action
+              v-for="company in filteredCompanies"
               :key="company.uuid"
               :label="company.name"
               :icon="{ name: 'ChevronRight' }"
@@ -64,8 +64,8 @@ const toast = useToastStore();
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const search = ref('');
@@ -77,19 +77,18 @@ const viewState = ref('listing');
 
 const filteredCompanies = computed(() => {
   if (!companies.value) return [];
-  
+
   let result = [...companies.value];
-  
+
   // Apply search filter if search term exists
   if (search.value) {
     const searchTerm = search.value.toLowerCase().trim();
     // street and city are optional
-    result = result.filter(company =>
-      [company.name, company.street, company.city]
-        .some(value => (value ?? '').toLowerCase().includes(searchTerm))
+    result = result.filter((company) =>
+      [company.name, company.street, company.city].some((value) => (value ?? '').toLowerCase().includes(searchTerm)),
     );
   }
-  
+
   // Apply sorting
   return result.sort((a, b) => {
     const modifier = isAscending.value ? 1 : -1;
@@ -113,13 +112,13 @@ const handleCompanyCreated = (company) => {
 };
 
 const handleCompanyUpdated = (company) => {
-  companies.value = companies.value.map(c => c.uuid === company.uuid ? company : c);
+  companies.value = companies.value.map((c) => (c.uuid === company.uuid ? company : c));
   toast.show('Firma erfolgreich aktualisiert.', 'success');
   resetView();
-};  
+};
 
 const handleCompanyDeleted = (uuid) => {
-  companies.value = companies.value.filter(c => c.uuid !== uuid);
+  companies.value = companies.value.filter((c) => c.uuid !== uuid);
   toast.show('Firma erfolgreich gelöscht.', 'success');
   resetView();
 };
@@ -136,18 +135,19 @@ onMounted(async () => {
   try {
     const response = await getUserCompanies();
     companies.value = response.data;
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Firmen konnten nicht geladen werden.');
-  } 
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
 
-watch(() => props.isActive, (isActive) => {
-  if (isActive) {
-    resetView();
-  }
-});
+watch(
+  () => props.isActive,
+  (isActive) => {
+    if (isActive) {
+      resetView();
+    }
+  },
+);
 </script>

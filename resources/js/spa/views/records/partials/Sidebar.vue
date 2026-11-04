@@ -1,7 +1,7 @@
 <template>
   <div
-    class="flex flex-col justify-between min-h-full"
-    :class="disabled ? 'opacity-20 pointer-events-none transition-opacity' : ''">
+    class="flex min-h-full flex-col justify-between"
+    :class="disabled ? 'pointer-events-none opacity-20 transition-opacity' : ''">
     <div class="flex flex-col gap-y-20">
       <InputGroup>
         <InputSearch
@@ -11,54 +11,62 @@
       </InputGroup>
 
       <InputGroup>
-        <InputLabel label="Sortierfolge" id="sort_order" />
+        <InputLabel
+          id="sort_order"
+          label="Sortierfolge" />
         <InputSelect
           id="sort_order"
           v-model="localSortOrder"
           :options="sortOrderOptions"
-          variant="box"
-        />
+          variant="box" />
       </InputGroup>
 
       <InputGroup v-if="categories.length > 0">
-        <InputLabel label="Kategorien" id="category" />
+        <InputLabel
+          id="category"
+          label="Kategorien" />
         <InputSelectButtons
-          legend="Kategorien"
           v-model="localSelectedCategories"
+          legend="Kategorien"
           :multiple="true"
           name="categories"
           :options="categories"
           classes="!text-black"
-          wrapperClasses="flex flex-col gap-y-8" />
+          wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
 
       <InputGroup v-if="registers.length > 0">
-        <InputLabel label="Register" id="register" />
+        <InputLabel
+          id="register"
+          label="Register" />
         <InputSelectButtons
-          legend="Register"
           v-model="localSelectedRegisters"
+          legend="Register"
           :multiple="true"
           name="registers"
           :options="registers"
           classes="!text-black"
-          wrapperClasses="flex flex-col gap-y-8" />
+          wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
 
       <InputGroup v-if="tags.length > 0">
-        <InputLabel label="Tags" id="tags" />
+        <InputLabel
+          id="tags"
+          label="Tags" />
         <InputSelectButtons
-          legend="Tags"
           v-model="localSelectedTags"
+          legend="Tags"
           :multiple="true"
           name="tags"
           :options="tags"
           classes="!text-black"
-          wrapperClasses="flex flex-col gap-y-8" />
+          wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
-
     </div>
 
-    <InputGroup v-if="canEditSettings" class="sticky bottom-20">
+    <InputGroup
+      v-if="canEditSettings"
+      class="sticky bottom-20">
       <Action
         label="Voreinstellungen"
         variant="box"
@@ -85,22 +93,29 @@ const props = defineProps({
   modelValue: { type: Object, required: true },
   categories: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   registers: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   tags: {
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 });
 
 const userStore = useUserStore();
-const canEditSettings = computed(() => userStore.canArchive(props.uuid, [
-  'update', 'manageStructure', 'manageTemplate', 'manageTags', 'manageUsers', 'delete',
-]));
+const canEditSettings = computed(() =>
+  userStore.canArchive(props.uuid, [
+    'update',
+    'manageStructure',
+    'manageTemplate',
+    'manageTags',
+    'manageUsers',
+    'delete',
+  ]),
+);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -114,7 +129,7 @@ const sortOrderOptions = [
   { value: 'name', label: 'Name' },
   { value: 'date', label: 'Datum' },
   { value: 'created_at', label: 'Erstellt' },
-  { value: 'updated_at', label: 'Aktualisiert' }
+  { value: 'updated_at', label: 'Aktualisiert' },
 ];
 
 watch(
@@ -125,9 +140,9 @@ watch(
       sortOrder: localSortOrder.value,
       selectedCategories: localSelectedCategories.value,
       selectedRegisters: localSelectedRegisters.value,
-      selectedTags: localSelectedTags.value
+      selectedTags: localSelectedTags.value,
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

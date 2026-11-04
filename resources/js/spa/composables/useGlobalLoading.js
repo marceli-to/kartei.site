@@ -23,9 +23,7 @@ export function useGlobalLoading() {
   async function withLoading(promiseLikeOrFn) {
     show();
     try {
-      const p = typeof promiseLikeOrFn === 'function'
-        ? promiseLikeOrFn()
-        : promiseLikeOrFn;
+      const p = typeof promiseLikeOrFn === 'function' ? promiseLikeOrFn() : promiseLikeOrFn;
       return await p;
     } finally {
       hide();

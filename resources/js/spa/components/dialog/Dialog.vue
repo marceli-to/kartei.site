@@ -6,24 +6,22 @@
       enter-to-class="opacity-100"
       leave-active-class="transition duration-200 ease-in"
       leave-from-class="opacity-100"
-      leave-to-class="transform opacity-0"
-    >
+      leave-to-class="transform opacity-0">
       <div
         v-if="isVisible"
         class="fixed inset-0 z-[9999] overflow-y-auto"
         @mousedown="onPointerDown"
-        @click="onBackdropClick"
-      >
+        @click="onBackdropClick">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/80 transition-opacity duration-200"></div>
         <!-- Dialog -->
-        <div class="flex min-h-full items-center justify-center p-4 relative">
+        <div class="relative flex min-h-full items-center justify-center p-4">
           <div
             ref="panel"
             tabindex="-1"
             :class="[
-              'relative w-full transform overflow-hidden bg-white dark:text-black p-24 text-left shadow-xl transition-all outline-none',
-              getSizeClass(content.size)
+              'relative w-full transform overflow-hidden bg-white p-24 text-left shadow-xl outline-none transition-all dark:text-black',
+              getSizeClass(content.size),
             ]"
             role="dialog"
             aria-modal="true"
@@ -35,32 +33,36 @@
               class="absolute right-24 top-24"
               aria-label="Schliessen"
               @click="handleCancel">
-              <Icon name="cross" variant="small-bold" />
+              <Icon
+                name="cross"
+                variant="small-bold" />
             </button>
-            <div class="flex flex-col gap-y-24 mx-auto">
-
+            <div class="mx-auto flex flex-col gap-y-24">
               <!-- Title -->
-              <h3 v-if="content.title" id="dialog-title" class="font-muoto-medium">
+              <h3
+                v-if="content.title"
+                id="dialog-title"
+                class="font-muoto-medium">
                 {{ content.title }}
               </h3>
 
               <!-- Content -->
               <div>
-
                 <!-- Simple message -->
-                <p v-if="content.message" id="dialog-desc">
+                <p
+                  v-if="content.message"
+                  id="dialog-desc">
                   {{ content.message }}
                 </p>
                 <!-- ! Simple message -->
-                
+
                 <!-- Dynamic component -->
                 <component
-                  v-else-if="content.component"
                   :is="content.component"
-                  v-bind="content.props || {}"
-                />
+                  v-else-if="content.component"
+                  v-bind="content.props || {}" />
                 <!-- ! Dynamic component -->
-                
+
                 <!-- Default slot -->
                 <slot></slot>
                 <!-- ! Default slot -->
@@ -71,25 +73,23 @@
               <div v-if="!content.hideDefaultActions">
                 <slot name="actions">
                   <ButtonGroup>
-                    <AppButton 
+                    <AppButton
+                      v-if="content.onConfirm"
                       :label="content.confirmLabel || 'Speichern'"
                       type="button"
                       :disabled="isBusy"
-                      @click="handleConfirm"
-                      v-if="content.onConfirm" />
-                    <AppButton 
-                      :label="content.cancelLabel || 'Abbrechen'" 
+                      @click="handleConfirm" />
+                    <AppButton
+                      v-if="content.onCancel"
+                      :label="content.cancelLabel || 'Abbrechen'"
                       type="button"
                       :disabled="isBusy"
-                      @click="handleCancel"
-                      v-if="content.onCancel" />
+                      @click="handleCancel" />
                   </ButtonGroup>
                 </slot>
               </div>
               <!-- ! Actions -->
-
             </div>
-            
           </div>
         </div>
       </div>
@@ -129,18 +129,18 @@ watch(isVisible, async (visible) => {
     returnFocusTo = document.activeElement;
     await nextTick();
     panel.value?.focus();
-  }
-  else if (returnFocusTo?.isConnected) {
+  } else if (returnFocusTo?.isConnected) {
     returnFocusTo.focus();
     returnFocusTo = null;
   }
 });
 
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 // Tab and Shift+Tab cycle inside the dialog
 const trapFocus = (event) => {
-  const items = [...panel.value.querySelectorAll(FOCUSABLE)].filter(el => el.offsetParent !== null);
+  const items = [...panel.value.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
   if (!items.length) {
     event.preventDefault();
     return;
@@ -151,8 +151,7 @@ const trapFocus = (event) => {
   if (event.shiftKey && (active === first || active === panel.value)) {
     event.preventDefault();
     last.focus();
-  }
-  else if (!event.shiftKey && active === last) {
+  } else if (!event.shiftKey && active === last) {
     event.preventDefault();
     first.focus();
   }
@@ -193,8 +192,7 @@ const handleConfirm = async () => {
   isBusy.value = true;
   try {
     result = await content.value.onConfirm?.();
-  }
-  finally {
+  } finally {
     if (version.value === current) {
       isBusy.value = false;
       if (result !== false) hide();
@@ -214,8 +212,7 @@ const handleBackdropClick = () => {
   if (isBusy.value) return;
   if (content.value.onCancel) {
     handleCancel();
-  } 
-  else {
+  } else {
     hide();
   }
 };

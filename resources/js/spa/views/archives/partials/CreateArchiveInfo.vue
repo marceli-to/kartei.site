@@ -1,6 +1,8 @@
 <template>
   <span class="flex items-center gap-x-8 text-xs">
-    <Icon name="chevron-left" variant="small-bold" />
+    <Icon
+      name="chevron-left"
+      variant="small-bold" />
     Erstellen Sie Ihre erste Kartei
   </span>
 </template>

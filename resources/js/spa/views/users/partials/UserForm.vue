@@ -1,32 +1,50 @@
 <template>
-  <form 
-    @submit.prevent="submit" 
-    class="w-full h-full flex flex-col gap-y-32 justify-between" 
-    v-if="!isLoading">
+  <form
+    v-if="!isLoading"
+    class="flex h-full w-full flex-col justify-between gap-y-32"
+    @submit.prevent="submit">
     <div class="flex flex-col gap-y-32">
       <div class="flex flex-col gap-y-20">
-        <InputGroup v-for="field in FIELDS" :key="field.key">
-          <InputLabel :label="field.label" :id="`user_${field.key}`" required :error="errors[field.key]" />
-          <InputText 
-            v-model="form[field.key]" 
-            :id="`user_${field.key}`" 
-            :error="errors[field.key]" 
-            @update:error="errors[field.key] = $event" 
-            :placeholder="field.label" />
+        <InputGroup
+          v-for="field in FIELDS"
+          :key="field.key">
+          <InputLabel
+            :id="`user_${field.key}`"
+            :label="field.label"
+            required
+            :error="errors[field.key]" />
+          <InputText
+            :id="`user_${field.key}`"
+            v-model="form[field.key]"
+            :error="errors[field.key]"
+            :placeholder="field.label"
+            @update:error="errors[field.key] = $event" />
         </InputGroup>
       </div>
-      <div v-if="uuid" class="flex flex-col gap-y-48">
-        <Action 
+      <div
+        v-if="uuid"
+        class="flex flex-col gap-y-48">
+        <Action
           type="button"
           label="Rechte"
           :icon="{ name: 'ChevronRight' }"
           @click="$emit('user-selected-permissions', userData)" />
-        <AppButton label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
+        <AppButton
+          label="Löschen"
+          variant="danger"
+          type="button"
+          @click="showDeleteDialog" />
       </div>
     </div>
     <ButtonGroup>
-      <AppButton type="submit" label="Speichern" :loading="isSaving" />
-      <AppButton type="button" @click="$emit('cancel')" label="Abbrechen" />
+      <AppButton
+        type="submit"
+        label="Speichern"
+        :loading="isSaving" />
+      <AppButton
+        type="button"
+        label="Abbrechen"
+        @click="$emit('cancel')" />
     </ButtonGroup>
   </form>
 </template>
@@ -49,16 +67,11 @@ import AppButton from '@/components/buttons/Button.vue';
 const props = defineProps({
   uuid: {
     type: [String, Number],
-    default: null
-  }
+    default: null,
+  },
 });
 
-const emit = defineEmits([
-  'success', 
-  'cancel', 
-  'user-selected-permissions', 
-  'user-deleted'
-]);
+const emit = defineEmits(['success', 'cancel', 'user-selected-permissions', 'user-deleted']);
 
 const FIELDS = [
   { key: 'firstname', label: 'Vorname' },
@@ -78,7 +91,7 @@ const form = ref({
   email: '',
 });
 
-const { errors, setErrors, clearErrors } = useFormErrors(FIELDS.map(field => field.key));
+const { errors, setErrors, clearErrors } = useFormErrors(FIELDS.map((field) => field.key));
 
 onMounted(async () => {
   if (!props.uuid) return;
@@ -89,11 +102,9 @@ onMounted(async () => {
       name: userData.value.name || '',
       email: userData.value.email || '',
     };
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Benutzerdaten konnten nicht geladen werden.');
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -102,17 +113,16 @@ const submit = async () => {
   try {
     isSaving.value = true;
     clearErrors();
-    const response = props.uuid
-      ? await updateUser(props.uuid, { ...form.value })
-      : await createUser({ ...form.value });
+    const response = props.uuid ? await updateUser(props.uuid, { ...form.value }) : await createUser({ ...form.value });
     toast.show(props.uuid ? 'Benutzer/in erfolgreich aktualisiert.' : 'Benutzer/in erfolgreich erstellt.', 'success');
     emit('success', response);
-  } 
-  catch (error) {
+  } catch (error) {
     setErrors(error);
-    notifyError(error, props.uuid ? 'Fehler beim Aktualisieren des Benutzers.' : 'Fehler beim Erstellen des Benutzers.');
-  }
-  finally {
+    notifyError(
+      error,
+      props.uuid ? 'Fehler beim Aktualisieren des Benutzers.' : 'Fehler beim Erstellen des Benutzers.',
+    );
+  } finally {
     isSaving.value = false;
   }
 };

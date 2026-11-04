@@ -48,6 +48,8 @@
 - [x] Icons: one `components/icons/Icon.vue` (`<Icon name="cross" variant="small" class="…" />`, single `<svg>` root, `aria-hidden`) with the SVG data in `icons/registry.js` (generated from the 21 old files, which are gone; `Logo.vue` stays); `Action.vue` template no longer duplicated; screenshots of 16 screens pixel-identical before/after
 - [x] Buttons: `Primary` + `Auth` -> `components/buttons/Button.vue` (imported as `AppButton`, variants `primary`/`danger`/`secondary`, `loading`); `Action` (list row: link or button with icon) and `Sort` (text toggle) stay separate on purpose, they are different controls
 - [x] `ImageUpload`: one `v-model` (`defineModel`), no `existingImages`; `useFileUpload` hands uploads to an `onUploaded` callback, `List.vue` drags the parent's list directly and saves the order in the setter (no copies left)
+- [x] Tooling: ESLint (`eslint.config.js`, eslint-plugin-vue recommended + eslint-config-prettier) and Prettier (`.prettierrc.json`: semicolons, single quotes, 120 columns, one attribute per line, `bracketSameLine`, Tailwind class sorting incl. `classes`/`wrapperClasses`/… props); `npm run lint`, `npm run format`, `npm run format:check`; whole SPA formatted once, 16 screens pixel-identical before/after
+- [x] Keyboard focus visible on `AppButton` and the upload zone (`focus-visible` outline instead of `!outline-none`)
 - [x] Bug found on the way: an address without house number failed with a 500 (`addresses.street_number` was NOT NULL); migration makes it nullable, test added
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
@@ -66,11 +68,6 @@
 ## Vue review: open points
 
 Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
-
-### Structure and duplication
-
-### Tooling
-- [ ] Prettier/ESLint config and one run (semicolons, quotes, attribute order)
 
 ## Archive cover image (Titelbild)
 

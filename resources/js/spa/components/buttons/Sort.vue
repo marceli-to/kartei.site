@@ -1,9 +1,9 @@
 <template>
   <button
     type="button"
-    @click="$emit('toggle')"
     :aria-label="isAscending ? 'Sortierung: aufsteigend (A–Z), umkehren' : 'Sortierung: absteigend (Z–A), umkehren'"
-    class="text-sm mb-4 block">
+    class="mb-4 block text-sm"
+    @click="$emit('toggle')">
     <slot></slot>
   </button>
 </template>
@@ -12,8 +12,8 @@
 defineProps({
   isAscending: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 });
 
 defineEmits(['toggle']);

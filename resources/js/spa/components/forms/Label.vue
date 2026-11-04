@@ -1,7 +1,9 @@
 <template>
   <!-- With an error, the message takes the label's place: always visible, even when
        the field has a value (a placeholder only shows while it is empty) -->
-  <label :for="id" :class="[classes, { 'text-flame': error }]">
+  <label
+    :for="id"
+    :class="[classes, { 'text-flame': error }]">
     <template v-if="error">{{ error }}</template>
     <template v-else>{{ label }} <span v-if="required">*</span></template>
   </label>
@@ -10,24 +12,24 @@
 defineProps({
   id: {
     type: String,
-    default: null
+    default: null,
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   required: {
     type: Boolean,
-    default: false
+    default: false,
   },
   // Server message for the field, shown instead of the label
   error: {
     type: String,
-    default: null
+    default: null,
   },
   classes: {
     type: String,
-    default: 'text-sm mb-4 block'
-  }
+    default: 'text-sm mb-4 block',
+  },
 });
 </script>

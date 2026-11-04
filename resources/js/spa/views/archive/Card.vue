@@ -1,54 +1,57 @@
 <template>
   <Slide :pull="true">
-    <form 
-      @submit.prevent="handleSubmit"
-      class="w-full h-full flex flex-col justify-between relative"
-      v-if="!isLoading">
-
+    <form
+      v-if="!isLoading"
+      class="relative flex h-full w-full flex-col justify-between"
+      @submit.prevent="handleSubmit">
       <!-- Content -->
       <div class="flex flex-col gap-y-20">
-
         <div>
           <InputLabel label="Bildfeld" />
-          <ImageCard class="flex items-center justify-center mb-8 !aspect-[16/9]">
-            <Icon name="image" class="text-graphite" v-if="form.has_images" />
-            <Icon name="image" variant="missing" class="text-graphite" v-else />
+          <ImageCard class="mb-8 flex !aspect-[16/9] items-center justify-center">
+            <Icon
+              v-if="form.has_images"
+              name="image"
+              class="text-graphite" />
+            <Icon
+              v-else
+              name="image"
+              variant="missing"
+              class="text-graphite" />
           </ImageCard>
           <InputGroup>
             <InputSelectButtons
-              legend="Bildfeld"
               v-model="form.has_images"
+              legend="Bildfeld"
               name="image"
-              wrapperClasses="flex flex-col gap-y-8"
+              wrapper-classes="flex flex-col gap-y-8"
               :options="image_options" />
           </InputGroup>
         </div>
 
         <InputGroup>
           <InputLabel label="Nr. / ID" />
-          <InputStatic>
-            Nr. / ID (wird automatisch generiert)
-          </InputStatic>
+          <InputStatic> Nr. / ID (wird automatisch generiert) </InputStatic>
         </InputGroup>
 
         <div class="mt-16">
-          <Action 
+          <Action
             type="button"
-            label="Textfeld" 
+            label="Textfeld"
             :icon="{ name: 'Plus', variant: 'small', position: 'center' }"
             @click="add" />
         </div>
 
         <div>
-          <draggable 
-            v-model="form.record_fields" 
-            :item-key="rowKey" 
-            class="flex flex-col gap-y-8" 
+          <draggable
+            v-model="form.record_fields"
+            :item-key="rowKey"
+            class="flex flex-col gap-y-8"
             handle=".drag-handle"
             :animation="200"
             @end="reorder">
             <template #item="{ element, index }">
-              <InputGroup class="relative flex justify-between items-center">
+              <InputGroup class="relative flex items-center justify-between">
                 <!-- 
                   <span class="cursor-grab size-16 drag-handle">
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,28 +60,32 @@
                   </span>
                 -->
                 <InputText
+                  :ref="(el) => (inputRefs[index] = el)"
                   v-model="element.placeholder"
                   :placeholder="`Textfeld ${index + 1}`"
-                  aria-label="Textfeld"
-                  :ref="el => inputRefs[index] = el" />
+                  aria-label="Textfeld" />
 
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   class="absolute right-8 top-12"
                   :aria-label="`Textfeld ${index + 1} entfernen`"
                   @click="remove(index)">
-                  <Icon name="cross" variant="small" />
+                  <Icon
+                    name="cross"
+                    variant="small" />
                 </button>
               </InputGroup>
             </template>
           </draggable>
         </div>
-
       </div>
 
       <!-- Buttons -->
       <ButtonGroup>
-        <AppButton type="submit" label="Speichern" :disabled="isSaving" />
+        <AppButton
+          type="submit"
+          label="Speichern"
+          :disabled="isSaving" />
       </ButtonGroup>
     </form>
   </Slide>
@@ -115,21 +122,21 @@ const inputRefs = ref([]);
 
 const image_options = [
   { value: true, label: 'Bildfeld' },
-  { value: false, label: 'Ohne Bildfeld' }
+  { value: false, label: 'Ohne Bildfeld' },
 ];
 
 defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // A fresh object each time: a shared one would keep whatever was typed into it
 const emptyField = (order = 0) => ({
   uuid: '',
   placeholder: '',
-  order
+  order,
 });
 
 // Stable drag keys per row object; new fields have no uuid yet
@@ -143,7 +150,7 @@ const rowKey = (row) => {
 
 const form = ref({
   has_images: true,
-  record_fields: [emptyField()]
+  record_fields: [emptyField()],
 });
 
 onMounted(async () => {
@@ -154,15 +161,12 @@ onMounted(async () => {
 
       if (!response.record_fields || response.record_fields.length === 0) {
         form.value.record_fields = [emptyField()];
-      }
-      else {
+      } else {
         form.value.record_fields = response.record_fields;
       }
-    } 
-    catch (error) {
+    } catch (error) {
       notifyError(error, 'Die Kartenvorlage konnte nicht geladen werden.');
-    }
-    finally {
+    } finally {
       isLoading.value = false;
     }
   }
@@ -172,27 +176,24 @@ onMounted(async () => {
 const handleSubmit = async () => {
   isSaving.value = true;
   try {
-    const validFields = form.value.record_fields.filter(field => field.placeholder.trim() !== '');
+    const validFields = form.value.record_fields.filter((field) => field.placeholder.trim() !== '');
     const payload = {
       has_images: form.value.has_images,
-      record_fields: validFields
+      record_fields: validFields,
     };
 
     const response = await storeArchiveSettings(uuid.value, payload);
 
     if (response?.record_fields?.length > 0) {
       form.value.record_fields = response.record_fields;
-    }
-    else {
+    } else {
       form.value.record_fields = [emptyField()];
     }
 
     toast.show('Kartenvorlage erfolgreich gespeichert.', 'success');
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Fehler beim Speichern der Kartenvorlage.');
-  } 
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };
@@ -210,8 +211,7 @@ const remove = async (index) => {
   if (fieldUuid) {
     try {
       await deleteArchiveSettingsField(fieldUuid, uuid.value);
-    } 
-    catch (error) {
+    } catch (error) {
       notifyError(error, 'Fehler beim Löschen des Textfelds.');
       return;
     }

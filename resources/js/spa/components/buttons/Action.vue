@@ -13,7 +13,9 @@
       <span :class="{ 'flex-1 text-left': icon?.position === 'center' }">
         {{ label }}
       </span>
-      <span v-if="icon?.position === 'center'" class="flex-1 flex justify-start">
+      <span
+        v-if="icon?.position === 'center'"
+        class="flex flex-1 justify-start">
         <Icon
           v-if="iconName"
           :name="iconName"
@@ -36,19 +38,19 @@ import Icon from '@/components/icons/Icon.vue';
 const props = defineProps({
   type: {
     type: String,
-    default: 'submit'
+    default: 'submit',
   },
   href: {
     type: String,
-    default: ''
+    default: '',
   },
   to: {
     type: [String, Object],
-    default: ''
+    default: '',
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   icon: {
     type: Object,
@@ -61,21 +63,21 @@ const props = defineProps({
         (!variant || ['tiny', 'small', 'small-bold', 'large'].includes(variant)) &&
         (!position || ['left', 'right', 'center'].includes(position))
       );
-    }
+    },
   },
   classes: {
     type: String,
-    default: ''
+    default: '',
   },
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   variant: {
     type: String,
     default: 'default',
-    validator: (value) => ['default', 'box'].includes(value)
-  }
+    validator: (value) => ['default', 'box'].includes(value),
+  },
 });
 
 // A router link (to), a plain link (href) or a button
@@ -93,15 +95,14 @@ const elementAttrs = computed(() => {
 
 // icon.name as written by the callers ('Plus', 'ChevronRight') -> registry name
 const iconName = computed(() =>
-  props.icon?.name ? props.icon.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : null
+  props.icon?.name ? props.icon.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : null,
 );
 
-const baseClasses = 'min-h-default flex items-center justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
+const baseClasses =
+  'min-h-default flex items-center justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
 
 const defaultBorderClasses = computed(() => {
-  return props.variant === 'box' 
-    ? 'border border-graphite px-8' 
-    : 'border-y border-graphite pr-8';
+  return props.variant === 'box' ? 'border border-graphite px-8' : 'border-y border-graphite pr-8';
 });
 
 const contentClasses = computed(() => {
@@ -109,9 +110,10 @@ const contentClasses = computed(() => {
     return 'w-full flex items-center justify-center';
   }
   return {
-    'w-full flex items-center justify-between gap-8': props.icon?.name && (props.icon.position === 'right' || !props.icon.position),
+    'w-full flex items-center justify-between gap-8':
+      props.icon?.name && (props.icon.position === 'right' || !props.icon.position),
     'w-full flex items-center gap-8': props.icon?.name && props.icon.position === 'left',
-    'w-full flex items-center justify-center': !props.icon?.name
+    'w-full flex items-center justify-center': !props.icon?.name,
   };
 });
 </script>

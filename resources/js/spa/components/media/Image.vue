@@ -5,7 +5,7 @@
       :alt="alt"
       :width="width"
       :height="height"
-      class="max-w-full max-h-full object-contain" />
+      class="max-h-full max-w-full object-contain" />
   </div>
 </template>
 
@@ -13,28 +13,28 @@
 defineProps({
   src: {
     type: String,
-    required: true
+    required: true,
   },
   alt: {
     type: String,
-    default: ''
+    default: '',
   },
   classes: {
     type: String,
-    default: 'absolute inset-0 flex justify-center items-center'
+    default: 'absolute inset-0 flex justify-center items-center',
   },
   spacing: {
     type: String,
-    default: 'm-20'
+    default: 'm-20',
   },
   // Pixel sizes; left out when unknown ("auto" is not a valid attribute value)
   width: {
     type: [String, Number],
-    default: undefined
+    default: undefined,
   },
   height: {
     type: [String, Number],
-    default: undefined
-  }
+    default: undefined,
+  },
 });
 </script>

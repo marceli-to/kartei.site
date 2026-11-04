@@ -1,13 +1,17 @@
 <template>
   <div>
     <div
+      v-if="multiple || list.length === 0"
       ref="dropZone"
-      class="border border-graphite aspect-square flex items-center justify-center w-full h-full relative cursor-pointer outline-none transition duration-200 ease-in-out group"
-      :class="[classes, {
-        '!border-[var(--theme-color)] text-[var(--theme-color)]': isDragging,
-        '!border-flame': hasError,
-        'bg-snow': isUploading
-      }]"
+      class="group relative flex aspect-square h-full w-full cursor-pointer items-center justify-center border border-graphite outline-none transition duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:focus-visible:outline-white"
+      :class="[
+        classes,
+        {
+          '!border-[var(--theme-color)] text-[var(--theme-color)]': isDragging,
+          '!border-flame': hasError,
+          'bg-snow': isUploading,
+        },
+      ]"
       role="button"
       tabindex="0"
       aria-label="Bilder hochladen"
@@ -16,52 +20,52 @@
       @keydown.enter.prevent="triggerFileInput"
       @dragover.prevent="isDragging = true"
       @dragleave.prevent="onDragLeave"
-      @drop.prevent="handleDrop"
-      v-if="multiple || list.length === 0">
+      @drop.prevent="handleDrop">
       <input
         ref="fileInput"
         type="file"
         class="hidden"
         :accept="allowedTypes.join(',')"
         :multiple="multiple"
-        @change="handleFileSelect"
-      />
-  
-      <div v-if="isUploading" class="absolute top-0 left-0 w-full">
-        <div class="w-full bg-transparent h-4 overflow-hidden">
-          <div 
-            class="bg-black h-4 transition-all duration-200 will-change-auto" 
-            :style="{ width: `${uploadProgress}%` }"
-          ></div>
+        @change="handleFileSelect" />
+
+      <div
+        v-if="isUploading"
+        class="absolute left-0 top-0 w-full">
+        <div class="h-4 w-full overflow-hidden bg-transparent">
+          <div
+            class="h-4 bg-black transition-all duration-200 will-change-auto"
+            :style="{ width: `${uploadProgress}%` }"></div>
         </div>
-        <div class="text-xs mt-4 ml-4 leading-none">{{ uploadProgress }}%</div>
+        <div class="ml-4 mt-4 text-xs leading-none">{{ uploadProgress }}%</div>
       </div>
-      <div v-else class="flex flex-col items-center">
-        <Icon name="image" :class="{ 'text-flame': hasError || hasValidationError }" />
+      <div
+        v-else
+        class="flex flex-col items-center">
+        <Icon
+          name="image"
+          :class="{ 'text-flame': hasError || hasValidationError }" />
         <template v-if="hasValidationError">
-          <div class="text-sm mt-8 text-flame">
+          <div class="mt-8 text-sm text-flame">
             {{ displayedError }}
           </div>
         </template>
         <template v-else>
-          <div class="text-sm mt-8">
-            Klicken oder Bild hierher ziehen
-          </div>
+          <div class="mt-8 text-sm">Klicken oder Bild hierher ziehen</div>
         </template>
       </div>
     </div>
 
-    <ImageList 
+    <ImageList
       :images="list"
-      @update:images="images = $event" 
-      :editable="true" 
-      :multiple="multiple" />
-
+      :editable="true"
+      :multiple="multiple"
+      @update:images="images = $event" />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue';
 import { useFileUpload, normalizeImageEntry } from '@/composables/useFileUpload.js';
 import ImageList from '@/components/media/upload/List.vue';
 import { MAX_UPLOAD_BYTES } from '@/config/upload';
@@ -70,28 +74,28 @@ import Icon from '@/components/icons/Icon.vue';
 const props = defineProps({
   maxSize: {
     type: Number,
-    default: MAX_UPLOAD_BYTES
+    default: MAX_UPLOAD_BYTES,
   },
   allowedTypes: {
     type: Array,
-    default: () => ['image/*']
+    default: () => ['image/*'],
   },
   uploadUrl: {
     type: String,
-    default: '/upload'
+    default: '/upload',
   },
   multiple: {
     type: Boolean,
-    default: true
+    default: true,
   },
   error: {
     type: String,
-    default: ''
+    default: '',
   },
   classes: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 });
 
 // The images (saved and freshly uploaded); the parent's v-model is the only copy
@@ -108,7 +112,7 @@ const {
   validationErrors,
   handleDrop,
   handleFileSelect,
-  triggerFileInput
+  triggerFileInput,
 } = useFileUpload({
   maxSize: props.maxSize,
   allowedTypes: props.allowedTypes,
@@ -117,7 +121,7 @@ const {
   // New uploads go first; a single-image field is replaced
   onUploaded: (uploaded) => {
     images.value = props.multiple ? [...uploaded, ...list.value] : uploaded;
-  }
+  },
 });
 
 const displayedError = computed(() => {

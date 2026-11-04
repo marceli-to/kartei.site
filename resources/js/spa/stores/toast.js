@@ -16,7 +16,7 @@ export const useToastStore = defineStore('toast', () => {
   };
 
   const removeToast = (id) => {
-    toasts.value = toasts.value.filter(toast => toast.id !== id);
+    toasts.value = toasts.value.filter((toast) => toast.id !== id);
   };
 
   return { toasts, show, removeToast };

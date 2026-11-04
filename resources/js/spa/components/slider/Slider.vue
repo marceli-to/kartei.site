@@ -1,23 +1,24 @@
 <template>
-  <div class="flex flex-grow w-full overflow-hidden mt-48 relative">
-
-    <nav class="w-2/12 min-w-nav sticky shrink-0 left-0 mt-58 min-h-full z-50 border-graphite border-r bg-white dark:bg-black">
-      <div :class="{ 'border border-graphite min-h-[calc(100%_-_20px)] mr-8 pl-8': navigationVariant === 'box' }">
-
+  <div class="relative mt-48 flex w-full flex-grow overflow-hidden">
+    <nav
+      class="sticky left-0 z-50 mt-58 min-h-full w-2/12 min-w-nav shrink-0 border-r border-graphite bg-white dark:bg-black">
+      <div :class="{ 'mr-8 min-h-[calc(100%_-_20px)] border border-graphite pl-8': navigationVariant === 'box' }">
         <!-- Previous slide, covers the headings that slid under the navigation -->
         <div
           v-if="activeIndex > 0"
-          class="absolute left-0 -top-60 w-full flex items-center justify-between bg-white dark:bg-black">
-          <h1 class="opacity-20 font-muoto-medium">
+          class="absolute -top-60 left-0 flex w-full items-center justify-between bg-white dark:bg-black">
+          <h1 class="font-muoto-medium opacity-20">
             {{ visibleSlides[activeIndex - 1].name }}
           </h1>
           <button
             type="button"
-            @click="prev"
             title="Vorheriger Abschnitt"
             aria-label="Vorheriger Abschnitt"
-            class="opacity-20 mr-16">
-            <Icon name="chevron-left" variant="small-bold" />
+            class="mr-16 opacity-20"
+            @click="prev">
+            <Icon
+              name="chevron-left"
+              variant="small-bold" />
           </button>
         </div>
 
@@ -27,14 +28,14 @@
           <li
             v-for="item in visibleSlides"
             :key="item.id"
-            class="min-h-default flex items-center border-b border-b-graphite first-of-type:border-t first-of-type:border-t-graphite mr-8">
+            class="mr-8 flex min-h-default items-center border-b border-b-graphite first-of-type:border-t first-of-type:border-t-graphite">
             <button
               type="button"
-              @click="go(item.id)"
               :disabled="item.disabled"
               :aria-current="item.id === activeId ? 'step' : undefined"
               class="block w-full text-left disabled:opacity-50"
-              :class="{ 'font-muoto-medium': item.id === activeId }">
+              :class="{ 'font-muoto-medium': item.id === activeId }"
+              @click="go(item.id)">
               {{ item.name }}
             </button>
           </li>
@@ -44,33 +45,35 @@
 
     <div
       ref="track"
-      class="flex flex-grow w-full relative z-40"
+      class="relative z-40 flex w-full flex-grow"
       :class="{ 'transition-transform duration-300 ease-in-out': animate }"
       :style="{ transform: `translateX(-${offset}px)` }">
       <section
         v-for="(item, index) in visibleSlides"
         :key="item.id"
-        :ref="el => setSectionEl(item.id, el)"
+        :ref="(el) => setSectionEl(item.id, el)"
         :class="item.class"
         class="shrink-0">
         <h2
-          class="ml-8 flex justify-between items-center font-muoto-medium leading-none h-20"
+          class="ml-8 flex h-20 items-center justify-between font-muoto-medium leading-none"
           :class="{ 'opacity-20': index !== activeIndex }">
           <span>{{ item.name }}</span>
           <button
             v-if="index >= activeIndex && index < visibleSlides.length - 1"
             type="button"
-            @click="next"
             title="Nächster Abschnitt"
             aria-label="Nächster Abschnitt"
-            class="mr-16">
-            <Icon name="chevron-right" variant="small-bold" />
+            class="mr-16"
+            @click="next">
+            <Icon
+              name="chevron-right"
+              variant="small-bold" />
           </button>
         </h2>
-        <div class="flex flex-grow min-h-full pt-38">
+        <div class="flex min-h-full flex-grow pt-38">
           <!-- inert: no clicks and no keyboard focus outside the active slide -->
           <div
-            class="flex-grow min-h-full border-r border-r-graphite relative"
+            class="relative min-h-full flex-grow border-r border-r-graphite"
             :class="{
               'opacity-20 transition-opacity': index > activeIndex,
               'opacity-0 transition-opacity': index < activeIndex,
@@ -79,13 +82,12 @@
             <component
               :is="item.component"
               v-bind="item.props || {}"
-              :isActive="index === activeIndex"
+              :is-active="index === activeIndex"
               class="shrink-0" />
           </div>
         </div>
       </section>
     </div>
-
   </div>
 </template>
 
@@ -111,12 +113,12 @@ import Icon from '@/components/icons/Icon.vue';
 const props = defineProps({
   slides: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   navigationVariant: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 });
 
 const route = useRoute();
@@ -127,20 +129,18 @@ const resolve = (value) => (typeof value === 'function' ? value() : value);
 
 const visibleSlides = computed(() =>
   props.slides
-    .filter(slide => {
+    .filter((slide) => {
       if (!slide.permission) return true;
-      return typeof slide.permission === 'function'
-        ? slide.permission()
-        : userStore.can(slide.permission);
+      return typeof slide.permission === 'function' ? slide.permission() : userStore.can(slide.permission);
     })
-    .map(slide => ({ ...slide, disabled: !!resolve(slide.disabled) }))
+    .map((slide) => ({ ...slide, disabled: !!resolve(slide.disabled) })),
 );
 
-const isSelectable = (id) => visibleSlides.value.some(slide => slide.id === id && !slide.disabled);
-const firstSelectable = () => visibleSlides.value.find(slide => !slide.disabled)?.id ?? null;
+const isSelectable = (id) => visibleSlides.value.some((slide) => slide.id === id && !slide.disabled);
+const firstSelectable = () => visibleSlides.value.find((slide) => !slide.disabled)?.id ?? null;
 
 const activeId = ref(isSelectable(route.query.section) ? route.query.section : firstSelectable());
-const activeIndex = computed(() => visibleSlides.value.findIndex(slide => slide.id === activeId.value));
+const activeIndex = computed(() => visibleSlides.value.findIndex((slide) => slide.id === activeId.value));
 
 function go(id) {
   if (!isSelectable(id) || id === activeId.value) return;
@@ -157,11 +157,14 @@ const next = () => step(1);
 const prev = () => step(-1);
 
 // Links to another section while the page is open
-watch(() => route.query.section, (section) => {
-  if (section && section !== activeId.value && isSelectable(section)) {
-    activeId.value = section;
-  }
-});
+watch(
+  () => route.query.section,
+  (section) => {
+    if (section && section !== activeId.value && isSelectable(section)) {
+      activeId.value = section;
+    }
+  },
+);
 
 // The active slide got hidden or disabled (permissions, new archive)
 watch(visibleSlides, () => {

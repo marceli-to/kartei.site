@@ -7,8 +7,8 @@
 const props = defineProps({
   class: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 });
 const baseClasses = 'border-y border-y-graphite min-h-default flex items-center select-none';
 </script>

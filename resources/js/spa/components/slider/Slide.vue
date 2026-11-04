@@ -1,6 +1,6 @@
 <template>
-  <div 
-    class="w-full h-full relative px-8 pb-16"
+  <div
+    class="relative h-full w-full px-8 pb-16"
     :class="{ '-top-24': pull }">
     <slot />
   </div>
@@ -9,7 +9,7 @@
 defineProps({
   pull: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 </script>

@@ -1,14 +1,13 @@
 <template>
   <Slide :pull="viewState !== 'listing' && viewState !== 'notifying'">
-
     <template v-if="viewState === 'creating'">
-      <UserForm 
-        @success="(userData) => handleUserCreated(userData)" 
+      <UserForm
+        @success="(userData) => handleUserCreated(userData)"
         @cancel="resetView()" />
     </template>
 
     <template v-if="viewState === 'updating'">
-      <UserForm 
+      <UserForm
         :uuid="selectedUser.uuid"
         @success="handleUserUpdated"
         @user-deleted="handleUserDeleted"
@@ -17,35 +16,34 @@
     </template>
 
     <template v-if="viewState === 'createPermissions'">
-      <UserPermissions 
+      <UserPermissions
         :user="createdUser"
-        :archiveUuid="archiveUuid"
+        :archive-uuid="archiveUuid"
         @success="handleUserPermissionsSaved" />
     </template>
 
     <template v-if="viewState === 'updatePermissions'">
-      <UserPermissions 
+      <UserPermissions
         :user="selectedUser"
-        :archiveUuid="archiveUuid"
+        :archive-uuid="archiveUuid"
         cancelable
         @success="handleUserPermissionsSaved"
         @cancel="resetView()" />
     </template>
 
     <template v-if="viewState === 'listing'">
-      <ListUsers 
+      <ListUsers
         ref="userListRef"
         :users="users"
-        :isLoading="isLoadingUsers"
+        :is-loading="isLoadingUsers"
+        :can-create="!showSubscriptionInfo"
         @user-selected="handleUserSelected"
-        @create-user="viewState = 'creating'"
-        :canCreate="!showSubscriptionInfo" />
+        @create-user="viewState = 'creating'" />
 
-      <SubscriptionInfo 
+      <SubscriptionInfo
         v-if="showSubscriptionInfo"
-        :hasSubscription="hasSubscription"
-        :maxUsersReached="maxUsersReached" />
-
+        :has-subscription="hasSubscription"
+        :max-users-reached="maxUsersReached" />
     </template>
   </Slide>
 </template>
@@ -77,8 +75,8 @@ const isLoadingSubscription = ref(true);
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // Subscription logic
@@ -96,18 +94,21 @@ const showSubscriptionInfo = computed(() => {
 });
 
 // Watch for when this slide becomes active
-watch(() => props.isActive, async (isActive) => {
-  if (isActive) {
-    resetView();
-    await Promise.all([fetchUsers(), fetchSubscription()]);
-  }
-});
+watch(
+  () => props.isActive,
+  async (isActive) => {
+    if (isActive) {
+      resetView();
+      await Promise.all([fetchUsers(), fetchSubscription()]);
+    }
+  },
+);
 
 // Load users when component mounts
-onMounted( async ()  => {
- if (props.isActive) {
+onMounted(async () => {
+  if (props.isActive) {
     await Promise.all([fetchUsers(), fetchSubscription()]);
- }
+  }
 });
 
 // Fetch subscription
@@ -131,16 +132,13 @@ const fetchUsers = async () => {
     let response;
     if (archiveUuid.value) {
       response = await getArchiveUsers(archiveUuid.value);
-    }
-    else {
+    } else {
       response = await getRelatedUsers();
     }
     users.value = response.data || [];
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Benutzer/innen konnten nicht geladen werden.');
-  }
-  finally {
+  } finally {
     isLoadingUsers.value = false;
   }
 };
@@ -168,24 +166,24 @@ const handleUserPermissionsSaved = () => {
 const handleUserSelectedPermissions = (user) => {
   selectedUser.value = user;
   viewState.value = 'updatePermissions';
-}; 
+};
 
 const handleUserDeleted = (deletedUserUuid) => {
-  users.value = users.value.filter(user => user.uuid !== deletedUserUuid);
+  users.value = users.value.filter((user) => user.uuid !== deletedUserUuid);
   resetView();
 };
 
 const resetView = () => {
   const previousState = viewState.value;
   viewState.value = 'listing';
-  
+
   if (previousState !== 'updating') {
     createdUser.value = null;
   }
-  
+
   // Reset selected user when going back to listing
   selectedUser.value = null;
-  
+
   if (userListRef.value) {
     userListRef.value.resetSearch();
   }

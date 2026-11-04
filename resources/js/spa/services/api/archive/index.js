@@ -1,4 +1,4 @@
-import api from '@/services/api/axios'
+import api from '@/services/api/axios';
 
 export const getArchive = async (uuid) => {
   const response = await api.get(`/archive/${uuid}`);
@@ -22,7 +22,7 @@ export const getByUser = async (userId) => {
   const response = await api.get(`/archives/user/${userId}`);
   return response.data;
 };
-  
+
 export const getArchivesByAdmin = async () => {
   const response = await api.get('/archives/admin');
   return response.data;
@@ -62,4 +62,3 @@ export const getArchiveMeta = async (uuid) => {
   const response = await api.get(`/archive/meta/${uuid}`);
   return response.data;
 };
-

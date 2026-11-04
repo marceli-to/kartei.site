@@ -13,13 +13,13 @@ export const useUserStore = defineStore('user', {
     // Per-archive abilities from ArchivePolicy: { [archiveUuid]: ['view', 'updateRecord', ...] }
     archives: {},
     favorites: [],
-    initialized: false
+    initialized: false,
   }),
 
   getters: {
     isSuperAdmin: (state) => {
-      return state.roles.some(role => role.name === 'Super Admin');
-    }
+      return state.roles.some((role) => role.name === 'Super Admin');
+    },
   },
 
   actions: {
@@ -33,7 +33,9 @@ export const useUserStore = defineStore('user', {
           if (!(await this.fetchPermissions())) return;
           this.initialized = true;
           await this.fetchFavorites();
-        })().finally(() => { initializing = null; });
+        })().finally(() => {
+          initializing = null;
+        });
       }
       return initializing;
     },
@@ -47,8 +49,7 @@ export const useUserStore = defineStore('user', {
         this.roles = permissions.roles;
         this.archives = permissions.archives || {};
         return true;
-      } 
-      catch (error) {
+      } catch (error) {
         notifyError(error, 'Ihre Berechtigungen konnten nicht geladen werden.');
         return false;
       }
@@ -58,22 +59,21 @@ export const useUserStore = defineStore('user', {
       try {
         const favorites = await getFavorites();
         this.favorites = favorites;
-      } 
-      catch {
+      } catch {
         // Not worth a message: the hearts just show as empty
       }
     },
 
     can(permission) {
       if (this.isSuperAdmin) return true;
-      return this.permissions.some(p => p.name === permission);
+      return this.permissions.some((p) => p.name === permission);
     },
 
     // Same rules as the API (ArchivePolicy). abilities: one name or a list (any of them)
     canArchive(archiveUuid, abilities) {
       if (this.isSuperAdmin) return true;
       const granted = this.archives[archiveUuid] || [];
-      return [].concat(abilities).some(ability => granted.includes(ability));
+      return [].concat(abilities).some((ability) => granted.includes(ability));
     },
-  }
+  },
 });

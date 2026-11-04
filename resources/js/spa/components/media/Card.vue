@@ -1,9 +1,5 @@
 <template>
-  <figure 
-    :class="[
-      'border border-graphite aspect-square relative bg-white dark:bg-black',
-      classes
-    ]">
+  <figure :class="['relative aspect-square border border-graphite bg-white dark:bg-black', classes]">
     <slot />
   </figure>
 </template>
@@ -11,7 +7,7 @@
 defineProps({
   classes: {
     type: String,
-    default: ''
-  }
-})
+    default: '',
+  },
+});
 </script>

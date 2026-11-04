@@ -39,21 +39,21 @@ export function useStructureForm(archiveUuid) {
     const data = Array.isArray(response.data) ? response.data : [];
 
     categories.value = data.length
-      ? data.map(category => ({
+      ? data.map((category) => ({
           name: category.name,
           custom_id: category.custom_id ?? '',
           uuid: category.uuid,
-          registers: (category.registers || []).map(register => ({
+          registers: (category.registers || []).map((register) => ({
             name: register.name,
             custom_id: register.custom_id ?? '',
-            uuid: register.uuid
-          }))
+            uuid: register.uuid,
+          })),
         }))
       : [emptyCategory()];
     hasCategories.value = data.length > 0;
 
     // Registers store their own numeral type; read it from the first register there is
-    const firstRegister = data.flatMap(category => category.registers || [])[0];
+    const firstRegister = data.flatMap((category) => category.registers || [])[0];
     numeralsCategory.value = data[0]?.numeral_type ?? 'decimal';
     numeralsRegister.value = firstRegister?.numeral_type ?? numeralsCategory.value;
     idType.value = data[0]?.custom_id_type ?? 'auto';
@@ -73,41 +73,46 @@ export function useStructureForm(archiveUuid) {
 
   // Rows without any input are dropped before saving
   const removeEmptyRows = () => {
-    categories.value = categories.value.filter(category => {
-      category.registers = category.registers.filter(register =>
-        register.name || register.custom_id || register.uuid
+    categories.value = categories.value.filter((category) => {
+      category.registers = category.registers.filter(
+        (register) => register.name || register.custom_id || register.uuid,
       );
       return category.name || category.custom_id || category.uuid || category.registers.length > 0;
     });
   };
 
-  const buildPayload = () => categories.value.map((category, cIdx) => {
-    // Stored numbers: "A" for a category, "A.b" for a register
-    const number = formatNumber(cIdx, numeralsCategory.value).toUpperCase();
-    return {
-      numeral_type: numeralsCategory.value,
-      custom_id_type: idType.value,
-      uuid: category.uuid,
-      number,
-      name: category.name,
-      custom_id: category.custom_id,
-      order: cIdx,
-      registers: category.registers.map((register, rIdx) => ({
-        numeral_type: numeralsRegister.value,
+  const buildPayload = () =>
+    categories.value.map((category, cIdx) => {
+      // Stored numbers: "A" for a category, "A.b" for a register
+      const number = formatNumber(cIdx, numeralsCategory.value).toUpperCase();
+      return {
+        numeral_type: numeralsCategory.value,
         custom_id_type: idType.value,
-        uuid: register.uuid,
-        number: `${number}.${formatNumber(rIdx, numeralsRegister.value)}`,
-        name: register.name,
-        custom_id: register.custom_id,
-        order: rIdx
-      }))
-    };
-  });
+        uuid: category.uuid,
+        number,
+        name: category.name,
+        custom_id: category.custom_id,
+        order: cIdx,
+        registers: category.registers.map((register, rIdx) => ({
+          numeral_type: numeralsRegister.value,
+          custom_id_type: idType.value,
+          uuid: register.uuid,
+          number: `${number}.${formatNumber(rIdx, numeralsRegister.value)}`,
+          name: register.name,
+          custom_id: register.custom_id,
+          order: rIdx,
+        })),
+      };
+    });
 
-  const isComplete = (payload) => payload.every(category =>
-    category.custom_id && category.number && category.name &&
-    category.registers.every(register => register.custom_id && register.number && register.name)
-  );
+  const isComplete = (payload) =>
+    payload.every(
+      (category) =>
+        category.custom_id &&
+        category.number &&
+        category.name &&
+        category.registers.every((register) => register.custom_id && register.number && register.name),
+    );
 
   // Takes the uuids and IDs the server assigned
   const applySaved = (data) => {
@@ -133,7 +138,7 @@ export function useStructureForm(archiveUuid) {
     removeEmptyRows();
 
     // Enter submits without a blur, so auto IDs may not be derived yet
-    categories.value.forEach(category => {
+    categories.value.forEach((category) => {
       applyAutoId(category);
       category.registers.forEach(applyAutoId);
     });

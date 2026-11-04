@@ -1,31 +1,30 @@
 <template>
   <Slide :pull="true">
-    <div 
-      class="w-full h-full flex flex-col justify-between"
-      v-if="!isLoading">
-
+    <div
+      v-if="!isLoading"
+      class="flex h-full w-full flex-col justify-between">
       <!-- Form elements -->
       <div class="flex flex-col gap-y-20">
         <InputGroup>
           <InputLabel label="Hintergrund" />
           <InputSelectButtons
-            legend="Hintergrund"
             v-model="theme.color_scheme"
+            legend="Hintergrund"
             name="color_scheme"
-            wrapperClasses="w-full flex gap-x-8"
-            labelClasses="w-full"
+            wrapper-classes="w-full flex gap-x-8"
+            label-classes="w-full"
             :options="colorSchemes"
-            @update:modelValue="saveTheme" />
+            @update:model-value="saveTheme" />
         </InputGroup>
         <InputGroup>
           <InputLabel label="Auszeichnungsfarbe" />
           <InputSelectButtons
-            legend="Auszeichnungsfarbe"
             v-model="theme.color_theme"
+            legend="Auszeichnungsfarbe"
             name="color_theme"
-            wrapperClasses="w-full grid grid-cols-2 gap-8"
+            wrapper-classes="w-full grid grid-cols-2 gap-8"
             :options="colorThemes"
-            @update:modelValue="saveTheme" />
+            @update:model-value="saveTheme" />
         </InputGroup>
       </div>
     </div>
@@ -42,19 +41,12 @@ import Slide from '@/components/slider/Slide.vue';
 defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // Use the theme composable
-const { 
-  theme, 
-  isLoading, 
-  colorSchemes, 
-  colorThemes, 
-  fetchTheme, 
-  saveTheme 
-} = useTheme();
+const { theme, isLoading, colorSchemes, colorThemes, fetchTheme, saveTheme } = useTheme();
 
 onMounted(() => {
   fetchTheme();

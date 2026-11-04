@@ -1,35 +1,37 @@
 <template>
   <Slide class="pb-40">
-    <form 
-      @submit.prevent="handleSubmit"
-      class="w-full h-full flex flex-col justify-between"
-      v-if="!isLoading">
-
+    <form
+      v-if="!isLoading"
+      class="flex h-full w-full flex-col justify-between"
+      @submit.prevent="handleSubmit">
       <!-- Content -->
       <div class="flex flex-col gap-y-32">
         <div>
-          <Action 
+          <Action
             type="button"
-            label="Tag" 
+            label="Tag"
             :icon="{ name: 'Plus', variant: 'small-bold', position: 'center' }"
             @click="add" />
         </div>
         <div class="flex flex-col gap-y-8">
           <InputGroup
-            class="relative"
-            v-for="(tag, index) in form.tags" :key="rowKey(tag)">
+            v-for="(tag, index) in form.tags"
+            :key="rowKey(tag)"
+            class="relative">
             <InputText
+              :ref="(el) => (inputRefs[index] = el)"
               v-model="tag.name"
               :placeholder="`Tag ${index + 1}`"
-              aria-label="Tag"
-              :ref="el => inputRefs[index] = el" />
-              <button 
-                type="button" 
-                class="absolute right-8 top-1/2 -translate-y-1/2"
-                :aria-label="`Tag ${index + 1} entfernen`"
-                @click="remove(index)">
-                <Icon name="cross" variant="small" />
-              </button>
+              aria-label="Tag" />
+            <button
+              type="button"
+              class="absolute right-8 top-1/2 -translate-y-1/2"
+              :aria-label="`Tag ${index + 1} entfernen`"
+              @click="remove(index)">
+              <Icon
+                name="cross"
+                variant="small" />
+            </button>
           </InputGroup>
         </div>
       </div>
@@ -37,7 +39,9 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <AppButton label="Speichern" :disabled="isSaving" />
+          <AppButton
+            label="Speichern"
+            :disabled="isSaving" />
         </ButtonGroup>
       </div>
     </form>
@@ -63,8 +67,8 @@ const toast = useToastStore();
 defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const route = useRoute();
@@ -91,7 +95,7 @@ const rowKey = (row) => {
 };
 
 const form = ref({
-  tags: [emptyTag()]
+  tags: [emptyTag()],
 });
 
 onMounted(async () => {
@@ -99,11 +103,9 @@ onMounted(async () => {
     if (uuid.value) {
       await fetchTags();
     }
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Tags konnten nicht geladen werden.');
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -111,29 +113,26 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
-    const validTags = form.value.tags.filter(tag => tag.name.trim() !== '');
+    const validTags = form.value.tags.filter((tag) => tag.name.trim() !== '');
     const response = await storeTags(uuid.value, validTags);
     if (response?.data) {
       setTags(response.data);
     }
     toast.show('Tag/s erfolgreich gespeichert.', 'success');
-  } 
-  catch (error) { 
+  } catch (error) {
     notifyError(error, 'Fehler beim Speichern der Tags.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };
 
 const fetchTags = async () => {
   if (!uuid.value) return;
-  
+
   try {
     const response = await getTags(uuid.value);
     setTags(response?.data);
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Tags konnten nicht geladen werden.');
   }
 };
@@ -144,15 +143,14 @@ const add = async () => {
   // InputText's root element is the <input> itself
   const lastIndex = form.value.tags.length - 1;
   inputRefs.value[lastIndex]?.$el?.focus();
-}
+};
 
 const remove = async (index) => {
   const tagUuid = form.value.tags[index].uuid;
   if (tagUuid) {
     try {
       await deleteTag(tagUuid);
-    } 
-    catch (error) {
+    } catch (error) {
       notifyError(error, 'Fehler beim Löschen des Tags.');
       return;
     }
@@ -163,5 +161,4 @@ const remove = async (index) => {
     form.value.tags.push(emptyTag());
   }
 };
-
 </script>

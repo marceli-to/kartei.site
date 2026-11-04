@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-grow w-full">
-    <div class="flex mt-106 min-h-full w-full">
+  <div class="flex w-full flex-grow">
+    <div class="mt-106 flex min-h-full w-full">
       <ContentNavigation>
         <div class="flex flex-col gap-y-48">
           <div class="flex flex-col gap-y-20">
@@ -11,42 +11,46 @@
                 aria-label="Suche" />
             </InputGroup>
             <InputGroup>
-              <InputLabel label="Sortierfolge" id="sort_order" />
+              <InputLabel
+                id="sort_order"
+                label="Sortierfolge" />
               <InputSelect
                 id="sort_order"
                 v-model="sortOrder"
                 :options="sortOrderOptions"
-                variant="box"
-              />
+                variant="box" />
             </InputGroup>
             <InputGroup>
-              <InputLabel label="Darstellung" id="layout" />
+              <InputLabel
+                id="layout"
+                label="Darstellung" />
               <InputSelect
                 id="layout"
                 v-model="layout"
                 :options="layoutOptions"
-                variant="box"
-              />
+                variant="box" />
             </InputGroup>
           </div>
           <div class="flex flex-col gap-y-40">
-            <InputGroup v-if="userStore.can('create.archive')" class="relative">
-              <Action 
-                label="Erstellen" 
+            <InputGroup
+              v-if="userStore.can('create.archive')"
+              class="relative">
+              <Action
+                label="Erstellen"
                 variant="box"
                 :to="{ name: 'archiveSettings' }"
                 :icon="{ name: 'Plus', position: 'right' }" />
-                <template v-if="isInfoOpen">
-                  <InfoBox
-                    class="absolute !top-0 !-right-16 !w-auto min-h-default !py-0 flex items-center"
-                    :closable="false">
-                    <InfoCreateArchive />
-                  </InfoBox>
-                </template>
+              <template v-if="isInfoOpen">
+                <InfoBox
+                  class="absolute !-right-16 !top-0 flex min-h-default !w-auto items-center !py-0"
+                  :closable="false">
+                  <InfoCreateArchive />
+                </InfoBox>
+              </template>
             </InputGroup>
             <InputGroup>
-              <Action 
-                label="Duplizieren" 
+              <Action
+                label="Duplizieren"
                 variant="box"
                 :icon="{ name: 'Plus', position: 'right' }" />
             </InputGroup>
@@ -54,20 +58,28 @@
         </div>
       </ContentNavigation>
       <ContentMain>
-        <div 
+        <div
           v-if="filteredArchives.length > 0"
           class="flex flex-wrap gap-x-16 gap-y-32">
-          <Teaser 
-            :archive="archive" 
-            class="w-full md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)] shrink-0"
-            v-for="archive in filteredArchives" :key="archive.uuid" />
+          <Teaser
+            v-for="archive in filteredArchives"
+            :key="archive.uuid"
+            :archive="archive"
+            class="w-full shrink-0 md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)]" />
         </div>
-        <div v-else-if="archives.length > 0" class="text-center py-20">
+        <div
+          v-else-if="archives.length > 0"
+          class="py-20 text-center">
           <p class="text-gray-500">Keine Ergebnisse gefunden.</p>
         </div>
-        <div v-else-if="loadFailed" class="flex flex-col items-center gap-y-20 py-20">
+        <div
+          v-else-if="loadFailed"
+          class="flex flex-col items-center gap-y-20 py-20">
           <p class="text-gray-500">Die Karteien konnten nicht geladen werden.</p>
-          <AppButton type="button" label="Erneut versuchen" @click="loadArchives" />
+          <AppButton
+            type="button"
+            label="Erneut versuchen"
+            @click="loadArchives" />
         </div>
       </ContentMain>
     </div>
@@ -118,8 +130,8 @@ const layoutOptions = [
 const filteredArchives = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
   if (!query) return archives.value;
-  return archives.value.filter(archive =>
-    [archive.name, archive.acronym].some(value => value?.toLowerCase().includes(query))
+  return archives.value.filter((archive) =>
+    [archive.name, archive.acronym].some((value) => value?.toLowerCase().includes(query)),
   );
 });
 
@@ -141,8 +153,7 @@ const loadArchives = async () => {
 
     archives.value = await getByUser(userStore.user.uuid);
     hasArchive.value = archives.value.length > 0;
-  }
-  catch {
+  } catch {
     // Shown in the page (with a retry button), no toast on top
     loadFailed.value = true;
   }

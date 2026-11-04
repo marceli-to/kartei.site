@@ -1,25 +1,33 @@
 <template>
   <Slide :pull="true">
-    <form 
-      @submit.prevent="handleSubmit"
-      class="w-full h-full flex flex-col justify-between"
-      v-if="!isLoading">
-
-      <AddressFields v-model:form="form" v-model:errors="errors" :idPrefix="config.idPrefix" />
+    <form
+      v-if="!isLoading"
+      class="flex h-full w-full flex-col justify-between"
+      @submit.prevent="handleSubmit">
+      <AddressFields
+        v-model:form="form"
+        v-model:errors="errors"
+        :id-prefix="config.idPrefix" />
 
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <AppButton label="Speichern" :loading="isSaving" />
+          <AppButton
+            label="Speichern"
+            :loading="isSaving" />
         </ButtonGroup>
       </div>
-
     </form>
   </Slide>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getUserAddress, updateUserAddress, getUserBillingAddress, updateUserBillingAddress } from '@/services/api/user';
+import {
+  getUserAddress,
+  updateUserAddress,
+  getUserBillingAddress,
+  updateUserBillingAddress,
+} from '@/services/api/user';
 import { notifyError } from '@/services/api/error';
 import { useToastStore } from '@/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
@@ -32,13 +40,13 @@ import AppButton from '@/components/buttons/Button.vue';
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
+    default: false,
   },
   type: {
     type: String,
     default: 'address',
-    validator: (value) => ['address', 'billing'].includes(value)
-  }
+    validator: (value) => ['address', 'billing'].includes(value),
+  },
 });
 
 const CONFIG = {
@@ -73,7 +81,7 @@ const form = ref({
   street_number: '',
   zip: '',
   city: '',
-  country: 'Schweiz'
+  country: 'Schweiz',
 });
 
 const { errors, setErrors, clearErrors } = useFormErrors(FIELDS);
@@ -85,11 +93,9 @@ onMounted(async () => {
     for (const key of FIELDS) {
       if (response.data?.[key] != null) form.value[key] = response.data[key];
     }
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, config.loadFailed);
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -100,12 +106,10 @@ const handleSubmit = async () => {
     clearErrors();
     await config.save(form.value);
     toast.show(config.saved, 'success');
-  } 
-  catch (error) {
+  } catch (error) {
     setErrors(error);
     notifyError(error, config.saveFailed);
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };

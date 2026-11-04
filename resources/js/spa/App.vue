@@ -3,7 +3,9 @@
 
   <!-- Keyed by path: query changes (e.g. ?section=) must not remount the page -->
   <router-view v-slot="{ Component }">
-    <component :is="Component" :key="route.path" />
+    <component
+      :is="Component"
+      :key="route.path" />
   </router-view>
 
   <Toast />

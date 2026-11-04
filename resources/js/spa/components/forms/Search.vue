@@ -5,25 +5,26 @@
       :id="id || undefined"
       :type="type"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
       :placeholder="placeholder"
-      :class="[
-        defaultClasses,
-        props.classes,
-      ]"
-    >
+      :class="[defaultClasses, props.classes]"
+      @input="$emit('update:modelValue', $event.target.value)" />
     <template v-if="modelValue">
       <button
         type="button"
-        @click="$emit('update:modelValue', '')"
         class="absolute right-8 top-1/2 -translate-y-1/2 text-black"
         aria-label="Suchfeld leeren"
-        title="Suchfeld leeren">
-        <Icon name="cross" variant="small" />
+        title="Suchfeld leeren"
+        @click="$emit('update:modelValue', '')">
+        <Icon
+          name="cross"
+          variant="small" />
       </button>
     </template>
     <template v-else>
-      <Icon name="magnifier" aria-hidden="true" class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+      <Icon
+        name="magnifier"
+        aria-hidden="true"
+        class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
     </template>
   </div>
 </template>
@@ -37,28 +38,29 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps({
   modelValue: {
     type: [String, Number],
-    default: ''
+    default: '',
   },
   id: {
     type: String,
-    default: ''
+    default: '',
   },
   type: {
     type: String,
-    default: 'text'
+    default: 'text',
   },
   placeholder: {
     type: String,
-    default: ''
+    default: '',
   },
   classes: {
     type: [String, Object, Array],
-    default: ''
-  }
+    default: '',
+  },
 });
 
 // Define default classes
-const defaultClasses = 'w-full min-h-default text-md !ring-0 px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black placeholder:text-black';
+const defaultClasses =
+  'w-full min-h-default text-md !ring-0 px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black placeholder:text-black';
 
 // Define emits
 defineEmits(['update:modelValue']);

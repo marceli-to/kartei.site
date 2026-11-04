@@ -11,11 +11,9 @@ import { ref } from 'vue';
  *   <InputLabel :error="errors.name" ... /> <InputText :error="errors.name" @update:error="errors.name = $event" ... />
  */
 export function useFormErrors(fields) {
-  const map = Array.isArray(fields)
-    ? Object.fromEntries(fields.map(field => [field, field]))
-    : fields;
+  const map = Array.isArray(fields) ? Object.fromEntries(fields.map((field) => [field, field])) : fields;
 
-  const empty = () => Object.fromEntries(Object.keys(map).map(key => [key, null]));
+  const empty = () => Object.fromEntries(Object.keys(map).map((key) => [key, null]));
   const errors = ref(empty());
 
   const clearErrors = () => {

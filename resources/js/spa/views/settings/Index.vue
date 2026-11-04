@@ -19,60 +19,60 @@ setTitle('Einstellungen');
 
 // Define all possible slides with their permissions and components
 const slides = [
-  { 
-    id: 'profile', 
-    name: "Profil", 
-    class: "w-3/12 min-w-3/12", 
-    component: markRaw(ProfileComponent)
+  {
+    id: 'profile',
+    name: 'Profil',
+    class: 'w-3/12 min-w-3/12',
+    component: markRaw(ProfileComponent),
   },
-  { 
-    id: 'address', 
-    name: "Adresse", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'address',
+    name: 'Adresse',
+    class: 'w-3/12 min-w-3/12',
     permission: 'edit.address',
     component: markRaw(AddressFormComponent),
-    props: { type: 'address' }
+    props: { type: 'address' },
   },
-  { 
-    id: 'billingAddress', 
-    name: "Rechnungsadresse", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'billingAddress',
+    name: 'Rechnungsadresse',
+    class: 'w-3/12 min-w-3/12',
     permission: 'edit.address',
     component: markRaw(AddressFormComponent),
-    props: { type: 'billing' }
+    props: { type: 'billing' },
   },
-  { 
-    id: 'subscription', 
-    name: "Abonnement", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'subscription',
+    name: 'Abonnement',
+    class: 'w-3/12 min-w-3/12',
     permission: 'edit.subscription',
-    component: markRaw(SubscriptionComponent)
+    component: markRaw(SubscriptionComponent),
   },
-  { 
-    id: 'company', 
-    name: "Kundinnen/Kunden", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'company',
+    name: 'Kundinnen/Kunden',
+    class: 'w-3/12 min-w-3/12',
     permission: 'edit.clients',
-    component: markRaw(CompanyComponent)
+    component: markRaw(CompanyComponent),
   },
-  { 
-    id: 'user', 
-    name: "Benutzer", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'user',
+    name: 'Benutzer',
+    class: 'w-3/12 min-w-3/12',
     permission: 'edit.users',
-    component: markRaw(UserComponent)
+    component: markRaw(UserComponent),
   },
-  { 
-    id: 'theme', 
-    name: "Erscheinungsbild", 
-    class: "w-3/12 min-w-3/12", 
-    component: markRaw(ThemeComponent)
+  {
+    id: 'theme',
+    name: 'Erscheinungsbild',
+    class: 'w-3/12 min-w-3/12',
+    component: markRaw(ThemeComponent),
   },
-  { 
-    id: 'deleteAccount', 
-    name: "Löschen", 
-    class: "w-3/12 min-w-3/12", 
-    component: markRaw(AccountDeleteComponent)
-  }
+  {
+    id: 'deleteAccount',
+    name: 'Löschen',
+    class: 'w-3/12 min-w-3/12',
+    component: markRaw(AccountDeleteComponent),
+  },
 ];
 </script>

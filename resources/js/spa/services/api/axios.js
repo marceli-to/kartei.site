@@ -20,7 +20,7 @@ api.interceptors.request.use(
     return config;
   },
   // No show() has run for a request that failed before being sent, so nothing to hide
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
@@ -47,8 +47,7 @@ api.interceptors.response.use(
       try {
         await axios.get('/sanctum/csrf-cookie');
         return await api({ ...error.config, __retried419: true });
-      }
-      catch (retryError) {
+      } catch (retryError) {
         // The retry went through this interceptor already
         if (retryError.config?.__retried419) return Promise.reject(retryError);
         error = retryError;
@@ -57,7 +56,7 @@ api.interceptors.response.use(
 
     handleApiError(error);
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

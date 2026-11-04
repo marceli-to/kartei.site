@@ -29,9 +29,9 @@ export function useArchiveMeta() {
     registers.value = meta.registers.map(toOption);
     tags.value = meta.tags.map(toOption);
 
-    categoriesRegisters.value = meta.categories_registers.flatMap(cat => [
+    categoriesRegisters.value = meta.categories_registers.flatMap((cat) => [
       { prefix: `${cat.number}.`, label: cat.name, value: cat.uuid, labelClass: 'font-muoto-medium' },
-      ...(cat.registers ?? []).map(reg => ({ prefix: `${reg.number}.`, label: reg.name, value: reg.uuid })),
+      ...(cat.registers ?? []).map((reg) => ({ prefix: `${reg.number}.`, label: reg.name, value: reg.uuid })),
     ]);
 
     settings.value = meta.settings ?? { has_images: null, record_fields: [] };

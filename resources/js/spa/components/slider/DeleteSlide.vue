@@ -1,15 +1,15 @@
 <template>
   <!-- Layout of the "Löschen" slides (archive, account): text, then a red button -->
   <Slide class="-top-4 pb-36">
-    <div class="w-full h-full flex flex-col justify-between">
+    <div class="flex h-full w-full flex-col justify-between">
       <div>
         <slot />
       </div>
       <div v-if="isActive">
         <ButtonGroup>
-          <AppButton 
+          <AppButton
             type="button"
-            :label="label" 
+            :label="label"
             variant="danger"
             :disabled="disabled"
             @click="$emit('delete')" />
@@ -26,16 +26,16 @@ import AppButton from '@/components/buttons/Button.vue';
 defineProps({
   isActive: {
     type: Boolean,
-    default: false
+    default: false,
   },
   label: {
     type: String,
-    required: true
+    required: true,
   },
   disabled: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 defineEmits(['delete']);

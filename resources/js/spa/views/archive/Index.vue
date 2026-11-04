@@ -1,7 +1,11 @@
 <template>
-  <Slider :slides="slides" navigationVariant="box">
+  <Slider
+    :slides="slides"
+    navigation-variant="box">
     <template #header>
-      <SliderHeader title="Voreinstellungen" :uuid="uuid" />
+      <SliderHeader
+        title="Voreinstellungen"
+        :uuid="uuid" />
     </template>
   </Slider>
 </template>
@@ -37,72 +41,73 @@ const allows = (ability) => () =>
 const isNew = () => !uuid.value;
 
 const slides = [
-  { 
-    id: 'basic-information', 
-    name: "Basisinformationen", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'basic-information',
+    name: 'Basisinformationen',
+    class: 'w-3/12 min-w-3/12',
     permission: allows('update'),
     component: markRaw(BasicInformationComponent),
   },
-  { 
-    id: 'structure', 
-    name: "Struktur", 
-    class: "w-6/12 min-w-6/12", 
+  {
+    id: 'structure',
+    name: 'Struktur',
+    class: 'w-6/12 min-w-6/12',
     permission: allows('manageStructure'),
     component: markRaw(CategoryComponent),
-    disabled: isNew
+    disabled: isNew,
   },
-  { 
-    id: 'card', 
-    name: "Kartenvorlage", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'card',
+    name: 'Kartenvorlage',
+    class: 'w-3/12 min-w-3/12',
     permission: allows('manageTemplate'),
     component: markRaw(CardComponent),
-    disabled: isNew
+    disabled: isNew,
   },
-  { 
-    id: 'tags', 
-    name: "Tags", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'tags',
+    name: 'Tags',
+    class: 'w-3/12 min-w-3/12',
     permission: allows('manageTags'),
     component: markRaw(TagsComponent),
-    disabled: isNew
+    disabled: isNew,
   },
-  { 
-    id: 'user', 
-    name: "Benutzer", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'user',
+    name: 'Benutzer',
+    class: 'w-3/12 min-w-3/12',
     permission: allows('manageUsers'),
     component: markRaw(UserComponent),
-    disabled: isNew
+    disabled: isNew,
   },
-  { 
-    id: 'delete', 
-    name: "Löschen", 
-    class: "w-3/12 min-w-3/12", 
+  {
+    id: 'delete',
+    name: 'Löschen',
+    class: 'w-3/12 min-w-3/12',
     permission: allows('delete'),
     component: markRaw(DeleteComponent),
-    disabled: isNew
-  }
+    disabled: isNew,
+  },
 ];
 
 const fetchArchive = async () => {
   try {
     const archive = await getArchive(uuid.value);
     setTitle(archive.name);
-  }
-  catch {
+  } catch {
     // Only the page title; the slides report their own load errors
   }
 };
 
-watch(uuid, () => {
-  if (uuid.value) {
-    fetchArchive();
-  }
-  else {
-    setTitle('Einstellungen');
-  }
-}, { immediate: true });
-
+watch(
+  uuid,
+  () => {
+    if (uuid.value) {
+      fetchArchive();
+    } else {
+      setTitle('Einstellungen');
+    }
+  },
+  { immediate: true },
+);
 </script>

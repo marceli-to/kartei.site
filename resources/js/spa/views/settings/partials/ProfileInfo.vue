@@ -9,15 +9,15 @@
   </div>
 </template>
 <style scoped>
-  ul {
-    @apply list-none;
-  }
+ul {
+  @apply list-none;
+}
 
-  li {
-    @apply relative pl-16
-  }
+li {
+  @apply relative pl-16;
+}
 
-  li::before {
-    @apply content-['–'] absolute left-0;
-  }
+li::before {
+  @apply absolute left-0 content-['–'];
+}
 </style>

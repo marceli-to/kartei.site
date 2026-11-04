@@ -5,24 +5,22 @@
       :id="id"
       :type="type"
       :value="modelValue"
-      @input="onInput"
       :aria-invalid="error ? 'true' : undefined"
       :placeholder="placeholder"
-      :class="[
-        defaultClasses,
-        props.classes,
-        { '!bg-flame !border-flame placeholder:!text-white': error },
-      ]">
-      <button
-        type="button"
-        @click="toggleType" 
-        class="absolute inset-y-0 right-8 flex items-center text-graphite"
-        :aria-label="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'"
-        :title="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'">
-        <span class="w-17 h-16 flex items-center justify-center">
-          <Icon name="eye" :variant="type === 'text' ? 'enabled' : 'disabled'" />
-        </span>
-      </button>
+      :class="[defaultClasses, props.classes, { '!border-flame !bg-flame placeholder:!text-white': error }]"
+      @input="onInput" />
+    <button
+      type="button"
+      class="absolute inset-y-0 right-8 flex items-center text-graphite"
+      :aria-label="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'"
+      :title="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'"
+      @click="toggleType">
+      <span class="flex h-16 w-17 items-center justify-center">
+        <Icon
+          name="eye"
+          :variant="type === 'text' ? 'enabled' : 'disabled'" />
+      </span>
+    </button>
   </div>
 </template>
 
@@ -38,24 +36,24 @@ const type = ref('password');
 const props = defineProps({
   modelValue: {
     type: [String, Number],
-    default: ''
+    default: '',
   },
   id: {
     type: String,
-    default: ''
+    default: '',
   },
   placeholder: {
     type: String,
-    default: ''
+    default: '',
   },
   error: {
     type: String,
-    default: ''
+    default: '',
   },
   classes: {
     type: [String, Object, Array],
-    default: ''
-  }
+    default: '',
+  },
 });
 
 function toggleType() {
@@ -63,7 +61,8 @@ function toggleType() {
 }
 
 // Define default classes
-const defaultClasses = 'w-full min-h-default text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
+const defaultClasses =
+  'w-full min-h-default text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
 
 const emit = defineEmits(['update:modelValue', 'update:error']);
 

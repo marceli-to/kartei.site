@@ -1,8 +1,7 @@
 <template>
   <div>
-
     <!-- Header -->
-    <header class="grid grid-cols-12 gap-0 mb-32">
+    <header class="mb-32 grid grid-cols-12 gap-0">
       <div class="col-span-5">
         <h2 class="font-muoto-medium">Struktur</h2>
       </div>
@@ -15,56 +14,62 @@
     <!-- Content -->
     <InputLabel label="Kategorie" />
     <div class="grid grid-cols-12 gap-0">
-
       <div class="col-span-5 flex flex-col gap-y-20 border-r border-r-graphite pr-8">
-        
         <InputGroup>
           <InputSelectButtons
-            legend="Kategorie"
             v-model="numerals_category_type"
+            legend="Kategorie"
             name="numerals-category"
-            labelClasses="font-muoto-medium"
-            wrapperClasses="flex flex-col gap-y-8"
+            label-classes="font-muoto-medium"
+            wrapper-classes="flex flex-col gap-y-8"
             :options="numerals_category" />
         </InputGroup>
-        
+
         <InputGroup>
           <InputLabel label="Register" />
           <InputSelectButtons
-            legend="Register"
             v-model="numerals_register_type"
+            legend="Register"
             name="numerals-register"
-            wrapperClasses="flex flex-col gap-y-8"
+            wrapper-classes="flex flex-col gap-y-8"
             :options="numerals_register" />
         </InputGroup>
-        
+
         <InputGroup>
           <InputLabel label="ID" />
           <InputSelectButtons
-            legend="ID"
             v-model="id_type"
+            legend="ID"
             name="id-type"
-            wrapperClasses="flex flex-col gap-y-8"
+            wrapper-classes="flex flex-col gap-y-8"
             :options="ids" />
         </InputGroup>
 
-        <div class="text-sm px-8">
-          <p>Standardmässig werden Kategorien und Register numerisch geordnet und die ID besteht aus den ersten beiden Buchstaben des Registertitels. Die Ordnungsstruktur kann jederzeit
-wieder angepasst werden.</p>
+        <div class="px-8 text-sm">
+          <p>
+            Standardmässig werden Kategorien und Register numerisch geordnet und die ID besteht aus den ersten beiden
+            Buchstaben des Registertitels. Die Ordnungsstruktur kann jederzeit wieder angepasst werden.
+          </p>
         </div>
 
         <!-- Buttons -->
         <ButtonGroup class="mt-108">
-          <AppButton type="button" label="Speichern" @click="handleSave" />
-          <AppButton type="button" label="Abbrechen" @click="onCancel" />
+          <AppButton
+            type="button"
+            label="Speichern"
+            @click="handleSave" />
+          <AppButton
+            type="button"
+            label="Abbrechen"
+            @click="onCancel" />
         </ButtonGroup>
       </div>
 
       <StructurePreview
         class="col-span-7"
-        :categoryType="numerals_category_type"
-        :registerType="numerals_register_type"
-        :idType="id_type" />
+        :category-type="numerals_category_type"
+        :register-type="numerals_register_type"
+        :id-type="id_type" />
     </div>
   </div>
 </template>
@@ -81,32 +86,32 @@ import AppButton from '@/components/buttons/Button.vue';
 const props = defineProps({
   onConfirm: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   onCancel: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   // The current settings; the dialog edits copies and hands them to onConfirm
   categoryType: {
     type: String,
-    default: 'decimal'
+    default: 'decimal',
   },
   registerType: {
     type: String,
-    default: 'decimal'
+    default: 'decimal',
   },
   idType: {
     type: String,
-    default: 'auto'
-  }
+    default: 'auto',
+  },
 });
 
 const handleSave = () => {
   props.onConfirm({
     category: numerals_category_type.value,
     register: numerals_register_type.value,
-    idType: id_type.value
+    idType: id_type.value,
   });
 };
 
@@ -130,5 +135,4 @@ const ids = [
   { label: 'Anfangsbuchstaben (2)', value: 'auto' },
   { label: 'Leeres Textfeld', value: 'manual' },
 ];
-
 </script>

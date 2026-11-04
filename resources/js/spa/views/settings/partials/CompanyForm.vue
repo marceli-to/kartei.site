@@ -1,16 +1,30 @@
 <template>
-  <form 
-    @submit.prevent="submit" 
-    class="w-full h-full flex flex-col justify-between">
+  <form
+    class="flex h-full w-full flex-col justify-between"
+    @submit.prevent="submit">
     <div class="flex flex-col gap-y-48">
-      <AddressFields v-model:form="form" v-model:errors="errors" idPrefix="company_" nameField="name" />
+      <AddressFields
+        v-model:form="form"
+        v-model:errors="errors"
+        id-prefix="company_"
+        name-field="name" />
       <div v-if="company">
-        <AppButton label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
+        <AppButton
+          label="Löschen"
+          variant="danger"
+          type="button"
+          @click="showDeleteDialog" />
       </div>
     </div>
     <ButtonGroup>
-      <AppButton type="submit" label="Speichern" :loading="isSaving" />
-      <AppButton type="button" @click="$emit('cancel')" label="Abbrechen" />
+      <AppButton
+        type="submit"
+        label="Speichern"
+        :loading="isSaving" />
+      <AppButton
+        type="button"
+        label="Abbrechen"
+        @click="$emit('cancel')" />
     </ButtonGroup>
   </form>
 </template>
@@ -29,8 +43,8 @@ import AppButton from '@/components/buttons/Button.vue';
 const props = defineProps({
   company: {
     type: Object,
-    default: null
-  }
+    default: null,
+  },
 });
 
 const emit = defineEmits(['success', 'cancel', 'delete']);
@@ -53,16 +67,12 @@ const submit = async () => {
   try {
     isSaving.value = true;
     clearErrors();
-    const response = props.company
-      ? await updateUserCompany(form.value)
-      : await createUserCompany(form.value);
+    const response = props.company ? await updateUserCompany(form.value) : await createUserCompany(form.value);
     emit('success', response.data);
-  }
-  catch (error) {
+  } catch (error) {
     setErrors(error);
     notifyError(error, props.company ? 'Fehler beim Speichern der Firma.' : 'Fehler beim Erstellen der Firma.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 };

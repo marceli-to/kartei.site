@@ -1,31 +1,36 @@
 <template>
   <form
     v-if="!isLoading"
-    @submit.prevent="save"
-    class="w-full h-full flex flex-col justify-between">
+    class="flex h-full w-full flex-col justify-between"
+    @submit.prevent="save">
     <div class="flex flex-col gap-y-20">
       <InputGroup v-if="!archiveUuid">
-        <InputLabel label="Kartei" id="archive_selection" />
-        <InputSelectButtons
-          legend="Kartei"
+        <InputLabel
           id="archive_selection"
-          :modelValue="selected"
-          @update:modelValue="selectArchive"
+          label="Kartei" />
+        <InputSelectButtons
+          id="archive_selection"
+          legend="Kartei"
+          :model-value="selected"
           name="archive_selection"
-          wrapperClasses="flex flex-col gap-y-8"
-          :options="archiveOptions">
+          wrapper-classes="flex flex-col gap-y-8"
+          :options="archiveOptions"
+          @update:model-value="selectArchive">
           <template #icon="{ option }">
-            <Icon name="checkmark" v-if="saved[option.value]" />
+            <Icon
+              v-if="saved[option.value]"
+              name="checkmark" />
           </template>
         </InputSelectButtons>
       </InputGroup>
 
       <div
-        :class="{ 'opacity-20 select-none pointer-events-none': !selected }"
+        :class="{ 'pointer-events-none select-none opacity-20': !selected }"
         class="flex flex-col gap-y-20">
-
         <!-- After saving: invite a user who was just added, or confirm -->
-        <div v-if="isDone" :class="{ 'relative top-8': archiveUuid }">
+        <div
+          v-if="isDone"
+          :class="{ 'relative top-8': archiveUuid }">
           <template v-if="added.has(selected) && !invited.has(selected)">
             <AppButton
               variant="secondary"
@@ -33,9 +38,14 @@
               :label="isSending ? 'Wird versendet...' : 'Einladungslink versenden'"
               :disabled="isSending"
               @click="invite" />
-            <p class="text-sm p-8 mt-8">Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.</p>
+            <p class="mt-8 p-8 text-sm">
+              Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten
+              Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.
+            </p>
           </template>
-          <p v-else class="text-sm p-8 mt-8">
+          <p
+            v-else
+            class="mt-8 p-8 text-sm">
             {{ invited.has(selected) ? 'Einladungslink wurde versendet.' : 'Berechtigungen wurden gespeichert.' }}
             <template v-if="!archiveUuid && hasArchivesWithoutAccess">
               Sie können Berechtigungen für weitere Karteien setzen oder den Prozess abschliessen.
@@ -45,22 +55,28 @@
 
         <template v-else>
           <InputGroup>
-            <InputLabel :label="isAdjusted ? 'Rechte (angepasst)' : 'Rechte'" id="role" />
+            <InputLabel
+              id="role"
+              :label="isAdjusted ? 'Rechte (angepasst)' : 'Rechte'" />
             <InputSelect
               id="role"
-              :modelValue="form.role"
-              @update:modelValue="changeRole"
-              :options="roleOptions" />
+              :model-value="form.role"
+              :options="roleOptions"
+              @update:model-value="changeRole" />
           </InputGroup>
-          <InputGroup v-for="group in permissionGroups" :key="group.key">
-            <InputLabel :label="group.label" :id="`permissions_${group.key}`" />
+          <InputGroup
+            v-for="group in permissionGroups"
+            :key="group.key">
+            <InputLabel
+              :id="`permissions_${group.key}`"
+              :label="group.label" />
             <InputSelectButtons
-              :legend="group.label"
               :id="`permissions_${group.key}`"
               v-model="form.permissions"
+              :legend="group.label"
               :multiple="true"
               name="permissions"
-              wrapperClasses="grid grid-cols-2 gap-8"
+              wrapper-classes="grid grid-cols-2 gap-8"
               :options="group.options" />
           </InputGroup>
         </template>
@@ -130,45 +146,39 @@ const isSending = ref(false);
 const archives = ref([]);
 const roleOptions = ref([]);
 const permissionGroups = ref([]);
-const roleDefaults = ref({});   // role id => permission ids
+const roleDefaults = ref({}); // role id => permission ids
 const defaultRole = ref(null);
 
-const saved = ref({});          // archive uuid => { role, permissions } as stored on the server
-const added = reactive(new Set());   // archives the user was added to in this session
+const saved = ref({}); // archive uuid => { role, permissions } as stored on the server
+const added = reactive(new Set()); // archives the user was added to in this session
 const invited = reactive(new Set()); // archives an invitation was sent for
 const selected = ref('');
-const isDone = ref(false);      // the selected archive was just saved
+const isDone = ref(false); // the selected archive was just saved
 const form = ref({ role: null, permissions: [] });
 
-const archiveOptions = computed(() =>
-  archives.value.map(archive => ({ value: archive.uuid, label: archive.name }))
-);
+const archiveOptions = computed(() => archives.value.map((archive) => ({ value: archive.uuid, label: archive.name })));
 
-const hasArchivesWithoutAccess = computed(() =>
-  archives.value.some(archive => !saved.value[archive.uuid])
-);
+const hasArchivesWithoutAccess = computed(() => archives.value.some((archive) => !saved.value[archive.uuid]));
 
-const isAdjusted = computed(() =>
-  !sameSet(form.value.permissions, roleDefaults.value[form.value.role] ?? [])
-);
+const isAdjusted = computed(() => !sameSet(form.value.permissions, roleDefaults.value[form.value.role] ?? []));
 
 // What the form would show if left untouched
 const baseline = computed(() => saved.value[selected.value] ?? defaultsFor(defaultRole.value));
 
-const isDirty = computed(() =>
-  !!selected.value && !isDone.value && (
-    form.value.role !== baseline.value.role ||
-    !sameSet(form.value.permissions, baseline.value.permissions)
-  )
+const isDirty = computed(
+  () =>
+    !!selected.value &&
+    !isDone.value &&
+    (form.value.role !== baseline.value.role || !sameSet(form.value.permissions, baseline.value.permissions)),
 );
 
 // An untouched new assignment can be saved as is
-const canSave = computed(() =>
-  !!selected.value && form.value.permissions.length > 0 && (isDirty.value || !saved.value[selected.value])
+const canSave = computed(
+  () => !!selected.value && form.value.permissions.length > 0 && (isDirty.value || !saved.value[selected.value]),
 );
 
 function sameSet(a, b) {
-  return a.length === b.length && a.every(id => b.includes(id));
+  return a.length === b.length && a.every((id) => b.includes(id));
 }
 
 function defaultsFor(role) {
@@ -182,9 +192,7 @@ async function selectArchive(uuid) {
 
   selected.value = uuid;
   const current = saved.value[uuid];
-  form.value = current
-    ? { role: current.role, permissions: [...current.permissions] }
-    : defaultsFor(defaultRole.value);
+  form.value = current ? { role: current.role, permissions: [...current.permissions] } : defaultsFor(defaultRole.value);
 
   // An archive saved in this session but not yet invited goes back to the invitation
   isDone.value = added.has(uuid) && !invited.has(uuid);
@@ -195,7 +203,7 @@ function changeRole(role) {
 }
 
 function confirmDiscard() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     dialogStore.show({
       title: 'Ungespeicherte Änderungen',
       message: 'Sie haben ungespeicherte Änderungen. Möchten Sie diese verwerfen?',
@@ -233,11 +241,9 @@ async function save() {
       return;
     }
     isDone.value = true;
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Fehler beim Speichern der Berechtigungen.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
 }
@@ -248,11 +254,9 @@ async function invite() {
     await sendInvitation(props.user, { archive: selected.value });
     invited.add(selected.value);
     toast.show('Einladungslink wurde versendet.', 'success');
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Fehler beim Versenden des Einladungslinks.');
-  }
-  finally {
+  } finally {
     isSending.value = false;
   }
 }
@@ -260,7 +264,7 @@ async function invite() {
 onMounted(async () => {
   try {
     const [archiveList, roles, rolesWithPermissions, permissions, userPermissions] = await Promise.all([
-      props.archiveUuid ? getArchive(props.archiveUuid).then(a => [a]) : getArchivesByAdmin(),
+      props.archiveUuid ? getArchive(props.archiveUuid).then((a) => [a]) : getArchivesByAdmin(),
       getRoles(),
       getRolesWithPermissions(),
       getPermissions(),
@@ -268,18 +272,18 @@ onMounted(async () => {
     ]);
 
     archives.value = archiveList;
-    roleOptions.value = roles.data.map(role => ({ value: role.id, label: role.label }));
+    roleOptions.value = roles.data.map((role) => ({ value: role.id, label: role.label }));
 
     for (const role of Object.values(rolesWithPermissions)) {
-      roleDefaults.value[role.id] = role.permissions.map(p => p.id);
+      roleDefaults.value[role.id] = role.permissions.map((p) => p.id);
       if (role.name === DEFAULT_ROLE_NAME) defaultRole.value = role.id;
     }
 
     // Grouped by group_key, in display order
-    permissionGroups.value = Object.values(permissions).map(group => ({
+    permissionGroups.value = Object.values(permissions).map((group) => ({
       key: group[0].group_key,
       label: group[0].group_name,
-      options: group.map(p => ({ value: p.id, label: p.display_name })),
+      options: group.map((p) => ({ value: p.id, label: p.display_name })),
     }));
 
     saved.value = userPermissions;
@@ -287,11 +291,9 @@ onMounted(async () => {
     if (props.archiveUuid) {
       await selectArchive(props.archiveUuid);
     }
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Fehler beim Laden der Berechtigungen.');
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });

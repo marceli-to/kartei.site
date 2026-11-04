@@ -1,10 +1,9 @@
 <template>
   <Slide :pull="true">
-    <form 
-      @submit.prevent="handleSubmit"
-      class="w-full h-full flex flex-col justify-between"
-      v-if="!isLoading">
-
+    <form
+      v-if="!isLoading"
+      class="flex h-full w-full flex-col justify-between"
+      @submit.prevent="handleSubmit">
       <!-- Info box -->
       <template v-if="isInfoOpen">
         <InfoBox class="pb-24">
@@ -15,46 +14,59 @@
       <!-- Form elements -->
       <div class="flex flex-col gap-y-20">
         <InputGroup>
-          <InputLabel label="Lizenz" id="subscription" required />
+          <InputLabel
+            id="subscription"
+            label="Lizenz"
+            required />
           <InputRadioGroup
-            legend="Lizenz"
             v-model="form.subscription"
+            legend="Lizenz"
             name="subscription"
             :options="subscriptions"
             variant="reduced" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Abrechnung" id="payment_interval" required />
+          <InputLabel
+            id="payment_interval"
+            label="Abrechnung"
+            required />
           <InputRadioGroup
-            legend="Abrechnung"
             v-model="form.payment_interval"
+            legend="Abrechnung"
             name="payment_interval"
             :options="paymentIntervals"
             variant="reduced" />
         </InputGroup>
         <InputGroup>
-          <InputLabel label="Zahlungsart" id="payment_method" required />
+          <InputLabel
+            id="payment_method"
+            label="Zahlungsart"
+            required />
           <InputRadioGroup
-            legend="Zahlungsart"
             v-model="form.payment_method"
+            legend="Zahlungsart"
             name="payment_method"
-            :options="[{
-              'label': 'Kreditkarte',
-              'value': 'card'
-            }]"
+            :options="[
+              {
+                label: 'Kreditkarte',
+                value: 'card',
+              },
+            ]"
             variant="reduced" />
         </InputGroup>
       </div>
       <div v-if="isDev">
-        <div class="font-muoto-medium text-flame border border-flame p-8 text-center">
+        <div class="border border-flame p-8 text-center font-muoto-medium text-flame">
           To do: implement payment with stripe
         </div>
       </div>
-      
+
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <AppButton label="Speichern" :disabled="isSaving" />
+          <AppButton
+            label="Speichern"
+            :disabled="isSaving" />
         </ButtonGroup>
       </div>
     </form>
@@ -85,8 +97,8 @@ const toast = useToastStore();
 const props = defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const isLoading = ref(false);
@@ -104,7 +116,7 @@ const { isOpen: isInfoOpen } = useInfoBox({
 const form = ref({
   subscription: '',
   payment_interval: '',
-  payment_method: 'card'
+  payment_method: 'card',
 });
 
 onMounted(async () => {
@@ -115,7 +127,7 @@ onMounted(async () => {
 
     subscriptions.value = response.data.map((subscription) => ({
       label: subscription.title,
-      value: subscription.uuid
+      value: subscription.uuid,
     }));
 
     // Fix: check .data instead of the whole object
@@ -126,11 +138,9 @@ onMounted(async () => {
       form.value.payment_method = userSubscription.data.payment_method;
       form.value.subscription = userSubscription.data.plan.uuid;
     }
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Das Abonnement konnte nicht geladen werden.');
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 });
@@ -141,12 +151,10 @@ const handleSubmit = async () => {
     await updateUserSubscription(form.value);
     hasSubscription.value = true;
     toast.show('Abonnement erfolgreich gespeichert.', 'success');
-  } 
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Fehler beim Ändern des Abonnements.');
-  }
-  finally {
+  } finally {
     isSaving.value = false;
   }
-}
+};
 </script>

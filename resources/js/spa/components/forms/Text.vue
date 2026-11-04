@@ -4,62 +4,57 @@
     :type="type"
     :value="modelValue"
     :maxlength="maxLength"
-    @input="onInput"
     :aria-invalid="error ? 'true' : undefined"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
-    :class="[
-      defaultClasses,
-      props.classes,
-      { '!bg-flame !border-flame placeholder:!text-white': error },
-    ]"
-  >
+    :class="[defaultClasses, props.classes, { '!border-flame !bg-flame placeholder:!text-white': error }]"
+    @input="onInput" />
 </template>
 
 <script setup>
 const props = defineProps({
   modelValue: {
     type: [String, Number],
-    default: ''
+    default: '',
   },
   id: {
     type: String,
-    default: ''
+    default: '',
   },
   type: {
     type: String,
-    default: 'text'
+    default: 'text',
   },
   maxLength: {
     type: [String, Number],
-    default: ''
+    default: '',
   },
   placeholder: {
     type: String,
-    default: ''
+    default: '',
   },
   error: {
     type: String,
-    default: ''
+    default: '',
   },
   classes: {
     type: [String, Object, Array],
-    default: ''
+    default: '',
   },
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   readonly: {
     type: Boolean,
-    default: false
-  }
-    
+    default: false,
+  },
 });
 
 // Define default classes
-const defaultClasses = 'w-full min-h-default text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white readonly:bg-white';
+const defaultClasses =
+  'w-full min-h-default text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white readonly:bg-white';
 
 const emit = defineEmits(['update:modelValue', 'update:error']);
 

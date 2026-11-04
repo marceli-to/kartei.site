@@ -6,10 +6,10 @@ export function useTheme() {
   // true until the first fetch is done, so the form doesn't flash empty
   const isLoading = ref(true);
   const isSaving = ref(false);
-  
+
   const theme = ref({
     color_scheme: '',
-    color_theme: ''
+    color_theme: '',
   });
 
   // What the server has, to revert to when a save fails
@@ -22,15 +22,15 @@ export function useTheme() {
     { label: 'Hell', value: 'light' },
     { label: 'Dunkel', value: 'dark' },
   ];
-  
+
   // Color theme options
   const colorThemes = [
     { label: 'Blau', value: 'ice' },
     { label: 'Pink', value: 'candy' },
     { label: 'Gelb', value: 'lemon' },
-    { label: 'Grün', value: 'lime' }
+    { label: 'Grün', value: 'lime' },
   ];
-  
+
   // Fetch user's theme from the API
   const fetchTheme = async () => {
     try {
@@ -40,19 +40,17 @@ export function useTheme() {
         theme.value.color_scheme = userThemeData.data.color_scheme;
         theme.value.color_theme = userThemeData.data.color_theme;
         savedTheme = { ...theme.value };
-        
+
         // Apply the theme immediately when fetched
         updateTheme(theme.value.color_scheme, theme.value.color_theme);
       }
-    } 
-    catch (error) {
+    } catch (error) {
       notifyError(error, 'Das Farbschema konnte nicht geladen werden.');
-    } 
-    finally {
+    } finally {
       isLoading.value = false;
     }
   };
-  
+
   // Save user's theme to the API. Clicks during a save are not lost: the
   // latest choice is saved once the running request is done. A failed save
   // puts the last saved theme back.
@@ -71,37 +69,41 @@ export function useTheme() {
         savedTheme = values;
       } while (pendingSave);
       return true;
-    }
-    catch (error) {
+    } catch (error) {
       pendingSave = false;
       theme.value.color_scheme = savedTheme.color_scheme;
       theme.value.color_theme = savedTheme.color_theme;
       notifyError(error, 'Das Farbschema konnte nicht gespeichert werden.');
       return false;
-    }
-    finally {
+    } finally {
       isSaving.value = false;
     }
   };
-  
+
   // Update the theme in the DOM using data attributes
   const updateTheme = (colorScheme, colorTheme) => {
     // Update color scheme data attribute
     document.documentElement.setAttribute('data-color-scheme', colorScheme || 'light');
-    
+
     // Update color theme data attribute
     document.documentElement.setAttribute('data-color-theme', colorTheme || 'ice');
   };
-  
+
   // Watch for changes to the theme and update the DOM
-  watch(() => theme.value.color_scheme, (newColorScheme) => {
-    updateTheme(newColorScheme, theme.value.color_theme);
-  });
-  
-  watch(() => theme.value.color_theme, (newColorTheme) => {
-    updateTheme(theme.value.color_scheme, newColorTheme);
-  });
-  
+  watch(
+    () => theme.value.color_scheme,
+    (newColorScheme) => {
+      updateTheme(newColorScheme, theme.value.color_theme);
+    },
+  );
+
+  watch(
+    () => theme.value.color_theme,
+    (newColorTheme) => {
+      updateTheme(theme.value.color_scheme, newColorTheme);
+    },
+  );
+
   return {
     theme,
     isLoading,
@@ -110,6 +112,6 @@ export function useTheme() {
     colorThemes,
     fetchTheme,
     saveTheme,
-    updateTheme
+    updateTheme,
   };
 }

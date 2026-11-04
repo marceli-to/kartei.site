@@ -1,9 +1,20 @@
 <template>
-  <DeleteSlide label="Konto löschen" :isActive="isActive" :disabled="isDeleting" @delete="showDialog">
+  <DeleteSlide
+    label="Konto löschen"
+    :is-active="isActive"
+    :disabled="isDeleting"
+    @delete="showDialog">
     <p>
-      Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt<template v-if="ownedArchivesCount">, auch Ihre {{ ownedArchivesCount === 1 ? 'Kartei' : ownedArchivesCount + ' Karteien' }} mit allen Karten und Bildern</template>.
+      Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich
+      entfernt<template v-if="ownedArchivesCount"
+        >, auch Ihre {{ ownedArchivesCount === 1 ? 'Kartei' : ownedArchivesCount + ' Karteien' }} mit allen Karten und
+        Bildern</template
+      >.
     </p>
-    <p v-if="subscriptionEndsAt">Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong>.</p>
+    <p v-if="subscriptionEndsAt">
+      Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong
+      >.
+    </p>
   </DeleteSlide>
 </template>
 <script setup>
@@ -24,8 +35,8 @@ const ownedArchivesCount = ref(0);
 defineProps({
   isActive: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const redirectAfterDeletion = '/auf-wiedersehen';
@@ -33,8 +44,7 @@ const redirectAfterDeletion = '/auf-wiedersehen';
 onMounted(async () => {
   try {
     ownedArchivesCount.value = (await getOwnedArchives()).data.length;
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Karteien konnten nicht geladen werden.');
   }
 
@@ -42,8 +52,7 @@ onMounted(async () => {
     const subscription = await getUserSubscription();
     const endsAt = subscription?.data?.ends_at;
     if (endsAt) subscriptionEndsAt.value = new Date(endsAt).toLocaleDateString('de-CH');
-  }
-  catch {
+  } catch {
     // Only the note about the subscription end is missing then
   }
 });
@@ -53,8 +62,7 @@ async function handleDelete() {
 
   try {
     await deleteAccount();
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Es ist ein Fehler beim Löschen Ihres Kontos aufgetreten.');
     isDeleting.value = false;
     return;
@@ -69,8 +77,7 @@ async function showDialog() {
   let archives;
   try {
     archives = (await getOwnedArchives()).data;
-  }
-  catch (error) {
+  } catch (error) {
     notifyError(error, 'Die Karteien konnten nicht geladen werden.');
     return;
   }
@@ -83,7 +90,7 @@ async function showDialog() {
     cancelLabel: 'Abbrechen',
     size: 'medium',
     onConfirm: handleDelete,
-    onCancel: () => {}
+    onCancel: () => {},
   });
 }
 </script>

@@ -35,7 +35,7 @@ export const useDialogStore = defineStore('dialog', () => {
     content.value = {
       ...defaults(),
       ...dialogContent,
-      component: dialogContent.component ? markRaw(dialogContent.component) : null
+      component: dialogContent.component ? markRaw(dialogContent.component) : null,
     };
     isVisible.value = true;
   };
@@ -61,7 +61,14 @@ export const useDialogStore = defineStore('dialog', () => {
    *     then: () => router.push(…),         // after a successful delete, optional
    *   });
    */
-  const confirmDelete = ({ action, success = '', failure = 'Fehler beim Löschen.', then = null, confirmLabel = 'Löschen', ...dialogContent }) => {
+  const confirmDelete = ({
+    action,
+    success = '',
+    failure = 'Fehler beim Löschen.',
+    then = null,
+    confirmLabel = 'Löschen',
+    ...dialogContent
+  }) => {
     show({
       ...dialogContent,
       confirmLabel,
@@ -70,8 +77,7 @@ export const useDialogStore = defineStore('dialog', () => {
       onConfirm: async () => {
         try {
           await action();
-        }
-        catch (error) {
+        } catch (error) {
           notifyError(error, failure);
           return;
         }
@@ -88,6 +94,6 @@ export const useDialogStore = defineStore('dialog', () => {
     content,
     version,
     show,
-    hide
+    hide,
   };
 });

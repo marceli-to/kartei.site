@@ -1,21 +1,22 @@
 <template>
   <!-- The layer lets clicks through to the header; only the toasts themselves catch them.
        Above the dialog (z-[9999]), so errors from a dialog action stay visible. -->
-  <div 
-    class="fixed z-[10000] text-sm w-full text-black font-muoto-medium top-0 left-0 px-16 pointer-events-none"
+  <div
+    class="pointer-events-none fixed left-0 top-0 z-[10000] w-full px-16 font-muoto-medium text-sm text-black"
     role="status"
     aria-live="polite">
-    <button 
+    <button
+      v-for="toast in toasts"
+      :key="toast.id"
       type="button"
       :class="[
-        'pointer-events-auto w-full bg-graphite text-center min-h-32 mb-4 flex items-center justify-center',
+        'pointer-events-auto mb-4 flex min-h-32 w-full items-center justify-center bg-graphite text-center',
         { '!bg-lime': toast.type === 'success' },
         { '!bg-flame text-white': toast.type === 'error' },
         { '!bg-ice': toast.type === 'info' },
       ]"
-      @click="removeToast(toast.id)"
       title="Meldung verbergen"
-      v-for="toast in toasts" :key="toast.id">
+      @click="removeToast(toast.id)">
       {{ toast.message }}
     </button>
   </div>
