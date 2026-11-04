@@ -25,19 +25,68 @@
 - [x] Settings slider rewritten as one component (`components/slider/Slider.vue`, header `slider/Header.vue`): slides keyed by id, active slide in `?section=<id>`, `inert` on inactive slides, disabled menu buttons; pages keyed by `route.path` (query changes no longer remount); permissions refetched after creating an archive
 - [x] Test suite green (83 tests, in-memory SQLite)
 
+## Done (Vue review, 4 November 2026)
+
+- [x] Review of all Vue parts (components, views, stores, services); open points below under "Vue review"
+- [x] Bugs: record edit fields matched by uuid in settings order (text landed in the wrong field), sidebar gets the archive uuid, Category register numeral type + auto IDs on Enter, Card/Tags fresh rows + stable keys + failed deletes keep the row + focus on new input, no double archive delete, company/user delete awaited, Address typo, loading counter, user store retries init, load-more retry button
+- [x] Dialog awaits async `onConfirm` (busy state, returning `false` keeps it open), German default labels, title/description ids
+- [x] Logout is a POST; profile icon links to settings; Stripe note dev-only; "Sie" everywhere; `loesungen@kartei.site`; German upload texts; archive list search
+- [x] Account deletion deletes the archives the user owns (Admin without pivot role, no other Admin); invited members keep their accounts; confirm dialog lists the archives (`GET /api/user/owned-archives`)
+- [x] Found in the browser test: Super Admin not recognised in the SPA (`RoleResource` now `name` + translated `label`), user list blocked at the seat limit (only "Benutzer/in" is disabled now), "Abbrechen" in permissions asks before discarding
+- [x] German validation attribute names (Kürzel, Hausnummer, …; `city` is "Ort"); toast layer lets header clicks through, sits above dialogs, aria-live
+- [x] Form errors shown in the label (`InputLabel` `error` prop), placeholders keep their text, errors clear on first change, `aria-invalid`; `composables/useFormErrors.js` used by all 10 forms
+- [x] Test suite green (89 tests)
+
 ## Servers (before going live)
 
 - [ ] Work through the server checklist (Claude Doc): Laravel-Lang malware check, PHP 8.3+, migrations, scheduler cron, `media:prune-orphans` dry run, smoke tests
 
 ## Next
 
-- [ ] Slider: check in the browser (deep link `?section=`, disabled entries on a new archive, Tab focus stays in the active slide, Admin creating an archive lands on its settings, not 403)
+- [ ] Slider: check Tab focus stays in the active slide and disabled entries on a new archive (deep links and "Admin creating an archive lands on its settings" verified 2026-11-04)
 - [ ] Slider layout uses hard-coded offsets that offset each other (`mt-48`/`mt-58`/`-top-60`/`pt-38`, `Slide` `pull` = `-top-24`, `-top-4` in the delete views); clean up together
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
-- [ ] Merge duplicate Vue components: record Create/Update, Address/BillingAddress, the two delete views
 - [ ] `App\Http\Requests\User\StoreRequest` is imported in `UserController` but unused
-- [ ] Search input in the record sidebar has no accessible label (`aria-label` isn't passed through by `components/forms/Search.vue`)
 - [ ] Countries are stored as German names; switch to ISO codes (with a data migration) once billing/invoices need it
+
+## Vue review: open points
+
+Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
+
+### Bugs not fixed yet
+- [ ] API errors: `handleApiError`'s message is discarded (axios interceptor); 401 shows an error page instead of the login; 419 loses form input
+- [ ] Theme: second click while saving is ignored, failed save not reverted (`useTheme`, `Theme.vue`)
+- [ ] Upload: failures only show a red icon, `NaN%` progress when `event.total` is missing, reorder saves on `@end` even without a move (use `@update`), drag flicker (`dragleave` on children), `name`/`original_name` look swapped in `normalizeImageEntry`
+- [ ] Favorite: no in-flight guard, no error toast (`records/components/Favorite.vue`)
+- [ ] Record list: stale requests ignored but not aborted (AbortController)
+- [ ] Company search throws on a company without street/city (`settings/Company.vue`)
+- [ ] BasicInformation: archive fetched up to 3 times, dead `route.params.uuid` watcher; partial success after create reports a failure
+- [ ] `isLoading` starts `false` (flash of empty content): Theme, Company, users Index subscription warning
+- [ ] "Meine Karteien": failed load shows an empty page, no message
+- [ ] `ButtonPrimary` has no `loading` prop (passed by `UserPermissions`); Slideshow `v-for` without `:key`, English alt "Slide"; `<img width="auto">`
+
+### Cross-cutting (accessibility, consistency)
+- [ ] `javascript:;` / `href=""` anchors used as buttons: Password toggle, Search clear, Collapsible, InfoBox close; icon-only buttons without `aria-label` (remove buttons in Category/Card/Tags, slider close, upload delete, burger menu, error page back links)
+- [ ] Wrapper-root inputs swallow attributes: `Password`, `Search`, `Select` need `inheritAttrs: false` + `v-bind="$attrs"` on the input (search fields have no accessible name)
+- [ ] Load/save errors that only reach the console (~20 places): show a toast
+- [ ] Focus: no focus ring on `sr-only` radios (`RadioGroup`, `SelectButtons`), no `<legend>`; dialog has no focus trap/restore, closes on mouseup after a drag from inside
+
+### Structure and duplication
+- [ ] Merge: record Create/Update (`RecordForm.vue` + `useArchiveMeta()`), Address/BillingAddress (`AddressForm.vue`), Create/UpdateCompany, Create/UpdateUser, the two delete views, 401/403/404 pages
+- [ ] `formatNumber`/`toRoman` duplicated in `Category.vue` and `StructureDialog.vue` -> `utils/numbering.js`; confirm-then-delete helper
+- [ ] Split `archive/Category.vue` (~540 lines): `useStructureForm`, `StructureRow`, `StructurePreview`
+- [ ] Icons: 23 files with mixed `class`/`classes` props (`Tiles`, `List` ignore it) -> one `<Icon name variant>`; buttons: Primary/Auth/Action/Sort -> one `Button` with variants (`Action.vue` template duplicated)
+- [ ] `ImageUpload`: one `v-model` instead of `modelValue` + `existingImages` (three copies of the list)
+- [ ] Folders: `partials/` vs `components/` in views, stores/composables inside component folders, `media/upload/composable` (singular); two `SubscriptionInfo.vue`
+- [ ] API layer: `deleteUser`/`updateUser` in two modules, `user/index.js` mixes company/theme/address/subscription
+
+### Dead code and dependencies
+- [ ] Delete `views/Archives.vue`, `dialog/ContentExample.vue`, `users/partials/SubscriptionInfo.vue`, `icons/ChevronUp.vue`, the commented block in `App.vue` and its title wiring (`pageComponent`, Header `title` prop)
+- [ ] Unused props: `Primary.submitting`, `Sort.isAscending`, `Search.id`/`error`; unused upload helpers (`retryFailed`, `reset`, `formatFileSize`, …)
+- [ ] `package.json`: drop the `mix` scripts and `vue-axios`, `alpinejs` listed twice, `uuid` -> `crypto.randomUUID()`, `axios` to `dependencies`
+- [ ] Upload files use plain axios (no loading/error handling); Alpine loaded on the SPA shell (`footer.blade.php`)
+- [ ] `tailwind.config.js`: 250 hand-written spacing entries (generate with a loop)
+- [ ] Prettier/ESLint config and one run (semicolons, quotes, attribute order)
 
 ## Archive cover image (Titelbild)
 
