@@ -86,7 +86,7 @@ it('lets users create and update their address and billing address', function ()
   $user = bugfixUser();
   Sanctum::actingAs($user);
 
-  $address = ['street' => 'Weg', 'street_number' => '1', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'Schweiz'];
+  $address = ['street' => 'Weg', 'street_number' => '1', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'CH'];
 
   $this->putJson('/api/user/address', $address)->assertSuccessful()->assertJsonPath('data.city', 'Zürich');
   $this->putJson('/api/user/billing-address', ['city' => 'Bern'] + $address)->assertSuccessful()->assertJsonPath('data.city', 'Bern');
@@ -101,7 +101,7 @@ it('saves an address without house number', function () {
   Sanctum::actingAs(bugfixUser());
 
   // The SPA sends an empty field, which Laravel turns into null
-  $this->putJson('/api/user/address', ['street' => 'Weg', 'street_number' => '', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'Schweiz'])
+  $this->putJson('/api/user/address', ['street' => 'Weg', 'street_number' => '', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'CH'])
     ->assertSuccessful()
     ->assertJsonPath('data.street_number', null);
 });
@@ -176,4 +176,39 @@ it('returns the raw role name next to the translated label', function () {
 
   expect($roles[0]['name'])->toBe('Super Admin');
   expect($roles[0]['label'])->toBe('Super Admin');
+});
+
+it('accepts only known country codes', function () {
+  $user = bugfixUser();
+  Sanctum::actingAs($user);
+  $address = ['street' => 'Weg', 'zip' => '8000', 'city' => 'Zürich'];
+  $company = ['name' => 'Firma', 'street' => 'Weg', 'zip' => '8000', 'city' => 'Zürich'];
+
+  $this->putJson('/api/user/address', $address + ['country' => 'DE'])->assertSuccessful()->assertJsonPath('data.country', 'DE');
+  $this->putJson('/api/user/address', $address + ['country' => 'Schweiz'])->assertUnprocessable()->assertJsonValidationErrors('country');
+  $this->putJson('/api/user/billing-address', $address + ['country' => 'XX'])->assertUnprocessable()->assertJsonValidationErrors('country');
+  $this->postJson('/api/user/company', $company + ['country' => 'AT'])->assertSuccessful();
+  $this->postJson('/api/user/company', $company + ['country' => 'Österreich'])->assertUnprocessable()->assertJsonValidationErrors('country');
+});
+
+it('converts stored country names to ISO codes and back', function () {
+  $user = bugfixUser();
+  $known = Company::create(['name' => 'A', 'street' => 'Weg', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'Österreich']);
+  $unknown = Company::create(['name' => 'B', 'street' => 'Weg', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'Atlantis']);
+  $address = Address::create([
+    'street' => 'Weg', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'Schweiz',
+    'addressable_id' => $user->id, 'addressable_type' => User::class,
+  ]);
+
+  $migration = require database_path('migrations/2026_11_04_150000_store_countries_as_iso_codes.php');
+  $migration->up();
+
+  expect($known->fresh()->country)->toBe('AT');
+  expect($address->fresh()->country)->toBe('CH');
+  expect($unknown->fresh()->country)->toBe('Atlantis');
+
+  $migration->down();
+
+  expect($known->fresh()->country)->toBe('Österreich');
+  expect($address->fresh()->country)->toBe('Schweiz');
 });

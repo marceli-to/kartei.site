@@ -58,7 +58,7 @@ const form = ref({
   street_number: props.company?.street_number || '',
   zip: props.company?.zip || '',
   city: props.company?.city || '',
-  country: props.company?.country || 'Schweiz',
+  country: props.company?.country || 'CH',
 });
 
 const { errors, setErrors, clearErrors } = useFormErrors(['name', 'street', 'street_number', 'zip', 'city', 'country']);

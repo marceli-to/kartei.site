@@ -55,17 +55,17 @@
 - [x] Slider checked in the browser: Tab focus stays in the active slide (`inert`), disabled entries on a new archive, enabled right after saving it. Fixed: the "Nächster Abschnitt" arrows of the following slides were extra Tab stops (now mouse-only, `tabindex=-1`), arrows hidden when the next slide is disabled, a link to a hidden/disabled/unknown section now corrects `?section=`
 - [x] Slider layout without offsets that cancel each other: navigation and slides share one structure (heading row `h-20`, `mt-38`, content line), the previous-slide row is in the flow (no `mt-58`/`-top-60`), sections no longer overflow by 20 px, `Slide` fills its column with `pb-20` and `pull` is `-mt-24`; Tags `pb-40`, Category `pb-24` and DeleteSlide `-top-4 pb-36` gone (DeleteSlide keeps an optical `-mt-4`). 16 screens pixel-identical except the previous-slide arrow (1 px, now 16 px from the line like the next arrows); short windows no longer cut off the save button
 - [x] Subscription form shows field errors in the labels (`useFormErrors`, cleared on change); `RadioGroup` has an `error` prop (in the `legend` for screen readers, `aria-invalid` on the radios)
+- [x] Countries stored as ISO codes (`CH`, …): one list in `resources/data/countries.json` (code => German name), read by `config/countries.php` and the SPA (`config/countries.js`); the server only accepts codes from the list; migration `2026_11_04_150000` converts names to codes (unknown values stay and are logged, `down()` converts back); tests added
 - [x] Removed the unused `App\Http\Requests\User\StoreRequest` (users are created via `ArchiveUserController`)
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
 ## Servers (before going live)
 
-- [ ] Work through the server checklist (Claude Doc): Laravel-Lang malware check, PHP 8.3+, migrations, scheduler cron, `media:prune-orphans` dry run, smoke tests
+- [ ] Work through the server checklist (Claude Doc): Laravel-Lang malware check, PHP 8.3+, migrations, scheduler cron, `media:prune-orphans` dry run, smoke tests; after migrating, check the log for "Countries not converted" (addresses/companies with a country outside the list)
 
 ## Next
 
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
-- [ ] Countries are stored as German names; switch to ISO codes (with a data migration) once billing/invoices need it
 
 ## Vue review: open points
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Requests\UserCompany;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -16,7 +17,7 @@ class UpdateRequest extends FormRequest
       'street' => ['required', 'string'],
       'zip' => ['required', 'string'],
       'city' => ['required', 'string'],
-      'country' => ['required', 'string', 'max:255'],
+      'country' => ['required', Rule::in(array_keys(config('countries')))],
     ];
   }
 }

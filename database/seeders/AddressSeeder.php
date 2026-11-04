@@ -18,7 +18,7 @@ class AddressSeeder extends Seeder
       'street_number' => '149',
       'zip' => '8047',
       'city' => 'Zürich',
-      'country' => 'Schweiz',
+      'country' => 'CH',
       'addressable_id' => 1,
       'addressable_type' => User::class,
       'is_billing' => false
@@ -31,7 +31,7 @@ class AddressSeeder extends Seeder
       'street_number' => '39',
       'zip' => '8045',
       'city' => 'Zürich',
-      'country' => 'Schweiz',
+      'country' => 'CH',
       'addressable_id' => 1,
       'addressable_type' => User::class,
       'is_billing' => true

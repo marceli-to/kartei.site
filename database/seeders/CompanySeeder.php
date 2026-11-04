@@ -17,7 +17,7 @@ class CompanySeeder extends Seeder
       'street_number' => '39',
       'zip' => '8045',
       'city' => 'Zürich',
-      'country' => 'Schweiz',
+      'country' => 'CH',
     ]);
 
     // create another company
@@ -27,7 +27,7 @@ class CompanySeeder extends Seeder
       'street_number' => '9a',
       'zip' => '8002',
       'city' => 'Zürich',
-      'country' => 'Schweiz',
+      'country' => 'CH',
     ]);
   }
 }

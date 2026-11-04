@@ -15,7 +15,7 @@ class UserAddressResource extends JsonResource
       'street_number' => $this->street_number ?? null,
       'zip' => $this->zip ?? null,
       'city' => $this->city ?? null,
-      'country' => $this->country ?? 'Schweiz',
+      'country' => $this->country ?? 'CH',
     ];
   }
 }

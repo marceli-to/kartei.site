@@ -81,7 +81,7 @@ const form = ref({
   street_number: '',
   zip: '',
   city: '',
-  country: 'Schweiz',
+  country: 'CH',
 });
 
 const { errors, setErrors, clearErrors } = useFormErrors(FIELDS);
