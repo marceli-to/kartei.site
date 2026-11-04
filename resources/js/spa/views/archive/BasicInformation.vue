@@ -14,7 +14,6 @@
             :allowedTypes="['image/*']"
             :multiple="false"
             v-model="form.image"
-            :existingImages="form.image"
             :error="errors.image"
           />
         </InputGroup>

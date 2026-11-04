@@ -1,10 +1,9 @@
 <template>
   <div v-if="images.length" :class="multiple ? 'mt-20' : ''">
     <draggable
-      v-model="localImages"
+      v-model="list"
       :item-key="imageKey"
-      :class="multiple ? 'grid grid-cols-12 gap-20' : ''"
-      @update="onReorder">
+      :class="multiple ? 'grid grid-cols-12 gap-20' : ''">
       <template #item="{ element, index }">
         <ImageCard :class="multiple ? 'col-span-6 xl:col-span-4 cursor-move' : ''">
           <Image
@@ -27,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 import api from '@/services/api/axios';
 import { notifyError } from '@/services/api/error';
 import draggable from 'vuedraggable';
@@ -52,28 +51,24 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:images', 'delete']);
+const emit = defineEmits(['update:images']);
 
-// Create a local copy of the images for drag-and-drop
-const localImages = ref([...props.images]);
-
-// Watch for changes in the parent images and sync with localImages
-watch(
-  () => props.images,
-  (newImages) => {
-    localImages.value = [...newImages];
-  }
-);
+// No local copy: dragging hands the new order straight to the parent (v-model:images).
+// vuedraggable only calls the setter when an image actually moved.
+const list = computed({
+  get: () => props.images,
+  set: (images) => {
+    emit('update:images', images);
+    saveOrder(images);
+  },
+});
 
 // Stable key per image: saved images have a uuid, new uploads a unique url
 const imageKey = (image) => image.uuid || image.resized_name || image.url;
 
-// Emit and save the new order; @update only fires when an image actually moved
-const onReorder = async () => {
-  emit('update:images', [...localImages.value]);
-
+const saveOrder = async (images) => {
   // Only saved images (with a uuid) have a position in the database
-  const positions = localImages.value
+  const positions = images
     .map((image, index) => ({ uuid: image.uuid, position: index }))
     .filter((position) => position.uuid);
 
@@ -93,10 +88,7 @@ const deleteImage = async (url, index) => {
     // Call the delete API
     await api.delete(`/upload${url}`);
 
-    // Emit a new list without the image (no in-place mutation)
-    localImages.value = localImages.value.filter((_, i) => i !== index);
-    emit('update:images', [...localImages.value]);
-    emit('delete', index);
+    emit('update:images', props.images.filter((_, i) => i !== index));
 
     toast.show('Bild gelöscht', 'success');
   } 

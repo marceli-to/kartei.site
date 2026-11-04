@@ -17,7 +17,7 @@
       @dragover.prevent="isDragging = true"
       @dragleave.prevent="onDragLeave"
       @drop.prevent="handleDrop"
-      v-if="multiple || uploadedFiles.length === 0">
+      v-if="multiple || list.length === 0">
       <input
         ref="fileInput"
         type="file"
@@ -52,17 +52,16 @@
     </div>
 
     <ImageList 
-      :images="uploadedFiles" 
+      :images="list"
+      @update:images="images = $event" 
       :editable="true" 
-      :multiple="multiple"
-      @update:images="handleImagesChange">
-    </ImageList>
+      :multiple="multiple" />
 
   </div>
 </template>
 
 <script setup>
-import { computed, watch, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useFileUpload, normalizeImageEntry } from '@/composables/useFileUpload.js';
 import ImageList from '@/components/media/upload/List.vue';
 import { MAX_UPLOAD_BYTES } from '@/config/upload';
@@ -85,14 +84,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  existingImages: {
-    type: Array,
-    default: () => [],
-  },
-  modelValue: {
-    type: Array,
-    default: () => []
-  },
   error: {
     type: String,
     default: ''
@@ -103,7 +94,10 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
+// The images (saved and freshly uploaded); the parent's v-model is the only copy
+const images = defineModel({ type: Array, default: () => [] });
+// Forms may start with null (no image yet)
+const list = computed(() => images.value ?? []);
 
 const {
   fileInput,
@@ -112,7 +106,6 @@ const {
   uploadProgress,
   hasError,
   validationErrors,
-  uploadedFiles,
   handleDrop,
   handleFileSelect,
   triggerFileInput
@@ -120,7 +113,11 @@ const {
   maxSize: props.maxSize,
   allowedTypes: props.allowedTypes,
   uploadUrl: props.uploadUrl,
-  multiple: props.multiple
+  multiple: props.multiple,
+  // New uploads go first; a single-image field is replaced
+  onUploaded: (uploaded) => {
+    images.value = props.multiple ? [...uploaded, ...list.value] : uploaded;
+  }
 });
 
 const displayedError = computed(() => {
@@ -130,17 +127,11 @@ const displayedError = computed(() => {
 
 const hasValidationError = computed(() => displayedError.value !== '');
 
-watch(uploadedFiles, (newVal) => {
-  emit('update:modelValue', newVal)
-});
-
+// Saved images arrive in the API's shape (or [null] without image); bring them
+// into the upload shape once, so new and saved images look the same
 onMounted(() => {
-  const validImages = props.existingImages?.filter(Boolean) ?? []
-  if (validImages.length) {
-    const normalized = validImages.map(normalizeImageEntry)
-    uploadedFiles.value = [...normalized]
-  }
-})
+  images.value = list.value.filter(Boolean).map(normalizeImageEntry);
+});
 
 // dragleave also fires when the pointer moves onto a child (icon, text);
 // only stop the highlight when it leaves the drop zone itself
@@ -148,10 +139,5 @@ const onDragLeave = (event) => {
   if (!event.currentTarget.contains(event.relatedTarget)) {
     isDragging.value = false;
   }
-};
-
-// Reordered or deleted in the list: replace the array so the watcher emits
-const handleImagesChange = (images) => {
-  uploadedFiles.value = [...images];
 };
 </script>

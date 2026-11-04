@@ -66,7 +66,6 @@
                         :allowedTypes="['image/*']"
                         :multiple="true"
                         v-model="form.media"
-                        :existingImages="form.media"
                         :error="null"
                         classes="!aspect-[16/9]" />
                     </template>

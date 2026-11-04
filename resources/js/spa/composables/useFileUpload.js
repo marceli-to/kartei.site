@@ -9,7 +9,8 @@ export function useFileUpload(options = {}) {
     maxSize = MAX_UPLOAD_BYTES,
     allowedTypes = ['image/*', 'application/pdf'],
     uploadUrl = '/upload',
-    multiple = true
+    multiple = true,
+    onUploaded = () => {}
   } = options;
 
   const toastStore = useToastStore();
@@ -20,7 +21,6 @@ export function useFileUpload(options = {}) {
   const uploadProgress = ref(0)
   const hasError = ref(false)
   const validationErrors = ref([])
-  const uploadedFiles = ref([])
 
   const toggleDrag = (value) => {
     isDragging.value = value
@@ -97,9 +97,8 @@ export function useFileUpload(options = {}) {
         }
       });
 
-      const normalized = response.data.files.map(normalizeImageEntry)
-      uploadedFiles.value = multiple ? [...normalized, ...uploadedFiles.value] : [...normalized]
-
+      // The caller adds them to its list (the v-model of upload/Image.vue)
+      onUploaded(response.data.files.map(normalizeImageEntry))
       return response.data;
     } 
     catch (error) {
@@ -162,7 +161,6 @@ export function useFileUpload(options = {}) {
     uploadProgress,
     hasError,
     validationErrors,
-    uploadedFiles,
     handleDrop,
     handleFileSelect,
     triggerFileInput,
