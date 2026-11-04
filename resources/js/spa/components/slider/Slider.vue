@@ -1,12 +1,15 @@
 <template>
+  <!--
+    Vertical layout, shared by the navigation and every slide:
+    heading row (h-20), gap (mt-38), then the content line, where the navigation box
+    and the slides start (slides with a label above that line use Slide's "pull").
+    Slides end pb-20 above the bottom edge (Slide.vue).
+  -->
   <div class="relative mt-48 flex w-full flex-grow overflow-hidden">
-    <nav
-      class="sticky left-0 z-50 mt-58 min-h-full w-2/12 min-w-nav shrink-0 border-r border-graphite bg-white dark:bg-black">
-      <div :class="{ 'mr-8 min-h-[calc(100%_-_20px)] border border-graphite pl-8': navigationVariant === 'box' }">
-        <!-- Previous slide, covers the headings that slid under the navigation -->
-        <div
-          v-if="activeIndex > 0"
-          class="absolute -top-60 left-0 flex w-full items-center justify-between bg-white dark:bg-black">
+    <nav class="sticky left-0 z-50 flex w-2/12 min-w-nav shrink-0 flex-col bg-white dark:bg-black">
+      <!-- Previous slide, covers the headings that slid under the navigation -->
+      <div class="flex h-20 shrink-0 items-center justify-between">
+        <template v-if="activeIndex > 0">
           <h1 class="font-muoto-medium opacity-20">
             {{ visibleSlides[activeIndex - 1].name }}
           </h1>
@@ -20,26 +23,32 @@
               name="chevron-left"
               variant="small-bold" />
           </button>
+        </template>
+      </div>
+
+      <div class="mt-38 flex flex-grow flex-col border-r border-graphite">
+        <div
+          class="flex flex-col"
+          :class="{ 'mb-20 mr-8 flex-grow border border-graphite pl-8': navigationVariant === 'box' }">
+          <slot name="header" />
+
+          <ul>
+            <li
+              v-for="item in visibleSlides"
+              :key="item.id"
+              class="mr-8 flex min-h-default items-center border-b border-b-graphite first-of-type:border-t first-of-type:border-t-graphite">
+              <button
+                type="button"
+                :disabled="item.disabled"
+                :aria-current="item.id === activeId ? 'step' : undefined"
+                class="block w-full text-left disabled:opacity-50"
+                :class="{ 'font-muoto-medium': item.id === activeId }"
+                @click="go(item.id)">
+                {{ item.name }}
+              </button>
+            </li>
+          </ul>
         </div>
-
-        <slot name="header" />
-
-        <ul>
-          <li
-            v-for="item in visibleSlides"
-            :key="item.id"
-            class="mr-8 flex min-h-default items-center border-b border-b-graphite first-of-type:border-t first-of-type:border-t-graphite">
-            <button
-              type="button"
-              :disabled="item.disabled"
-              :aria-current="item.id === activeId ? 'step' : undefined"
-              class="block w-full text-left disabled:opacity-50"
-              :class="{ 'font-muoto-medium': item.id === activeId }"
-              @click="go(item.id)">
-              {{ item.name }}
-            </button>
-          </li>
-        </ul>
       </div>
     </nav>
 
@@ -53,7 +62,7 @@
         :key="item.id"
         :ref="(el) => setSectionEl(item.id, el)"
         :class="item.class"
-        class="shrink-0">
+        class="flex shrink-0 flex-col">
         <h2
           class="ml-8 flex h-20 items-center justify-between font-muoto-medium leading-none"
           :class="{ 'opacity-20': index !== activeIndex }">
@@ -73,21 +82,19 @@
               variant="small-bold" />
           </button>
         </h2>
-        <div class="flex min-h-full flex-grow pt-38">
-          <!-- inert: no clicks and no keyboard focus outside the active slide -->
-          <div
-            class="relative min-h-full flex-grow border-r border-r-graphite"
-            :class="{
-              'opacity-20 transition-opacity': index > activeIndex,
-              'opacity-0 transition-opacity': index < activeIndex,
-            }"
-            :inert="index !== activeIndex">
-            <component
-              :is="item.component"
-              v-bind="item.props || {}"
-              :is-active="index === activeIndex"
-              class="shrink-0" />
-          </div>
+        <!-- inert: no clicks and no keyboard focus outside the active slide -->
+        <div
+          class="relative mt-38 flex flex-grow flex-col border-r border-r-graphite"
+          :class="{
+            'opacity-20 transition-opacity': index > activeIndex,
+            'opacity-0 transition-opacity': index < activeIndex,
+          }"
+          :inert="index !== activeIndex">
+          <component
+            :is="item.component"
+            v-bind="item.props || {}"
+            :is-active="index === activeIndex"
+            class="shrink-0" />
         </div>
       </section>
     </div>

@@ -2,7 +2,7 @@
   <Slide>
     <form
       v-if="!isLoading"
-      class="before:-z-1 after:-z-1 relative flex h-full w-full flex-col justify-between pb-24 before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite"
+      class="before:-z-1 after:-z-1 relative flex h-full w-full flex-col justify-between before:absolute before:-bottom-20 before:left-1/4 before:top-0 before:w-1 before:bg-graphite after:absolute after:-bottom-20 after:left-3/4 after:top-0 after:w-1 after:bg-graphite"
       @submit.prevent="handleSubmit">
       <!-- Info box -->
       <template v-if="isInfoOpen">

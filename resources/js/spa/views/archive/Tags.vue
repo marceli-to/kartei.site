@@ -1,5 +1,5 @@
 <template>
-  <Slide class="pb-40">
+  <Slide>
     <form
       v-if="!isLoading"
       class="flex h-full w-full flex-col justify-between"

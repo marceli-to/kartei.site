@@ -1,6 +1,7 @@
 <template>
-  <!-- Layout of the "Löschen" slides (archive, account): text, then a red button -->
-  <Slide class="-top-4 pb-36">
+  <!-- Layout of the "Löschen" slides (archive, account): text, then a red button.
+       -mt-4: the text's first line sits optically on the content line -->
+  <Slide class="-mt-4">
     <div class="flex h-full w-full flex-col justify-between">
       <div>
         <slot />
