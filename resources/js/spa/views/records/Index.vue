@@ -112,42 +112,43 @@ const createLink = {
 
 const actionLinks = computed(() => [...(canCreate.value ? [createLink] : []), ...otherActionLinks]);
 
+// Not built yet: shown greyed out
 const otherActionLinks = [
   {
     type: 'button',
     label: 'Ordnen',
     icon: 'reorder',
-    onClick: () => {},
+    disabled: true,
   },
   {
     type: 'button',
     label: 'Kacheln',
     icon: 'tiles',
-    onClick: () => {},
+    disabled: true,
   },
   {
     type: 'button',
     label: 'Liste',
     icon: 'list',
-    onClick: () => {},
+    disabled: true,
   },
   {
     type: 'button',
     label: 'Bilder',
     icon: 'image',
-    onClick: () => {},
+    disabled: true,
   },
   {
     type: 'button',
     label: 'Export',
     icon: 'download',
-    onClick: () => {},
+    disabled: true,
   },
   {
     type: 'button',
     label: 'Teilen',
     icon: 'upload',
-    onClick: () => {},
+    disabled: true,
   },
 ];
 

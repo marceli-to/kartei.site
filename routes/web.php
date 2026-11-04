@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'home')->name('page.home');
+// No welcome page: guests go straight to the login, logged-in users into the app
+Route::get('/', fn () => auth()->check()
+  ? redirect(config('app.home'))
+  : redirect()->route('auth.login')
+)->name('page.home');
 Route::view('/auf-wiedersehen', 'goodbye')->name('page.goodbye');
 
 Route::get('/archiv/{any?}', function () {

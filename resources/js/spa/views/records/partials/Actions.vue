@@ -26,7 +26,7 @@
           <button
             v-else-if="item.type === 'button'"
             type="button"
-            class="flex items-center gap-x-12"
+            class="flex items-center gap-x-12 disabled:cursor-default disabled:opacity-20"
             :class="item.class"
             :disabled="item.disabled"
             @click="item.onClick">

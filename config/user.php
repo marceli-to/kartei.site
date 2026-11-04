@@ -20,6 +20,6 @@ return [
     | Users will be prompted to change this password on first login.
     |
     */
-    'welcome_password' => env('USER_WELCOME_PASSWORD', 'WillkommenKarteiPunktSite'),
+    'welcome_password' => env('USER_WELCOME_PASSWORD', 'TWIN-GRAB-MENU-HILL-MOON'),
 
 ];
