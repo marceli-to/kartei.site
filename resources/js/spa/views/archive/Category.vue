@@ -21,7 +21,7 @@
               class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
               aria-label="Ordnungsstruktur einstellen"
               @click="showStructureDialog">
-              <IconSettings />
+              <Icon name="settings" />
             </button>
           </div>
           <div class="w-6/12">
@@ -38,7 +38,7 @@
               class="min-h-default border-y border-y-graphite w-full flex items-center justify-start"
               aria-label="Ordnungsstruktur einstellen"
               @click="showStructureDialog">
-              <IconSettings />
+              <Icon name="settings" />
             </button>
           </div>
         </div>
@@ -122,7 +122,6 @@ import { useInfoBox } from '@/composables/useInfoBox';
 import { useStructureForm } from '@/views/archive/composables/useStructureForm';
 import { deleteCategory, deleteRegister } from '@/services/api/category';
 import { notifyError } from '@/services/api/error';
-import IconSettings from '@/components/icons/Settings.vue';
 import Slide from '@/components/slider/Slide.vue';
 import Action from '@/components/buttons/Action.vue';
 import InputLabel from '@/components/forms/Label.vue';
@@ -132,6 +131,7 @@ import InfoBox from '@/components/infobox/InfoBox.vue';
 import StructureRow from '@/views/archive/partials/StructureRow.vue';
 import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
 import InfoStructure from '@/views/archive/partials/StructureInfo.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   isActive: {

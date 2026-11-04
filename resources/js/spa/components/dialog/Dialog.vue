@@ -35,7 +35,7 @@
               class="absolute right-24 top-24"
               aria-label="Schliessen"
               @click="handleCancel">
-              <IconCross variant="small-bold" />
+              <Icon name="cross" variant="small-bold" />
             </button>
             <div class="flex flex-col gap-y-24 mx-auto">
 
@@ -103,7 +103,7 @@ import { storeToRefs } from 'pinia';
 import { useDialogStore } from '@/stores/dialog';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
-import IconCross from '@/components/icons/Cross.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const dialogStore = useDialogStore();
 const { isVisible, isBusy, content, version } = storeToRefs(dialogStore);

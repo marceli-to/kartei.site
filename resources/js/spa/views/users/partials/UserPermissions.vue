@@ -15,7 +15,7 @@
           wrapperClasses="flex flex-col gap-y-8"
           :options="archiveOptions">
           <template #icon="{ option }">
-            <IconCheckmark v-if="saved[option.value]" />
+            <Icon name="checkmark" v-if="saved[option.value]" />
           </template>
         </InputSelectButtons>
       </InputGroup>
@@ -105,8 +105,8 @@ import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonAuth from '@/components/buttons/Auth.vue';
-import IconCheckmark from '@/components/icons/Checkmark.vue';
 import { notifyError } from '@/services/api/error';
+import Icon from '@/components/icons/Icon.vue';
 
 // New assignments start with the role giving the least access
 const DEFAULT_ROLE_NAME = 'Viewer';

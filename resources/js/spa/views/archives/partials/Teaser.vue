@@ -4,7 +4,7 @@
       :to="{ name: 'archiveRecords', params: { uuid: archive.uuid } }"
       class="block absolute top-8 right-8 z-10 size-24"
       title="Kartei bearbeiten">
-      <IconEdit class="text-graphite hover:text-black transition-colors w-full h-auto" />
+      <Icon name="edit" class="text-graphite hover:text-black transition-colors w-full h-auto" />
     </router-link>
     <ImageCard v-if="archive.image">
       <Image :src="archive.image.url" alt="Titelbild" spacing="m-40" />
@@ -24,7 +24,7 @@
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import Collapsible from '@/components/Collapsible.vue';
-import IconEdit from '@/components/icons/Edit.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   archive: {

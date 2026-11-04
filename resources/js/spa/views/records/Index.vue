@@ -4,7 +4,7 @@
     class="flex flex-grow w-full relative">
     <Actions :links="actionLinks">
       <router-link :to="{ name: 'archives' }" v-if="uuid" aria-label="Zurück zu Meine Karteien">
-        <IconChevronLeft variant="small-bold" />
+        <Icon name="chevron-left" variant="small-bold" />
       </router-link>
     </Actions>
     <div class="flex mt-106 min-h-full w-full">
@@ -69,14 +69,7 @@ import Card from '@/views/records/partials/Card.vue'
 import Sidebar from '@/views/records/partials/Sidebar.vue'
 import Actions from '@/views/records/partials/Actions.vue'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
-import IconPlus from '@/components/icons/Plus.vue'
-import IconReorder from '@/components/icons/Reorder.vue'
-import IconTiles from '@/components/icons/Tiles.vue'
-import IconList from '@/components/icons/List.vue'
-import IconImage from '@/components/icons/Image.vue'
-import IconDownload from '@/components/icons/Download.vue'
-import IconUpload from '@/components/icons/Upload.vue'
-import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
+import Icon from '@/components/icons/Icon.vue'
 
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)
@@ -101,7 +94,7 @@ const canCreate = computed(() => userStore.canArchive(uuid.value, 'createRecord'
 const createLink = {
   type: 'link',
   label: 'Karte',
-  icon: IconPlus,
+  icon: 'plus',
   to: { name: 'archiveRecordCreate', params: { uuid: uuid.value } },
   router: true,
 }
@@ -115,37 +108,37 @@ const otherActionLinks = [
   {
     type: 'button',
     label: 'Ordnen',
-    icon: IconReorder,
+    icon: 'reorder',
     onClick: () => {},
   },
   {
     type: 'button',
     label: 'Kacheln',
-    icon: IconTiles,
+    icon: 'tiles',
     onClick: () => {},
   },
   {
     type: 'button',
     label: 'Liste',
-    icon: IconList,
+    icon: 'list',
     onClick: () => {},
   },
   {
     type: 'button',
     label: 'Bilder',
-    icon: IconImage,
+    icon: 'image',
     onClick: () => {},
   },
   {
     type: 'button',
     label: 'Export',
-    icon: IconDownload,
+    icon: 'download',
     onClick: () => {},
   },
   {
     type: 'button',
     label: 'Teilen',
-    icon: IconUpload,
+    icon: 'upload',
     onClick: () => {},
   },
 ];

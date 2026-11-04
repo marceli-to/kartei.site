@@ -24,12 +24,13 @@
               :aria-pressed="infoIcon.isOpen"
               aria-label="Info"
               @click="infoIcon.toggle">
+              <!-- Same 48px box for both variants, so the header doesn't shift on hover -->
               <template v-if="infoIcon.isOpen">
-                <IconInfo variant="active" classes="theme-color-text" />
+                <span class="size-48 flex items-center justify-center theme-color-text"><Icon name="info" variant="active" /></span>
               </template>
               <template v-else>
-                <IconInfo classes="group-enabled:group-hover:hidden" />
-                <IconInfo variant="active" classes="hidden group-enabled:group-hover:block" />
+                <span class="size-48 flex items-center justify-center group-enabled:group-hover:hidden"><Icon name="info" /></span>
+                <span class="size-48 flex items-center justify-center hidden group-enabled:group-hover:block"><Icon name="info" variant="active" /></span>
               </template>
             </button>
 
@@ -37,8 +38,8 @@
               :to="{ name: 'settings', query: { section: 'profile' } }"
               class="mt-20 group"
               aria-label="Profil">
-              <IconProfile classes="group-hover:hidden" />
-              <IconProfile variant="active" classes="hidden group-hover:block" />
+              <span class="size-48 flex items-center justify-center group-hover:hidden"><Icon name="profile" /></span>
+              <span class="size-48 flex items-center justify-center hidden group-hover:block"><Icon name="profile" variant="active" /></span>
             </router-link>
             <button 
               type="button"
@@ -46,8 +47,8 @@
               :aria-label="isOpen ? 'Menü schliessen' : 'Menü öffnen'"
               :aria-expanded="isOpen"
               @click="toggle">
-              <IconCross v-if="isOpen" />
-              <IconBurger v-else />
+              <Icon name="cross" v-if="isOpen" />
+              <Icon name="burger" v-else />
             </button>
           </div>
         </div>
@@ -61,11 +62,8 @@ import { useToggleSidebar } from '@/composables/useToggleSidebar';
 import { useInfoIconStore } from '@/stores/info';
 import { usePageTitle } from '@/composables/usePageTitle';
 import IconLogo from '@/components/icons/Logo.vue';
-import IconInfo from '@/components/icons/Info.vue';
-import IconProfile from '@/components/icons/Profile.vue';
-import IconBurger from '@/components/icons/Burger.vue';
-import IconCross from '@/components/icons/Cross.vue';
 import SidebarMenu from '@/components/menu/Sidebar.vue';
+import Icon from '@/components/icons/Icon.vue';
 const { isOpen, toggle, hide } = useToggleSidebar();
 const infoIcon = useInfoIconStore();
 

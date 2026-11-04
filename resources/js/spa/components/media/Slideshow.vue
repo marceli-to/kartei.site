@@ -25,11 +25,11 @@
     </swiper>
 
     <button type="button" aria-label="Vorheriges Bild" :class="`swiper-button-prev swiper-button-prev-${uniqueId} absolute left-0 top-1/2 -translate-y-1/2 z-10 size-40 flex justify-center items-center`">
-      <IconChevronLeft variant="small" />
+      <Icon name="chevron-left" variant="small" />
     </button>
 
     <button type="button" aria-label="Nächstes Bild" :class="`swiper-button-next swiper-button-next-${uniqueId} absolute right-0 top-1/2 -translate-y-1/2 z-10 size-40 flex justify-center items-center`">
-      <IconChevronRight variant="small" />
+      <Icon name="chevron-right" variant="small" />
     </button>
 
   </div>
@@ -42,9 +42,8 @@ let nextId = 1
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
-import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
 import Image from '@/components/media/Image.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const uniqueId = nextId++
 const prevButton = `.swiper-button-prev-${uniqueId}`

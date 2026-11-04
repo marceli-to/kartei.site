@@ -4,12 +4,12 @@
     :class="classes" 
     :disabled="disabled"
     :aria-label="label">
-    <IconChevronRight variant="small" />
+    <Icon name="chevron-right" variant="small" />
     {{ label }}
   </button>
 </template>
 <script setup>
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   type: {

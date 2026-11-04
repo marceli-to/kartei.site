@@ -10,14 +10,14 @@
       <router-link 
         :to="{ name: 'settings', query: { section: 'subscription' } }"
         class="font-muoto-medium flex items-center gap-x-4 mt-4">
-        <IconChevronRight variant="tiny" />
+        <Icon name="chevron-right" variant="tiny" />
         Abonnement erstellen
       </router-link>
     </div>
   </div>
 </template>
 <script setup>
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   hasSubscription: {

@@ -1,9 +1,9 @@
 <template>
   <span class="flex items-center gap-x-8 text-xs">
-    <IconChevronLeft variant="small-bold" />
+    <Icon name="chevron-left" variant="small-bold" />
     Erstellen Sie Ihre erste Kartei
   </span>
 </template>
 <script setup>
-import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
+import Icon from '@/components/icons/Icon.vue';
 </script>

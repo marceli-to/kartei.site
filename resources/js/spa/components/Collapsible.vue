@@ -14,7 +14,7 @@
         <span class="w-48">{{ item.number }}.</span>
         <span>{{ item.name }}</span>
       </span>
-      <IconChevronDown 
+      <Icon name="chevron-down" 
         :class="isOpen[index] ? 'rotate-180' : ''" 
         class="transition-transform"
         v-if="item.registers.length > 0" />
@@ -38,7 +38,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import IconChevronDown from '@/components/icons/ChevronDown.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   items: {

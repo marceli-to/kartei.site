@@ -11,8 +11,8 @@
         <div>
           <InputLabel label="Bildfeld" />
           <ImageCard class="flex items-center justify-center mb-8 !aspect-[16/9]">
-            <IconImage v-if="form.has_images" />
-            <IconImage variant="missing" v-else />
+            <Icon name="image" class="text-graphite" v-if="form.has_images" />
+            <Icon name="image" variant="missing" class="text-graphite" v-else />
           </ImageCard>
           <InputGroup>
             <InputSelectButtons
@@ -67,7 +67,7 @@
                   class="absolute right-8 top-12"
                   :aria-label="`Textfeld ${index + 1} entfernen`"
                   @click="remove(index)">
-                  <IconCross variant="small" />
+                  <Icon name="cross" variant="small" />
                 </button>
               </InputGroup>
             </template>
@@ -99,10 +99,9 @@ import InputStatic from '@/components/forms/Static.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import ImageCard from '@/components/media/Card.vue';
-import IconImage from '@/components/icons/Image.vue';
-import IconCross from '@/components/icons/Cross.vue';
 import Action from '@/components/buttons/Action.vue';
 import { notifyError } from '@/services/api/error';
+import Icon from '@/components/icons/Icon.vue';
 
 const toast = useToastStore();
 

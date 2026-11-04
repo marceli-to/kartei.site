@@ -19,18 +19,17 @@
         class="absolute right-8 top-1/2 -translate-y-1/2 text-black"
         aria-label="Suchfeld leeren"
         title="Suchfeld leeren">
-        <IconCross variant="small" />
+        <Icon name="cross" variant="small" />
       </button>
     </template>
     <template v-else>
-      <IconMagnifier aria-hidden="true" class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+      <Icon name="magnifier" aria-hidden="true" class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
     </template>
   </div>
 </template>
 
 <script setup>
-import IconMagnifier from '@/components/icons/Magnifier.vue';
-import IconCross from '@/components/icons/Cross.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 // aria-label etc. belong on the input, not the wrapper
 defineOptions({ inheritAttrs: false });

@@ -10,15 +10,15 @@
         class="absolute right-0 top-0"
         aria-label="Hinweis schliessen"
         v-if="closable">
-        <IconCross variant="small" />
+        <Icon name="cross" variant="small" />
       </button>
       <slot />
     </div>
   </div>
 </template>
 <script setup>
-import IconCross from '@/components/icons/Cross.vue';
 import { useInfoIconStore } from '@/stores/info';
+import Icon from '@/components/icons/Icon.vue';
 const infoIcon = useInfoIconStore();
 
 const props = defineProps({

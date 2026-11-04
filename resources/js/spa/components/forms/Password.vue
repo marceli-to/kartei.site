@@ -19,19 +19,16 @@
         class="absolute inset-y-0 right-8 flex items-center text-graphite"
         :aria-label="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'"
         :title="type === 'text' ? 'Passwort verbergen' : 'Passwort anzeigen'">
-        <template v-if="type === 'text'">
-          <IconEye variant="enabled" />
-        </template>
-        <template v-else>
-          <IconEye variant="disabled" />
-        </template>
+        <span class="w-17 h-16 flex items-center justify-center">
+          <Icon name="eye" :variant="type === 'text' ? 'enabled' : 'disabled'" />
+        </span>
       </button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import IconEye from '@/components/icons/Eye.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 // aria-label, autocomplete, name ... belong on the input, not the wrapper
 defineOptions({ inheritAttrs: false });

@@ -1,75 +1,37 @@
 <template>
   <component
-    v-if="!isRouterLink"
-    :is="tag"
-    :type="tag === 'button' ? type : undefined"
-    :href="tag === 'a' ? href : undefined"
+    :is="element"
+    v-bind="elementAttrs"
     :aria-label="label"
     :title="label"
-    :disabled="tag === 'button' ? disabled : undefined"
     :class="[baseClasses, defaultBorderClasses, classes]">
     <span :class="contentClasses">
-      <component 
-        v-if="icon?.name && icon.position === 'left'" 
-        :is="resolveIconComponent" 
-        :variant="icon.variant || 'small'" 
-      />
+      <Icon
+        v-if="iconName && icon.position === 'left'"
+        :name="iconName"
+        :variant="icon.variant || 'small'" />
       <span :class="{ 'flex-1 text-left': icon?.position === 'center' }">
         {{ label }}
       </span>
       <span v-if="icon?.position === 'center'" class="flex-1 flex justify-start">
-        <component 
-          v-if="icon.name" 
-          :is="resolveIconComponent" 
-          :variant="icon.variant || 'small'" 
-          class="relative -translate-x-1/2" 
-        />
+        <Icon
+          v-if="iconName"
+          :name="iconName"
+          :variant="icon.variant || 'small'"
+          class="relative -translate-x-1/2" />
       </span>
-      <component 
-        v-if="icon?.name && (icon.position === 'right' || !icon.position)" 
-        :is="resolveIconComponent" 
-        :variant="icon.variant || 'small'" 
-      />
+      <Icon
+        v-if="iconName && (icon.position === 'right' || !icon.position)"
+        :name="iconName"
+        :variant="icon.variant || 'small'" />
     </span>
   </component>
-  <RouterLink
-    v-else
-    :to="to"
-    :aria-label="label"
-    :title="label"
-    :class="[baseClasses, defaultBorderClasses, classes]">
-    <span :class="contentClasses">
-      <component 
-        v-if="icon?.name && icon.position === 'left'" 
-        :is="resolveIconComponent" 
-        :variant="icon.variant || 'small'" 
-      />
-      <span :class="{ 'flex-1 text-left': icon?.position === 'center' }">
-        {{ label }}
-      </span>
-      <span v-if="icon?.position === 'center'" class="flex-1 flex justify-start">
-        <component 
-          v-if="icon.name" 
-          :is="resolveIconComponent" 
-          :variant="icon.variant || 'small'" 
-          class="relative -translate-x-1/2" 
-        />
-      </span>
-      <component 
-        v-if="icon?.name && (icon.position === 'right' || !icon.position)" 
-        :is="resolveIconComponent" 
-        :variant="icon.variant || 'small'" 
-      />
-    </span>
-  </RouterLink>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import IconPlus from '@/components/icons/Plus.vue';
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
-import IconSettings from '@/components/icons/Settings.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   type: {
@@ -116,23 +78,23 @@ const props = defineProps({
   }
 });
 
-const isRouterLink = computed(() => !!props.to);
-
-const tag = computed(() => {
+// A router link (to), a plain link (href) or a button
+const element = computed(() => {
+  if (props.to) return RouterLink;
   if (props.href) return 'a';
   return 'button';
 });
 
-const resolveIconComponent = computed(() => {
-  if (!props.icon?.name) return null;
-  
-  const icons = {
-    plus: IconPlus,
-    chevronright: IconChevronRight,
-    settings: IconSettings
-  };
-  return icons[props.icon.name.toLowerCase()] || null;
+const elementAttrs = computed(() => {
+  if (props.to) return { to: props.to };
+  if (props.href) return { href: props.href };
+  return { type: props.type, disabled: props.disabled };
 });
+
+// icon.name as written by the callers ('Plus', 'ChevronRight') -> registry name
+const iconName = computed(() =>
+  props.icon?.name ? props.icon.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : null
+);
 
 const baseClasses = 'min-h-default flex items-center justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
 

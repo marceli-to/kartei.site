@@ -11,7 +11,7 @@
           Keine Sorge, hier geht es zurück:
           <span class="flex justify-center mt-16">
             <router-link :to="{ name: 'archives' }" aria-label="Zurück zu Meine Karteien">
-              <IconChevronLeft variant="large-rounded" />
+              <Icon name="chevron-left" variant="large-rounded" />
             </router-link>
           </span>
         </template>
@@ -22,7 +22,7 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { usePageTitle } from '@/composables/usePageTitle';
-import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 // One page for /error/401, /error/403 and /error/404 (status comes from the route)
 const props = defineProps({

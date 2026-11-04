@@ -32,14 +32,14 @@
     </p>
     <div>
       <a href="" class="flex gap-x-8 items-center font-muoto-medium">
-        <IconChevronRight variant="tiny" />
+        <Icon name="chevron-right" variant="tiny" />
         Vertragsbedingungen
       </a>
     </div>
   </div>
 </template>
 <script setup>
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
+import Icon from '@/components/icons/Icon.vue';
 </script>
 <style scoped>
   ul {

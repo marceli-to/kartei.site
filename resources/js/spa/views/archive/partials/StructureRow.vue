@@ -15,7 +15,7 @@
         class="absolute right-8 top-12"
         :aria-label="`${label} ${position} entfernen`"
         @click="$emit('remove')">
-        <IconCross variant="small" />
+        <Icon name="cross" variant="small" />
       </button>
     </div>
     <div class="w-3/12">
@@ -27,9 +27,9 @@
   </div>
 </template>
 <script setup>
-import IconCross from '@/components/icons/Cross.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputStatic from '@/components/forms/Static.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 // row is the category or register object of the structure form, edited in place
 defineProps({

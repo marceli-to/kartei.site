@@ -36,7 +36,7 @@
         <form method="post" action="/logout">
           <input type="hidden" name="_token" :value="csrfToken">
           <button type="submit" class="gap-x-12">
-            <IconChevronRight variant="small" />
+            <Icon name="chevron-right" variant="small" />
             Abmelden
           </button>
         </form>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 

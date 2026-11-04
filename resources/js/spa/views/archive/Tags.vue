@@ -28,7 +28,7 @@
                 class="absolute right-8 top-1/2 -translate-y-1/2"
                 :aria-label="`Tag ${index + 1} entfernen`"
                 @click="remove(index)">
-                <IconCross variant="small" />
+                <Icon name="cross" variant="small" />
               </button>
           </InputGroup>
         </div>
@@ -55,8 +55,8 @@ import InputText from '@/components/forms/Text.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Action from '@/components/buttons/Action.vue';
-import IconCross from '@/components/icons/Cross.vue';
 import { notifyError } from '@/services/api/error';
+import Icon from '@/components/icons/Icon.vue';
 
 const toast = useToastStore();
 

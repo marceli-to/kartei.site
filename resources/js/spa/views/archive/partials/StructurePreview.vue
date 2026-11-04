@@ -5,7 +5,7 @@
   <div class="flex mb-32">
     <div class="w-3/12">
       <div class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
-        <IconSettings />
+        <Icon name="settings" />
       </div>
     </div>
     <div class="w-6/12 px-16">
@@ -13,14 +13,14 @@
         <span class="w-full flex items-center justify-center">
           <span class="flex-1 text-left">Kategorie</span>
           <span class="flex-1 flex justify-start">
-            <IconPlus variant="small-bold" />
+            <Icon name="plus" variant="small-bold" />
           </span>
         </span>
       </div>
     </div>
     <div class="w-3/12">
       <div class="min-h-default border-y border-y-graphite w-full flex items-center justify-start">
-        <IconSettings />
+        <Icon name="settings" />
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
         <span class="w-full flex items-center justify-center">
           <span class="flex-1 text-left">Register</span>
           <span class="flex-1 flex justify-start">
-            <IconPlus variant="small" />
+            <Icon name="plus" variant="small" />
           </span>
         </span>
       </div>
@@ -89,9 +89,8 @@
 <script setup>
 import InputLabel from '@/components/forms/Label.vue';
 import InputStatic from '@/components/forms/Static.vue';
-import IconSettings from '@/components/icons/Settings.vue';
-import IconPlus from '@/components/icons/Plus.vue';
 import { formatNumber } from '@/utils/numbering';
+import Icon from '@/components/icons/Icon.vue';
 
 defineProps({
   categoryType: {

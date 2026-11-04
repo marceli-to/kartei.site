@@ -2,13 +2,13 @@
   <h2 class="flex justify-between items-center mb-38 mr-8">
     <span>{{ title }}</span>
     <router-link :to="linkTarget" aria-label="Schliessen">
-      <IconCross variant="small" />
+      <Icon name="cross" variant="small" />
     </router-link>
   </h2>
 </template>
 <script setup>
 import { computed } from 'vue';
-import IconCross from '@/components/icons/Cross.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   title: { type: String, default: 'Voreinstellungen' },

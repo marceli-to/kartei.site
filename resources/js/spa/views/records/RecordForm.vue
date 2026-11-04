@@ -5,7 +5,7 @@
         :to="{ name: 'archiveRecords', params: { uuid: archiveUuid } }"
         v-if="archiveUuid"
         aria-label="Zurück zur Kartei">
-        <IconChevronLeft variant="small-bold" />
+        <Icon name="chevron-left" variant="small-bold" />
       </router-link>
     </Actions>
     <div class="flex mt-106 min-h-full w-full">
@@ -73,7 +73,7 @@
                     <template v-else>
                       <ImageCard class="!aspect-[16/9] flex items-center justify-center">
                         <div class="flex flex-col items-center">
-                          <IconImage variant="missing" />
+                          <Icon name="image" variant="missing" class="text-graphite" />
                           <div class="text-sm mt-8">
                             Kein Bildfeld definiert
                           </div>
@@ -138,9 +138,7 @@ import InputLabel from '@/components/forms/Label.vue'
 import InputTextarea from '@/components/forms/Textarea.vue'
 import ImageUpload from '@/components/media/upload/Image.vue'
 import ImageCard from '@/components/media/Card.vue'
-import IconImage from '@/components/icons/Image.vue'
-import IconCross from '@/components/icons/Cross.vue'
-import IconChevronLeft from '@/components/icons/ChevronLeft.vue'
+import Icon from '@/components/icons/Icon.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -189,7 +187,7 @@ const actionLinks = computed(() => canDelete.value ? [
   {
     type: 'button',
     label: 'Löschen',
-    icon: IconCross,
+    icon: 'cross',
     onClick: () => dialogStore.confirmDelete({
       title: 'Karte löschen',
       message: 'Möchten Sie diese Karte wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',

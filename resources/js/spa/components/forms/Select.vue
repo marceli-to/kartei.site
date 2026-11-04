@@ -24,14 +24,14 @@
       </option>
     </select>
     <div :class="[chevronClasses, { '!text-white': props.error }]">
-      <IconChevronDown />
+      <Icon name="chevron-down" />
     </div>
   </div>
 </template>
 
 <script setup>
-import IconChevronDown from '@/components/icons/ChevronDown.vue';
 import { computed } from 'vue';
+import Icon from '@/components/icons/Icon.vue';
 
 // aria-label, name ... belong on the select, not the wrapper
 defineOptions({ inheritAttrs: false });

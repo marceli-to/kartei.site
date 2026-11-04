@@ -18,7 +18,7 @@
             class="flex items-center gap-x-12"
             :class="item.class"
           >
-            <component :is="item.icon" v-if="item.icon" :variant="item.iconVariant || 'square'" />
+            <Icon v-if="item.icon" :name="item.icon" :variant="item.iconVariant || 'square'" />
             <span class="text-xs font-muoto-medium">{{ item.label }}</span>
           </component>
           <button
@@ -29,7 +29,7 @@
             :disabled="item.disabled"
             @click="item.onClick"
           >
-            <component :is="item.icon" v-if="item.icon" :variant="item.iconVariant || 'square'" />
+            <Icon v-if="item.icon" :name="item.icon" :variant="item.iconVariant || 'square'" />
             <span class="text-xs font-muoto-medium">{{ item.label }}</span>
           </button>
         </li>
@@ -39,7 +39,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import Icon from '@/components/icons/Icon.vue'
 
 const props = defineProps({
   links: {

@@ -18,7 +18,7 @@
             @click="deleteImage((element.url), index)"
             class="absolute top-0 right-0 p-8 hover:bg-snow"
           >
-            <IconCross variant="small" />
+            <Icon name="cross" variant="small" />
           </button>
         </ImageCard>
       </template>
@@ -31,10 +31,10 @@ import { ref, watch } from 'vue';
 import api from '@/services/api/axios';
 import { notifyError } from '@/services/api/error';
 import draggable from 'vuedraggable';
-import IconCross from '@/components/icons/Cross.vue';
 import ImageCard from '@/components/media/Card.vue';
 import Image from '@/components/media/Image.vue';
 import { useToastStore } from '@/stores/toast';
+import Icon from '@/components/icons/Icon.vue';
 const toast = useToastStore();
 
 const props = defineProps({

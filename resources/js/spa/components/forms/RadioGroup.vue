@@ -18,16 +18,16 @@
           @change="$emit('update:modelValue', option.value)"
           class="sr-only"
         />
-        <IconRadio v-if="modelValue !== option.value" />
-        <IconRadio variant="checked" v-else />
+        <Icon name="radio" v-if="modelValue !== option.value" />
+        <Icon name="radio" variant="checked" v-else />
       </div>
     </label>
   </fieldset>
 </template>
 
 <script setup>
-import IconRadio from '@/components/icons/Radio.vue';
 import { computed } from 'vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   modelValue: {

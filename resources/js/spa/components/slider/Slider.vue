@@ -17,7 +17,7 @@
             title="Vorheriger Abschnitt"
             aria-label="Vorheriger Abschnitt"
             class="opacity-20 mr-16">
-            <IconChevronLeft variant="small-bold" />
+            <Icon name="chevron-left" variant="small-bold" />
           </button>
         </div>
 
@@ -64,7 +64,7 @@
             title="Nächster Abschnitt"
             aria-label="Nächster Abschnitt"
             class="mr-16">
-            <IconChevronRight variant="small-bold" />
+            <Icon name="chevron-right" variant="small-bold" />
           </button>
         </h2>
         <div class="flex flex-grow min-h-full pt-38">
@@ -106,8 +106,7 @@
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import IconChevronRight from '@/components/icons/ChevronRight.vue';
-import IconChevronLeft from '@/components/icons/ChevronLeft.vue';
+import Icon from '@/components/icons/Icon.vue';
 
 const props = defineProps({
   slides: {
