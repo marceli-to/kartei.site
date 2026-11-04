@@ -16,7 +16,11 @@
 - [x] Roles per archive: changing a role on one archive keeps the others; `model_has_roles` key includes `archive_id` (migration `2026_11_03_140000`)
 - [x] Dead files removed (seo config, `Sidebar-New.vue`, `InviteUser.vue`, Cards/Grid icons)
 - [x] Record list paginated on the server (48 per page, search/filters/sort in the API, infinite scroll)
-- [x] Test suite green (80 tests, in-memory SQLite)
+- [x] User permission forms merged into `UserPermissions.vue` (one `PUT /user/permissions/{user}`); fixed buttons that re-saved, false "invitation sent" message, discard dialog without changes
+- [x] Settings page: unique field ids, Abbrechen in user/company forms no longer submits, taken email on user update is a 422
+- [x] Info (lightbulb) icon: views register while visible (`useInfoBox`), no state carried over between slides/pages, auto-opened boxes can be closed
+- [x] Demo data: `php artisan db:seed --class=DemoArchiveSeeder` (10 archives with categories, registers, records, tags, images; re-runnable)
+- [x] Test suite green (82 tests, in-memory SQLite)
 
 ## Servers (before going live)
 
@@ -25,7 +29,8 @@
 ## Next
 
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
-- [ ] Merge duplicate Vue components: Create/UpdateUserPermissions, record Create/Update, Address/BillingAddress, the two delete views
+- [ ] Merge duplicate Vue components: record Create/Update, Address/BillingAddress, the two delete views
+- [ ] `App\Http\Requests\User\StoreRequest` is imported in `UserController` but unused
 - [ ] Search input in the record sidebar has no accessible label (`aria-label` isn't passed through by `components/forms/Search.vue`)
 
 ## Archive cover image (Titelbild)
