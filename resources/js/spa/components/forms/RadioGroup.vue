@@ -7,7 +7,7 @@
     <legend
       v-if="legend"
       class="sr-only">
-      {{ legend }}
+      {{ legend }}<template v-if="error">: {{ error }}</template>
     </legend>
     <label
       v-for="option in options"
@@ -20,6 +20,7 @@
           :name="name"
           :value="option.value"
           :checked="modelValue === option.value"
+          :aria-invalid="error ? 'true' : undefined"
           class="sr-only"
           @change="$emit('update:modelValue', option.value)" />
         <Icon
@@ -51,6 +52,11 @@ const props = defineProps({
   legend: {
     type: String,
     default: '',
+  },
+  // Server message; the visible one is in the InputLabel, this one is for screen readers
+  error: {
+    type: String,
+    default: null,
   },
   options: {
     type: Array,

@@ -17,10 +17,12 @@
           <InputLabel
             id="subscription"
             label="Lizenz"
+            :error="errors.subscription"
             required />
           <InputRadioGroup
             v-model="form.subscription"
             legend="Lizenz"
+            :error="errors.subscription"
             name="subscription"
             :options="subscriptions"
             variant="reduced" />
@@ -29,10 +31,12 @@
           <InputLabel
             id="payment_interval"
             label="Abrechnung"
+            :error="errors.payment_interval"
             required />
           <InputRadioGroup
             v-model="form.payment_interval"
             legend="Abrechnung"
+            :error="errors.payment_interval"
             name="payment_interval"
             :options="paymentIntervals"
             variant="reduced" />
@@ -41,10 +45,12 @@
           <InputLabel
             id="payment_method"
             label="Zahlungsart"
+            :error="errors.payment_method"
             required />
           <InputRadioGroup
             v-model="form.payment_method"
             legend="Zahlungsart"
+            :error="errors.payment_method"
             name="payment_method"
             :options="[
               {
@@ -73,12 +79,13 @@
   </Slide>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { getSubscriptionPlans } from '@/services/api/subscription';
 import { getUserSubscription, updateUserSubscription } from '@/services/api/subscription';
 import { paymentIntervals } from '@/config/paymentIntervals';
 import { useToastStore } from '@/stores/toast';
 import { useInfoBox } from '@/composables/useInfoBox';
+import { useFormErrors } from '@/composables/useFormErrors';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputRadioGroup from '@/components/forms/RadioGroup.vue';
@@ -119,6 +126,16 @@ const form = ref({
   payment_method: 'card',
 });
 
+const { errors, setErrors, clearErrors } = useFormErrors(['subscription', 'payment_interval', 'payment_method']);
+
+// An error clears as soon as its field changes
+for (const field of Object.keys(errors.value)) {
+  watch(
+    () => form.value[field],
+    () => (errors.value[field] = null),
+  );
+}
+
 onMounted(async () => {
   try {
     isLoading.value = true;
@@ -148,10 +165,12 @@ onMounted(async () => {
 const handleSubmit = async () => {
   try {
     isSaving.value = true;
+    clearErrors();
     await updateUserSubscription(form.value);
     hasSubscription.value = true;
     toast.show('Abonnement erfolgreich gespeichert.', 'success');
   } catch (error) {
+    setErrors(error);
     notifyError(error, 'Fehler beim Ändern des Abonnements.');
   } finally {
     isSaving.value = false;
