@@ -67,7 +67,7 @@
         </div>
         <div v-else-if="loadFailed" class="flex flex-col items-center gap-y-20 py-20">
           <p class="text-gray-500">Die Karteien konnten nicht geladen werden.</p>
-          <ButtonPrimary type="button" label="Erneut versuchen" @click="loadArchives" />
+          <AppButton type="button" label="Erneut versuchen" @click="loadArchives" />
         </div>
       </ContentMain>
     </div>
@@ -86,10 +86,10 @@ import InputSelect from '@/components/forms/Select.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
 import Teaser from '@/views/archives/partials/Teaser.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const userStore = useUserStore();
 const { setTitle } = usePageTitle();

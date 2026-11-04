@@ -54,7 +54,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" :disabled="isSaving" />
+          <AppButton label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
     </form>
@@ -71,11 +71,11 @@ import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputRadioGroup from '@/components/forms/RadioGroup.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import PlanInfo from '@/views/settings/partials/PlanInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
 import { notifyError } from '@/services/api/error';
+import AppButton from '@/components/buttons/Button.vue';
 
 // Dev-only reminder in the template; never shown in production builds
 const isDev = import.meta.env.DEV;

@@ -82,10 +82,10 @@
                 @update:error="passwordErrors.new_password_confirmation = $event"
                 placeholder="Neues Passwort wiederholen"
                 aria-label="Passwort wiederholen" />
-              <ButtonAuth 
+              <AppButton
+                variant="secondary"
                 type="button"
                 label="Passwort ändern"
-                aria-label="Passwort ändern"
                 @click.stop.prevent="handleAuthSubmit" />
               <div class="text-sm font-muoto-italic text-graphite pl-8">
                 Das Passwort muss mindestens 8 Zeichen umfassen sowie Gross- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.
@@ -99,7 +99,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" :disabled="isSaving" />
+          <AppButton label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
 
@@ -117,12 +117,11 @@ import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputPassword from '@/components/forms/Password.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
-import ButtonAuth from '@/components/buttons/Auth.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoProfile from '@/views/settings/partials/ProfileInfo.vue';
 import Slide from '@/components/slider/Slide.vue';
 import { notifyError } from '@/services/api/error';
+import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();
 

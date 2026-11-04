@@ -37,7 +37,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" :disabled="isSaving" />
+          <AppButton label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
     </form>
@@ -53,10 +53,10 @@ import Slide from '@/components/slider/Slide.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import InputText from '@/components/forms/Text.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Action from '@/components/buttons/Action.vue';
 import { notifyError } from '@/services/api/error';
 import Icon from '@/components/icons/Icon.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();
 

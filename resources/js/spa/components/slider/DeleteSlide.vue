@@ -7,7 +7,7 @@
       </div>
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary 
+          <AppButton 
             type="button"
             :label="label" 
             variant="danger"
@@ -20,8 +20,8 @@
 </template>
 <script setup>
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 defineProps({
   isActive: {

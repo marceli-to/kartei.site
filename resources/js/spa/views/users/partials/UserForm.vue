@@ -21,12 +21,12 @@
           label="Rechte"
           :icon="{ name: 'ChevronRight' }"
           @click="$emit('user-selected-permissions', userData)" />
-        <ButtonPrimary label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
+        <AppButton label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary type="submit" label="Speichern" :loading="isSaving" />
-      <ButtonPrimary type="button" @click="$emit('cancel')" label="Abbrechen" />
+      <AppButton type="submit" label="Speichern" :loading="isSaving" />
+      <AppButton type="button" @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
   </form>
 </template>
@@ -40,10 +40,10 @@ import { useDialogStore } from '@/stores/dialog';
 import { useFormErrors } from '@/composables/useFormErrors';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 // Without uuid it creates a user (Index.vue then asks for the permissions)
 const props = defineProps({

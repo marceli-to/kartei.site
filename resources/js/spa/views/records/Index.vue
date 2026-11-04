@@ -33,7 +33,7 @@
           <!-- Loads the next page when scrolled into view; stops after a failed request -->
           <div v-if="hasMore && !loadMoreFailed" ref="loadMoreSentinel" class="h-px" />
           <div v-if="hasMore && loadMoreFailed" class="flex justify-center pt-32">
-            <ButtonPrimary type="button" label="Weitere Karten laden" @click="retryLoadMore" />
+            <AppButton type="button" label="Weitere Karten laden" @click="retryLoadMore" />
           </div>
         </template>
         <template v-else>
@@ -68,8 +68,8 @@ import Skeleton from '@/views/records/partials/Skeleton.vue'
 import Card from '@/views/records/partials/Card.vue'
 import Sidebar from '@/views/records/partials/Sidebar.vue'
 import Actions from '@/views/records/partials/Actions.vue'
-import ButtonPrimary from '@/components/buttons/Primary.vue'
 import Icon from '@/components/icons/Icon.vue'
+import AppButton from '@/components/buttons/Button.vue'
 
 const route = useRoute()
 const uuid = ref(route.params.uuid || null)

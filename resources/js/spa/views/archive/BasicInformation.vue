@@ -56,7 +56,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" :disabled="isSaving" />
+          <AppButton label="Speichern" :disabled="isSaving" />
         </ButtonGroup>
       </div>
 
@@ -80,8 +80,8 @@ import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputSelect from '@/components/forms/Select.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();
 

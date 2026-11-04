@@ -5,12 +5,12 @@
     <div class="flex flex-col gap-y-48">
       <AddressFields :form="form" :errors="errors" idPrefix="company_" nameField="name" />
       <div v-if="company">
-        <ButtonPrimary label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
+        <AppButton label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary type="submit" label="Speichern" :loading="isSaving" />
-      <ButtonPrimary type="button" @click="$emit('cancel')" label="Abbrechen" />
+      <AppButton type="submit" label="Speichern" :loading="isSaving" />
+      <AppButton type="button" @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
   </form>
 </template>
@@ -22,8 +22,8 @@ import { notifyError } from '@/services/api/error';
 import { useDialogStore } from '@/stores/dialog';
 import { useFormErrors } from '@/composables/useFormErrors';
 import AddressFields from '@/components/forms/AddressFields.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 // Without company it creates one; the parent shows the toasts and updates the list
 const props = defineProps({

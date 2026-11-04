@@ -101,8 +101,8 @@
               </div>
             </div>
             <ButtonGroup class="pb-8 relative z-10">
-              <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
-              <ButtonPrimary type="button" label="Abbrechen" @click="handleCancel" />
+              <AppButton type="submit" label="Speichern" :disabled="isSaving" />
+              <AppButton type="button" label="Abbrechen" @click="handleCancel" />
             </ButtonGroup>
           </div>
         </form>
@@ -131,7 +131,6 @@ import ContentMain from '@/components/layout/ContentMain.vue'
 import Sidebar from '@/views/records/partials/Sidebar.vue'
 import Actions from '@/views/records/partials/Actions.vue'
 import ButtonGroup from '@/components/buttons/Group.vue'
-import ButtonPrimary from '@/components/buttons/Primary.vue'
 import InputGroup from '@/components/forms/Group.vue'
 import InputSelectButtons from '@/components/forms/SelectButtons.vue'
 import InputLabel from '@/components/forms/Label.vue'
@@ -139,6 +138,7 @@ import InputTextarea from '@/components/forms/Textarea.vue'
 import ImageUpload from '@/components/media/upload/Image.vue'
 import ImageCard from '@/components/media/Card.vue'
 import Icon from '@/components/icons/Icon.vue'
+import AppButton from '@/components/buttons/Button.vue'
 
 const router = useRouter()
 const route = useRoute()

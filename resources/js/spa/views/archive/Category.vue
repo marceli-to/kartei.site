@@ -106,7 +106,7 @@
 
       <!-- Buttons -->
       <ButtonGroup class="relative z-10">
-        <ButtonPrimary type="submit" label="Speichern" :loading="isSaving" />
+        <AppButton type="submit" label="Speichern" :loading="isSaving" />
       </ButtonGroup>
     </form>
   </Slide>
@@ -126,12 +126,12 @@ import Slide from '@/components/slider/Slide.vue';
 import Action from '@/components/buttons/Action.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import StructureRow from '@/views/archive/partials/StructureRow.vue';
 import StructureDialog from '@/views/archive/partials/StructureDialog.vue';
 import InfoStructure from '@/views/archive/partials/StructureInfo.vue';
 import Icon from '@/components/icons/Icon.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const props = defineProps({
   isActive: {

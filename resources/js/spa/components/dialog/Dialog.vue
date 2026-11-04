@@ -71,13 +71,13 @@
               <div v-if="!content.hideDefaultActions">
                 <slot name="actions">
                   <ButtonGroup>
-                    <ButtonPrimary 
+                    <AppButton 
                       :label="content.confirmLabel || 'Speichern'"
                       type="button"
                       :disabled="isBusy"
                       @click="handleConfirm"
                       v-if="content.onConfirm" />
-                    <ButtonPrimary 
+                    <AppButton 
                       :label="content.cancelLabel || 'Abbrechen'" 
                       type="button"
                       :disabled="isBusy"
@@ -102,8 +102,8 @@ import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDialogStore } from '@/stores/dialog';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Icon from '@/components/icons/Icon.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const dialogStore = useDialogStore();
 const { isVisible, isBusy, content, version } = storeToRefs(dialogStore);

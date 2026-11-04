@@ -27,7 +27,8 @@
         <!-- After saving: invite a user who was just added, or confirm -->
         <div v-if="isDone" :class="{ 'relative top-8': archiveUuid }">
           <template v-if="added.has(selected) && !invited.has(selected)">
-            <ButtonAuth
+            <AppButton
+              variant="secondary"
               type="button"
               :label="isSending ? 'Wird versendet...' : 'Einladungslink versenden'"
               :disabled="isSending"
@@ -67,19 +68,19 @@
     </div>
 
     <ButtonGroup>
-      <ButtonPrimary
+      <AppButton
         v-if="isDone"
         type="button"
         label="Abschliessen"
         :disabled="isSending"
         @click="emit('success')" />
       <template v-else>
-        <ButtonPrimary
+        <AppButton
           type="submit"
           label="Speichern"
           :disabled="isSaving || !canSave"
           :loading="isSaving" />
-        <ButtonPrimary
+        <AppButton
           v-if="cancelable"
           type="button"
           label="Abbrechen"
@@ -103,10 +104,9 @@ import InputLabel from '@/components/forms/Label.vue';
 import InputSelect from '@/components/forms/Select.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
-import ButtonAuth from '@/components/buttons/Auth.vue';
 import { notifyError } from '@/services/api/error';
 import Icon from '@/components/icons/Icon.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 // New assignments start with the role giving the least access
 const DEFAULT_ROLE_NAME = 'Viewer';

@@ -10,7 +10,7 @@
       <!-- Actions -->
       <div v-if="isActive">
         <ButtonGroup>
-          <ButtonPrimary label="Speichern" :loading="isSaving" />
+          <AppButton label="Speichern" :loading="isSaving" />
         </ButtonGroup>
       </div>
 
@@ -25,8 +25,8 @@ import { useToastStore } from '@/stores/toast';
 import { useFormErrors } from '@/composables/useFormErrors';
 import AddressFields from '@/components/forms/AddressFields.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import Slide from '@/components/slider/Slide.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 // The account's address and its billing address: same fields, other endpoints
 const props = defineProps({

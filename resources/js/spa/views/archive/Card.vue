@@ -78,7 +78,7 @@
 
       <!-- Buttons -->
       <ButtonGroup>
-        <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
+        <AppButton type="submit" label="Speichern" :disabled="isSaving" />
       </ButtonGroup>
     </form>
   </Slide>
@@ -92,7 +92,6 @@ import { getArchiveSettings, storeArchiveSettings, deleteArchiveSettingsField } 
 
 import Slide from '@/components/slider/Slide.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import InputStatic from '@/components/forms/Static.vue';
@@ -102,6 +101,7 @@ import ImageCard from '@/components/media/Card.vue';
 import Action from '@/components/buttons/Action.vue';
 import { notifyError } from '@/services/api/error';
 import Icon from '@/components/icons/Icon.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();
 

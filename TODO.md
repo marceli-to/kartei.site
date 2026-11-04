@@ -46,6 +46,7 @@
 - [x] Record Create/Update merged into `views/records/RecordForm.vue` (both routes, mode from the route name); `useArchiveMeta()` loads and normalizes categories/registers/tags/settings (also used by the record list), replaces `useNormalizeData`
 - [x] `archive/Category.vue` split (455 -> 264 lines): `composables/useStructureForm.js` (load, numbering, auto IDs, save), `partials/StructureRow.vue`, `partials/StructurePreview.vue` (example column of the structure dialog, no `v-html`)
 - [x] Icons: one `components/icons/Icon.vue` (`<Icon name="cross" variant="small" class="…" />`, single `<svg>` root, `aria-hidden`) with the SVG data in `icons/registry.js` (generated from the 21 old files, which are gone; `Logo.vue` stays); `Action.vue` template no longer duplicated; screenshots of 16 screens pixel-identical before/after
+- [x] Buttons: `Primary` + `Auth` -> `components/buttons/Button.vue` (imported as `AppButton`, variants `primary`/`danger`/`secondary`, `loading`); `Action` (list row: link or button with icon) and `Sort` (text toggle) stay separate on purpose, they are different controls
 - [x] Bug found on the way: an address without house number failed with a 500 (`addresses.street_number` was NOT NULL); migration makes it nullable, test added
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
 
@@ -66,7 +67,6 @@
 Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
 
 ### Structure and duplication
-- [ ] Buttons: Primary/Auth/Action/Sort -> one `Button` with variants
 - [ ] `ImageUpload`: one `v-model` instead of `modelValue` + `existingImages` (three copies of the list)
 
 ### Tooling

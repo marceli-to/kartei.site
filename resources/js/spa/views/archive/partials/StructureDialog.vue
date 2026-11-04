@@ -55,8 +55,8 @@ wieder angepasst werden.</p>
 
         <!-- Buttons -->
         <ButtonGroup class="mt-108">
-          <ButtonPrimary type="button" label="Speichern" @click="handleSave" />
-          <ButtonPrimary type="button" label="Abbrechen" @click="onCancel" />
+          <AppButton type="button" label="Speichern" @click="handleSave" />
+          <AppButton type="button" label="Abbrechen" @click="onCancel" />
         </ButtonGroup>
       </div>
 
@@ -75,8 +75,8 @@ import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import StructurePreview from '@/views/archive/partials/StructurePreview.vue';
+import AppButton from '@/components/buttons/Button.vue';
 
 const props = defineProps({
   onConfirm: {
