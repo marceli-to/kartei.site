@@ -20,7 +20,9 @@
 - [x] Settings page: unique field ids, Abbrechen in user/company forms no longer submits, taken email on user update is a 422
 - [x] Info (lightbulb) icon: views register while visible (`useInfoBox`), no state carried over between slides/pages, auto-opened boxes can be closed
 - [x] Demo data: `php artisan db:seed --class=DemoArchiveSeeder` (10 archives with categories, registers, records, tags, images; re-runnable)
-- [x] Test suite green (82 tests, in-memory SQLite)
+- [x] Payment interval validated (`monthly`/`yearly`, was a DB error); option lists moved from `data/` to `config/` (`countries.js`, `paymentIntervals.js`)
+- [x] Dev-only UI demo pages (`views/ui`) and the `Users.vue` stub removed
+- [x] Test suite green (83 tests, in-memory SQLite)
 
 ## Servers (before going live)
 
@@ -32,6 +34,7 @@
 - [ ] Merge duplicate Vue components: record Create/Update, Address/BillingAddress, the two delete views
 - [ ] `App\Http\Requests\User\StoreRequest` is imported in `UserController` but unused
 - [ ] Search input in the record sidebar has no accessible label (`aria-label` isn't passed through by `components/forms/Search.vue`)
+- [ ] Countries are stored as German names; switch to ISO codes (with a data migration) once billing/invoices need it
 
 ## Archive cover image (Titelbild)
 
