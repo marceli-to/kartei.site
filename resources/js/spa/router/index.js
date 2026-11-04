@@ -35,9 +35,12 @@ const routes = [
   { path: '/archiv/kartei/karte/bearbeiten/:uuid', name: 'archiveRecordUpdate', component: () => import('@/views/records/Update.vue') },
 
   // Error pages
-  { path: '/error/401', name: '401', component: () => import('@/views/error/401.vue') },
-  { path: '/error/403', name: '403', component: () => import('@/views/error/403.vue') },
-  { path: '/error/404', name: '404', component: () => import('@/views/error/404.vue') },
+  ...[401, 403, 404].map(status => ({
+    path: `/error/${status}`,
+    name: String(status),
+    component: () => import('@/views/error/ErrorPage.vue'),
+    props: { status },
+  })),
   { path: '/:catchAll(.*)', redirect: '/error/404' },
 ];
 

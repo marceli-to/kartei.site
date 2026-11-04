@@ -1,36 +1,18 @@
 <template>
-  <Slide class="-top-4 pb-36">
-    <div class="w-full h-full flex flex-col justify-between">
-      <!-- Content -->
-      <div>
-        <p>
-          Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt<template v-if="ownedArchivesCount">, auch Ihre {{ ownedArchivesCount === 1 ? 'Kartei' : ownedArchivesCount + ' Karteien' }} mit allen Karten und Bildern</template>.
-        </p>
-        <p v-if="subscriptionEndsAt">Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong>.</p>
-      </div>
-
-      <!-- Actions -->
-      <div v-if="isActive">
-        <ButtonGroup>
-          <ButtonPrimary 
-            label="Konto löschen" 
-            @click="showDialog"
-            :classes="'bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border'"
-            :disabled="isDeleting" />
-        </ButtonGroup>
-      </div>
-    </div>
-  </Slide>
+  <DeleteSlide label="Konto löschen" :isActive="isActive" :disabled="isDeleting" @delete="showDialog">
+    <p>
+      Mit dem Löschen Ihres Kontos werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt<template v-if="ownedArchivesCount">, auch Ihre {{ ownedArchivesCount === 1 ? 'Kartei' : ownedArchivesCount + ' Karteien' }} mit allen Karten und Bildern</template>.
+    </p>
+    <p v-if="subscriptionEndsAt">Ihr Abonnement läuft noch bis zum <strong>{{ subscriptionEndsAt }}</strong>.</p>
+  </DeleteSlide>
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
 import { deleteAccount, getOwnedArchives } from '@/services/api/user';
 import { getUserSubscription } from '@/services/api/subscription';
 import { useDialogStore } from '@/stores/dialog';
-import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
 import AccountDeleteDialog from '@/views/settings/partials/AccountDeleteDialog.vue';
-import Slide from '@/components/slider/Slide.vue';
+import DeleteSlide from '@/components/slider/DeleteSlide.vue';
 import { notifyError } from '@/services/api/error';
 
 const dialogStore = useDialogStore();

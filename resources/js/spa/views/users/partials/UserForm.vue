@@ -5,53 +5,27 @@
     v-if="!isLoading">
     <div class="flex flex-col gap-y-32">
       <div class="flex flex-col gap-y-20">
-        <InputGroup>
-          <InputLabel label="Vorname" id="user_firstname" required :error="errors.firstname" />
+        <InputGroup v-for="field in FIELDS" :key="field.key">
+          <InputLabel :label="field.label" :id="`user_${field.key}`" required :error="errors[field.key]" />
           <InputText 
-            v-model="form.firstname" 
-            id="user_firstname" 
-            :error="errors.firstname" 
-            @update:error="errors.firstname = $event" 
-            placeholder="Vorname" 
-            required 
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <InputLabel label="Nachname" id="user_name" required :error="errors.name" />
-          <InputText 
-            v-model="form.name" 
-            id="user_name" 
-            :error="errors.name" 
-            @update:error="errors.name = $event" 
-            placeholder="Nachname" 
-            required 
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <InputLabel label="E-Mail" id="user_email" required :error="errors.email" />
-          <InputText 
-            v-model="form.email" 
-            id="user_email" 
-            :error="errors.email" 
-            @update:error="errors.email = $event" 
-            placeholder="E-Mail" 
-            required 
-          />
+            v-model="form[field.key]" 
+            :id="`user_${field.key}`" 
+            :error="errors[field.key]" 
+            @update:error="errors[field.key] = $event" 
+            :placeholder="field.label" />
         </InputGroup>
       </div>
-      <div class="flex flex-col gap-y-48">
+      <div v-if="uuid" class="flex flex-col gap-y-48">
         <Action 
           type="button"
           label="Rechte"
           :icon="{ name: 'ChevronRight' }"
           @click="$emit('user-selected-permissions', userData)" />
-        <ButtonPrimary label="Löschen" variant="danger" type="button" @click.prevent="showDeleteDialog" />
+        <ButtonPrimary label="Löschen" variant="danger" type="button" @click="showDeleteDialog" />
       </div>
     </div>
     <ButtonGroup>
-      <ButtonPrimary type="submit" label="Speichern" :disabled="isSaving" />
+      <ButtonPrimary type="submit" label="Speichern" :loading="isSaving" />
       <ButtonPrimary type="button" @click="$emit('cancel')" label="Abbrechen" />
     </ButtonGroup>
   </form>
@@ -59,20 +33,26 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { findUser, updateUser, deleteUser } from '@/services/api/archiveUser';
+import { findUser, createUser, updateUser, deleteUser } from '@/services/api/archiveUser';
+import { notifyError } from '@/services/api/error';
 import { useToastStore } from '@/stores/toast';
-import { useFormErrors } from '@/composables/useFormErrors';
 import { useDialogStore } from '@/stores/dialog';
+import { useFormErrors } from '@/composables/useFormErrors';
 import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
 import Action from '@/components/buttons/Action.vue';
-import { notifyError } from '@/services/api/error';
 
-const toast = useToastStore();
-const dialogStore = useDialogStore();
+// Without uuid it creates a user (Index.vue then asks for the permissions)
+const props = defineProps({
+  uuid: {
+    type: [String, Number],
+    default: null
+  }
+});
+
 const emit = defineEmits([
   'success', 
   'cancel', 
@@ -80,16 +60,17 @@ const emit = defineEmits([
   'user-deleted'
 ]);
 
-const props = defineProps({
-  uuid: {
-    type: [String, Number],
-    required: true
-  }
-});
+const FIELDS = [
+  { key: 'firstname', label: 'Vorname' },
+  { key: 'name', label: 'Nachname' },
+  { key: 'email', label: 'E-Mail' },
+];
 
-const isLoading = ref(true);
+const toast = useToastStore();
+const dialogStore = useDialogStore();
+const isLoading = ref(!!props.uuid);
 const isSaving = ref(false);
-const userData = ref('');
+const userData = ref(null);
 
 const form = ref({
   firstname: '',
@@ -97,14 +78,12 @@ const form = ref({
   email: '',
 });
 
-const { errors, setErrors, clearErrors } = useFormErrors(['firstname', 'name', 'email']);
+const { errors, setErrors, clearErrors } = useFormErrors(FIELDS.map(field => field.key));
 
 onMounted(async () => {
+  if (!props.uuid) return;
   try {
-    isLoading.value = true;
     userData.value = await findUser(props.uuid);
-    
-    // Populate form with user data
     form.value = {
       firstname: userData.value.firstname || '',
       name: userData.value.name || '',
@@ -123,18 +102,17 @@ const submit = async () => {
   try {
     isSaving.value = true;
     clearErrors();
-    
-    const userData = { ...form.value };
-    const response = await updateUser(props.uuid, userData);
-    
-    toast.show('Benutzer/in erfolgreich aktualisiert.', 'success');
+    const response = props.uuid
+      ? await updateUser(props.uuid, { ...form.value })
+      : await createUser({ ...form.value });
+    toast.show(props.uuid ? 'Benutzer/in erfolgreich aktualisiert.' : 'Benutzer/in erfolgreich erstellt.', 'success');
     emit('success', response);
   } 
   catch (error) {
     setErrors(error);
-    
-    notifyError(error, 'Fehler beim Aktualisieren des Benutzers.');
-  } finally {
+    notifyError(error, props.uuid ? 'Fehler beim Aktualisieren des Benutzers.' : 'Fehler beim Erstellen des Benutzers.');
+  }
+  finally {
     isSaving.value = false;
   }
 };

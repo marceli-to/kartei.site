@@ -2,13 +2,13 @@
   <Slide :pull="viewState !== 'listing' && viewState !== 'notifying'">
 
     <template v-if="viewState === 'creating'">
-      <CreateUser 
+      <UserForm 
         @success="(userData) => handleUserCreated(userData)" 
         @cancel="resetView()" />
     </template>
 
     <template v-if="viewState === 'updating'">
-      <UpdateUser 
+      <UserForm 
         :uuid="selectedUser.uuid"
         @success="handleUserUpdated"
         @user-deleted="handleUserDeleted"
@@ -57,8 +57,7 @@ import { getRelatedUsers, getArchiveUsers } from '@/services/api/archiveUser';
 import { getUserSubscription } from '@/services/api/subscription';
 import { notifyError } from '@/services/api/error';
 import Slide from '@/components/slider/Slide.vue';
-import CreateUser from '@/views/users/partials/CreateUser.vue';
-import UpdateUser from '@/views/users/partials/UpdateUser.vue';
+import UserForm from '@/views/users/partials/UserForm.vue';
 import UserPermissions from '@/views/users/partials/UserPermissions.vue';
 import ListUsers from '@/views/users/partials/ListUsers.vue';
 import SubscriptionInfo from '@/views/users/partials/SubscriptionInfo.vue';

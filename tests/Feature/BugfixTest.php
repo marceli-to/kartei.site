@@ -97,6 +97,15 @@ it('lets users create and update their address and billing address', function ()
   expect($user->fresh()->billingAddress->city)->toBe('Basel');
 });
 
+it('saves an address without house number', function () {
+  Sanctum::actingAs(bugfixUser());
+
+  // The SPA sends an empty field, which Laravel turns into null
+  $this->putJson('/api/user/address', ['street' => 'Weg', 'street_number' => '', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'Schweiz'])
+    ->assertSuccessful()
+    ->assertJsonPath('data.street_number', null);
+});
+
 it('lets company members update their company, but not other companies', function () {
   $user = bugfixUser();
   $company = Company::create(['name' => 'Own', 'street' => 'Weg', 'zip' => '8000', 'city' => 'Zürich', 'country' => 'CH']);

@@ -78,6 +78,7 @@
             :inert="index !== activeIndex">
             <component
               :is="item.component"
+              v-bind="item.props || {}"
               :isActive="index === activeIndex"
               class="shrink-0" />
           </div>
@@ -92,7 +93,8 @@
 /**
  * Horizontal slider for the settings pages.
  *
- * slides: [{ id, name, class, component, permission?, disabled? }]
+ * slides: [{ id, name, class, component, props?, permission?, disabled? }]
+ * - props: extra props for the slide's component (it always gets isActive)
  * - class: width classes of the slide, e.g. "w-3/12 min-w-3/12"
  * - permission: a global permission name, or a function returning a boolean
  *   (e.g. a per-archive check via userStore.canArchive). Hidden when not granted.

@@ -1,12 +1,12 @@
 <template>
   <Slide :pull="viewState !== 'listing'">
     <template v-if="viewState === 'creating'">
-      <CreateCompany 
+      <CompanyForm 
         @success="handleCompanyCreated" 
         @cancel="resetView()" />
     </template>
     <template v-else-if="viewState === 'updating'">
-      <UpdateCompany 
+      <CompanyForm 
         :company="selectedCompany"
         @delete="handleCompanyDeleted"
         @success="handleCompanyUpdated" 
@@ -57,8 +57,7 @@ import Slide from '@/components/slider/Slide.vue';
 import InputSearch from '@/components/forms/Search.vue';
 import Action from '@/components/buttons/Action.vue';
 import Sort from '@/components/buttons/Sort.vue';
-import CreateCompany from '@/views/settings/partials/CreateCompany.vue';
-import UpdateCompany from '@/views/settings/partials/UpdateCompany.vue';
+import CompanyForm from '@/views/settings/partials/CompanyForm.vue';
 
 const toast = useToastStore();
 

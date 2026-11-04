@@ -1,24 +1,7 @@
 <template>
-  <Slide class="-top-4 pb-36">
-    <div class="w-full h-full flex flex-col justify-between">
-
-      <!-- Content -->
-      <div>
-        <p>Mit dem Löschen dieser Kartei werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
-      </div>
-
-      <!-- Actions -->
-      <div v-if="isActive">
-        <ButtonGroup>
-          <ButtonPrimary 
-            label="Kartei löschen" 
-            @click="showDialog"
-            :classes="'bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border'"
-            :disabled="isDeleting" />
-        </ButtonGroup>
-      </div>
-    </div>
-  </Slide>
+  <DeleteSlide label="Kartei löschen" :isActive="isActive" :disabled="isDeleting" @delete="showDialog">
+    <p>Mit dem Löschen dieser Kartei werden alle Ihre Daten und gespeicherten Informationen unwiderruflich entfernt.</p>
+  </DeleteSlide>
 </template>
 <script setup>
 import { ref } from 'vue';
@@ -27,9 +10,7 @@ import { deleteArchive } from '@/services/api/archive';
 import { useDialogStore } from '@/stores/dialog';
 import { useToastStore } from '@/stores/toast';
 import { useUserStore } from '@/stores/user';
-import ButtonGroup from '@/components/buttons/Group.vue';
-import ButtonPrimary from '@/components/buttons/Primary.vue';
-import Slide from '@/components/slider/Slide.vue';
+import DeleteSlide from '@/components/slider/DeleteSlide.vue';
 import { notifyError } from '@/services/api/error';
 
 const dialogStore = useDialogStore();

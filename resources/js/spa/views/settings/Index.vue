@@ -7,8 +7,7 @@ import { markRaw } from 'vue';
 import { usePageTitle } from '@/composables/usePageTitle';
 import Slider from '@/components/slider/Slider.vue';
 import ProfileComponent from '@/views/settings/Profile.vue';
-import AddressComponent from '@/views/settings/Address.vue';
-import BillingAddressComponent from '@/views/settings/BillingAddress.vue';
+import AddressFormComponent from '@/views/settings/AddressForm.vue';
 import CompanyComponent from '@/views/settings/Company.vue';
 import UserComponent from '@/views/users/Index.vue';
 import SubscriptionComponent from '@/views/settings/Subscription.vue';
@@ -31,14 +30,16 @@ const slides = [
     name: "Adresse", 
     class: "w-3/12 min-w-3/12", 
     permission: 'edit.address',
-    component: markRaw(AddressComponent)
+    component: markRaw(AddressFormComponent),
+    props: { type: 'address' }
   },
   { 
     id: 'billingAddress', 
     name: "Rechnungsadresse", 
     class: "w-3/12 min-w-3/12", 
     permission: 'edit.address',
-    component: markRaw(BillingAddressComponent)
+    component: markRaw(AddressFormComponent),
+    props: { type: 'billing' }
   },
   { 
     id: 'subscription', 
