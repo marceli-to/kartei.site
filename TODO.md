@@ -61,6 +61,7 @@
 - [x] Stackr cards (4 Nov 2026): #140 loading spinner replaced by a 2px bar at the top in the theme color (`LoadingOverlay.vue`, 150ms delay); #126 sidebar registers in structure order (`ArchiveMetaController`, test); #128 page title 1.75rem, cap height = x-height of the logo, same baseline (`text-title`); #139 `/` redirects to the login or into the app (welcome page removed), welcome password `TWIN-GRAB-MENU-HILL-MOON`, record list actions greyed out
 - [x] `public/.user.ini` in the format the Hostpoint Control Panel writes (notes moved to `config/media.php`)
 - [x] Stackr #129 filter category → register → result: a selected category shows only its own registers (others hidden and deselected); picking registers of a selected category narrows it to them, other selected categories stay whole (`Record/Get.php` filter, `Sidebar.vue`, register options carry their category; tests)
+- [x] Stackr #123 notice bar covers the header as in Benedikt's mock (16px from the top, same width, ends on the header line); fixed, with a page-coloured frame so scrolled content doesn't show around it (`Toast.vue`)
 
 ## Servers (before going live)
 
@@ -70,7 +71,7 @@
 
 ## Next
 
-- [ ] Stackr board "kartei.site" (To Do): #125 sidebar layout (waits for Benedikt's design + icons), #137 Tailwind 4; #126 and #128 are in Pending for Benedikt's review
+- [ ] Stackr board "kartei.site" (To Do): #137 Tailwind 4; #125 sidebar layout back with Benedikt (the sticky "Voreinstellungen" button covers the last tags), #126, #128, #129 in Pending for his review
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
