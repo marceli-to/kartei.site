@@ -25,7 +25,7 @@
               aria-label="Tag" />
             <button
               type="button"
-              class="absolute right-8 top-1/2 -translate-y-1/2"
+              class="absolute top-1/2 right-8 -translate-y-1/2"
               :aria-label="`Tag ${index + 1} entfernen`"
               @click="remove(index)">
               <Icon

@@ -1,12 +1,125 @@
-@import "_webfonts.css";
+@import './_webfonts.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Only the templates are scanned, like v3's `content` (not public/build or docs) */
+@import 'tailwindcss' source(none);
+@source '../js';
+@source '../views';
+
+@plugin '@tailwindcss/forms';
+
+@custom-variant dark (&:where([data-color-scheme="dark"], [data-color-scheme="dark"] *));
+
+@theme {
+  /* Spacing in 1px steps: mt-48 = 48px (n/16 rem) */
+  --spacing: 0.0625rem;
+
+  --breakpoint-xs: 440px;
+  --breakpoint-3xl: 100rem;
+
+  --min-height-slim: 1.5rem;
+  --min-height-default: 2rem;
+
+  --min-width-nav: 240px;
+  --min-width-1\/12: 6.25rem;
+  --min-width-2\/12: 12.5rem;
+  --min-width-3\/12: 18.75rem;
+  --min-width-4\/12: 25rem;
+  --min-width-5\/12: 31.25rem;
+  --min-width-6\/12: 37.5rem;
+  --min-width-7\/12: 43.75rem;
+  --min-width-8\/12: 50rem;
+  --min-width-9\/12: 56.25rem;
+  --min-width-10\/12: 75rem;
+
+  --container-page: 125rem;
+
+  --width-1\/12: 8.33333%;
+  --width-2\/12: 16.66667%;
+  --width-3\/12: 25%;
+  --width-4\/12: 33.33333%;
+  --width-5\/12: 41.66667%;
+  --width-6\/12: 50%;
+  --width-7\/12: 58.33333%;
+  --width-8\/12: 66.66667%;
+  --width-9\/12: 75%;
+  --width-10\/12: 83.33333%;
+  --width-11\/12: 91.66667%;
+  --width-12\/12: 100%;
+
+  --color-graphite: #78786e;
+  --color-ash: #96968c;
+  --color-pebble: #d2d2c8;
+  --color-snow: #f5f5f3;
+  --color-ice: #96e6ff;
+  --color-candy: #ff8cd2;
+  --color-lemon: #ebf000;
+  --color-lime: #b4e600;
+  --color-flame: #ff3200;
+  --color-onyx: #1e1e1e;
+  --color-charcoal: #464644;
+  --color-steel: #8c8c8c;
+
+  --z-index-60: 60;
+  --z-index-70: 70;
+  --z-index-80: 80;
+  --z-index-90: 90;
+  --z-index-100: 100;
+
+  --font-otto-bold:
+    ABCOtto-Bold, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-otto-regular:
+    ABCOtto-Regular, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-muoto-regular:
+    Muoto-Regular, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-muoto-medium:
+    Muoto-Medium, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-muoto-italic:
+    Muoto-italic, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1.063rem;
+  --text-lg: 2.25rem;
+  --text-title: 1.75rem;
+  --text-huge: 12rem;
+  /* Font sizes only, the line height is inherited (as in v3, where the sizes were plain values) */
+  --text-xs--line-height: initial;
+  --text-sm--line-height: initial;
+  --text-lg--line-height: initial;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  /* Tailwind v4 dropped the pointer cursor on buttons; keep v3's */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+}
 
 @layer utilities {
   [data-disabled] {
-    @apply opacity-20 [&>*]:pointer-events-none [&>*]:select-none transition-all;
+    @apply opacity-20 *:pointer-events-none *:select-none transition-all;
   }
 
 }
@@ -15,46 +128,49 @@
 @layer base {
   /* Default theme variables (fallback) */
   :root {
-    --theme-color: theme('colors.ice');
-    --theme-color-hover: theme('colors.ice' / 80%);
+    --theme-color: var(--color-ice);
+    --theme-color-hover: color-mix(in srgb, var(--color-ice) 80%, transparent);
   }
 
   /* Theme-specific variables */
   [data-color-theme="ice"] {
-    --theme-color: theme('colors.ice');
-    --theme-color-hover: theme('colors.ice' / 80%);
+    --theme-color: var(--color-ice);
+    --theme-color-hover: color-mix(in srgb, var(--color-ice) 80%, transparent);
   }
 
   [data-color-theme="candy"] {
-    --theme-color: theme('colors.candy');
-    --theme-color-hover: theme('colors.candy' / 80%);
+    --theme-color: var(--color-candy);
+    --theme-color-hover: color-mix(in srgb, var(--color-candy) 80%, transparent);
   }
 
   [data-color-theme="lemon"] {
-    --theme-color: theme('colors.lemon');
-    --theme-color-hover: theme('colors.lemon' / 80%);
+    --theme-color: var(--color-lemon);
+    --theme-color-hover: color-mix(in srgb, var(--color-lemon) 80%, transparent);
   }
 
   [data-color-theme="lime"] {
-    --theme-color: theme('colors.lime');
-    --theme-color-hover: theme('colors.lime' / 80%);
+    --theme-color: var(--color-lime);
+    --theme-color-hover: color-mix(in srgb, var(--color-lime) 80%, transparent);
   }
 
-  /* Apply theme color to elements that should use the theme color */
-  .theme-color {
-    @apply bg-[var(--theme-color)];
-  }
+}
 
-  .theme-color-text {
-    @apply text-[var(--theme-color)];
-  }
+/* Theme colour utilities; as @utility they also work with variants (hover:theme-color) */
+@utility theme-color {
+  background-color: var(--theme-color);
+}
 
-  .theme-color-border {
-    @apply border-[var(--theme-color)];
-  }
+@utility theme-color-text {
+  color: var(--theme-color);
+}
 
-  .theme-color-hover:hover {
-    @apply bg-[var(--theme-color-hover)];
+@utility theme-color-border {
+  border-color: var(--theme-color);
+}
+
+@utility theme-color-hover {
+  &:hover {
+    background-color: var(--theme-color-hover);
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex w-full flex-grow">
+  <div class="relative flex w-full grow">
     <Actions :links="actionLinks">
       <router-link
         v-if="archiveUuid"
@@ -23,10 +23,10 @@
         </Sidebar>
       </ContentNavigation>
 
-      <ContentMain class="!pb-0">
+      <ContentMain class="pb-0!">
         <form
           v-if="!isLoading"
-          class="before:-z-1 after:-z-1 relative flex h-full w-full min-w-[800px] flex-col justify-between pb-24 before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite"
+          class="relative flex h-full w-full min-w-[800px] flex-col justify-between pb-24 before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite"
           @submit.prevent="handleSubmit">
           <div class="flex h-full flex-col justify-between">
             <div class="relative z-10 flex h-full gap-x-17">
@@ -43,7 +43,7 @@
                       :multiple="false"
                       name="categoriesRegisters"
                       :options="categoriesRegisters"
-                      classes="!text-black"
+                      classes="text-black!"
                       wrapper-classes="flex flex-col gap-y-8"
                       @update:model-value="errors.category = null" />
                   </InputGroup>
@@ -56,7 +56,7 @@
                       :multiple="true"
                       name="tags"
                       :options="tags"
-                      classes="!text-black"
+                      classes="text-black!"
                       wrapper-classes="flex flex-col gap-y-8" />
                   </InputGroup>
                 </div>
@@ -71,10 +71,10 @@
                         :allowed-types="['image/*']"
                         :multiple="true"
                         :error="null"
-                        classes="!aspect-[16/9]" />
+                        classes="aspect-video!" />
                     </template>
                     <template v-else>
-                      <ImageCard class="flex !aspect-[16/9] items-center justify-center">
+                      <ImageCard class="flex aspect-video! items-center justify-center">
                         <div class="flex flex-col items-center">
                           <Icon
                             name="image"

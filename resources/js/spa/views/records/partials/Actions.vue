@@ -10,7 +10,7 @@
         <li
           v-for="(item, idx) in links"
           :key="idx"
-          class="shrink-0 2xl:w-[calc((25%/2)_-_14px)]">
+          class="shrink-0 2xl:w-[calc(12.5%-14px)]">
           <component
             :is="item.router ? 'router-link' : 'a'"
             v-if="item.type === 'link'"

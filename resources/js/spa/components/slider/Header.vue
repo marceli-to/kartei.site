@@ -1,5 +1,5 @@
 <template>
-  <h2 class="mb-38 mr-8 flex items-center justify-between">
+  <h2 class="mr-8 mb-38 flex items-center justify-between">
     <span>{{ title }}</span>
     <router-link
       :to="linkTarget"

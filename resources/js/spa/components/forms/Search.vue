@@ -11,7 +11,7 @@
     <template v-if="modelValue">
       <button
         type="button"
-        class="absolute right-8 top-1/2 -translate-y-1/2 text-black"
+        class="absolute top-1/2 right-8 -translate-y-1/2 text-black"
         aria-label="Suchfeld leeren"
         title="Suchfeld leeren"
         @click="$emit('update:modelValue', '')">
@@ -24,7 +24,7 @@
       <Icon
         name="magnifier"
         aria-hidden="true"
-        class="absolute right-8 top-1/2 -translate-y-1/2 text-black" />
+        class="absolute top-1/2 right-8 -translate-y-1/2 text-black" />
     </template>
   </div>
 </template>
@@ -60,7 +60,7 @@ const props = defineProps({
 
 // Define default classes
 const defaultClasses =
-  'w-full min-h-default text-md !ring-0 px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black placeholder:text-black';
+  'w-full min-h-default text-md ring-0! px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black placeholder:text-black';
 
 // Define emits
 defineEmits(['update:modelValue']);

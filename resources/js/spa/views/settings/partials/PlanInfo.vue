@@ -1,20 +1,20 @@
 <template>
   <h2 class="font-muoto-medium">Lizenzen</h2>
-  <div class="leading-[1.5]">
-    <h3 class="ml-16 mt-16 font-muoto-medium">Small</h3>
+  <div class="leading-normal">
+    <h3 class="mt-16 ml-16 font-muoto-medium">Small</h3>
     <ul class="mb-16">
       <li>1 Benutzer/in</li>
       <li>10 Karteien</li>
       <li>Fr. 18.00 / Monat</li>
     </ul>
-    <h3 class="ml-16 mt-16 font-muoto-medium">Medium</h3>
+    <h3 class="mt-16 ml-16 font-muoto-medium">Medium</h3>
     <ul class="mb-16">
       <li>1 – 5 Benutzer / innen</li>
       <li>20 Karteien</li>
       <li>Basispreis: Fr. 25.00 / Monat</li>
       <li>Fr. 15.00 / Benutzer / in + Monat</li>
     </ul>
-    <h3 class="ml-16 mt-16 font-muoto-medium">Professional</h3>
+    <h3 class="mt-16 ml-16 font-muoto-medium">Professional</h3>
     <ul>
       <li>5 – 20 Benutzer / innen</li>
       <li>40 Karteien</li>
@@ -46,6 +46,7 @@
 import Icon from '@/components/icons/Icon.vue';
 </script>
 <style scoped>
+@reference "@/../../css/app.css";
 ul {
   @apply list-none;
 }

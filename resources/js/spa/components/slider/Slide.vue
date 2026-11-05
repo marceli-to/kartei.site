@@ -1,7 +1,7 @@
 <template>
   <!-- Fills its column in the slider down to pb-20 above the bottom edge (layout: Slider.vue) -->
   <div
-    class="relative flex-grow px-8 pb-20"
+    class="relative grow px-8 pb-20"
     :class="{ '-mt-24': pull }">
     <slot />
   </div>

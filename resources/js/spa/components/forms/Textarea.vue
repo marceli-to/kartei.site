@@ -9,7 +9,7 @@
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
-    :class="[defaultClasses, props.classes, { '!border-flame !bg-flame placeholder:!text-white': error }]"
+    :class="[defaultClasses, props.classes, { 'border-flame! bg-flame! placeholder:text-white!': error }]"
     @input="onInput"></textarea>
 </template>
 
@@ -76,7 +76,7 @@ watch(
 );
 
 const defaultClasses =
-  'appearance-none w-full text-md !ring-0 min-h-default px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white';
+  'appearance-none w-full text-md ring-0! min-h-default px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white';
 </script>
 <style scoped>
 textarea {

@@ -1,5 +1,5 @@
 <template>
-  <div class="hyphens-auto pr-12">
+  <div class="pr-12 hyphens-auto">
     <p>
       Einer Kartei können beliebig viele Kategorien zugewiesen werden, die Kategorien wiederum können in Register
       unterteilt werden.

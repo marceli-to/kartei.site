@@ -2,11 +2,11 @@
   <Slide>
     <form
       v-if="!isLoading"
-      class="before:-z-1 after:-z-1 relative flex h-full w-full flex-col justify-between before:absolute before:-bottom-20 before:left-1/4 before:top-0 before:w-1 before:bg-graphite after:absolute after:-bottom-20 after:left-3/4 after:top-0 after:w-1 after:bg-graphite"
+      class="relative flex h-full w-full flex-col justify-between before:absolute before:top-0 before:-bottom-20 before:left-1/4 before:w-1 before:bg-graphite after:absolute after:top-0 after:-bottom-20 after:left-3/4 after:w-1 after:bg-graphite"
       @submit.prevent="handleSubmit">
       <!-- Info box -->
       <template v-if="isInfoOpen">
-        <InfoBox class="!-right-16 !-top-0 w-4/12">
+        <InfoBox class="top-0! -right-16! w-4/12">
           <InfoStructure />
         </InfoBox>
       </template>
@@ -27,7 +27,7 @@
             <Action
               type="button"
               label="Kategorie"
-              classes="!font-muoto-medium"
+              classes="font-muoto-medium!"
               :icon="{ name: 'Plus', variant: 'small-bold', position: 'center' }"
               @click="addCategory" />
           </div>
@@ -45,13 +45,13 @@
         <div class="mb-4 flex gap-x-17">
           <InputLabel
             label="Nr."
-            class="!mb-0 w-3/12" />
+            class="mb-0! w-3/12" />
           <InputLabel
             label="Titel"
-            class="!mb-0 w-6/12" />
+            class="mb-0! w-6/12" />
           <InputLabel
             label="Kürzel"
-            class="!mb-0 w-3/12" />
+            class="mb-0! w-3/12" />
         </div>
 
         <draggable

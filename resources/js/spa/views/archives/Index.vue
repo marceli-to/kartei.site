@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full flex-grow">
+  <div class="flex w-full grow">
     <div class="mt-106 flex min-h-full w-full">
       <ContentNavigation>
         <div class="flex flex-col gap-y-48">
@@ -42,7 +42,7 @@
                 :icon="{ name: 'Plus', position: 'right' }" />
               <template v-if="isInfoOpen">
                 <InfoBox
-                  class="absolute !-right-16 !top-0 flex min-h-default !w-auto items-center !py-0"
+                  class="absolute top-0! -right-16! flex min-h-default w-auto! items-center py-0!"
                   :closable="false">
                   <InfoCreateArchive />
                 </InfoBox>
@@ -65,7 +65,7 @@
             v-for="archive in filteredArchives"
             :key="archive.uuid"
             :archive="archive"
-            class="w-full shrink-0 md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)]" />
+            class="w-full shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-(32px/3))] 2xl:w-[calc(25%-12px)]" />
         </div>
         <div
           v-else-if="archives.length > 0"

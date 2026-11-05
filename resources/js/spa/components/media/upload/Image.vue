@@ -3,12 +3,12 @@
     <div
       v-if="multiple || list.length === 0"
       ref="dropZone"
-      class="group relative flex aspect-square h-full w-full cursor-pointer items-center justify-center border border-graphite outline-none transition duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:focus-visible:outline-white"
+      class="group relative flex aspect-square h-full w-full cursor-pointer items-center justify-center border border-graphite transition duration-200 ease-in-out outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:focus-visible:outline-white"
       :class="[
         classes,
         {
-          '!border-[var(--theme-color)] text-[var(--theme-color)]': isDragging,
-          '!border-flame': hasError,
+          'border-(--theme-color)! text-(--theme-color)': isDragging,
+          'border-flame!': hasError,
           'bg-snow': isUploading,
         },
       ]"
@@ -31,13 +31,13 @@
 
       <div
         v-if="isUploading"
-        class="absolute left-0 top-0 w-full">
+        class="absolute top-0 left-0 w-full">
         <div class="h-4 w-full overflow-hidden bg-transparent">
           <div
             class="h-4 bg-black transition-all duration-200 will-change-auto"
             :style="{ width: `${uploadProgress}%` }"></div>
         </div>
-        <div class="ml-4 mt-4 text-xs leading-none">{{ uploadProgress }}%</div>
+        <div class="mt-4 ml-4 text-xs leading-none">{{ uploadProgress }}%</div>
       </div>
       <div
         v-else

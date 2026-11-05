@@ -1,12 +1,12 @@
 <template>
   <div
-    class="pointer-events-none fixed inset-x-0 top-0 z-[9999] h-2 select-none transition-opacity duration-200 motion-reduce:transition-none"
+    class="pointer-events-none fixed inset-x-0 top-0 z-9999 h-2 transition-opacity duration-200 select-none motion-reduce:transition-none"
     :class="isVisible ? 'opacity-100' : 'opacity-0'"
     role="progressbar"
     aria-label="Wird geladen"
     :aria-hidden="!isVisible">
     <div
-      class="theme-color h-full w-full origin-left transition-transform duration-200 ease-out motion-reduce:transition-none"
+      class="h-full w-full origin-left theme-color transition-transform duration-200 ease-out motion-reduce:transition-none"
       :style="{ transform: `scaleX(${progress})` }" />
   </div>
 </template>

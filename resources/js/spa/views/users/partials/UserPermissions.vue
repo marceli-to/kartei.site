@@ -25,7 +25,7 @@
       </InputGroup>
 
       <div
-        :class="{ 'pointer-events-none select-none opacity-20': !selected }"
+        :class="{ 'pointer-events-none opacity-20 select-none': !selected }"
         class="flex flex-col gap-y-20">
         <!-- After saving: invite a user who was just added, or confirm -->
         <div

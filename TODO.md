@@ -63,6 +63,7 @@
 - [x] Stackr #129 filter category → register → result: a selected category shows only its own registers (others hidden and deselected); picking registers of a selected category narrows it to them, other selected categories stay whole (`Record/Get.php` filter, `Sidebar.vue`, register options carry their category; tests)
 - [x] Stackr #123 notice bar covers the header as in Benedikt's mock (16px from the top, same width, ends on the header line); fixed, with a page-coloured frame so scrolled content doesn't show around it (`Toast.vue`)
 - [x] Stackr #135 description fields limited to 255 characters (the `record_fields.content` string column; texts over 255 used to fail with a database error): `maxlength` + counter "n / 255" under each field, server validation on create and update (`Record/UpdateRequest`, German message, test); textareas grow in browsers without `field-sizing` (older Safari) and no longer widen for long words. Whether more than 255 is needed is still open
+- [x] Stackr #137 Tailwind 4: theme moved from `tailwind.config.js` into `@theme` in `app.css` (`--spacing: 1px` steps, so `mt-48` = 48px as before), `@tailwindcss/vite` instead of PostCSS, scanning limited to `resources/js` + `resources/views`, `theme-color*` as `@utility` (so `hover:theme-color` keeps working), v3 compat kept for border colour, button cursor and the inherited line height of `text-xs/sm/lg`, font URLs relative (`../fonts`), `@reference` in components with `@apply`; removed the `-z-1` that v3 ignored (it hid the column lines). 61 screenshots (3 widths, logged out, dialog, toast, filter, dark) identical to a v3 production build, except the register page: focus border now black as its classes say (v3 showed the forms plugin's blue)
 
 ## Servers (before going live)
 
@@ -72,7 +73,7 @@
 
 ## Next
 
-- [ ] Stackr board "kartei.site" (To Do): #137 Tailwind 4; #125 sidebar layout back with Benedikt (the sticky "Voreinstellungen" button covers the last tags), #126, #128, #129 in Pending for his review
+- [ ] Stackr board "kartei.site" (To Do): nothing; #125 sidebar layout back with Benedikt (the sticky "Voreinstellungen" button covers the last tags), #126, #128, #129 in Pending for his review
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points

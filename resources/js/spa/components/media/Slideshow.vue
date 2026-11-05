@@ -23,7 +23,7 @@
     <button
       type="button"
       aria-label="Vorheriges Bild"
-      :class="`swiper-button-prev swiper-button-prev-${uniqueId} absolute left-0 top-1/2 z-10 flex size-40 -translate-y-1/2 items-center justify-center`">
+      :class="`swiper-button-prev swiper-button-prev-${uniqueId} absolute top-1/2 left-0 z-10 flex size-40 -translate-y-1/2 items-center justify-center`">
       <Icon
         name="chevron-left"
         variant="small" />
@@ -32,7 +32,7 @@
     <button
       type="button"
       aria-label="Nächstes Bild"
-      :class="`swiper-button-next swiper-button-next-${uniqueId} absolute right-0 top-1/2 z-10 flex size-40 -translate-y-1/2 items-center justify-center`">
+      :class="`swiper-button-next swiper-button-next-${uniqueId} absolute top-1/2 right-0 z-10 flex size-40 -translate-y-1/2 items-center justify-center`">
       <Icon
         name="chevron-right"
         variant="small" />

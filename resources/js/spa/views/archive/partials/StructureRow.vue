@@ -12,7 +12,7 @@
         @blur="$emit('blur')" />
       <button
         type="button"
-        class="absolute right-8 top-12"
+        class="absolute top-12 right-8"
         :aria-label="`${label} ${position} entfernen`"
         @click="$emit('remove')">
         <Icon

@@ -11,7 +11,7 @@
           </router-link>
         </div>
         <div class="w-7/12">
-          <h1 class="ml-8 mt-30 font-otto-regular text-title">
+          <h1 class="mt-30 ml-8 font-otto-regular text-title">
             {{ title }}
           </h1>
         </div>
@@ -26,7 +26,7 @@
               @click="infoIcon.toggle">
               <!-- Same 48px box for both variants, so the header doesn't shift on hover -->
               <template v-if="infoIcon.isOpen">
-                <span class="theme-color-text flex size-48 items-center justify-center"
+                <span class="flex size-48 items-center justify-center theme-color-text"
                   ><Icon
                     name="info"
                     variant="active"

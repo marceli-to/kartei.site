@@ -8,7 +8,7 @@
   "plugins": [
     "prettier-plugin-tailwindcss"
   ],
-  "tailwindConfig": "./tailwind.config.js",
+  "tailwindStylesheet": "./resources/css/app.css",
   "tailwindAttributes": [
     "classes",
     "wrapperClasses",

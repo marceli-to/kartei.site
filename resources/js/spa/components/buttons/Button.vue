@@ -52,12 +52,12 @@ const props = defineProps({
 // The outline only shows for keyboard focus (focus-visible), not on click
 const focus =
   'focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:focus-visible:outline-white';
-const base = `min-h-default w-full flex items-center justify-center !ring-0 ${focus}`;
+const base = `min-h-default w-full flex items-center justify-center ring-0! ${focus}`;
 
 const VARIANTS = {
   primary: `${base} bg-white dark:bg-black border border-pebble text-graphite hover:text-black transition-all hover:theme-color hover:border-black disabled:hover:text-graphite disabled:hover:bg-transparent disabled:opacity-40 disabled:pointer-events-none`,
   danger: `${base} bg-white dark:bg-black text-flame hover:bg-flame hover:text-white border-flame border`,
-  secondary: `${focus} border border-graphite min-h-default font-muoto-regular text-md text-white w-full flex items-center justify-start gap-x-12 px-8 bg-pebble hover:theme-color hover:text-black !ring-0 transition-all disabled:pointer-events-none disabled:hover:bg-pebble disabled:hover:text-black`,
+  secondary: `${focus} border border-graphite min-h-default font-muoto-regular text-md text-white w-full flex items-center justify-start gap-x-12 px-8 bg-pebble hover:theme-color hover:text-black ring-0! transition-all disabled:pointer-events-none disabled:hover:bg-pebble disabled:hover:text-black`,
 };
 
 const classes = computed(() => VARIANTS[props.variant]);

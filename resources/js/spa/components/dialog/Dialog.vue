@@ -9,7 +9,7 @@
       leave-to-class="transform opacity-0">
       <div
         v-if="isVisible"
-        class="fixed inset-0 z-[9999] overflow-y-auto"
+        class="fixed inset-0 z-9999 overflow-y-auto"
         @mousedown="onPointerDown"
         @click="onBackdropClick">
         <!-- Backdrop -->
@@ -20,7 +20,7 @@
             ref="panel"
             tabindex="-1"
             :class="[
-              'relative w-full transform overflow-hidden bg-white p-24 text-left shadow-xl outline-none transition-all dark:text-black',
+              'relative w-full transform overflow-hidden bg-white p-24 text-left shadow-xl transition-all outline-none dark:text-black',
               getSizeClass(content.size),
             ]"
             role="dialog"
@@ -30,7 +30,7 @@
             @keydown.tab="trapFocus">
             <button
               type="button"
-              class="absolute right-24 top-24"
+              class="absolute top-24 right-24"
               aria-label="Schliessen"
               @click="handleCancel">
               <Icon

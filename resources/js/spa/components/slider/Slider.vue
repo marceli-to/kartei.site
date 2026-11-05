@@ -5,7 +5,7 @@
     and the slides start (slides with a label above that line use Slide's "pull").
     Slides end pb-20 above the bottom edge (Slide.vue).
   -->
-  <div class="relative mt-48 flex w-full flex-grow overflow-hidden">
+  <div class="relative mt-48 flex w-full grow overflow-hidden">
     <nav class="sticky left-0 z-50 flex w-2/12 min-w-nav shrink-0 flex-col bg-white dark:bg-black">
       <!-- Previous slide, covers the headings that slid under the navigation -->
       <div class="flex h-20 shrink-0 items-center justify-between">
@@ -26,10 +26,10 @@
         </template>
       </div>
 
-      <div class="mt-38 flex flex-grow flex-col border-r border-graphite">
+      <div class="mt-38 flex grow flex-col border-r border-graphite">
         <div
           class="flex flex-col"
-          :class="{ 'mb-20 mr-8 flex-grow border border-graphite pl-8': navigationVariant === 'box' }">
+          :class="{ 'mr-8 mb-20 grow border border-graphite pl-8': navigationVariant === 'box' }">
           <slot name="header" />
 
           <ul>
@@ -54,7 +54,7 @@
 
     <div
       ref="track"
-      class="relative z-40 flex w-full flex-grow"
+      class="relative z-40 flex w-full grow"
       :class="{ 'transition-transform duration-300 ease-in-out': animate }"
       :style="{ transform: `translateX(-${offset}px)` }">
       <section
@@ -84,7 +84,7 @@
         </h2>
         <!-- inert: no clicks and no keyboard focus outside the active slide -->
         <div
-          class="relative mt-38 flex flex-grow flex-col border-r border-r-graphite"
+          class="relative mt-38 flex grow flex-col border-r border-r-graphite"
           :class="{
             'opacity-20 transition-opacity': index > activeIndex,
             'opacity-0 transition-opacity': index < activeIndex,

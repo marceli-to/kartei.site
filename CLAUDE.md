@@ -5,7 +5,7 @@ This file contains project-specific configuration for Claude Code.
 ## Project Info
 - **Name**: kartei.site
 - **Type**: Web application (archive / card index SaaS)
-- **Stack**: Laravel 13 (slim structure, PHP ^8.3), Vue 3 SPA (Pinia, vue-router), Tailwind 3, Vite
+- **Stack**: Laravel 13 (slim structure, PHP ^8.3), Vue 3 SPA (Pinia, vue-router), Tailwind 4 (theme in `resources/css/app.css`, no JS config), Vite
 
 ## Common Commands
 ```bash

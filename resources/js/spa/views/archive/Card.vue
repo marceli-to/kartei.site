@@ -8,7 +8,7 @@
       <div class="flex flex-col gap-y-20">
         <div>
           <InputLabel label="Bildfeld" />
-          <ImageCard class="mb-8 flex !aspect-[16/9] items-center justify-center">
+          <ImageCard class="mb-8 flex aspect-video! items-center justify-center">
             <Icon
               v-if="form.has_images"
               name="image"
@@ -67,7 +67,7 @@
 
                 <button
                   type="button"
-                  class="absolute right-8 top-12"
+                  class="absolute top-12 right-8"
                   :aria-label="`Textfeld ${index + 1} entfernen`"
                   @click="remove(index)">
                   <Icon

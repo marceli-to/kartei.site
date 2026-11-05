@@ -15,7 +15,7 @@
             v-if="editable"
             type="button"
             aria-label="Bild löschen"
-            class="absolute right-0 top-0 p-8 hover:bg-snow"
+            class="absolute top-0 right-0 p-8 hover:bg-snow"
             @click="deleteImage(element.url, index)">
             <Icon
               name="cross"
@@ -103,6 +103,7 @@ const deleteImage = async (url, index) => {
 </script>
 
 <style scoped>
+@reference "@/../../css/app.css";
 .sortable-ghost {
   @apply bg-graphite/10;
 }

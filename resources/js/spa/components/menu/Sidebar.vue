@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="fixed right-0 top-12 z-80 h-[calc(100dvh_-_0.75rem)] w-full max-w-[16rem] bg-snow pt-174 dark:bg-graphite"
+    class="fixed top-12 right-0 z-80 h-[calc(100dvh-0.75rem)] w-full max-w-3xs bg-snow pt-174 dark:bg-graphite"
     :class="{ 'visible opacity-100': isOpen, 'pointer-events-none invisible opacity-0': !isOpen }">
     <ul class="mx-16 border-t border-t-black dark:border-t-white">
       <li>
@@ -70,6 +70,7 @@ defineProps({
 defineEmits(['toggle']);
 </script>
 <style scoped>
+@reference "@/../../css/app.css";
 nav a,
 nav button {
   @apply flex w-full items-center border-b border-b-black py-16 font-muoto-medium leading-none transition-all hover:text-graphite dark:border-b-white dark:hover:text-black;

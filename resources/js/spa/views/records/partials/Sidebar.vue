@@ -31,7 +31,7 @@
           :multiple="true"
           name="categories"
           :options="categories"
-          classes="!text-black"
+          classes="text-black!"
           wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
 
@@ -45,7 +45,7 @@
           :multiple="true"
           name="registers"
           :options="visibleRegisters"
-          classes="!text-black"
+          classes="text-black!"
           wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
 
@@ -59,7 +59,7 @@
           :multiple="true"
           name="tags"
           :options="tags"
-          classes="!text-black"
+          classes="text-black!"
           wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
     </div>

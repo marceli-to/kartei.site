@@ -2,7 +2,7 @@
   <div class="relative flex flex-col gap-y-32">
     <router-link
       :to="{ name: 'archiveRecords', params: { uuid: archive.uuid } }"
-      class="absolute right-8 top-8 z-10 block size-24"
+      class="absolute top-8 right-8 z-10 block size-24"
       title="Kartei bearbeiten">
       <Icon
         name="edit"

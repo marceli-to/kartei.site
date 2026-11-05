@@ -83,7 +83,7 @@ const props = defineProps({
 const computedClasses = computed(() => {
   // The radio itself is sr-only, so the row shows the keyboard focus
   const baseClasses =
-    'min-h-default pr-8 flex items-center justify-between cursor-pointer group has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-black dark:has-[:focus-visible]:outline-white';
+    'min-h-default pr-8 flex items-center justify-between cursor-pointer group has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-black dark:has-focus-visible:outline-white';
   const variantClasses = props.variant === 'default' ? 'border-y border-graphite' : 'border-b border-graphite';
   return `${baseClasses} ${variantClasses} ${props.classes}`;
 });

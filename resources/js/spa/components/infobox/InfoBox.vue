@@ -4,7 +4,7 @@
       <button
         v-if="closable"
         type="button"
-        class="absolute right-0 top-0"
+        class="absolute top-0 right-0"
         aria-label="Hinweis schliessen"
         @click="infoIcon.close()">
         <Icon
@@ -27,7 +27,7 @@ defineProps({
   },
   defaultClass: {
     type: [String],
-    default: 'absolute top-24 -right-8 z-[100] translate-x-full w-10/12 bg-[var(--theme-color)] p-8 text-sm',
+    default: 'absolute top-24 -right-8 z-100 translate-x-full w-10/12 bg-(--theme-color) p-8 text-sm',
   },
   closable: {
     type: Boolean,

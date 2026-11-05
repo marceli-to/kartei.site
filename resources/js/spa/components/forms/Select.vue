@@ -5,7 +5,7 @@
       :id="id"
       :value="modelValue"
       :aria-invalid="error ? 'true' : undefined"
-      :class="[selectClasses, { '!border-flame !bg-flame !text-white': error }]"
+      :class="[selectClasses, { 'border-flame! bg-flame! text-white!': error }]"
       @change="onChange">
       <option
         v-if="placeholder"
@@ -21,7 +21,7 @@
         {{ option.label }}
       </option>
     </select>
-    <div :class="[chevronClasses, { '!text-white': props.error }]">
+    <div :class="[chevronClasses, { 'text-white!': props.error }]">
       <Icon name="chevron-down" />
     </div>
   </div>
@@ -72,10 +72,10 @@ const props = defineProps({
 const wrapperClasses = 'relative';
 
 const defaultClasses =
-  'w-full min-h-default !bg-none appearance-none text-md !ring-0 px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
+  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
 
 const boxClasses =
-  'w-full min-h-default !bg-none appearance-none text-md !ring-0 px-8 py-2 border border-graphite focus:border-black bg-white placeholder:font-muoto-italic placeholder:text-black';
+  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-8 py-2 border border-graphite focus:border-black bg-white placeholder:font-muoto-italic placeholder:text-black';
 
 const selectClasses = computed(() => {
   const baseClasses = props.variant === 'box' ? boxClasses : defaultClasses;

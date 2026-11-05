@@ -21,7 +21,7 @@
       <span
         :class="[
           borderClasses,
-          'flex min-h-default w-full cursor-pointer select-none items-center justify-between px-8 text-md text-graphite transition-all hover:text-black dark:hover:text-white',
+          'flex min-h-default w-full cursor-pointer items-center justify-between px-8 text-md text-graphite transition-all select-none hover:text-black dark:hover:text-white',
           // The input is sr-only, so the button shows the keyboard focus
           'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-black dark:peer-focus-visible:outline-white',
           classes,
@@ -102,7 +102,7 @@ const props = defineProps({
   },
   activeClass: {
     type: String,
-    default: 'theme-color !border-black !text-black',
+    default: 'theme-color border-black! text-black!',
   },
   labelClasses: {
     type: String,
@@ -110,7 +110,7 @@ const props = defineProps({
   },
   disabledClasses: {
     type: String,
-    default: '!bg-white !text-black pointer-events-none',
+    default: 'bg-white! text-black! pointer-events-none',
   },
   valueActiveClassMap: {
     type: Object,

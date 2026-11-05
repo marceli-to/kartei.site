@@ -1,7 +1,7 @@
 <template>
   <!-- Example of the chosen numbering and ID type, beside the structure settings -->
   <div
-    class="before:-z-1 after:-z-1 relative pl-8 before:absolute before:inset-y-0 before:left-[calc(25%_+_14px)] before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-[calc(75%_-_6px)] after:w-1 after:bg-graphite">
+    class="relative pl-8 before:absolute before:inset-y-0 before:left-[calc(25%+14px)] before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-[calc(75%-6px)] after:w-1 after:bg-graphite">
     <div class="mb-32 flex">
       <div class="w-3/12">
         <div class="flex min-h-default w-full items-center justify-start border-y border-y-graphite">
@@ -10,7 +10,7 @@
       </div>
       <div class="w-6/12 px-16">
         <div
-          class="pointer-events-none flex min-h-default w-full justify-between border-y border-graphite pr-8 !font-muoto-medium text-md text-black transition-all dark:text-white">
+          class="pointer-events-none flex min-h-default w-full justify-between border-y border-graphite pr-8 font-muoto-medium! text-md text-black transition-all dark:text-white">
           <span class="flex w-full items-center justify-center">
             <span class="flex-1 text-left">Kategorie</span>
             <span class="flex flex-1 justify-start">

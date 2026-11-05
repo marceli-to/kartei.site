@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="!isLoading"
-    class="relative flex w-full flex-grow">
+    class="relative flex w-full grow">
     <Actions :links="actionLinks">
       <router-link
         v-if="uuid"
@@ -32,7 +32,7 @@
               v-for="record in records"
               :key="record.uuid"
               :record="record"
-              class="w-full shrink-0 md:w-[calc(50%_-_8px)] lg:w-[calc(33.333%_-_(32px/3))] 2xl:w-[calc(25%_-_12px)]" />
+              class="w-full shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-(32px/3))] 2xl:w-[calc(25%-12px)]" />
           </div>
           <!-- Loads the next page when scrolled into view; stops after a failed request -->
           <div
