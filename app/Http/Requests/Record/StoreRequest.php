@@ -1,18 +1,13 @@
 <?php
 namespace App\Http\Requests\Record;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class StoreRequest extends UpdateRequest
 {
-  public function authorize(): bool
-  {
-    return true;
-  }
-
   public function rules(): array
   {
     return [
       'category' => 'required',
+      ...parent::rules(),
     ];
   }
   
@@ -20,6 +15,7 @@ class StoreRequest extends FormRequest
   {
     return [
       'category.required' => 'Kategorie oder Register fehlt',
+      ...parent::messages(),
     ];
   }
 }

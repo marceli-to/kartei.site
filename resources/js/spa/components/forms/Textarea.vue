@@ -1,6 +1,8 @@
 <template>
   <textarea
     :id="id"
+    ref="textarea"
+    rows="1"
     :value="modelValue"
     :maxlength="maxLength"
     :aria-invalid="error ? 'true' : undefined"
@@ -12,6 +14,8 @@
 </template>
 
 <script setup>
+import { ref, watch, onMounted, nextTick } from 'vue';
+
 const props = defineProps({
   modelValue: {
     type: [String, Number],
@@ -55,6 +59,22 @@ const onInput = (event) => {
   if (props.error) emit('update:error', '');
 };
 
+// Browsers without `field-sizing: content` (Safari) don't grow the field with its text
+const textarea = ref(null);
+const growsByItself = typeof CSS !== 'undefined' && CSS.supports('field-sizing', 'content');
+const fitHeight = () => {
+  const element = textarea.value;
+  if (growsByItself || !element) return;
+  element.style.height = 'auto';
+  // scrollHeight leaves out the borders
+  element.style.height = `${element.scrollHeight + element.offsetHeight - element.clientHeight}px`;
+};
+onMounted(fitHeight);
+watch(
+  () => props.modelValue,
+  () => nextTick(fitHeight),
+);
+
 const defaultClasses =
   'appearance-none w-full text-md !ring-0 min-h-default px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white';
 </script>
@@ -62,5 +82,8 @@ const defaultClasses =
 textarea {
   field-sizing: content;
   resize: vertical;
+  /* field-sizing would otherwise widen the field for a long word or URL */
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 </style>

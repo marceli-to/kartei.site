@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers\Api;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Record;
@@ -12,6 +11,7 @@ use App\Actions\Record\Create as CreateRecordAction;
 use App\Actions\Record\Update as UpdateRecordAction;
 use App\Actions\Record\Delete as DeleteRecordAction;
 use App\Http\Requests\Record\StoreRequest;
+use App\Http\Requests\Record\UpdateRequest;
 use App\Http\Requests\Record\IndexRequest;
 
 class RecordController extends Controller
@@ -74,10 +74,10 @@ class RecordController extends Controller
    * Update an existing record
    * 
    * @param Record $record
-   * @param Request $request
+   * @param UpdateRequest $request
    * @return JsonResponse
    */
-  public function update(Record $record, Request $request): JsonResponse
+  public function update(Record $record, UpdateRequest $request): JsonResponse
   {
     $this->authorize('updateRecord', $record->archive);
     // A record can't be moved to another archive

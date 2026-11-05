@@ -93,13 +93,22 @@
                   <InputGroup
                     v-if="form.fields.length > 0"
                     class="flex flex-col gap-y-8">
-                    <InputTextarea
+                    <div
                       v-for="(field, index) in form.fields"
-                      :id="'field-' + index"
-                      :key="field.uuid"
-                      v-model="field.content"
-                      :placeholder="field.placeholder"
-                      :aria-label="field.placeholder" />
+                      :key="field.uuid">
+                      <InputTextarea
+                        :id="'field-' + index"
+                        v-model="field.content"
+                        :max-length="FIELD_MAX_LENGTH"
+                        :placeholder="field.placeholder"
+                        :aria-label="field.placeholder"
+                        :aria-describedby="'field-' + index + '-count'" />
+                      <div
+                        :id="'field-' + index + '-count'"
+                        class="mt-2 text-right text-xs text-graphite">
+                        {{ field.content?.length ?? 0 }} / {{ FIELD_MAX_LENGTH }}
+                      </div>
+                    </div>
                   </InputGroup>
                 </div>
               </div>
@@ -157,6 +166,9 @@ const userStore = useUserStore();
 const { setTitle } = usePageTitle();
 
 const isEdit = route.name === 'archiveRecordUpdate';
+// Same limit as the server (record_fields.content is a string column)
+const FIELD_MAX_LENGTH = 255;
+
 const record = ref(null);
 const archiveUuid = ref(isEdit ? null : route.params.uuid);
 

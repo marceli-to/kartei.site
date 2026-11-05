@@ -161,6 +161,21 @@ it('does not move a record into another archive on update', function () {
   expect($record->fresh()->archive_id)->toBe($this->archive->id);
 });
 
+it('limits description fields to 255 characters with a readable error', function () {
+  Sanctum::actingAs($this->admin);
+  $record = Record::create(['category_id' => $this->category->id, 'archive_id' => $this->archive->id]);
+  $field = fn (int $length) => ['fields' => [['uuid' => 'f1', 'placeholder' => 'Titel', 'content' => str_repeat('a', $length)]]];
+
+  $this->putJson("/api/record/{$record->uuid}", $field(256))
+    ->assertUnprocessable()
+    ->assertJsonValidationErrors(['fields.0.content' => 'höchstens 255 Zeichen']);
+  $this->postJson('/api/record', ['archive_id' => $this->archive->uuid, 'category' => $this->category->uuid, ...$field(256)])
+    ->assertUnprocessable();
+
+  $this->putJson("/api/record/{$record->uuid}", $field(255))->assertOk();
+  expect($record->fresh()->fields->first()->content)->toHaveLength(255);
+});
+
 it('uses per-archive permissions for members', function () {
   $viewer = addMember($this->archive, Role::findByName('Viewer', 'web'), $this->admin);
   $archivist = addMember($this->archive, Role::findByName('Archivist', 'web'), $this->admin, ['edit.card', 'delete.card']);

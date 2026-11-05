@@ -62,6 +62,7 @@
 - [x] `public/.user.ini` in the format the Hostpoint Control Panel writes (notes moved to `config/media.php`)
 - [x] Stackr #129 filter category → register → result: a selected category shows only its own registers (others hidden and deselected); picking registers of a selected category narrows it to them, other selected categories stay whole (`Record/Get.php` filter, `Sidebar.vue`, register options carry their category; tests)
 - [x] Stackr #123 notice bar covers the header as in Benedikt's mock (16px from the top, same width, ends on the header line); fixed, with a page-coloured frame so scrolled content doesn't show around it (`Toast.vue`)
+- [x] Stackr #135 description fields limited to 255 characters (the `record_fields.content` string column; texts over 255 used to fail with a database error): `maxlength` + counter "n / 255" under each field, server validation on create and update (`Record/UpdateRequest`, German message, test); textareas grow in browsers without `field-sizing` (older Safari) and no longer widen for long words. Whether more than 255 is needed is still open
 
 ## Servers (before going live)
 
