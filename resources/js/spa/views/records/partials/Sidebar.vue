@@ -35,7 +35,7 @@
           wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
 
-      <InputGroup v-if="registers.length > 0">
+      <InputGroup v-if="visibleRegisters.length > 0">
         <InputLabel
           id="register"
           label="Register" />
@@ -44,7 +44,7 @@
           legend="Register"
           :multiple="true"
           name="registers"
-          :options="registers"
+          :options="visibleRegisters"
           classes="!text-black"
           wrapper-classes="flex flex-col gap-y-8" />
       </InputGroup>
@@ -124,6 +124,20 @@ const localSortOrder = ref(props.modelValue?.sortOrder || 'name');
 const localSelectedCategories = ref(props.modelValue?.selectedCategories || []);
 const localSelectedRegisters = ref(props.modelValue?.selectedRegisters || []);
 const localSelectedTags = ref(props.modelValue?.selectedTags || []);
+
+// Selected categories show only their own registers, which then narrow the
+// category down (category → register → result)
+const visibleRegisters = computed(() =>
+  localSelectedCategories.value.length > 0
+    ? props.registers.filter((register) => localSelectedCategories.value.includes(register.category))
+    : props.registers,
+);
+
+// Registers that get hidden are deselected too
+watch(visibleRegisters, (visible) => {
+  const kept = localSelectedRegisters.value.filter((uuid) => visible.some((register) => register.value === uuid));
+  if (kept.length !== localSelectedRegisters.value.length) localSelectedRegisters.value = kept;
+});
 
 const sortOrderOptions = [
   { value: 'name', label: 'Name' },

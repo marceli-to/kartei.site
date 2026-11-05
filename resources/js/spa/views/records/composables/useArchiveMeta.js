@@ -26,7 +26,10 @@ export function useArchiveMeta() {
     const meta = await getArchiveMeta(archiveUuid);
 
     categories.value = meta.categories.map(toOption);
-    registers.value = meta.registers.map(toOption);
+    // In structure order, each with the uuid of its category
+    registers.value = meta.categories_registers.flatMap((cat) =>
+      (cat.registers ?? []).map((reg) => ({ ...toOption(reg), category: cat.uuid })),
+    );
     tags.value = meta.tags.map(toOption);
 
     categoriesRegisters.value = meta.categories_registers.flatMap((cat) => [

@@ -142,6 +142,12 @@ it('filters by category including its registers, by register and by tag', functi
   expect($uuids(['registers' => [$this->register->uuid]]))->toBe([$inRegister->uuid]);
   expect($uuids(['tags' => [$tag->uuid]]))->toBe([$inOther->uuid]);
 
+  // A register of a selected category narrows that category down; other categories stay whole
+  expect($uuids(['categories' => [$this->category->uuid], 'registers' => [$this->register->uuid]]))
+    ->toBe([$inRegister->uuid]);
+  expect($uuids(['categories' => [$this->category->uuid, $other->uuid], 'registers' => [$this->register->uuid]]))
+    ->toBe(collect([$inRegister->uuid, $inOther->uuid])->sort()->values()->all());
+
   listRecords($this, ['tags' => [$tag->uuid]])
     ->assertJsonPath('meta.total', 1)
     ->assertJsonPath('meta.archive_total', 3);

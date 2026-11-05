@@ -58,13 +58,19 @@
 - [x] Countries stored as ISO codes (`CH`, …): one list in `resources/data/countries.json` (code => German name), read by `config/countries.php` and the SPA (`config/countries.js`); the server only accepts codes from the list; migration `2026_11_04_150000` converts names to codes (unknown values stay and are logged, `down()` converts back); tests added
 - [x] Removed the unused `App\Http\Requests\User\StoreRequest` (users are created via `ArchiveUserController`)
 - [x] Favorite in-flight guard + error toast + `aria-pressed`; record list aborts stale requests; company search with empty street/city; BasicInformation: dead watcher removed, create success no longer reported as failure; `isLoading` starts `true` (Theme, BasicInformation, users subscription note); "Meine Karteien" shows a load error with retry; `ButtonPrimary` `loading` prop; Slideshow keys, German alt and button labels; no `width="auto"`
+- [x] Stackr cards (4 Nov 2026): #140 loading spinner replaced by a 2px bar at the top in the theme color (`LoadingOverlay.vue`, 150ms delay); #126 sidebar registers in structure order (`ArchiveMetaController`, test); #128 page title 1.75rem, cap height = x-height of the logo, same baseline (`text-title`); #139 `/` redirects to the login or into the app (welcome page removed), welcome password `TWIN-GRAB-MENU-HILL-MOON`, record list actions greyed out
+- [x] `public/.user.ini` in the format the Hostpoint Control Panel writes (notes moved to `config/media.php`)
+- [x] Stackr #129 filter category → register → result: a selected category shows only its own registers (others hidden and deselected); picking registers of a selected category narrows it to them, other selected categories stay whole (`Record/Get.php` filter, `Sidebar.vue`, register options carry their category; tests)
 
 ## Servers (before going live)
 
-- [ ] Work through the server checklist (Claude Doc): Laravel-Lang malware check, PHP 8.3+, migrations, scheduler cron, `media:prune-orphans` dry run, smoke tests; after migrating, check the log for "Countries not converted" (addresses/companies with a country outside the list)
+- [x] Staging (Hostpoint, kartei.ch.wbg.ch, the only server, real data) deployed to `df6813e` on 4 Nov 2026: PHP 8.4 (CLI + website), composer alias, migrations, countries converted, new welcome password in `.env`
+- [ ] Staging: scheduler cron (`/usr/local/php84/bin/php artisan schedule:run`), see the Hostpoint section of the server checklist
+- [ ] Rest of the server checklist (Claude Doc): Laravel-Lang malware check, `media:prune-orphans` dry run, authorization smoke tests
 
 ## Next
 
+- [ ] Stackr board "kartei.site" (To Do): #125 sidebar layout (waits for Benedikt's design + icons), #137 Tailwind 4; #126 and #128 are in Pending for Benedikt's review
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points

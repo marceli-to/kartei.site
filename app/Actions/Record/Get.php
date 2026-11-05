@@ -72,14 +72,24 @@ class Get
 
   private function filter(Collection $rows, Archive $archive, Collection $categories, array $params): Collection
   {
-    // Categories include their registers; registers can also be picked on their own
+    // A category includes its registers. Picking registers of a selected category
+    // narrows it down to them (category → register → result); registers whose
+    // category isn't selected are added on their own.
     $selectedCategories = array_filter((array) ($params['categories'] ?? []));
     $selectedRegisters = array_filter((array) ($params['registers'] ?? []));
     if ($selectedCategories || $selectedRegisters) {
+      $narrowed = $categories
+        ->filter(fn ($category) => $category->parent && in_array($category->uuid, $selectedRegisters, true))
+        ->map(fn ($register) => $register->parent->uuid)
+        ->unique()
+        ->all();
       $allowed = $categories
-        ->filter(fn ($category) => in_array($category->uuid, $selectedCategories, true)
-          || in_array($category->uuid, $selectedRegisters, true)
-          || ($category->parent && in_array($category->parent->uuid, $selectedCategories, true)))
+        ->filter(function ($category) use ($selectedCategories, $selectedRegisters, $narrowed) {
+          if (in_array($category->uuid, $selectedRegisters, true)) return true;
+          $categoryUuid = $category->parent?->uuid ?? $category->uuid;
+          return in_array($categoryUuid, $selectedCategories, true)
+            && !in_array($categoryUuid, $narrowed, true);
+        })
         ->keys()
         ->flip();
       $rows = $rows->filter(fn ($row) => $allowed->has($row->category_id));
