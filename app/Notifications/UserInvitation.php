@@ -9,6 +9,8 @@ class UserInvitation extends Notification
 {
   use Queueable;
 
+  public $data;
+
   /**
    * Create a new notification instance.
    *
@@ -41,8 +43,8 @@ class UserInvitation extends Notification
     return (new MailMessage)
       ->from(env('MAIL_FROM_ADDRESS'))
       ->replyTo(env('MAIL_TO'))
-      ->subject('Einladung kartei.site')
-      ->markdown('mail.user.invitation', ['data' => $this->data]);
+      ->subject(!empty($this->data['existing']) ? 'Neue Kartei auf kartei.site' : 'Einladung kartei.site')
+      ->markdown(!empty($this->data['existing']) ? 'mail.user.added' : 'mail.user.invitation', ['data' => $this->data]);
   }
 
   /**

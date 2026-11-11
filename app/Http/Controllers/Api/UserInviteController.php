@@ -21,10 +21,7 @@ class UserInviteController extends Controller
     $this->authorize('assignToArchive', [$user, $archive]);
     abort_unless($user->isMemberOf($archive), 422, 'Der Benutzer hat keinen Zugriff auf diese Kartei.');
 
-    (new Invite())->execute(
-      $user, 
-      $archive->uuid
-    );
+    (new Invite())->execute($user, $archive);
     return response()->noContent();
   }
 }

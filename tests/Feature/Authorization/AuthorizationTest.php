@@ -535,3 +535,38 @@ it('changes a role on one archive without touching the user\'s other archives', 
     ->assertOk()
     ->assertJsonFragment(['uuid' => $target->uuid, 'role' => __('roles.Viewer')]);
 });
+
+it('sends credentials only to invited users who still have the welcome password', function () {
+  \Illuminate\Support\Facades\Notification::fake();
+  $role = Role::findByName('Viewer', 'web');
+  $fresh = addMember($this->archive, $role, $this->admin);
+  $fresh->forceFill(['password' => config('user.welcome_password')])->save();
+  $existing = addMember($this->archive, $role, $this->admin);
+  Sanctum::actingAs($this->admin);
+
+  $this->postJson("/api/user/invite/{$fresh->uuid}", ['archive' => $this->archive->uuid])->assertNoContent();
+  $this->postJson("/api/user/invite/{$existing->uuid}", ['archive' => $this->archive->uuid])->assertNoContent();
+
+  $mailFor = function (string $email) {
+    $sent = null;
+    \Illuminate\Support\Facades\Notification::assertSentOnDemand(
+      \App\Notifications\UserInvitation::class,
+      function ($n, $channels, $notifiable) use ($email, &$sent) {
+        if ($notifiable->routes['mail'] !== $email) return false;
+        $sent = $n;
+        return true;
+      }
+    );
+    return $sent->toMail(null);
+  };
+
+  $mail = $mailFor($fresh->email);
+  expect($mail->markdown)->toBe('mail.user.invitation');
+  expect((string) $mail->render())->toContain(config('user.welcome_password'));
+
+  $mail = $mailFor($existing->email);
+  expect($mail->markdown)->toBe('mail.user.added');
+  expect((string) $mail->render())
+    ->toContain($this->archive->name)
+    ->not->toContain(config('user.welcome_password'));
+});
