@@ -13,6 +13,7 @@ class ArchiveAbilities
     'view',
     'update',
     'delete',
+    'duplicate',
     'manageStructure',
     'manageTemplate',
     'manageTags',

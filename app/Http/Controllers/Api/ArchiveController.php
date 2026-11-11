@@ -10,6 +10,7 @@ use App\Actions\Archive\Find as FindArchiveAction;
 use App\Actions\Archive\Create as CreateArchiveAction;
 use App\Actions\Archive\Update as UpdateArchiveAction;
 use App\Actions\Archive\Delete as DeleteArchiveAction;
+use App\Actions\Archive\Duplicate as DuplicateArchiveAction;
 use App\Actions\ArchiveImage\Create as CreateArchiveImageAction;
 use App\Actions\ArchiveUser\Attach as AttachArchiveUserAction;
 use App\Http\Requests\Archive\StoreRequest;
@@ -131,6 +132,22 @@ class ArchiveController extends Controller
     (new CreateArchiveImageAction())->execute($request->image[0], $archive);
     return response()->json(
       new ArchiveResource($archive->load('company', 'media'))
+    );
+  }
+
+  /**
+   * Duplicate an archive's setup (no records, no image); answers with the copy
+   *
+   * @param Archive $archive
+   * @return JsonResponse
+   */
+  public function duplicate(Archive $archive): JsonResponse
+  {
+    $this->authorize('duplicate', $archive);
+    $copy = (new DuplicateArchiveAction())->execute($archive, auth()->user());
+    return response()->json(
+      new ArchiveResource($copy->load('company', 'media')),
+      201
     );
   }
 

@@ -62,3 +62,9 @@ export const getArchiveMeta = async (uuid) => {
   const response = await api.get(`/archive/meta/${uuid}`);
   return response.data;
 };
+
+// Copies the archive's setup (no records, no image); answers with the copy
+export const duplicateArchive = async (uuid) => {
+  const response = await api.post(`/archive/${uuid}/duplicate`);
+  return response.data;
+};

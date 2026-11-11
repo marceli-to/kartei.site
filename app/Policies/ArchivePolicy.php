@@ -51,6 +51,12 @@ class ArchivePolicy
     return $this->allows($user, $archive, ['edit.tags']);
   }
 
+  // Only the archive's own admin: the copy takes its members and their permissions along
+  public function duplicate(User $user, Archive $archive): bool
+  {
+    return $user->isAdminOf($archive);
+  }
+
   public function manageUsers(User $user, Archive $archive): bool
   {
     return $user->isAdminOf($archive);

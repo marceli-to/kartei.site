@@ -3,8 +3,14 @@
     <div class="w-2/12 min-w-nav shrink-0">
       <slot />
     </div>
+    <!-- Instead of links: a heading in the same place (e.g. "Kartei duplizieren") -->
+    <div
+      v-if="$slots.main"
+      class="ml-8 w-10/12 min-w-10/12">
+      <slot name="main" />
+    </div>
     <nav
-      v-if="links.length"
+      v-else-if="links.length"
       class="relative ml-8 w-10/12 min-w-10/12">
       <ul class="flex justify-start gap-x-44 leading-none 2xl:gap-x-16">
         <li

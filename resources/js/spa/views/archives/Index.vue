@@ -3,48 +3,10 @@
     <Actions :links="viewLinks" />
     <div class="mt-106 flex min-h-full w-full">
       <ContentNavigation>
-        <div class="flex flex-col gap-y-20">
-          <div class="flex flex-col gap-y-8">
-            <InputGroup>
-              <InputSearch
-                v-model="searchQuery"
-                placeholder="Suchen"
-                aria-label="Suchen" />
-            </InputGroup>
-            <InputGroup
-              v-if="userStore.can('create.archive')"
-              class="relative">
-              <Action
-                label="Erstellen"
-                variant="box"
-                :to="{ name: 'archiveSettings' }"
-                :icon="{ name: 'Plus', position: 'right' }" />
-              <template v-if="isInfoOpen">
-                <InfoBox
-                  class="absolute top-0! -right-16! flex min-h-default w-auto! items-center py-0!"
-                  :closable="false">
-                  <InfoCreateArchive />
-                </InfoBox>
-              </template>
-            </InputGroup>
-            <InputGroup>
-              <Action
-                label="Duplizieren"
-                variant="box"
-                :icon="{ name: 'duplicate', variant: 'small', position: 'right' }" />
-            </InputGroup>
-          </div>
-          <InputGroup>
-            <InputLabel
-              id="sort_order"
-              label="Sortierfolge" />
-            <InputSelect
-              id="sort_order"
-              v-model="sortOrder"
-              :options="sortOrderOptions"
-              variant="box" />
-          </InputGroup>
-        </div>
+        <Navigation
+          v-model:search="searchQuery"
+          v-model:sort="sortOrder"
+          :show-create-info="isInfoOpen" />
       </ContentNavigation>
       <ContentMain>
         <!--
@@ -88,14 +50,8 @@ import { useUserStore } from '@/stores/user';
 import { getByUser } from '@/services/api/archive';
 import ContentNavigation from '@/components/layout/ContentNavigation.vue';
 import ContentMain from '@/components/layout/ContentMain.vue';
-import InputSearch from '@/components/forms/Search.vue';
-import InputSelect from '@/components/forms/Select.vue';
-import InputLabel from '@/components/forms/Label.vue';
-import InputGroup from '@/components/forms/Group.vue';
-import Action from '@/components/buttons/Action.vue';
-import InfoBox from '@/components/infobox/InfoBox.vue';
-import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
 import Teaser from '@/views/archives/partials/Teaser.vue';
+import Navigation from '@/views/archives/partials/Navigation.vue';
 import Actions from '@/views/records/partials/Actions.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
@@ -109,13 +65,6 @@ const sortOrder = ref('name');
 const hasArchive = ref(true);
 const archives = ref([]);
 const loadFailed = ref(false);
-
-const sortOrderOptions = [
-  { value: 'name', label: 'Name' },
-  { value: 'date', label: 'Datum' },
-  { value: 'created_at', label: 'Erstellt' },
-  { value: 'updated_at', label: 'Aktualisiert' },
-];
 
 // View toggle above the content, remembered in the browser
 const VIEW_STORAGE_KEY = 'kartei.archives.view';

@@ -1,0 +1,1 @@
+import{E as e,R as t,U as n,et as r,u as i,x as a}from"./vue.runtime.esm-bundler-CJ-k5icW.js";import{r as o}from"./spa-B2CUQNw7.js";a(),n();var s=0;function c({active:n,auto:a=!1}){let c=o(),l=`info-${s++}`;return t(()=>[r(n),r(a)],([e,t])=>{e?c.register(l,t):c.unregister(l)},{immediate:!0}),e(()=>c.unregister(l)),{isOpen:i(()=>r(n)&&c.isOpen)}}export{c as t};

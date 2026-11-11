@@ -99,6 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::post('/archive', [ArchiveController::class, 'create']);
   Route::put('/archive/{archive:uuid}', [ArchiveController::class, 'update']);
   Route::delete('/archive/{archive:uuid}', [ArchiveController::class, 'destroy']);
+  Route::post('/archive/{archive:uuid}/duplicate', [ArchiveController::class, 'duplicate']);
   
   // Archive User
   Route::post('/archive/user', [ArchiveUserController::class, 'create']);

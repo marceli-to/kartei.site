@@ -20,6 +20,12 @@ const routes = [
   { path: '/archiv/einstellungen', name: 'settings', component: () => import('@/views/settings/Index.vue') },
   { path: '/archiv/meine-karteien', name: 'archives', component: () => import('@/views/archives/Index.vue') },
   {
+    path: '/archiv/meine-karteien/duplizieren',
+    name: 'archivesDuplicate',
+    component: () => import('@/views/archives/Duplicate.vue'),
+    meta: { permissionWithoutUuid: 'create.archive' },
+  },
+  {
     path: '/archiv/kartei/einstellungen/:uuid?',
     name: 'archiveSettings',
     component: () => import('@/views/archive/Index.vue'),
