@@ -81,6 +81,9 @@
     Muoto-italic, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
+  /* Record list sidebar (Benedikt's KAR0001_Sidebar_Layout_261108): 11px, tracked like the design */
+  --text-2xs: 0.6875rem;
+  --text-2xs--letter-spacing: 0.04em;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-md: 1.063rem;
@@ -122,6 +125,37 @@
     @apply opacity-20 *:pointer-events-none *:select-none transition-all;
   }
 
+}
+
+/* Scroll bars everywhere (page and inner lists): 4px, as in Benedikt's sidebar design.
+   Always visible in Chrome/Safari once styled; Firefox only knows "thin". */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-snow);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ash);
+  }
+  [data-color-scheme='dark'] ::-webkit-scrollbar-track {
+    background: var(--color-onyx);
+  }
+  [data-color-scheme='dark'] ::-webkit-scrollbar-thumb {
+    background: var(--color-charcoal);
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-ash) var(--color-snow);
+    }
+    [data-color-scheme='dark'],
+    [data-color-scheme='dark'] * {
+      scrollbar-color: var(--color-charcoal) var(--color-onyx);
+    }
+  }
 }
 
 /* Theme Styles */
