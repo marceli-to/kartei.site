@@ -24,106 +24,108 @@
       </ContentNavigation>
 
       <ContentMain class="pb-0!">
+        <!--
+          lg and up: columns Ordnung | Bilder | Beschreibung (1:2:1) with lines between them;
+          without an image field (card template "Ohne Bildfeld") Ordnung | Beschreibung keep their quarter widths, side by side.
+          Narrower: one column, Bilder, Beschreibung, then Ordnung/Tags. Labels sit above the
+          content line only in the column layout (lg:-top-24).
+        -->
         <form
           v-if="!isLoading"
-          class="relative flex h-full w-full min-w-[800px] flex-col justify-between pb-24 before:absolute before:inset-y-0 before:left-1/4 before:w-1 before:bg-graphite after:absolute after:inset-y-0 after:left-3/4 after:w-1 after:bg-graphite"
+          class="relative flex h-full w-full flex-col justify-between gap-y-32 pb-24 lg:before:absolute lg:before:inset-y-0 lg:before:w-1 lg:before:bg-graphite"
+          :class="
+            settings.has_images
+              ? 'lg:before:left-1/4 lg:after:absolute lg:after:inset-y-0 lg:after:left-3/4 lg:after:w-1 lg:after:bg-graphite'
+              : 'lg:before:left-1/4 lg:after:absolute lg:after:inset-y-0 lg:after:left-1/2 lg:after:w-1 lg:after:bg-graphite'
+          "
           @submit.prevent="handleSubmit">
-          <div class="flex h-full flex-col justify-between">
-            <div class="relative z-10 flex h-full gap-x-17">
-              <div class="w-3/12">
-                <div class="relative -top-24 flex flex-col gap-20">
-                  <InputGroup>
-                    <InputLabel
-                      label="Ordnung"
-                      :error="errors.category" />
-                    <InputSelectButtons
-                      v-if="categoriesRegisters.length"
-                      v-model="form.category"
-                      legend="Ordnung"
-                      :multiple="false"
-                      name="categoriesRegisters"
-                      :options="categoriesRegisters"
-                      classes="text-black!"
-                      wrapper-classes="flex flex-col gap-y-8"
-                      @update:model-value="errors.category = null" />
-                  </InputGroup>
-                  <InputGroup>
-                    <InputLabel label="Tags" />
-                    <InputSelectButtons
-                      v-if="tags.length > 0"
-                      v-model="form.tags"
-                      legend="Tags"
-                      :multiple="true"
-                      name="tags"
-                      :options="tags"
-                      classes="text-black!"
-                      wrapper-classes="flex flex-col gap-y-8" />
-                  </InputGroup>
-                </div>
-              </div>
-              <div class="w-6/12">
-                <div class="relative -top-24">
-                  <InputGroup>
-                    <InputLabel label="Bilder" />
-                    <template v-if="settings.has_images">
-                      <ImageUpload
-                        v-model="form.media"
-                        :allowed-types="['image/*']"
-                        :multiple="true"
-                        :error="null"
-                        classes="aspect-video!" />
-                    </template>
-                    <template v-else>
-                      <ImageCard class="flex aspect-video! items-center justify-center">
-                        <div class="flex flex-col items-center">
-                          <Icon
-                            name="image"
-                            variant="missing"
-                            class="text-graphite" />
-                          <div class="mt-8 text-sm">Kein Bildfeld definiert</div>
-                        </div>
-                      </ImageCard>
-                    </template>
-                  </InputGroup>
-                </div>
-              </div>
-              <div class="w-3/12">
-                <div class="relative -top-24">
-                  <InputLabel label="Beschreibung" />
-                  <InputGroup
-                    v-if="form.fields.length > 0"
-                    class="flex flex-col gap-y-8">
-                    <div
-                      v-for="(field, index) in form.fields"
-                      :key="field.uuid">
-                      <InputTextarea
-                        :id="'field-' + index"
-                        v-model="field.content"
-                        :max-length="FIELD_MAX_LENGTH"
-                        :placeholder="field.placeholder"
-                        :aria-label="field.placeholder"
-                        :aria-describedby="'field-' + index + '-count'" />
-                      <div
-                        :id="'field-' + index + '-count'"
-                        class="mt-2 text-right text-xs text-graphite">
-                        {{ field.content?.length ?? 0 }} / {{ FIELD_MAX_LENGTH }}
-                      </div>
-                    </div>
-                  </InputGroup>
-                </div>
+          <div
+            class="relative z-10 grid grid-cols-1 gap-y-32 lg:h-full lg:gap-y-0"
+            :class="settings.has_images ? 'lg:grid-cols-[1fr_2fr_1fr]' : 'lg:grid-cols-[1fr_1fr_2fr]'">
+            <div class="order-3 lg:order-none lg:pr-8">
+              <div class="flex flex-col gap-20 lg:relative lg:-top-24">
+                <InputGroup>
+                  <InputLabel
+                    label="Ordnung"
+                    :error="errors.category" />
+                  <InputSelectButtons
+                    v-if="categoriesRegisters.length"
+                    v-model="form.category"
+                    legend="Ordnung"
+                    :multiple="false"
+                    name="categoriesRegisters"
+                    :options="categoriesRegisters"
+                    classes="text-black!"
+                    wrapper-classes="flex flex-col gap-y-8"
+                    @update:model-value="errors.category = null" />
+                </InputGroup>
+                <InputGroup>
+                  <InputLabel label="Tags" />
+                  <InputSelectButtons
+                    v-if="tags.length > 0"
+                    v-model="form.tags"
+                    legend="Tags"
+                    :multiple="true"
+                    name="tags"
+                    :options="tags"
+                    classes="text-black!"
+                    wrapper-classes="flex flex-col gap-y-8" />
+                </InputGroup>
               </div>
             </div>
-            <ButtonGroup class="relative z-10 pb-8">
-              <AppButton
-                type="submit"
-                label="Speichern"
-                :disabled="isSaving" />
-              <AppButton
-                type="button"
-                label="Abbrechen"
-                @click="handleCancel" />
-            </ButtonGroup>
+            <div
+              v-if="settings.has_images"
+              class="order-1 lg:order-none lg:px-9">
+              <div class="lg:relative lg:-top-24">
+                <InputGroup>
+                  <InputLabel label="Bilder" />
+                  <ImageUpload
+                    v-model="form.media"
+                    :allowed-types="['image/*']"
+                    :multiple="true"
+                    :error="null"
+                    classes="aspect-video!" />
+                </InputGroup>
+              </div>
+            </div>
+            <div
+              class="order-2 lg:order-none lg:pl-9"
+              :class="{ 'lg:pr-8': !settings.has_images }">
+              <div class="lg:relative lg:-top-24">
+                <InputLabel label="Beschreibung" />
+                <InputGroup
+                  v-if="form.fields.length > 0"
+                  class="flex flex-col gap-y-8">
+                  <div
+                    v-for="(field, index) in form.fields"
+                    :key="field.uuid">
+                    <InputTextarea
+                      :id="'field-' + index"
+                      v-model="field.content"
+                      :max-length="FIELD_MAX_LENGTH"
+                      :placeholder="field.placeholder"
+                      :aria-label="field.placeholder"
+                      :aria-describedby="'field-' + index + '-count'" />
+                    <div
+                      :id="'field-' + index + '-count'"
+                      class="mt-2 text-right text-xs text-graphite">
+                      {{ field.content?.length ?? 0 }} / {{ FIELD_MAX_LENGTH }}
+                    </div>
+                  </div>
+                </InputGroup>
+              </div>
+            </div>
           </div>
+          <ButtonGroup class="relative z-10 pb-8">
+            <AppButton
+              type="submit"
+              label="Speichern"
+              :disabled="isSaving" />
+            <AppButton
+              type="button"
+              label="Abbrechen"
+              @click="handleCancel" />
+          </ButtonGroup>
         </form>
       </ContentMain>
     </div>
@@ -155,7 +157,6 @@ import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputTextarea from '@/components/forms/Textarea.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
-import ImageCard from '@/components/media/Card.vue';
 import Icon from '@/components/icons/Icon.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
