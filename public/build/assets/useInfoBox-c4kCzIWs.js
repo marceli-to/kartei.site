@@ -1,1 +1,0 @@
-import{D as e,S as t,W as n,tt as r,u as i,z as a}from"./vue.runtime.esm-bundler-CDKb9pnr.js";import{r as o}from"./spa-CkOTvPdu.js";t(),n();var s=0;function c({active:t,auto:n=!1}){let c=o(),l=`info-${s++}`;return a(()=>[r(t),r(n)],([e,t])=>{e?c.register(l,t):c.unregister(l)},{immediate:!0}),e(()=>c.unregister(l)),{isOpen:i(()=>r(t)&&c.isOpen)}}export{c as t};
