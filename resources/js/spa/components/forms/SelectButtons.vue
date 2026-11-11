@@ -21,8 +21,7 @@
       <span
         :class="[
           borderClasses,
-          'flex w-full cursor-pointer items-center justify-between px-8 text-graphite transition-all select-none hover:text-black dark:hover:text-white',
-          size === 'small' ? 'min-h-20 text-2xs' : 'min-h-default text-md',
+          'flex min-h-default w-full cursor-pointer items-center justify-between px-8 text-md text-graphite transition-all select-none hover:text-black dark:hover:text-white',
           // The input is sr-only, so the button shows the keyboard focus
           'peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-black dark:peer-focus-visible:outline-white',
           classes,
@@ -88,12 +87,6 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     default: false,
-  },
-  // small: 20px high, text-2xs (record list sidebar)
-  size: {
-    type: String,
-    default: 'default',
-    validator: (value) => ['default', 'small'].includes(value),
   },
   classes: {
     type: String,

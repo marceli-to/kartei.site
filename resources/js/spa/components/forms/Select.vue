@@ -22,10 +22,7 @@
       </option>
     </select>
     <div :class="[chevronClasses, { 'text-white!': props.error }]">
-      <!-- small: 12×6 as in the sidebar design -->
-      <Icon
-        name="chevron-down"
-        :class="{ 'h-6 w-12': size === 'small' }" />
+      <Icon name="chevron-down" />
     </div>
   </div>
 </template>
@@ -70,12 +67,6 @@ const props = defineProps({
     default: 'default',
     validator: (value) => ['default', 'box'].includes(value),
   },
-  // small: 20px high, text-2xs (record list sidebar)
-  size: {
-    type: String,
-    default: 'default',
-    validator: (value) => ['default', 'small'].includes(value),
-  },
 });
 
 const wrapperClasses = 'relative';
@@ -86,11 +77,8 @@ const defaultClasses =
 const boxClasses =
   'w-full min-h-default bg-none! appearance-none text-md ring-0! px-8 py-2 border border-graphite focus:border-black bg-white placeholder:font-muoto-italic placeholder:text-black';
 
-const smallClasses = 'block h-20! min-h-0! py-0! text-2xs! leading-none!';
-
 const selectClasses = computed(() => {
-  const variantClasses = props.variant === 'box' ? boxClasses : defaultClasses;
-  const baseClasses = props.size === 'small' ? `${variantClasses} ${smallClasses}` : variantClasses;
+  const baseClasses = props.variant === 'box' ? boxClasses : defaultClasses;
   return props.classes ? `${baseClasses} ${props.classes}` : baseClasses;
 });
 

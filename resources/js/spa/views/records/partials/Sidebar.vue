@@ -3,9 +3,8 @@
     Sticky: stays 20px below the window top while the cards scroll. "Voreinstellungen" is fixed 32px
     above the window bottom (left/width taken from the sidebar); the filter list ends 20px above it
     (height set in fitHeight) and scrolls inside when it doesn't fit.
-    Layout as in Benedikt's KAR0001_Sidebar_Layout_261108: 20px fields in text-2xs (11px, tracked), medium labels,
-    8px between fields, 22px between groups (24-25px to the next label's capitals, as measured in the PDF); a 4px scroll bar 10px right of the fields (mr-16 / -mr-14 pr-10)
-    and a fade-out at the bottom while there is more to scroll.
+    Fields, labels and spacing in the regular form sizes (decided against the smaller ones of the sidebar design, Stackr #125);
+    a 4px scroll bar 10px right of the fields (mr-16 / -mr-14 pr-10) and a fade-out at the bottom while there is more to scroll.
   -->
   <div
     ref="root"
@@ -15,12 +14,11 @@
     <div class="relative -mr-14 flex min-h-0 flex-col">
       <div
         ref="filters"
-        class="filters flex min-h-0 flex-col gap-y-22 overflow-y-auto pr-10"
+        class="filters flex min-h-0 flex-col gap-y-20 overflow-y-auto pr-10"
         @scroll.passive="updateScrollState">
         <InputGroup>
           <InputSearch
             v-model="localSearchQuery"
-            size="small"
             placeholder="Suchen"
             aria-label="Suchen" />
         </InputGroup>
@@ -28,28 +26,24 @@
         <InputGroup>
           <InputLabel
             id="sort_order"
-            label="Sortierfolge"
-            :classes="LABEL_CLASSES" />
+            label="Sortierfolge" />
           <InputSelect
             id="sort_order"
             v-model="localSortOrder"
             :options="sortOrderOptions"
-            variant="box"
-            size="small" />
+            variant="box" />
         </InputGroup>
 
         <InputGroup v-if="categories.length > 0">
           <InputLabel
             id="category"
-            label="Kategorien"
-            :classes="LABEL_CLASSES" />
+            label="Kategorien" />
           <InputSelectButtons
             v-model="localSelectedCategories"
             legend="Kategorien"
             :multiple="true"
             name="categories"
             :options="categories"
-            size="small"
             classes="text-black!"
             wrapper-classes="flex flex-col gap-y-8" />
         </InputGroup>
@@ -57,15 +51,13 @@
         <InputGroup v-if="visibleRegisters.length > 0">
           <InputLabel
             id="register"
-            label="Register"
-            :classes="LABEL_CLASSES" />
+            label="Register" />
           <InputSelectButtons
             v-model="localSelectedRegisters"
             legend="Register"
             :multiple="true"
             name="registers"
             :options="visibleRegisters"
-            size="small"
             classes="text-black!"
             wrapper-classes="flex flex-col gap-y-8" />
         </InputGroup>
@@ -73,15 +65,13 @@
         <InputGroup v-if="tags.length > 0">
           <InputLabel
             id="tags"
-            label="Tags"
-            :classes="LABEL_CLASSES" />
+            label="Tags" />
           <InputSelectButtons
             v-model="localSelectedTags"
             legend="Tags"
             :multiple="true"
             name="tags"
             :options="tags"
-            size="small"
             classes="text-black!"
             wrapper-classes="flex flex-col gap-y-8" />
         </InputGroup>
@@ -148,8 +138,6 @@ const canEditSettings = computed(() =>
 );
 
 const emit = defineEmits(['update:modelValue']);
-
-const LABEL_CLASSES = 'mb-7 block font-muoto-medium text-2xs leading-none';
 
 // Fade the bottom of the filter list while there is more to scroll
 const filters = ref(null);
