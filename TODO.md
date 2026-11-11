@@ -65,6 +65,9 @@
 - [x] Stackr #135 description fields limited to 255 characters (the `record_fields.content` string column; texts over 255 used to fail with a database error): `maxlength` + counter "n / 255" under each field, server validation on create and update (`Record/UpdateRequest`, German message, test); textareas grow in browsers without `field-sizing` (older Safari) and no longer widen for long words. Whether more than 255 is needed is still open
 - [x] Stackr #137 Tailwind 4: theme moved from `tailwind.config.js` into `@theme` in `app.css` (`--spacing: 1px` steps, so `mt-48` = 48px as before), `@tailwindcss/vite` instead of PostCSS, scanning limited to `resources/js` + `resources/views`, `theme-color*` as `@utility` (so `hover:theme-color` keeps working), v3 compat kept for border colour, button cursor and the inherited line height of `text-xs/sm/lg`, font URLs relative (`../fonts`), `@reference` in components with `@apply`; removed the `-z-1` that v3 ignored (it hid the column lines). 61 screenshots (3 widths, logged out, dialog, toast, filter, dark) identical to a v3 production build, except the register page: focus border now black as its classes say (v3 showed the forms plugin's blue)
 
+- [x] Stackr #144 invitation for an existing user: accounts that no longer have the welcome password get a short "added to archive «Name»" mail (`mail/user/added.blade.php`, subject "Neue Kartei auf kartei.site") instead of the welcome mail with the password; test for both cases
+- [x] Stackr #136 editing customers and users (Benedikt's PDF "Kunden_Benutzer_Bearbeiten", 6 pages): `components/EditBox.vue` (box headed by the name, close cross 8/8 from the outer edge). Customers: the box replaces the list, "Kunde löschen" inside, Speichern/Abbrechen below; section "Kunden", button "Kundin / Kunde", texts say "Kunde" instead of "Firma". Users: full-height box with the tabs Kontakt/Rechte (`users/partials/UserEdit.vue`, `v-show` keeps unsaved input), permissions inline (the separate permissions view is gone), "Benutzer löschen", list search "Suchen", "Benutzer / in" below the list. Permission groups "Kartei / Eigenschaften", "Karten / Eigenschaften", "Export" (migration `2026_11_11_090000` + seeder). Required `*` kept on purpose
+
 ## Servers (before going live)
 
 - [x] Staging (Hostpoint, kartei.ch.wbg.ch, the only server, real data) deployed to `df6813e` on 4 Nov 2026: PHP 8.4 (CLI + website), composer alias, migrations, countries converted, new welcome password in `.env`
@@ -73,7 +76,8 @@
 
 ## Next
 
-- [ ] Stackr board "kartei.site" (To Do): nothing; #125 sidebar layout back with Benedikt (the sticky "Voreinstellungen" button covers the last tags), #126, #128, #129 in Pending for his review
+- [ ] Stackr board "kartei.site" (state 11 Nov 2026): Pending for Benedikt's review: #136. To Do (going through one by one): #132 responsive "Karte erstellen/bearbeiten" (next), #135, #129, #127, #130, #124, #125, #142 "Ordnung", #143 backup routine, #145 Sammelsurium. Discussion: #133 account deletion process, #134 subscription terms
+- [ ] Staging: `git pull` to `278e5e9` and `php artisan migrate` (permission group labels, #136)
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
