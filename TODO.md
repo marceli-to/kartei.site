@@ -23,7 +23,7 @@
 - [x] Payment interval validated (`monthly`/`yearly`, was a DB error); option lists moved from `data/` to `config/` (`countries.js`, `paymentIntervals.js`)
 - [x] Dev-only UI demo pages (`views/ui`) and the `Users.vue` stub removed
 - [x] Settings slider rewritten as one component (`components/slider/Slider.vue`, header `slider/Header.vue`): slides keyed by id, active slide in `?section=<id>`, `inert` on inactive slides, disabled menu buttons; pages keyed by `route.path` (query changes no longer remount); permissions refetched after creating an archive
-- [x] Test suite green (83 tests, in-memory SQLite)
+- [x] Test suite green (97 tests on 11 Nov 2026, in-memory SQLite)
 
 ## Done (Vue review, 4 November 2026)
 
@@ -70,7 +70,10 @@
 - [x] Stackr #132 card form: "Ohne Bildfeld" hides the Bilder column (Ordnung and Beschreibung keep their quarter widths); below 1024px the columns stack (Bilder, Beschreibung, Ordnung/Tags), no fixed 800px minimum width
 - [x] Stackr #135 card form: "Nr. / ID" at the top of Beschreibung (number, or "wird automatisch generiert"), counter "n / 255" in the field's top right, text keeps clear of it, no resize handle
 - [x] Stackr #129 card list: sidebar sticky; back link "< Meine Karteien" in the slider heading type (17px medium); "Voreinstellungen" no longer jumps (was sticky 20px vs. resting at the nav's 32px padding), now `position: fixed` 32px above the window bottom
-- [~] Stackr #125 sidebar after `KAR0001_Sidebar_Layout_261108.pdf` (1600x1000 pt = 1:1 screen design): fields 20px, `text-2xs` (11px, 0.04em tracking, measured from cap height 8px and word widths), medium labels, 8px between fields, 22px between groups, small icons (`size="small"` on Search/Select/SelectButtons); filters scroll inside the sidebar with a fade-out; 4px scroll bars globally (`app.css`). In Pending with "Anschauen": the user finds the text still too small, exact values asked from Benedikt
+- [x] Stackr #125 sidebar: decided to keep the regular field sizes and spacing (the 20px / 11px `text-2xs` variant from `KAR0001_Sidebar_Layout_261108.pdf` was built and reverted, `c066c4c`); kept: sticky sidebar, filters scroll inside with a fade-out, "Voreinstellungen" fixed 32px above the window bottom, 4px scroll bars globally (`app.css`), placeholder "Suchen". The fields end 16px earlier than before to leave room for the scroll bar
+- [x] Stackr #142 "Ordnung" instead of "Struktur" (slide, dialog, messages), "ID" instead of "Kürzel" in the structure columns, category number and title in medium, register placeholder "Register 1.1" (follows the numbering), 6px above "Voreinstellungen" in the box navigation (`Slider.vue`, all settings pages)
+- [x] Stackr #127 drag handles after `KAR0001_Drag_Handle_261108.pdf` (`DragHandle.vue`, icon `drag`, 8px from the field edge, cross at right-40) on text fields, tags, categories and registers; only the handle drags (separate `category-handle` / `register-handle`), ghost faded (`.drag-ghost`); tags have an `order` column (migration `2026_11_11_100000`, saved in list order, `TagOrderTest`); label "Textfeld" above the template fields. Gotcha: a vuedraggable item component must have a single root element without a comment above it, otherwise dev mode sees a fragment and drops revert (was the case in `StructureRow.vue`)
+- [x] Stackr #130 record form hints after `KAR0001_Hints_261108.pdf` (`SetupHint.vue` on `InfoBox`, 14px like the other hints, in the theme colour): Ordnung / Tags / Beschreibung when the archive has no categories / tags / text fields, link to the settings section only with the matching ability; open by themselves, lightbulb toggles them
 
 ## Servers (before going live)
 
@@ -80,8 +83,8 @@
 
 ## Next
 
-- [ ] Stackr board "kartei.site" (state 11 Nov 2026, afternoon): Pending for Benedikt's review: #136, #132, #135, #129; #125 with "Anschauen" (waiting for exact sidebar sizes). To Do, one by one: #127 Kartenvorlage Textfelder (next), #130, #124, #142 "Ordnung", #143 backup routine, #145 Sammelsurium. Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch" from the sidebar design (#125)
-- [ ] Staging: `git pull` to `c256ff9` and `php artisan migrate` (permission group labels, #136)
+- [ ] Stackr board "kartei.site" (state 11 Nov 2026, evening): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125. To Do, one by one: #124 Grösse Bildfeld (next), #143 backup routine, #145 Sammelsurium. Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" and new icons (#125), drag preview in Safari (#127)
+- [ ] Staging: deployed to `b393799` on 11 Nov 2026 (incl. the tags `order` migration); next `git pull` to `c066c4c` or later (no migrations since)
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
