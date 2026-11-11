@@ -1,29 +1,29 @@
 {
-  "_Actions-CcLKoWRw.js": {
-    "file": "assets/Actions-CcLKoWRw.js",
+  "_Actions-BQVYsG8h.js": {
+    "file": "assets/Actions-BQVYsG8h.js",
     "name": "Actions",
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js",
-      "_Search-DjbQV62Z.js",
+      "_Search-B5vAkyu5.js",
       "_SelectButtons-DNtiVhMc.js"
     ]
   },
-  "_ContentMain-Co420jQ5.js": {
-    "file": "assets/ContentMain-Co420jQ5.js",
+  "_ContentMain-DLjLw0eo.js": {
+    "file": "assets/ContentMain-DLjLw0eo.js",
     "name": "ContentMain",
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js"
     ]
   },
-  "_DeleteSlide-gJM-lPSO.js": {
-    "file": "assets/DeleteSlide-gJM-lPSO.js",
+  "_DeleteSlide-C9Xpjlab.js": {
+    "file": "assets/DeleteSlide-C9Xpjlab.js",
     "name": "DeleteSlide",
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js",
-      "_Search-DjbQV62Z.js",
+      "_Search-B5vAkyu5.js",
       "_useFormErrors-DS6pY7gR.js",
       "_SelectButtons-DNtiVhMc.js"
     ]
@@ -35,16 +35,16 @@
       "_vue.runtime.esm-bundler-CDKb9pnr.js"
     ]
   },
-  "_InfoBox-8FbyOx2o.js": {
-    "file": "assets/InfoBox-8FbyOx2o.js",
+  "_InfoBox-Dr1LOIC7.js": {
+    "file": "assets/InfoBox-Dr1LOIC7.js",
     "name": "InfoBox",
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js"
     ]
   },
-  "_Search-DjbQV62Z.js": {
-    "file": "assets/Search-DjbQV62Z.js",
+  "_Search-B5vAkyu5.js": {
+    "file": "assets/Search-B5vAkyu5.js",
     "name": "Search",
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
@@ -58,8 +58,8 @@
       "_vue.runtime.esm-bundler-CDKb9pnr.js"
     ]
   },
-  "_Static-BPIp1ja7.js": {
-    "file": "assets/Static-BPIp1ja7.js",
+  "_Static-D2fx-jM_.js": {
+    "file": "assets/Static-D2fx-jM_.js",
     "name": "Static",
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
@@ -86,7 +86,7 @@
     "name": "vue.runtime.esm-bundler"
   },
   "resources/css/app.css": {
-    "file": "assets/app-C6yEwQKG.css",
+    "file": "assets/app-XQqPGHBM.css",
     "name": "app",
     "names": [
       "app.css"
@@ -153,7 +153,7 @@
     "isEntry": true
   },
   "resources/js/spa.js": {
-    "file": "assets/spa-DNITPhTj.js",
+    "file": "assets/spa-VtceHR-7.js",
     "name": "spa",
     "src": "resources/js/spa.js",
     "isEntry": true,
@@ -174,7 +174,7 @@
     ]
   },
   "resources/js/spa/views/Home.vue": {
-    "file": "assets/Home-T1FsrkfG.js",
+    "file": "assets/Home-Cv0vUGFd.js",
     "name": "Home",
     "src": "resources/js/spa/views/Home.vue",
     "isDynamicEntry": true,
@@ -184,38 +184,38 @@
     ]
   },
   "resources/js/spa/views/archive/Index.vue": {
-    "file": "assets/Index-DJj8ymAr.js",
+    "file": "assets/Index-Vm8kTWdG.js",
     "name": "Index",
     "src": "resources/js/spa/views/archive/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js",
-      "_Search-DjbQV62Z.js",
-      "_DeleteSlide-gJM-lPSO.js",
+      "_Search-B5vAkyu5.js",
+      "_DeleteSlide-C9Xpjlab.js",
       "_useFormErrors-DS6pY7gR.js",
-      "_Static-BPIp1ja7.js",
-      "_InfoBox-8FbyOx2o.js",
+      "_Static-D2fx-jM_.js",
+      "_InfoBox-Dr1LOIC7.js",
       "_SelectButtons-DNtiVhMc.js",
       "_Image-CrZNVVj4.js"
     ]
   },
   "resources/js/spa/views/archives/Index.vue": {
-    "file": "assets/Index-BfXklm5i.js",
+    "file": "assets/Index-CpJ4sfCb.js",
     "name": "Index",
     "src": "resources/js/spa/views/archives/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
-      "_InfoBox-8FbyOx2o.js",
+      "_InfoBox-Dr1LOIC7.js",
       "resources/js/spa.js",
-      "_Search-DjbQV62Z.js",
-      "_ContentMain-Co420jQ5.js",
+      "_Search-B5vAkyu5.js",
+      "_ContentMain-DLjLw0eo.js",
       "_Image-CrZNVVj4.js"
     ]
   },
   "resources/js/spa/views/error/ErrorPage.vue": {
-    "file": "assets/ErrorPage-DEVQDx-f.js",
+    "file": "assets/ErrorPage-BFjPGK8-.js",
     "name": "ErrorPage",
     "src": "resources/js/spa/views/error/ErrorPage.vue",
     "isDynamicEntry": true,
@@ -225,16 +225,16 @@
     ]
   },
   "resources/js/spa/views/records/Index.vue": {
-    "file": "assets/Index-Q_TAWBMx.js",
+    "file": "assets/Index-BRTLCxYM.js",
     "name": "Index",
     "src": "resources/js/spa/views/records/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js",
-      "_Actions-CcLKoWRw.js",
-      "_Search-DjbQV62Z.js",
-      "_ContentMain-Co420jQ5.js",
+      "_Actions-BQVYsG8h.js",
+      "_Search-B5vAkyu5.js",
+      "_ContentMain-DLjLw0eo.js",
       "_Image-CrZNVVj4.js"
     ],
     "css": [
@@ -242,36 +242,36 @@
     ]
   },
   "resources/js/spa/views/records/RecordForm.vue": {
-    "file": "assets/RecordForm-BP5atGoj.js",
+    "file": "assets/RecordForm-C82xxgCu.js",
     "name": "RecordForm",
     "src": "resources/js/spa/views/records/RecordForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js",
-      "_Actions-CcLKoWRw.js",
+      "_Actions-BQVYsG8h.js",
       "_useFormErrors-DS6pY7gR.js",
-      "_Search-DjbQV62Z.js",
-      "_ContentMain-Co420jQ5.js",
+      "_Search-B5vAkyu5.js",
+      "_ContentMain-DLjLw0eo.js",
       "_SelectButtons-DNtiVhMc.js",
-      "_Static-BPIp1ja7.js"
+      "_Static-D2fx-jM_.js"
     ],
     "css": [
       "assets/RecordForm-BS6GlOIK.css"
     ]
   },
   "resources/js/spa/views/settings/Index.vue": {
-    "file": "assets/Index-CtIBpu3F.js",
+    "file": "assets/Index-yZmkEWQ-.js",
     "name": "Index",
     "src": "resources/js/spa/views/settings/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue.runtime.esm-bundler-CDKb9pnr.js",
       "resources/js/spa.js",
-      "_DeleteSlide-gJM-lPSO.js",
-      "_InfoBox-8FbyOx2o.js",
+      "_DeleteSlide-C9Xpjlab.js",
+      "_InfoBox-Dr1LOIC7.js",
       "_useFormErrors-DS6pY7gR.js",
-      "_Search-DjbQV62Z.js",
+      "_Search-B5vAkyu5.js",
       "_SelectButtons-DNtiVhMc.js"
     ],
     "css": [

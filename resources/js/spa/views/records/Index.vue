@@ -6,10 +6,13 @@
       <router-link
         v-if="uuid"
         :to="{ name: 'archives' }"
+        class="inline-flex items-center gap-x-12"
         aria-label="Zurück zu Meine Karteien">
         <Icon
           name="chevron-left"
           variant="small-bold" />
+        <!-- Same type as the slider headings in the settings ("Abonnement", …) -->
+        <span class="font-muoto-medium leading-none">Meine Karteien</span>
       </router-link>
     </Actions>
     <div class="mt-106 flex min-h-full w-full">

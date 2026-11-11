@@ -1,8 +1,15 @@
 <template>
+  <!--
+    Sticky: stays 20px below the window top while the cards scroll, and always ends 32px above the
+    window bottom (height set in fitHeight), so "Voreinstellungen" sits there. Filters that don't
+    fit scroll inside the sidebar instead of running under the button.
+  -->
   <div
-    class="flex min-h-full flex-col justify-between"
-    :class="disabled ? 'pointer-events-none opacity-20 transition-opacity' : ''">
-    <div class="flex flex-col gap-y-20">
+    ref="root"
+    class="sticky top-20 flex flex-col justify-between gap-y-20"
+    :class="disabled ? 'pointer-events-none opacity-20 transition-opacity' : ''"
+    :style="height ? { height: `${height}px` } : null">
+    <div class="-mr-8 flex min-h-0 flex-col gap-y-20 overflow-y-auto pr-8">
       <InputGroup>
         <InputSearch
           v-model="localSearchQuery"
@@ -66,7 +73,7 @@
 
     <InputGroup
       v-if="canEditSettings"
-      class="sticky bottom-20">
+      class="shrink-0">
       <Action
         label="Voreinstellungen"
         variant="box"
@@ -77,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useUserStore } from '@/stores/user';
 
 import InputSearch from '@/components/forms/Search.vue';
@@ -118,6 +125,29 @@ const canEditSettings = computed(() =>
 );
 
 const emit = defineEmits(['update:modelValue']);
+
+// From the sidebar's top (its place in the page, or 20px once it sticks) to 32px above the window bottom
+const BOTTOM_GAP = 32;
+const root = ref(null);
+const height = ref(0);
+let frame = 0;
+const fitHeight = () => {
+  cancelAnimationFrame(frame);
+  frame = requestAnimationFrame(() => {
+    if (!root.value) return;
+    height.value = Math.max(0, Math.floor(window.innerHeight - root.value.getBoundingClientRect().top - BOTTOM_GAP));
+  });
+};
+onMounted(() => {
+  fitHeight();
+  window.addEventListener('scroll', fitHeight, { passive: true });
+  window.addEventListener('resize', fitHeight);
+});
+onBeforeUnmount(() => {
+  cancelAnimationFrame(frame);
+  window.removeEventListener('scroll', fitHeight);
+  window.removeEventListener('resize', fitHeight);
+});
 
 const localSearchQuery = ref(props.modelValue?.searchQuery || '');
 const localSortOrder = ref(props.modelValue?.sortOrder || 'name');
