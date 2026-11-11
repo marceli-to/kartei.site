@@ -85,8 +85,9 @@
 
 - [x] Stackr #124 record form: Ordnung | Bilder | Beschreibung at 3/12 each plus 3/12 whitespace, square image field, two images per row, buttons end with the last column (Pending for Benedikt)
 - [x] Stackr #145 Sammelsurium: back to the user list after inviting (archive context), invite button on the content line, structure info box as wide as the next column, whole slide heading rows clickable (Done)
-- [ ] Stackr board "kartei.site" (state 11 Nov 2026, late): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125, #124. To Do: #143 backup routine, left open on purpose (Hostpoint's server backup is enough for now, no external storage; a nightly DB dump on the account would be a cheap extra once the cron runs). Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" and new icons (#125), drag preview in Safari (#127)
-- [ ] Staging: deployed to `b393799` on 11 Nov 2026 (incl. the tags `order` migration); next `git pull` to `90729de` or later (no migrations since)
+- [x] Icons from Benedikt (11 Nov 2026): `thin` variant for chevron-left/-right (11x20) and cross (16x16), new `duplicate` (20x20, for "Duplizieren"), `drag` now his drag-handle artwork (same 12x5 shape); all `currentColor`. Thin chevrons/cross and duplicate not used yet
+- [ ] Stackr board "kartei.site" (state 11 Nov 2026, late): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125, #124. To Do: #143 backup routine, left open on purpose (Hostpoint's server backup is enough for now, no external storage; a nightly DB dump on the account would be a cheap extra once the cron runs). Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" (#125); where the thin chevrons/cross go (icons arrived 11 Nov), drag preview in Safari (#127)
+- [ ] Staging: deployed to `b393799` on 11 Nov 2026 (incl. the tags `order` migration); next `git pull` to `2a07bc4` or later (no migrations since)
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
