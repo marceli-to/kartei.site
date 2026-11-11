@@ -28,14 +28,15 @@
 
       <ContentMain>
         <template v-if="records.length > 0">
+          <!-- Same grid as Meine Karteien: from lg up 10 columns, a tile spans 3 (three per row) -->
           <div
-            class="flex flex-wrap gap-x-16 gap-y-32 transition-opacity"
+            class="grid grid-cols-1 gap-x-16 gap-y-56 transition-opacity md:grid-cols-2 lg:grid-cols-10"
             :class="{ 'opacity-50': isFiltering }">
             <Card
               v-for="record in records"
               :key="record.uuid"
               :record="record"
-              class="w-full shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-(32px/3))] 2xl:w-[calc(25%-12px)]" />
+              class="lg:col-span-3" />
           </div>
           <!-- Loads the next page when scrolled into view; stops after a failed request -->
           <div
