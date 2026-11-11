@@ -83,8 +83,10 @@
 
 ## Next
 
-- [ ] Stackr board "kartei.site" (state 11 Nov 2026, evening): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125. To Do, one by one: #124 Grösse Bildfeld (next), #143 backup routine, #145 Sammelsurium. Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" and new icons (#125), drag preview in Safari (#127)
-- [ ] Staging: deployed to `b393799` on 11 Nov 2026 (incl. the tags `order` migration); next `git pull` to `c066c4c` or later (no migrations since)
+- [x] Stackr #124 record form: Ordnung | Bilder | Beschreibung at 3/12 each plus 3/12 whitespace, square image field, two images per row, buttons end with the last column (Pending for Benedikt)
+- [x] Stackr #145 Sammelsurium: back to the user list after inviting (archive context), invite button on the content line, structure info box as wide as the next column, whole slide heading rows clickable (Done)
+- [ ] Stackr board "kartei.site" (state 11 Nov 2026, late): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125, #124. To Do: #143 backup routine, left open on purpose (Hostpoint's server backup is enough for now, no external storage; a nightly DB dump on the account would be a cheap extra once the cron runs). Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" and new icons (#125), drag preview in Safari (#127)
+- [ ] Staging: deployed to `b393799` on 11 Nov 2026 (incl. the tags `order` migration); next `git pull` to `90729de` or later (no migrations since)
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
