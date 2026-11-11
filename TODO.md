@@ -67,6 +67,10 @@
 
 - [x] Stackr #144 invitation for an existing user: accounts that no longer have the welcome password get a short "added to archive «Name»" mail (`mail/user/added.blade.php`, subject "Neue Kartei auf kartei.site") instead of the welcome mail with the password; test for both cases
 - [x] Stackr #136 editing customers and users (Benedikt's PDF "Kunden_Benutzer_Bearbeiten", 6 pages): `components/EditBox.vue` (box headed by the name, close cross 8/8 from the outer edge). Customers: the box replaces the list, "Kunde löschen" inside, Speichern/Abbrechen below; section "Kunden", button "Kundin / Kunde", texts say "Kunde" instead of "Firma". Users: full-height box with the tabs Kontakt/Rechte (`users/partials/UserEdit.vue`, `v-show` keeps unsaved input), permissions inline (the separate permissions view is gone), "Benutzer löschen", list search "Suchen", "Benutzer / in" below the list. Permission groups "Kartei / Eigenschaften", "Karten / Eigenschaften", "Export" (migration `2026_11_11_090000` + seeder). Required `*` kept on purpose
+- [x] Stackr #132 card form: "Ohne Bildfeld" hides the Bilder column (Ordnung and Beschreibung keep their quarter widths); below 1024px the columns stack (Bilder, Beschreibung, Ordnung/Tags), no fixed 800px minimum width
+- [x] Stackr #135 card form: "Nr. / ID" at the top of Beschreibung (number, or "wird automatisch generiert"), counter "n / 255" in the field's top right, text keeps clear of it, no resize handle
+- [x] Stackr #129 card list: sidebar sticky; back link "< Meine Karteien" in the slider heading type (17px medium); "Voreinstellungen" no longer jumps (was sticky 20px vs. resting at the nav's 32px padding), now `position: fixed` 32px above the window bottom
+- [~] Stackr #125 sidebar after `KAR0001_Sidebar_Layout_261108.pdf` (1600x1000 pt = 1:1 screen design): fields 20px, `text-2xs` (11px, 0.04em tracking, measured from cap height 8px and word widths), medium labels, 8px between fields, 22px between groups, small icons (`size="small"` on Search/Select/SelectButtons); filters scroll inside the sidebar with a fade-out; 4px scroll bars globally (`app.css`). In Pending with "Anschauen": the user finds the text still too small, exact values asked from Benedikt
 
 ## Servers (before going live)
 
@@ -76,8 +80,8 @@
 
 ## Next
 
-- [ ] Stackr board "kartei.site" (state 11 Nov 2026): Pending for Benedikt's review: #136. To Do (going through one by one): #132 responsive "Karte erstellen/bearbeiten" (next), #135, #129, #127, #130, #124, #125, #142 "Ordnung", #143 backup routine, #145 Sammelsurium. Discussion: #133 account deletion process, #134 subscription terms
-- [ ] Staging: `git pull` to `278e5e9` and `php artisan migrate` (permission group labels, #136)
+- [ ] Stackr board "kartei.site" (state 11 Nov 2026, afternoon): Pending for Benedikt's review: #136, #132, #135, #129; #125 with "Anschauen" (waiting for exact sidebar sizes). To Do, one by one: #127 Kartenvorlage Textfelder (next), #130, #124, #142 "Ordnung", #143 backup routine, #145 Sammelsurium. Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch" from the sidebar design (#125)
+- [ ] Staging: `git pull` to `c256ff9` and `php artisan migrate` (permission group labels, #136)
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
