@@ -7,8 +7,8 @@
   -->
   <div class="relative mt-48 flex w-full grow overflow-hidden">
     <nav class="sticky left-0 z-50 flex w-2/12 min-w-nav shrink-0 flex-col bg-white dark:bg-black">
-      <!-- Previous slide, covers the headings that slid under the navigation -->
-      <div class="flex h-20 shrink-0 items-center justify-between">
+      <!-- Previous slide, covers the headings that slid under the navigation; the whole row goes back -->
+      <div class="relative flex h-20 shrink-0 items-center">
         <template v-if="activeIndex > 0">
           <h1 class="font-muoto-medium opacity-20">
             {{ visibleSlides[activeIndex - 1].name }}
@@ -17,7 +17,7 @@
             type="button"
             title="Vorheriger Abschnitt"
             aria-label="Vorheriger Abschnitt"
-            class="mr-16 opacity-20"
+            class="absolute inset-0 flex items-center justify-end pr-16 opacity-20"
             @click="prev">
             <Icon
               name="chevron-left"
@@ -64,20 +64,25 @@
         :class="item.class"
         class="flex shrink-0 flex-col">
         <h2
-          class="ml-8 flex h-20 items-center justify-between font-muoto-medium leading-none"
+          class="relative ml-8 flex h-20 items-center font-muoto-medium leading-none"
           :class="{ 'opacity-20': index !== activeIndex }">
           <span>{{ item.name }}</span>
-          <!-- Only the active slide's button is a Tab stop; the ones on the following slides are a mouse shortcut -->
+          <!--
+            The whole heading row is a button: on the active slide it goes to the next one, on a
+            following slide straight to that slide. Only the active slide's button is a Tab stop;
+            the others are a mouse shortcut.
+          -->
           <button
-            v-if="canGoNext && index >= activeIndex && index < visibleSlides.length - 1"
+            v-if="headingTarget(index)"
             type="button"
-            title="Nächster Abschnitt"
-            aria-label="Nächster Abschnitt"
+            :title="index === activeIndex ? 'Nächster Abschnitt' : `Zu «${item.name}»`"
+            :aria-label="index === activeIndex ? 'Nächster Abschnitt' : `Zu «${item.name}»`"
             :tabindex="index === activeIndex ? undefined : -1"
             :aria-hidden="index === activeIndex ? undefined : 'true'"
-            class="mr-16"
-            @click="next">
+            class="absolute inset-0 flex items-center justify-end pr-16"
+            @click="go(headingTarget(index))">
             <Icon
+              v-if="canGoNext && index < visibleSlides.length - 1"
               name="chevron-right"
               variant="small-bold" />
           </button>
@@ -172,8 +177,14 @@ function step(direction) {
   if (target) go(target.id);
 }
 
-const next = () => step(1);
 const prev = () => step(-1);
+
+// Where a slide's heading leads: the active one to the next slide, a following one to itself
+function headingTarget(index) {
+  if (index < activeIndex.value) return null;
+  const target = index === activeIndex.value ? visibleSlides.value[index + 1] : visibleSlides.value[index];
+  return target && isSelectable(target.id) ? target.id : null;
+}
 
 // Links to another section while the page is open
 watch(

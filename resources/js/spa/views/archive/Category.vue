@@ -6,7 +6,8 @@
       @submit.prevent="handleSubmit">
       <!-- Info box -->
       <template v-if="isInfoOpen">
-        <InfoBox class="top-0! -right-16! w-4/12">
+        <!-- Right of the slide, as wide as the next slide's content (that slide is half as wide as this one) -->
+        <InfoBox class="top-0! -right-16! w-[calc(50%-8px)]">
           <InfoStructure />
         </InfoBox>
       </template>

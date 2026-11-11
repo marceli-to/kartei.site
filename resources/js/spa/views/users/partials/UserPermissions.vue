@@ -30,7 +30,7 @@
         <!-- After saving: invite a user who was just added, or confirm -->
         <div
           v-if="isDone"
-          :class="{ 'relative top-8': archiveUuid }">
+          :class="{ 'relative top-24': archiveUuid }">
           <template v-if="added.has(selected) && !invited.has(selected)">
             <AppButton
               variant="secondary"
@@ -254,6 +254,8 @@ async function invite() {
     await sendInvitation(props.user, { archive: selected.value });
     invited.add(selected.value);
     toast.show('Einladungslink wurde versendet.', 'success');
+    // Within an archive there is nothing left to do: back to the user list, the toast confirms
+    if (props.archiveUuid) emit('success');
   } catch (error) {
     notifyError(error, 'Fehler beim Versenden des Einladungslinks.');
   } finally {
