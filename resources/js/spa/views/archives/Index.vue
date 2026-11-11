@@ -1,37 +1,16 @@
 <template>
-  <div class="flex w-full grow">
+  <div class="relative flex w-full grow">
+    <Actions :links="viewLinks" />
     <div class="mt-106 flex min-h-full w-full">
       <ContentNavigation>
-        <div class="flex flex-col gap-y-48">
-          <div class="flex flex-col gap-y-20">
+        <div class="flex flex-col gap-y-20">
+          <div class="flex flex-col gap-y-8">
             <InputGroup>
               <InputSearch
                 v-model="searchQuery"
-                placeholder="Suche"
-                aria-label="Suche" />
+                placeholder="Suchen"
+                aria-label="Suchen" />
             </InputGroup>
-            <InputGroup>
-              <InputLabel
-                id="sort_order"
-                label="Sortierfolge" />
-              <InputSelect
-                id="sort_order"
-                v-model="sortOrder"
-                :options="sortOrderOptions"
-                variant="box" />
-            </InputGroup>
-            <InputGroup>
-              <InputLabel
-                id="layout"
-                label="Darstellung" />
-              <InputSelect
-                id="layout"
-                v-model="layout"
-                :options="layoutOptions"
-                variant="box" />
-            </InputGroup>
-          </div>
-          <div class="flex flex-col gap-y-40">
             <InputGroup
               v-if="userStore.can('create.archive')"
               class="relative">
@@ -52,9 +31,19 @@
               <Action
                 label="Duplizieren"
                 variant="box"
-                :icon="{ name: 'Plus', position: 'right' }" />
+                :icon="{ name: 'duplicate', variant: 'small', position: 'right' }" />
             </InputGroup>
           </div>
+          <InputGroup>
+            <InputLabel
+              id="sort_order"
+              label="Sortierfolge" />
+            <InputSelect
+              id="sort_order"
+              v-model="sortOrder"
+              :options="sortOrderOptions"
+              variant="box" />
+          </InputGroup>
         </div>
       </ContentNavigation>
       <ContentMain>
@@ -101,6 +90,7 @@ import Action from '@/components/buttons/Action.vue';
 import InfoBox from '@/components/infobox/InfoBox.vue';
 import InfoCreateArchive from '@/views/archives/partials/CreateArchiveInfo.vue';
 import Teaser from '@/views/archives/partials/Teaser.vue';
+import Actions from '@/views/records/partials/Actions.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
 const userStore = useUserStore();
@@ -109,7 +99,7 @@ setTitle('Meine Karteien');
 
 const searchQuery = ref('');
 const sortOrder = ref('name');
-const layout = ref('list');
+const layout = ref('tiles');
 const hasArchive = ref(true);
 const archives = ref([]);
 const loadFailed = ref(false);
@@ -121,10 +111,22 @@ const sortOrderOptions = [
   { value: 'updated_at', label: 'Aktualisiert' },
 ];
 
-const layoutOptions = [
-  { value: 'list', label: 'Liste' },
-  { value: 'grid', label: 'Gitter' },
+// View toggle above the content; the views themselves follow in Stackr #147
+const views = [
+  { value: 'tiles', label: 'Kacheln', icon: 'tiles' },
+  { value: 'table', label: 'Tabelle', icon: 'list' },
+  { value: 'images', label: 'Bilder', icon: 'image' },
 ];
+
+const viewLinks = computed(() =>
+  views.map((view) => ({
+    type: 'button',
+    label: view.label,
+    icon: view.icon,
+    active: layout.value === view.value,
+    onClick: () => (layout.value = view.value),
+  })),
+);
 
 // Search by name or Kürzel, in the browser (the list is not paginated)
 const filteredArchives = computed(() => {

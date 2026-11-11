@@ -108,10 +108,17 @@ export default {
     },
   },
   // Drag handle: two 1px lines, 4px apart (KAR0001_Drag_Handle_261108)
-  // Benedikt, Nov 2026: for "Duplizieren" later
+  // Benedikt, Nov 2026: "Duplizieren"
   duplicate: {
     default: 'default',
     variants: {
+      // In the sidebar buttons, same size as the small plus
+      small: {
+        width: 12,
+        height: 12,
+        viewBox: '0 0 50 50',
+        body: '<path d="M8.33313 0V4.16667H45.8331V41.6667H49.9998V0H8.33313Z" fill="currentColor"/><path d="M4.16667 12.5002H37.5V45.8336H4.16667V12.5002ZM0 50.0002H41.6667V8.33356H0V50.0002Z" fill="currentColor"/>',
+      },
       default: {
         width: 20,
         height: 20,

@@ -27,7 +27,8 @@
             v-else-if="item.type === 'button'"
             type="button"
             class="flex items-center gap-x-12 disabled:cursor-default disabled:opacity-20"
-            :class="item.class"
+            :class="[item.active === false ? 'text-graphite hover:text-black dark:hover:text-white' : '', item.class]"
+            :aria-pressed="item.active ?? undefined"
             :disabled="item.disabled"
             @click="item.onClick">
             <Icon
@@ -45,7 +46,8 @@
 <script setup>
 import Icon from '@/components/icons/Icon.vue';
 
-// [{ type: 'link' | 'button', label, icon, iconVariant?, to?, router?, onClick?, disabled? }]
+// [{ type: 'link' | 'button', label, icon, iconVariant?, to?, router?, onClick?, disabled?, active? }]
+// active: false = an unselected view toggle (graphite), true = the selected one
 defineProps({
   links: {
     type: Array,
