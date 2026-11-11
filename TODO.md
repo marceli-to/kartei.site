@@ -23,7 +23,7 @@
 - [x] Payment interval validated (`monthly`/`yearly`, was a DB error); option lists moved from `data/` to `config/` (`countries.js`, `paymentIntervals.js`)
 - [x] Dev-only UI demo pages (`views/ui`) and the `Users.vue` stub removed
 - [x] Settings slider rewritten as one component (`components/slider/Slider.vue`, header `slider/Header.vue`): slides keyed by id, active slide in `?section=<id>`, `inert` on inactive slides, disabled menu buttons; pages keyed by `route.path` (query changes no longer remount); permissions refetched after creating an archive
-- [x] Test suite green (97 tests on 11 Nov 2026, in-memory SQLite)
+- [x] Test suite green (101 tests on 11 Nov 2026, in-memory SQLite)
 
 ## Done (Vue review, 4 November 2026)
 
@@ -85,14 +85,20 @@
 
 - [x] Stackr #124 record form: Ordnung | Bilder | Beschreibung at 3/12 each plus 3/12 whitespace, square image field, two images per row, buttons end with the last column (Pending for Benedikt)
 - [x] Stackr #145 Sammelsurium: back to the user list after inviting (archive context), invite button on the content line, structure info box as wide as the next column, whole slide heading rows clickable (Done)
-- [x] Icons from Benedikt (11 Nov 2026): `thin` variant for chevron-left/-right (11x20) and cross (16x16), new `duplicate` (20x20, for "Duplizieren"), `drag` now his drag-handle artwork (same 12x5 shape); all `currentColor`. Thin chevrons/cross and duplicate not used yet
-- [ ] Stackr board "kartei.site" (state 11 Nov 2026, late): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125, #124. To Do: #143 backup routine, left open on purpose (Hostpoint's server backup is enough for now, no external storage; a nightly DB dump on the account would be a cheap extra once the cron runs). Discussion: #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" (#125); where the thin chevrons/cross go (icons arrived 11 Nov), drag preview in Safari (#127)
-- [ ] Staging: deployed to `b393799` on 11 Nov 2026 (incl. the tags `order` migration); next `git pull` to `2a07bc4` or later (no migrations since)
+- [x] Icons from Benedikt (11 Nov 2026): `thin` variant for chevron-left/-right (11x20) and cross (16x16), new `duplicate` (20x20, plus a 12x12 `small` for the sidebar), `drag` now his drag-handle artwork (same 12x5 shape); all `currentColor`. Thin chevrons/cross used in the record tile slideshow (8x14) and the lightbox (16x29 / 24)
+- [x] `KAR0001_Desktop_261111.pdf` (14 pages) split into Stackr #146–#152. The mock sits on a 12-column page grid (116px columns, 16px gutters at 1600px): sidebar 2 columns, `ContentMain` = 10 columns, so tiles are `lg:col-span-3` of a 10-column grid (three per row, the 10th column empty)
+- [x] Stackr #146 Meine Karteien: view toolbar Kacheln/Tabelle/Bilder (reuses `records/partials/Actions.vue`, items with `active: false` are graphite), sidebar Suchen/Erstellen/Duplizieren (8px apart)/Sortierfolge, no Voreinstellungen there, teaser pencil removed (image and title link to the archive)
+- [x] Stackr #147 Meine Karteien views: Kacheln, Tabelle (image 2 + text 3 columns), Bilder (images only, empty frame without an image); hover = black frame + `scale-102` with `will-change-transform` (without it the image jumped at the end of the zoom-out); view in localStorage `kartei.archives.view`
+- [x] Stackr #149 record tiles: same grid (gap-y 56), thin slideshow arrows 8px inside the frame, hover as #147, `components/media/Lightbox.vue` (box 40px from the window, image 80px inside, arrows/cross 20px from the edge, Esc/backdrop/arrow keys; swallows wheel/touch instead of `overflow: hidden`, which removed the scroll bar and made the page jump), whole text block links to the record form, heart absolute on top
+- [x] Stackr #150 record delete: `records/partials/DeleteDialog.vue` in `Dialog` (new size `full` = 956px wide, full height minus 40/40, and `hideClose`): question, first image, fields, Abbrechen / Löschen
+- [x] Stackr #151 Kartei duplizieren: `POST /api/archive/{uuid}/duplicate` (`Archive/Duplicate.php`, policy ability `duplicate` = archive admin only): basic info, categories/registers, card template (new field uuids), tags, members with roles and per-archive permissions (renamed to the new id); no records, no image; "Name (Kopie)", "(Kopie 2)", … among the user's archives. Page `archives/Duplicate.vue` (`/archiv/meine-karteien/duplizieren`), sidebar shared as `archives/partials/Navigation.vue`, after duplicating the copy's Voreinstellungen open; `ArchiveDuplicateTest`
+- [ ] Stackr board "kartei.site" (state 11 Nov 2026, evening): Pending for Benedikt's review: #136, #132, #135, #129, #142, #127, #130, #125, #124, #146, #147, #149, #150, #151. To Do: #148 archive toolbar Karte/Kacheln/Tabelle/Bilder (record Tabelle/Bilder not designed yet; proposal: build them like Meine Karteien, waiting for the user's choice), #143 backup routine, left open on purpose (Hostpoint's server backup is enough for now, no external storage; a nightly DB dump on the account would be a cheap extra once the cron runs). Discussion: #152 search across all archives (5 questions for Benedikt on the card), #133, #134. Open questions for Benedikt: 255 characters enough (#135), sort option "Numerisch", scroll bar next to "Voreinstellungen" (#125), drag preview in Safari (#127), empty frame in Kacheln for an archive without image (#147), Titelbild required in Basisinformationen while a duplicate has none (#151)
+- [x] Staging: deployed to `8ae1194` on 11 Nov 2026 (no migrations since `b393799`)
 - [ ] Shared welcome password: per-user invite links instead of one password for all invitations (postponed)
 
 ## Vue review: open points
 
-All done (4 November 2026). Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen), "Meine Karteien" sort/layout selects and "Duplizieren".
+All done (4 November 2026). Placeholders kept on purpose until implemented: Kontakt/Impressum/Datenschutz/Vertragsbedingungen links (`href=""`), record list actions (Ordnen, Kacheln, Liste, Bilder, Export, Teilen; views follow in #148), the "Meine Karteien" Sortierfolge select (not wired to anything yet).
 
 ## Archive cover image (Titelbild)
 
