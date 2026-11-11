@@ -29,6 +29,7 @@
             :aria-describedby="content.message ? 'dialog-desc' : null"
             @keydown.tab="trapFocus">
             <button
+              v-if="!content.hideClose"
               type="button"
               class="absolute top-24 right-24"
               aria-label="Schliessen"
@@ -37,7 +38,8 @@
                 name="cross"
                 variant="small-bold" />
             </button>
-            <div class="mx-auto flex flex-col gap-y-24">
+            <!-- flex-1 down to the content: lets a "full" dialog's component fill the height -->
+            <div class="mx-auto flex flex-1 flex-col gap-y-24">
               <!-- Title -->
               <h3
                 v-if="content.title"
@@ -47,7 +49,7 @@
               </h3>
 
               <!-- Content -->
-              <div>
+              <div class="flex flex-1 flex-col">
                 <!-- Simple message -->
                 <p
                   v-if="content.message"
@@ -178,6 +180,9 @@ const getSizeClass = (size) => {
       return 'max-w-4xl';
     case 'xlarge':
       return 'max-w-5xl';
+    // Full height minus 40px above and below (record delete dialog, KAR0001_Desktop_261111 p. 11)
+    case 'full':
+      return 'max-w-[956px] min-h-[calc(100vh-80px)] flex flex-col';
     default:
       return 'max-w-2xl';
   }

@@ -192,6 +192,7 @@ import InputStatic from '@/components/forms/Static.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import Icon from '@/components/icons/Icon.vue';
 import AppButton from '@/components/buttons/Button.vue';
+import DeleteDialog from '@/views/records/partials/DeleteDialog.vue';
 import SetupHint from '@/views/records/partials/SetupHint.vue';
 import { useInfoBox } from '@/composables/useInfoBox';
 
@@ -250,14 +251,18 @@ const actionLinks = computed(() =>
           type: 'button',
           label: 'Löschen',
           icon: 'cross',
+          // Question with a preview of the saved record (Stackr #150)
           onClick: () =>
-            dialogStore.confirmDelete({
-              title: 'Karte löschen',
-              message: 'Möchten Sie diese Karte wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.',
-              action: () => deleteRecord(record.value.uuid),
-              then: backToList,
-              success: 'Karte erfolgreich gelöscht',
-              failure: 'Fehler beim Löschen der Karte',
+            dialogStore.show({
+              component: DeleteDialog,
+              props: {
+                record: record.value,
+                action: () => deleteRecord(record.value.uuid),
+                then: backToList,
+              },
+              size: 'full',
+              hideClose: true,
+              hideDefaultActions: true,
             }),
         },
       ]

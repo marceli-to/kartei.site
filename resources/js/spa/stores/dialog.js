@@ -14,6 +14,8 @@ const defaults = () => ({
   component: null,
   props: null,
   size: 'medium',
+  // true: no close cross (Esc and the backdrop still close it)
+  hideClose: false,
 });
 
 export const useDialogStore = defineStore('dialog', () => {
