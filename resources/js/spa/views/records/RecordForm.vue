@@ -93,26 +93,31 @@
               :class="{ 'lg:pr-8': !settings.has_images }">
               <div class="lg:relative lg:-top-24">
                 <InputLabel label="Beschreibung" />
-                <InputGroup
-                  v-if="form.fields.length > 0"
-                  class="flex flex-col gap-y-8">
+                <div class="flex flex-col gap-y-8">
+                  <!-- As in the card template: the number is generated, so it is only shown -->
+                  <InputStatic>
+                    {{ record?.display_number || 'Nr. / ID (wird automatisch generiert)' }}
+                  </InputStatic>
+                  <!-- The counter sits inside the field; the text keeps clear of it (pr-64) -->
                   <div
                     v-for="(field, index) in form.fields"
-                    :key="field.uuid">
+                    :key="field.uuid"
+                    class="relative">
                     <InputTextarea
                       :id="'field-' + index"
                       v-model="field.content"
                       :max-length="FIELD_MAX_LENGTH"
                       :placeholder="field.placeholder"
                       :aria-label="field.placeholder"
-                      :aria-describedby="'field-' + index + '-count'" />
+                      :aria-describedby="'field-' + index + '-count'"
+                      classes="resize-none! pr-64" />
                     <div
                       :id="'field-' + index + '-count'"
-                      class="mt-2 text-right text-xs text-graphite">
-                      {{ field.content?.length ?? 0 }} / {{ FIELD_MAX_LENGTH }}
+                      class="pointer-events-none absolute top-0 right-0 flex min-h-default items-center pr-8 text-xs text-graphite">
+                      {{ field.content?.length ?? 0 }}&thinsp;/&thinsp;{{ FIELD_MAX_LENGTH }}
                     </div>
                   </div>
-                </InputGroup>
+                </div>
               </div>
             </div>
           </div>
@@ -156,6 +161,7 @@ import InputGroup from '@/components/forms/Group.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputTextarea from '@/components/forms/Textarea.vue';
+import InputStatic from '@/components/forms/Static.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import Icon from '@/components/icons/Icon.vue';
 import AppButton from '@/components/buttons/Button.vue';
