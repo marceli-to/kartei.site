@@ -58,6 +58,14 @@
                     classes="text-black!"
                     wrapper-classes="flex flex-col gap-y-8"
                     @update:model-value="errors.category = null" />
+                  <SetupHint
+                    v-else-if="isInfoOpen"
+                    :archive-uuid="archiveUuid"
+                    section="structure"
+                    label="Ordnung"
+                    :can-edit="canEditSetting('manageStructure')">
+                    Organisieren Sie Ihre Kartei mittels Kategorien und Registern.
+                  </SetupHint>
                 </InputGroup>
                 <InputGroup>
                   <InputLabel label="Tags" />
@@ -70,6 +78,14 @@
                     :options="tags"
                     classes="text-black!"
                     wrapper-classes="flex flex-col gap-y-8" />
+                  <SetupHint
+                    v-else-if="isInfoOpen"
+                    :archive-uuid="archiveUuid"
+                    section="tags"
+                    label="Tags"
+                    :can-edit="canEditSetting('manageTags')">
+                    Versehen Sie Ihre Karten mit Tags (Schlagwörtern).
+                  </SetupHint>
                 </InputGroup>
               </div>
             </div>
@@ -93,7 +109,19 @@
               :class="{ 'lg:pr-8': !settings.has_images }">
               <div class="lg:relative lg:-top-24">
                 <InputLabel label="Beschreibung" />
-                <div class="flex flex-col gap-y-8">
+                <!-- Without text fields the hint takes the place of the fields, as in the design -->
+                <SetupHint
+                  v-if="isInfoOpen && !form.fields.length"
+                  :archive-uuid="archiveUuid"
+                  section="card"
+                  label="Kartenvorlage"
+                  :can-edit="canEditSetting('manageTemplate')">
+                  Definieren Sie in Ihrer Kartenvorlage Textfelder, um zugehörige Informationen einfach erfassen zu
+                  können.
+                </SetupHint>
+                <div
+                  v-else
+                  class="flex flex-col gap-y-8">
                   <!-- As in the card template: the number is generated, so it is only shown -->
                   <InputStatic>
                     {{ record?.display_number || 'Nr. / ID (wird automatisch generiert)' }}
@@ -165,6 +193,8 @@ import InputStatic from '@/components/forms/Static.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import Icon from '@/components/icons/Icon.vue';
 import AppButton from '@/components/buttons/Button.vue';
+import SetupHint from '@/views/records/partials/SetupHint.vue';
+import { useInfoBox } from '@/composables/useInfoBox';
 
 const router = useRouter();
 const route = useRoute();
@@ -200,6 +230,15 @@ const form = ref({
 });
 
 const { errors, setErrors, clearErrors } = useFormErrors(['category']);
+
+// Hints for what the archive is still missing (no categories, tags or text fields);
+// they open by itself and can be hidden with the lightbulb
+const isMissingSetup = computed(
+  () => !isLoading.value && (!categoriesRegisters.value.length || !tags.value.length || !form.value.fields.length),
+);
+const { isOpen: isInfoOpen } = useInfoBox({ active: isMissingSetup, auto: true });
+
+const canEditSetting = (ability) => !!archiveUuid.value && userStore.canArchive(archiveUuid.value, ability);
 
 const backToList = () => router.push({ name: 'archiveRecords', params: { uuid: archiveUuid.value } });
 
