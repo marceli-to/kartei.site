@@ -38,6 +38,13 @@ export default {
   'chevron-left': {
     default: 'large',
     variants: {
+      // Thin (Benedikt, Nov 2026): for later use; size it with a class if 11x20 doesn't fit
+      thin: {
+        width: 11,
+        height: 20,
+        viewBox: '0 0 67 122',
+        body: '<path d="M60.775 0L66.6667 5.89167L11.7875 60.775L66.6667 115.654L60.775 121.55L0 60.775L60.775 0Z" fill="currentColor"/>',
+      },
       small: {
         width: 8,
         height: 12,
@@ -67,6 +74,13 @@ export default {
   'chevron-right': {
     default: 'large',
     variants: {
+      // Thin (Benedikt, Nov 2026): for later use; size it with a class if 11x20 doesn't fit
+      thin: {
+        width: 11,
+        height: 20,
+        viewBox: '0 0 67 122',
+        body: '<path d="M5.89167 0L0 5.89167L54.8792 60.775L0 115.654L5.89167 121.55L66.6667 60.775L5.89167 0Z" fill="currentColor"/>',
+      },
       large: {
         width: 16,
         height: 24,
@@ -94,20 +108,41 @@ export default {
     },
   },
   // Drag handle: two 1px lines, 4px apart (KAR0001_Drag_Handle_261108)
-  drag: {
+  // Benedikt, Nov 2026: for "Duplizieren" later
+  duplicate: {
     default: 'default',
     variants: {
       default: {
-        width: 12,
-        height: 5,
-        viewBox: '0 0 12 5',
-        body: '<path d="M0 0H12V1H0V0Z" fill="currentColor"/><path d="M0 4H12V5H0V4Z" fill="currentColor"/>',
+        width: 20,
+        height: 20,
+        viewBox: '0 0 50 50',
+        body: '<path d="M8.33313 0V4.16667H45.8331V41.6667H49.9998V0H8.33313Z" fill="currentColor"/><path d="M4.16667 12.5002H37.5V45.8336H4.16667V12.5002ZM0 50.0002H41.6667V8.33356H0V50.0002Z" fill="currentColor"/>',
       },
     },
   },
+  drag: {
+    default: 'default',
+    variants: {
+      // Benedikt's drag-handle.svg (50x20.8), shown at 12x5 as before: two 1px lines
+      default: {
+        width: 12,
+        height: 5,
+        viewBox: '0 0 50 20.8334',
+        body: '<path d="M50 16.6667H0V20.8334H50V16.6667Z" fill="currentColor"/><path d="M50 0H0V4.16667H50V0Z" fill="currentColor"/>',
+      },
+    },
+  },
+
   cross: {
     default: 'large',
     variants: {
+      // Thin (Benedikt, Nov 2026): for later use; size it with a class if 16x16 doesn't fit
+      thin: {
+        width: 16,
+        height: 16,
+        viewBox: '0 0 100 100',
+        body: '<path d="M55.8917 50.0001L100 5.89173L94.1083 6.10352e-05L50 44.1084L5.89167 6.10352e-05L0 5.89173L44.1083 50.0001L0 94.1084L5.89167 100L50 55.8917L94.1083 100L100 94.1084L55.8917 50.0001Z" fill="currentColor"/>',
+      },
       large: {
         width: 24,
         height: 24,
