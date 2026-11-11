@@ -1,5 +1,6 @@
 <template>
-  <Slide :pull="viewState !== 'listing'">
+  <!-- Only the create form starts with a label above the line; the edit box starts on it -->
+  <Slide :pull="viewState === 'creating'">
     <template v-if="viewState === 'creating'">
       <CompanyForm
         @success="handleCompanyCreated"
@@ -24,7 +25,7 @@
         </div>
         <div>
           <Action
-            label="Kunde/Kundin"
+            :label="'Kundin\u2009/\u2009Kunde'"
             :icon="{ name: 'Plus', position: 'center' }"
             @click="viewState = 'creating'" />
         </div>
@@ -107,19 +108,19 @@ const showCompany = (company) => {
 
 const handleCompanyCreated = (company) => {
   companies.value.push(company);
-  toast.show('Firma erfolgreich erstellt.', 'success');
+  toast.show('Kunde erfolgreich erstellt.', 'success');
   resetView();
 };
 
 const handleCompanyUpdated = (company) => {
   companies.value = companies.value.map((c) => (c.uuid === company.uuid ? company : c));
-  toast.show('Firma erfolgreich aktualisiert.', 'success');
+  toast.show('Kunde erfolgreich aktualisiert.', 'success');
   resetView();
 };
 
 const handleCompanyDeleted = (uuid) => {
   companies.value = companies.value.filter((c) => c.uuid !== uuid);
-  toast.show('Firma erfolgreich gelöscht.', 'success');
+  toast.show('Kunde erfolgreich gelöscht.', 'success');
   resetView();
 };
 
@@ -136,7 +137,7 @@ onMounted(async () => {
     const response = await getUserCompanies();
     companies.value = response.data;
   } catch (error) {
-    notifyError(error, 'Die Firmen konnten nicht geladen werden.');
+    notifyError(error, 'Die Kunden konnten nicht geladen werden.');
   } finally {
     isLoading.value = false;
   }

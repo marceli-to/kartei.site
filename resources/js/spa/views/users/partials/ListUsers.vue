@@ -5,16 +5,8 @@
     <div>
       <InputSearch
         v-model="searchQuery"
-        placeholder="Suche"
-        aria-label="Suche" />
-    </div>
-    <div class="mt-15">
-      <!-- Only adding is blocked without a subscription or seats; existing users stay editable -->
-      <Action
-        label="Benutzer/in"
-        :icon="{ name: 'Plus', position: 'center' }"
-        :disabled="!canCreate"
-        @click="$emit('create-user')" />
+        placeholder="Suchen"
+        aria-label="Suchen" />
     </div>
     <div class="flex flex-col gap-y-20">
       <div
@@ -32,6 +24,14 @@
             @click="$emit('user-selected', user)" />
         </div>
       </div>
+    </div>
+    <!-- Adding comes after the list. Only adding is blocked without a subscription or seats -->
+    <div class="mt-16">
+      <Action
+        :label="'Benutzer\u2009/\u2009in'"
+        :icon="{ name: 'Plus', position: 'center' }"
+        :disabled="!canCreate"
+        @click="$emit('create-user')" />
     </div>
   </div>
 </template>

@@ -50,7 +50,7 @@ const slides = [
   },
   {
     id: 'company',
-    name: 'Kundinnen/Kunden',
+    name: 'Kunden',
     class: 'w-3/12 min-w-3/12',
     permission: 'edit.clients',
     component: markRaw(CompanyComponent),

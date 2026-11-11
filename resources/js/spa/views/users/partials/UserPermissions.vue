@@ -1,7 +1,7 @@
 <template>
   <form
     v-if="!isLoading"
-    class="flex h-full w-full flex-col justify-between"
+    class="flex h-full w-full flex-col justify-between gap-y-32"
     @submit.prevent="save">
     <div class="flex flex-col gap-y-20">
       <InputGroup v-if="!archiveUuid">
@@ -38,14 +38,14 @@
               :label="isSending ? 'Wird versendet...' : 'Einladungslink versenden'"
               :disabled="isSending"
               @click="invite" />
-            <p class="mt-8 p-8 text-sm">
+            <p class="mt-8 text-sm">
               Mit Abschicken des Einladungslinks erhält {{ user.firstname }} {{ user.name }} Zugang zu den ausgewählten
               Karteien. Zugriffsrechte können innerhalb der Kartei in den Voreinstellungen angepasst werden.
             </p>
           </template>
           <p
             v-else
-            class="mt-8 p-8 text-sm">
+            class="text-sm">
             {{ invited.has(selected) ? 'Einladungslink wurde versendet.' : 'Berechtigungen wurden gespeichert.' }}
             <template v-if="!archiveUuid && hasArchivesWithoutAccess">
               Sie können Berechtigungen für weitere Karteien setzen oder den Prozess abschliessen.

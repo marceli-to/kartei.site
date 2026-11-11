@@ -87,7 +87,7 @@ class PermissionSeeder extends Seeder
         'name' => 'edit.basic_info',
         'display_name' => 'Basisinformationen',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 4,
         'belongs_to' => ['Admin', 'Manager'],
         'publish' => 1
@@ -96,7 +96,7 @@ class PermissionSeeder extends Seeder
         'name' => 'edit.structure',
         'display_name' => 'Struktur',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 5,
         'belongs_to' => ['Admin', 'Manager'],
         'publish' => 1
@@ -105,7 +105,7 @@ class PermissionSeeder extends Seeder
         'name' => 'edit.template',
         'display_name' => 'Kartenvorlage',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 6,
         'belongs_to' => ['Admin', 'Manager'],
         'publish' => 1
@@ -114,7 +114,7 @@ class PermissionSeeder extends Seeder
         'name' => 'edit.tags',
         'display_name' => 'Tags',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 7,
         'belongs_to' => ['Admin', 'Manager'],
         'publish' => 1
@@ -123,16 +123,16 @@ class PermissionSeeder extends Seeder
         'name' => 'edit.users',
         'display_name' => 'Benutzer',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 8,
         'belongs_to' => ['Admin'],
         'publish' => 0
       ],
       [
         'name' => 'export.card',
-        'display_name' => 'Exportieren',
+        'display_name' => 'Export',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 9,
         'belongs_to' => ['Admin', 'Manager', 'Archivist', 'Viewer'],
         'publish' => 1
@@ -141,7 +141,7 @@ class PermissionSeeder extends Seeder
         'name' => 'share.card',
         'display_name' => 'Teilen',
         'group_key' => 'archive_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Kartei / Eigenschaften',
         'order' => 10,
         'belongs_to' => ['Admin', 'Manager', 'Archivist', 'Viewer'],
         'publish' => 1
@@ -177,7 +177,7 @@ class PermissionSeeder extends Seeder
         'name' => 'manage.order',
         'display_name' => 'Ordnung',
         'group_key' => 'card_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Karten / Eigenschaften',
         'order' => 14,
         'belongs_to' => ['Admin', 'Manager', 'Archivist'],
         'publish' => 1
@@ -186,7 +186,7 @@ class PermissionSeeder extends Seeder
         'name' => 'manage.images',
         'display_name' => 'Bilder',
         'group_key' => 'card_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Karten / Eigenschaften',
         'order' => 15,
         'belongs_to' => ['Admin', 'Manager', 'Archivist'],
         'publish' => 1
@@ -195,7 +195,7 @@ class PermissionSeeder extends Seeder
         'name' => 'manage.description',
         'display_name' => 'Beschreibung',
         'group_key' => 'card_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Karten / Eigenschaften',
         'order' => 16,
         'belongs_to' => ['Admin', 'Manager', 'Archivist'],
         'publish' => 1
@@ -204,7 +204,7 @@ class PermissionSeeder extends Seeder
         'name' => 'manage.favorites',
         'display_name' => 'Favoriten',
         'group_key' => 'card_edit',
-        'group_name' => 'Bearbeiten',
+        'group_name' => 'Karten / Eigenschaften',
         'order' => 17,
         'belongs_to' => ['Admin', 'Manager', 'Archivist', 'Viewer'],
         'publish' => 1

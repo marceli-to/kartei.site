@@ -1,21 +1,25 @@
 <template>
   <form
-    class="flex h-full w-full flex-col justify-between"
+    class="flex h-full w-full flex-col justify-between gap-y-32"
     @submit.prevent="submit">
-    <div class="flex flex-col gap-y-48">
-      <AddressFields
-        v-model:form="form"
-        v-model:errors="errors"
-        id-prefix="company_"
-        name-field="name" />
-      <div v-if="company">
+    <!-- Editing shows the fields in a box headed by the company; creating shows them plain -->
+    <component
+      :is="company ? EditBox : 'div'"
+      v-bind="company ? { title: company.name } : {}"
+      @close="$emit('cancel')">
+      <div class="flex flex-col gap-y-48">
+        <AddressFields
+          v-model:form="form"
+          v-model:errors="errors"
+          id-prefix="company_"
+          name-field="name" />
         <AppButton
-          label="Löschen"
-          variant="danger"
+          v-if="company"
+          label="Kunde löschen"
           type="button"
           @click="showDeleteDialog" />
       </div>
-    </div>
+    </component>
     <ButtonGroup>
       <AppButton
         type="submit"
@@ -36,6 +40,7 @@ import { notifyError } from '@/services/api/error';
 import { useDialogStore } from '@/stores/dialog';
 import { useFormErrors } from '@/composables/useFormErrors';
 import AddressFields from '@/components/forms/AddressFields.vue';
+import EditBox from '@/components/EditBox.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
@@ -71,7 +76,7 @@ const submit = async () => {
     emit('success', response.data);
   } catch (error) {
     setErrors(error);
-    notifyError(error, props.company ? 'Fehler beim Speichern der Firma.' : 'Fehler beim Erstellen der Firma.');
+    notifyError(error, props.company ? 'Fehler beim Speichern des Kunden.' : 'Fehler beim Erstellen des Kunden.');
   } finally {
     isSaving.value = false;
   }
@@ -80,10 +85,10 @@ const submit = async () => {
 // The parent removes the company from the list and confirms, so only emit once it's gone
 const showDeleteDialog = () => {
   dialogStore.confirmDelete({
-    title: `Möchten Sie die Firma "${props.company.name}" wirklich löschen?`,
+    title: `Möchten Sie den Kunden "${props.company.name}" wirklich löschen?`,
     action: () => deleteUserCompany(props.company.uuid),
     then: () => emit('delete', props.company.uuid),
-    failure: 'Fehler beim Löschen der Firma.',
+    failure: 'Fehler beim Löschen des Kunden.',
   });
 };
 </script>

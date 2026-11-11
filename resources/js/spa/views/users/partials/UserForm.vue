@@ -21,20 +21,11 @@
             @update:error="errors[field.key] = $event" />
         </InputGroup>
       </div>
-      <div
+      <AppButton
         v-if="uuid"
-        class="flex flex-col gap-y-48">
-        <Action
-          type="button"
-          label="Rechte"
-          :icon="{ name: 'ChevronRight' }"
-          @click="$emit('user-selected-permissions', userData)" />
-        <AppButton
-          label="Löschen"
-          variant="danger"
-          type="button"
-          @click="showDeleteDialog" />
-      </div>
+        label="Benutzer löschen"
+        type="button"
+        @click="showDeleteDialog" />
     </div>
     <ButtonGroup>
       <AppButton
@@ -60,10 +51,9 @@ import InputLabel from '@/components/forms/Label.vue';
 import InputText from '@/components/forms/Text.vue';
 import ButtonGroup from '@/components/buttons/Group.vue';
 import InputGroup from '@/components/forms/Group.vue';
-import Action from '@/components/buttons/Action.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
-// Without uuid it creates a user (Index.vue then asks for the permissions)
+// Without uuid it creates a user (Index.vue then asks for the permissions); editing sits in UserEdit's box
 const props = defineProps({
   uuid: {
     type: [String, Number],
@@ -71,7 +61,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['success', 'cancel', 'user-selected-permissions', 'user-deleted']);
+const emit = defineEmits(['success', 'cancel', 'user-deleted']);
 
 const FIELDS = [
   { key: 'firstname', label: 'Vorname' },

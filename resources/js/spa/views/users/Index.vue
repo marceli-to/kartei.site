@@ -1,5 +1,6 @@
 <template>
-  <Slide :pull="viewState !== 'listing' && viewState !== 'notifying'">
+  <!-- The edit box starts on the line; the other forms start with a label above it -->
+  <Slide :pull="!['listing', 'notifying', 'updating'].includes(viewState)">
     <template v-if="viewState === 'creating'">
       <UserForm
         @success="(userData) => handleUserCreated(userData)"
@@ -7,11 +8,11 @@
     </template>
 
     <template v-if="viewState === 'updating'">
-      <UserForm
-        :uuid="selectedUser.uuid"
+      <UserEdit
+        :user="selectedUser"
+        :archive-uuid="archiveUuid"
         @success="handleUserUpdated"
         @user-deleted="handleUserDeleted"
-        @user-selected-permissions="handleUserSelectedPermissions"
         @cancel="resetView()" />
     </template>
 
@@ -20,15 +21,6 @@
         :user="createdUser"
         :archive-uuid="archiveUuid"
         @success="handleUserPermissionsSaved" />
-    </template>
-
-    <template v-if="viewState === 'updatePermissions'">
-      <UserPermissions
-        :user="selectedUser"
-        :archive-uuid="archiveUuid"
-        cancelable
-        @success="handleUserPermissionsSaved"
-        @cancel="resetView()" />
     </template>
 
     <template v-if="viewState === 'listing'">
@@ -57,6 +49,7 @@ import { notifyError } from '@/services/api/error';
 import Slide from '@/components/slider/Slide.vue';
 import UserForm from '@/views/users/partials/UserForm.vue';
 import UserPermissions from '@/views/users/partials/UserPermissions.vue';
+import UserEdit from '@/views/users/partials/UserEdit.vue';
 import ListUsers from '@/views/users/partials/ListUsers.vue';
 import SubscriptionInfo from '@/views/users/partials/SubscriptionInfo.vue';
 
@@ -161,11 +154,6 @@ const handleUserUpdated = () => {
 const handleUserPermissionsSaved = () => {
   resetView();
   fetchUsers();
-};
-
-const handleUserSelectedPermissions = (user) => {
-  selectedUser.value = user;
-  viewState.value = 'updatePermissions';
 };
 
 const handleUserDeleted = (deletedUserUuid) => {
