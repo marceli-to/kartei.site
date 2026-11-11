@@ -1,1 +1,0 @@
-import{M as e,S as t,m as n}from"./vue.runtime.esm-bundler-CDKb9pnr.js";import{t as r}from"./spa-CwB8I4X1.js";t();var i={};function a(t,r){return e(),n(`h1`,null,`Home`)}var o=r(i,[[`render`,a]]);export{o as default};

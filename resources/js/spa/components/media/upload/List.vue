@@ -7,7 +7,7 @@
       :item-key="imageKey"
       :class="multiple ? 'grid grid-cols-12 gap-20' : ''">
       <template #item="{ element, index }">
-        <ImageCard :class="multiple ? 'col-span-6 cursor-move xl:col-span-4' : ''">
+        <ImageCard :class="multiple ? 'col-span-6 cursor-move' : ''">
           <Image
             :src="element.resized?.url || element.url"
             :alt="element.resized?.original_name || element.original_name || element.name" />

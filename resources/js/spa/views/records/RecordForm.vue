@@ -25,23 +25,22 @@
 
       <ContentMain class="pb-0!">
         <!--
-          lg and up: columns Ordnung | Bilder | Beschreibung (1:2:1) with lines between them;
-          without an image field (card template "Ohne Bildfeld") Ordnung | Beschreibung keep their quarter widths, side by side.
+          lg and up: quarter-width columns Ordnung | Bilder | Beschreibung, then whitespace, with a line
+          after each column; without an image field (card template "Ohne Bildfeld") Ordnung | Beschreibung.
           Narrower: one column, Bilder, Beschreibung, then Ordnung/Tags. Labels sit above the
           content line only in the column layout (lg:-top-24).
         -->
         <form
           v-if="!isLoading"
-          class="relative flex h-full w-full flex-col justify-between gap-y-32 pb-24 lg:before:absolute lg:before:inset-y-0 lg:before:w-1 lg:before:bg-graphite"
-          :class="
-            settings.has_images
-              ? 'lg:before:left-1/4 lg:after:absolute lg:after:inset-y-0 lg:after:left-3/4 lg:after:w-1 lg:after:bg-graphite'
-              : 'lg:before:left-1/4 lg:after:absolute lg:after:inset-y-0 lg:after:left-1/2 lg:after:w-1 lg:after:bg-graphite'
-          "
+          class="relative flex h-full w-full flex-col justify-between gap-y-32 pb-24"
           @submit.prevent="handleSubmit">
           <div
-            class="relative z-10 grid grid-cols-1 gap-y-32 lg:h-full lg:gap-y-0"
-            :class="settings.has_images ? 'lg:grid-cols-[1fr_2fr_1fr]' : 'lg:grid-cols-[1fr_1fr_2fr]'">
+            v-for="line in settings.has_images ? ['left-1/4', 'left-1/2', 'left-3/4'] : ['left-1/4', 'left-1/2']"
+            :key="line"
+            class="absolute inset-y-0 hidden w-1 bg-graphite lg:block"
+            :class="line"
+            aria-hidden="true"></div>
+          <div class="relative z-10 grid grid-cols-1 gap-y-32 lg:h-full lg:grid-cols-4 lg:gap-y-0">
             <div class="order-3 lg:order-none lg:pr-8">
               <div class="flex flex-col gap-20 lg:relative lg:-top-24">
                 <InputGroup>
@@ -91,7 +90,7 @@
             </div>
             <div
               v-if="settings.has_images"
-              class="order-1 lg:order-none lg:px-9">
+              class="order-1 lg:order-none lg:pr-8 lg:pl-9">
               <div class="lg:relative lg:-top-24">
                 <InputGroup>
                   <InputLabel label="Bilder" />
@@ -99,14 +98,11 @@
                     v-model="form.media"
                     :allowed-types="['image/*']"
                     :multiple="true"
-                    :error="null"
-                    classes="aspect-video!" />
+                    :error="null" />
                 </InputGroup>
               </div>
             </div>
-            <div
-              class="order-2 lg:order-none lg:pl-9"
-              :class="{ 'lg:pr-8': !settings.has_images }">
+            <div class="order-2 lg:order-none lg:pr-8 lg:pl-9">
               <div class="lg:relative lg:-top-24">
                 <InputLabel label="Beschreibung" />
                 <!-- Without text fields the hint takes the place of the fields, as in the design -->
@@ -149,7 +145,10 @@
               </div>
             </div>
           </div>
-          <ButtonGroup class="relative z-10 pb-8">
+          <!-- The buttons end with the last column (before the whitespace) -->
+          <ButtonGroup
+            class="relative z-10 pb-8"
+            :class="settings.has_images ? 'lg:w-[calc(75%-8px)]' : 'lg:w-[calc(50%-8px)]'">
             <AppButton
               type="submit"
               label="Speichern"
