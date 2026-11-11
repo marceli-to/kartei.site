@@ -47,14 +47,20 @@
         </div>
       </ContentNavigation>
       <ContentMain>
+        <!--
+          From lg up a 10-column grid (16px gutters) like the design: tiles and images span 3 columns
+          (three per row, the 10th column stays empty), table rows 2 + 3 columns.
+        -->
         <div
           v-if="filteredArchives.length > 0"
-          class="flex flex-wrap gap-x-16 gap-y-32">
+          class="grid grid-cols-1 gap-x-16 md:grid-cols-2 lg:grid-cols-10"
+          :class="viewGap">
           <Teaser
             v-for="archive in filteredArchives"
             :key="archive.uuid"
             :archive="archive"
-            class="w-full shrink-0 md:w-[calc(50%-8px)] lg:w-[calc(33.333%-(32px/3))] 2xl:w-[calc(25%-12px)]" />
+            :view="layout"
+            :class="viewItemClasses" />
         </div>
         <div
           v-else-if="archives.length > 0"
@@ -75,7 +81,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useInfoBox } from '@/composables/useInfoBox';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
@@ -99,7 +105,7 @@ setTitle('Meine Karteien');
 
 const searchQuery = ref('');
 const sortOrder = ref('name');
-const layout = ref('tiles');
+
 const hasArchive = ref(true);
 const archives = ref([]);
 const loadFailed = ref(false);
@@ -111,12 +117,22 @@ const sortOrderOptions = [
   { value: 'updated_at', label: 'Aktualisiert' },
 ];
 
-// View toggle above the content; the views themselves follow in Stackr #147
+// View toggle above the content, remembered in the browser
+const VIEW_STORAGE_KEY = 'kartei.archives.view';
 const views = [
   { value: 'tiles', label: 'Kacheln', icon: 'tiles' },
   { value: 'table', label: 'Tabelle', icon: 'list' },
   { value: 'images', label: 'Bilder', icon: 'image' },
 ];
+
+const storedView = localStorage.getItem(VIEW_STORAGE_KEY);
+const layout = ref(views.some((view) => view.value === storedView) ? storedView : 'tiles');
+watch(layout, (value) => localStorage.setItem(VIEW_STORAGE_KEY, value));
+
+const viewGap = computed(() => ({ tiles: 'gap-y-32', table: 'gap-y-28', images: 'gap-y-16' })[layout.value]);
+const viewItemClasses = computed(() =>
+  layout.value === 'table' ? 'md:col-span-2 lg:col-span-5 lg:col-start-1' : 'lg:col-span-3',
+);
 
 const viewLinks = computed(() =>
   views.map((view) => ({
