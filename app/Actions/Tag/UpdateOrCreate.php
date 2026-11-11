@@ -7,7 +7,8 @@ class UpdateOrCreate
 {
   public function execute($tags, Archive $archive): bool
   {
-    foreach ($tags as $tag) {
+    // The list order is the tag order (drag + drop in the settings)
+    foreach (array_values($tags ?? []) as $index => $tag) {
       Tag::updateOrCreate(
         [
           'uuid' => $tag['uuid'],
@@ -15,6 +16,7 @@ class UpdateOrCreate
         ],
         [
           'name' => $tag['name'],
+          'order' => $index,
         ]
       );
     }

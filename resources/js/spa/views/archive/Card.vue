@@ -43,37 +43,34 @@
         </div>
 
         <div>
+          <InputLabel label="Textfeld" />
           <draggable
             v-model="form.record_fields"
             :item-key="rowKey"
             class="flex flex-col gap-y-8"
             handle=".drag-handle"
-            :animation="200"
+            ghost-class="drag-ghost"
+            :animation="150"
             @end="reorder">
             <template #item="{ element, index }">
-              <InputGroup class="relative flex items-center justify-between">
-                <!-- 
-                  <span class="cursor-grab size-16 drag-handle">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-16 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16M4 14h16" />
-                    </svg>
-                  </span>
-                -->
+              <InputGroup class="relative">
                 <InputText
                   :ref="(el) => (inputRefs[index] = el)"
                   v-model="element.placeholder"
                   :placeholder="`Textfeld ${index + 1}`"
+                  classes="pr-56"
                   aria-label="Textfeld" />
 
                 <button
                   type="button"
-                  class="absolute top-12 right-8"
+                  class="absolute top-1/2 right-40 -translate-y-1/2"
                   :aria-label="`Textfeld ${index + 1} entfernen`"
                   @click="remove(index)">
                   <Icon
                     name="cross"
                     variant="small" />
                 </button>
+                <DragHandle />
               </InputGroup>
             </template>
           </draggable>
@@ -108,6 +105,7 @@ import ImageCard from '@/components/media/Card.vue';
 import Action from '@/components/buttons/Action.vue';
 import { notifyError } from '@/services/api/error';
 import Icon from '@/components/icons/Icon.vue';
+import DragHandle from '@/components/forms/DragHandle.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();

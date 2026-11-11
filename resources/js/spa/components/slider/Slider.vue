@@ -29,7 +29,7 @@
       <div class="mt-38 flex grow flex-col border-r border-graphite">
         <div
           class="flex flex-col"
-          :class="{ 'mr-8 mb-20 grow border border-graphite pl-8': navigationVariant === 'box' }">
+          :class="{ 'mr-8 mb-20 grow border border-graphite pt-6 pl-8': navigationVariant === 'box' }">
           <slot name="header" />
 
           <ul>

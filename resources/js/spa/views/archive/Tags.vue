@@ -13,27 +13,34 @@
             :icon="{ name: 'Plus', variant: 'small-bold', position: 'center' }"
             @click="add" />
         </div>
-        <div class="flex flex-col gap-y-8">
-          <InputGroup
-            v-for="(tag, index) in form.tags"
-            :key="rowKey(tag)"
-            class="relative">
-            <InputText
-              :ref="(el) => (inputRefs[index] = el)"
-              v-model="tag.name"
-              :placeholder="`Tag ${index + 1}`"
-              aria-label="Tag" />
-            <button
-              type="button"
-              class="absolute top-1/2 right-8 -translate-y-1/2"
-              :aria-label="`Tag ${index + 1} entfernen`"
-              @click="remove(index)">
-              <Icon
-                name="cross"
-                variant="small" />
-            </button>
-          </InputGroup>
-        </div>
+        <draggable
+          v-model="form.tags"
+          :item-key="rowKey"
+          class="flex flex-col gap-y-8"
+          handle=".drag-handle"
+          ghost-class="drag-ghost"
+          :animation="150">
+          <template #item="{ element: tag, index }">
+            <InputGroup class="relative">
+              <InputText
+                :ref="(el) => (inputRefs[index] = el)"
+                v-model="tag.name"
+                :placeholder="`Tag ${index + 1}`"
+                classes="pr-56"
+                aria-label="Tag" />
+              <button
+                type="button"
+                class="absolute top-1/2 right-40 -translate-y-1/2"
+                :aria-label="`Tag ${index + 1} entfernen`"
+                @click="remove(index)">
+                <Icon
+                  name="cross"
+                  variant="small" />
+              </button>
+              <DragHandle />
+            </InputGroup>
+          </template>
+        </draggable>
       </div>
 
       <!-- Actions -->
@@ -51,6 +58,7 @@
 <script setup>
 import { ref, onMounted, nextTick, toRaw } from 'vue';
 import { useRoute } from 'vue-router';
+import draggable from 'vuedraggable';
 import { storeTags, getTags, deleteTag } from '@/services/api/tags';
 import { useToastStore } from '@/stores/toast';
 import Slide from '@/components/slider/Slide.vue';
@@ -60,6 +68,7 @@ import ButtonGroup from '@/components/buttons/Group.vue';
 import Action from '@/components/buttons/Action.vue';
 import { notifyError } from '@/services/api/error';
 import Icon from '@/components/icons/Icon.vue';
+import DragHandle from '@/components/forms/DragHandle.vue';
 import AppButton from '@/components/buttons/Button.vue';
 
 const toast = useToastStore();

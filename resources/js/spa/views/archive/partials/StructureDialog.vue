@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="mb-32 grid grid-cols-12 gap-0">
       <div class="col-span-5">
-        <h2 class="font-muoto-medium">Struktur</h2>
+        <h2 class="font-muoto-medium">Ordnung</h2>
       </div>
 
       <div class="col-span-7">

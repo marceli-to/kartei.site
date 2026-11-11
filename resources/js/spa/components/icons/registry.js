@@ -93,6 +93,18 @@ export default {
       },
     },
   },
+  // Drag handle: two 1px lines, 4px apart (KAR0001_Drag_Handle_261108)
+  drag: {
+    default: 'default',
+    variants: {
+      default: {
+        width: 12,
+        height: 5,
+        viewBox: '0 0 12 5',
+        body: '<path d="M0 0H12V1H0V0Z" fill="currentColor"/><path d="M0 4H12V5H0V4Z" fill="currentColor"/>',
+      },
+    },
+  },
   cross: {
     default: 'large',
     variants: {

@@ -50,7 +50,7 @@ const slides = [
   },
   {
     id: 'structure',
-    name: 'Struktur',
+    name: 'Ordnung',
     class: 'w-6/12 min-w-6/12',
     permission: allows('manageStructure'),
     component: markRaw(CategoryComponent),

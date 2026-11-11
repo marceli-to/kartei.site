@@ -50,7 +50,7 @@
             label="Titel"
             class="mb-0! w-6/12" />
           <InputLabel
-            label="Kürzel"
+            label="ID"
             class="mb-0! w-3/12" />
         </div>
 
@@ -59,7 +59,9 @@
           group="categories"
           :item-key="rowKey"
           class="flex flex-col"
-          handle=".drag-handle">
+          handle=".category-handle"
+          ghost-class="drag-ghost"
+          :animation="150">
           <template #item="{ element: category, index: cIdx }">
             <div>
               <StructureRow
@@ -67,6 +69,8 @@
                 v-model:custom-id="category.custom_id"
                 class="mb-32"
                 label="Kategorie"
+                handle-class="category-handle"
+                strong
                 :position="cIdx + 1"
                 :number="categoryNumber(cIdx)"
                 :placeholder="`Kategorie ${cIdx + 1}`"
@@ -80,15 +84,19 @@
                 :item-key="rowKey"
                 :clone="cloneRegister"
                 class="flex flex-col"
-                handle=".drag-handle">
+                handle=".register-handle"
+                ghost-class="drag-ghost"
+                :animation="150">
                 <template #item="{ element: register, index: rIdx }">
                   <StructureRow
                     v-model:name="register.name"
                     v-model:custom-id="register.custom_id"
                     class="mb-8 last:mb-32"
                     label="Register"
+                    handle-class="register-handle"
                     :position="rIdx + 1"
                     :number="registerNumber(cIdx, rIdx)"
+                    :placeholder="`Register ${registerNumber(cIdx, rIdx)}`"
                     :readonly="idType === 'auto'"
                     @blur="applyAutoId(register)"
                     @remove="removeRegister(cIdx, rIdx)" />
@@ -186,7 +194,7 @@ onMounted(async () => {
   try {
     await load();
   } catch (error) {
-    notifyError(error, 'Die Struktur konnte nicht geladen werden.');
+    notifyError(error, 'Die Ordnung konnte nicht geladen werden.');
   } finally {
     isLoading.value = false;
   }
@@ -198,7 +206,7 @@ const handleSubmit = async () => {
     if (await save()) {
       toast.show('Ordnung erfolgreich gespeichert', 'success');
     } else {
-      toast.show('Fehler: Bitte füllen Sie alle Felder aus (Nummer, Titel, Kürzel)', 'error');
+      toast.show('Fehler: Bitte füllen Sie alle Felder aus (Nummer, Titel, ID)', 'error');
     }
   } catch (error) {
     notifyError(error, 'Fehler beim Speichern der Ordnung');

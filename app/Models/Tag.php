@@ -10,6 +10,7 @@ class Tag extends Model
   protected $fillable = [
     'uuid', 
     'name',
+    'order',
     'archive_id'
   ];
 

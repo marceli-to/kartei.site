@@ -81,7 +81,7 @@ class DemoArchiveSeeder extends Seeder
 
   private function createRecords(Archive $archive, array $definition, ?User $favoriteUser): int
   {
-    $tags = collect($definition['tags'])->map(fn ($name) => Tag::create(['name' => $name, 'archive_id' => $archive->id]));
+    $tags = collect($definition['tags'])->map(fn ($name, $index) => Tag::create(['name' => $name, 'order' => $index, 'archive_id' => $archive->id]));
     $fields = $archive->settings['record_fields'];
     $values = array_values($definition['fields']);
 

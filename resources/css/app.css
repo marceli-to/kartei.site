@@ -125,6 +125,11 @@
     @apply opacity-20 *:pointer-events-none *:select-none transition-all;
   }
 
+  /* Drag + drop rows (vuedraggable ghost-class): the row's new place in the list while dragging */
+  .drag-ghost {
+    @apply opacity-30;
+  }
+
 }
 
 /* Scroll bars everywhere (page and inner lists): 4px, as in Benedikt's sidebar design.
