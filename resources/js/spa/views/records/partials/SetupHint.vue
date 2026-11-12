@@ -1,6 +1,6 @@
 <template>
   <InfoBox
-    default-class="bg-(--theme-color) p-8 text-sm"
+    default-class="bg-(--theme-color) p-8 text-sm text-black"
     :closable="false">
     <!-- Hint in the record form for something the archive doesn't have yet (KAR0001_Hints_261108), with a link to its settings -->
     <p><slot /></p>

@@ -27,7 +27,7 @@ defineProps({
   },
   defaultClass: {
     type: [String],
-    default: 'absolute top-24 -right-8 z-100 translate-x-full w-10/12 bg-(--theme-color) p-8 text-sm',
+    default: 'absolute top-24 -right-8 z-100 translate-x-full w-10/12 bg-(--theme-color) p-8 text-sm text-black',
   },
   closable: {
     type: Boolean,

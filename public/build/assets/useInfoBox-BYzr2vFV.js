@@ -1,1 +1,0 @@
-import{B as e,C as t,G as n,O as r,f as i,nt as a}from"./usePageTitle-D0HZpO0h.js";import{n as o}from"./spa-LTj5FFmU.js";t(),n();var s=0;function c({active:t,auto:n=!1}){let c=o(),l=`info-${s++}`;return e(()=>[a(t),a(n)],([e,t])=>{e?c.register(l,t):c.unregister(l)},{immediate:!0}),r(()=>c.unregister(l)),{isOpen:i(()=>a(t)&&c.isOpen)}}export{c as t};

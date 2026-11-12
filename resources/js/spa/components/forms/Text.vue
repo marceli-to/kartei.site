@@ -54,7 +54,7 @@ const props = defineProps({
 
 // Define default classes
 const defaultClasses =
-  'w-full min-h-default text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow text-black border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white readonly:bg-white';
+  'w-full min-h-default text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow text-black dark:bg-onyx dark:text-white dark:placeholder:text-white dark:border-x-black dark:focus:border-white dark:focus:border-x-black border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black disabled:bg-white readonly:bg-white dark:disabled:bg-black dark:readonly:bg-black';
 
 const emit = defineEmits(['update:modelValue', 'update:error']);
 

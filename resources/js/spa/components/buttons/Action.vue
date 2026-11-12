@@ -99,7 +99,7 @@ const iconName = computed(() =>
 );
 
 const baseClasses =
-  'min-h-default flex items-center justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
+  'min-h-default flex items-center justify-between w-full font-muoto-regular text-md text-black dark:text-white hover:theme-color dark:hover:text-black hover:border-black disabled:opacity-20 disabled:pointer-events-none transition-all';
 
 const defaultBorderClasses = computed(() => {
   return props.variant === 'box' ? 'border border-graphite px-8' : 'border-y border-graphite pr-8';

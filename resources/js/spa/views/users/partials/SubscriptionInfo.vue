@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-32 bg-(--theme-color) p-8 text-sm">
+  <div class="mt-32 bg-(--theme-color) p-8 text-sm text-black">
     <div>
       <p v-if="hasSubscription && maxUsersReached">
         Die maximale Anzahl von Benutzern für Ihr Abonnement ist erreicht. Um weitere Benutzer hinzuzufügen, müssen Sie

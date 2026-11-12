@@ -27,7 +27,7 @@
             label="Duplizieren"
             variant="box"
             :to="{ name: 'archivesDuplicate' }"
-            :classes="active === 'duplicate' ? 'border-black theme-color' : ''"
+            :classes="active === 'duplicate' ? 'border-black theme-color dark:text-black' : ''"
             :icon="{ name: 'duplicate', variant: 'small', position: 'right' }" />
         </InputGroup>
       </template>
