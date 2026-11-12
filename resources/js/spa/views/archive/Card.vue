@@ -49,8 +49,7 @@
             :item-key="rowKey"
             class="flex flex-col gap-y-8"
             handle=".drag-handle"
-            ghost-class="drag-ghost"
-            :animation="150"
+            v-bind="dragOptions"
             @end="reorder">
             <template #item="{ element, index }">
               <InputGroup class="relative">
@@ -90,6 +89,7 @@
 <script setup>
 import { ref, onMounted, nextTick, toRaw } from 'vue';
 import draggable from 'vuedraggable';
+import { dragOptions } from '@/utils/dragOptions';
 import { useRoute } from 'vue-router';
 import { useToastStore } from '@/stores/toast';
 import { getArchiveSettings, storeArchiveSettings, deleteArchiveSettingsField } from '@/services/api/archive';

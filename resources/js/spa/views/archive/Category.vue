@@ -61,8 +61,7 @@
           :item-key="rowKey"
           class="flex flex-col"
           handle=".category-handle"
-          ghost-class="drag-ghost"
-          :animation="150">
+          v-bind="dragOptions">
           <template #item="{ element: category, index: cIdx }">
             <div>
               <StructureRow
@@ -86,8 +85,7 @@
                 :clone="cloneRegister"
                 class="flex flex-col"
                 handle=".register-handle"
-                ghost-class="drag-ghost"
-                :animation="150">
+                v-bind="dragOptions">
                 <template #item="{ element: register, index: rIdx }">
                   <StructureRow
                     v-model:name="register.name"
@@ -135,6 +133,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
+import { dragOptions } from '@/utils/dragOptions';
 import { useToastStore } from '@/stores/toast';
 import { useDialogStore } from '@/stores/dialog';
 import { useInfoBox } from '@/composables/useInfoBox';

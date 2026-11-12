@@ -18,8 +18,7 @@
           :item-key="rowKey"
           class="flex flex-col gap-y-8"
           handle=".drag-handle"
-          ghost-class="drag-ghost"
-          :animation="150">
+          v-bind="dragOptions">
           <template #item="{ element: tag, index }">
             <InputGroup class="relative">
               <InputText
@@ -59,6 +58,7 @@
 import { ref, onMounted, nextTick, toRaw } from 'vue';
 import { useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
+import { dragOptions } from '@/utils/dragOptions';
 import { storeTags, getTags, deleteTag } from '@/services/api/tags';
 import { useToastStore } from '@/stores/toast';
 import Slide from '@/components/slider/Slide.vue';
