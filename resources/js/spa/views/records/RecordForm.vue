@@ -1,13 +1,19 @@
 <template>
   <div class="relative flex w-full grow">
     <Actions :links="actionLinks">
+      <!-- Back to the archive, like "Meine Karteien" on the list; a long name is shortened with […] -->
       <router-link
         v-if="archiveUuid"
         :to="{ name: 'archiveRecords', params: { uuid: archiveUuid } }"
-        aria-label="Zurück zur Kartei">
+        class="flex min-w-0 items-center gap-x-12 pr-16"
+        :aria-label="`Zurück zu ${archiveName}`">
         <Icon
           name="chevron-left"
-          variant="small-bold" />
+          variant="small-bold"
+          class="shrink-0" />
+        <FitText
+          :text="archiveName"
+          class="font-muoto-medium leading-none" />
       </router-link>
     </Actions>
     <div class="mt-106 flex min-h-full w-full">
@@ -103,45 +109,55 @@
               </div>
             </div>
             <div class="order-2 lg:order-none lg:pr-8 lg:pl-9">
-              <div class="lg:relative lg:-top-24">
-                <InputLabel label="Beschreibung" />
-                <!-- Without text fields the hint takes the place of the fields, as in the design -->
-                <SetupHint
-                  v-if="isInfoOpen && !form.fields.length"
-                  :archive-uuid="archiveUuid"
-                  section="card"
-                  label="Kartenvorlage"
-                  :can-edit="canEditSetting('manageTemplate')">
-                  Definieren Sie in Ihrer Kartenvorlage Textfelder, um zugehörige Informationen einfach erfassen zu
-                  können.
-                </SetupHint>
-                <div
-                  v-else
-                  class="flex flex-col gap-y-8">
-                  <!-- As in the card template: the number is generated, so it is only shown -->
-                  <InputStatic>
-                    {{ record?.display_number || 'Nr. / ID (wird automatisch generiert)' }}
-                  </InputStatic>
-                  <!-- The counter sits inside the field; the text keeps clear of it (pr-64) -->
+              <div class="flex flex-col gap-20 lg:relative lg:-top-24">
+                <!-- As in the card template: the number is generated, so it is only shown -->
+                <InputGroup>
+                  <InputLabel label="Nr. / ID" />
+                  <div class="flex min-h-default items-center justify-between gap-x-8 border-y border-graphite pr-8">
+                    <span :class="{ 'font-muoto-medium': record }">
+                      {{ record?.display_number || 'Nr. / ID (wird automatisch generiert)' }}
+                    </span>
+                    <Favorite
+                      v-if="record"
+                      :uuid="record.uuid" />
+                  </div>
+                </InputGroup>
+                <InputGroup>
+                  <InputLabel label="Beschreibung" />
+                  <!-- Without text fields the hint takes the place of the fields, as in the design -->
+                  <SetupHint
+                    v-if="isInfoOpen && !form.fields.length"
+                    :archive-uuid="archiveUuid"
+                    section="card"
+                    label="Kartenvorlage"
+                    :can-edit="canEditSetting('manageTemplate')">
+                    Definieren Sie in Ihrer Kartenvorlage Textfelder, um zugehörige Informationen einfach erfassen zu
+                    können.
+                  </SetupHint>
                   <div
-                    v-for="(field, index) in form.fields"
-                    :key="field.uuid"
-                    class="relative">
-                    <InputTextarea
-                      :id="'field-' + index"
-                      v-model="field.content"
-                      :max-length="FIELD_MAX_LENGTH"
-                      :placeholder="field.placeholder"
-                      :aria-label="field.placeholder"
-                      :aria-describedby="'field-' + index + '-count'"
-                      classes="resize-none! pr-64" />
+                    v-else
+                    class="flex flex-col gap-y-8">
+                    <!-- The counter sits inside the field; the text keeps clear of it (pr-64) -->
                     <div
-                      :id="'field-' + index + '-count'"
-                      class="pointer-events-none absolute top-0 right-0 flex min-h-default items-center pr-8 text-xs text-graphite">
-                      {{ field.content?.length ?? 0 }}&thinsp;/&thinsp;{{ FIELD_MAX_LENGTH }}
+                      v-for="(field, index) in form.fields"
+                      :key="field.uuid"
+                      class="relative">
+                      <InputTextarea
+                        :id="'field-' + index"
+                        v-model="field.content"
+                        :max-length="FIELD_MAX_LENGTH"
+                        :placeholder="field.placeholder"
+                        :aria-label="field.placeholder"
+                        :aria-describedby="'field-' + index + '-count'"
+                        classes="resize-none! pr-64" />
+                      <div
+                        :id="'field-' + index + '-count'"
+                        class="pointer-events-none absolute top-0 right-0 flex min-h-default items-center pr-8 text-xs text-graphite">
+                        {{ field.content?.length ?? 0 }}&thinsp;/&thinsp;{{ FIELD_MAX_LENGTH }}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </InputGroup>
               </div>
             </div>
           </div>
@@ -188,7 +204,8 @@ import InputGroup from '@/components/forms/Group.vue';
 import InputSelectButtons from '@/components/forms/SelectButtons.vue';
 import InputLabel from '@/components/forms/Label.vue';
 import InputTextarea from '@/components/forms/Textarea.vue';
-import InputStatic from '@/components/forms/Static.vue';
+import FitText from '@/components/FitText.vue';
+import Favorite from '@/views/records/partials/Favorite.vue';
 import ImageUpload from '@/components/media/upload/Image.vue';
 import Icon from '@/components/icons/Icon.vue';
 import AppButton from '@/components/buttons/Button.vue';
@@ -208,6 +225,7 @@ const FIELD_MAX_LENGTH = 255;
 
 const record = ref(null);
 const archiveUuid = ref(isEdit ? null : route.params.uuid);
+const archiveName = ref('');
 
 const { categories, categoriesRegisters, registers, tags, settings, loadArchiveMeta } = useArchiveMeta();
 
@@ -303,6 +321,7 @@ onMounted(async () => {
       await loadRecord(route.params.uuid);
     } else {
       const [archive] = await Promise.all([getArchive(archiveUuid.value), loadArchiveMeta(archiveUuid.value)]);
+      archiveName.value = archive.name;
       setTitle(archive.name);
       form.value.fields = mergeSettingFields([], settings.value.record_fields);
     }
@@ -325,7 +344,9 @@ const loadRecord = async (recordUuid) => {
   await loadArchiveMeta(recordData.archive.uuid);
   record.value = recordData;
   archiveUuid.value = recordData.archive.uuid;
-  setTitle(recordData.archive.name);
+  archiveName.value = recordData.archive.name;
+  // The header shows the card's Nr. / ID (Stackr #154)
+  setTitle(recordData.display_number);
 
   const { category, tags, media, fields = [] } = recordData;
   form.value = {
