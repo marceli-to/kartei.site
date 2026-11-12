@@ -4,7 +4,7 @@
     above the window bottom (left/width taken from the sidebar); the filter list ends 20px above it
     (height set in fitHeight) and scrolls inside when it doesn't fit.
     Fields, labels and spacing in the regular form sizes (decided against the smaller ones of the sidebar design, Stackr #125);
-    a 4px scroll bar 10px right of the fields (mr-16 / -mr-14 pr-10) and a fade-out at the bottom while there is more to scroll.
+    a 4px scroll bar in the 14px right of the fields (mr-16 / -mr-14, fields as wide as the sidebar) and a fade-out at the bottom while there is more to scroll.
   -->
   <div
     ref="root"
@@ -14,67 +14,73 @@
     <div class="relative -mr-14 flex min-h-0 flex-col">
       <div
         ref="filters"
-        class="filters flex min-h-0 flex-col gap-y-20 overflow-y-auto pr-10"
+        class="filters flex min-h-0 flex-col overflow-y-auto"
         @scroll.passive="updateScrollState">
-        <InputGroup>
-          <InputSearch
-            v-model="localSearchQuery"
-            placeholder="Suchen"
-            aria-label="Suchen" />
-        </InputGroup>
+        <!-- Exactly the sidebar's width (like «Voreinstellungen»), with or without a scroll bar: browsers that
+             show it only while the list overflows (Safari) would otherwise change the field width -->
+        <div
+          class="flex flex-col gap-y-20"
+          :style="box.width ? { width: `${box.width}px` } : null">
+          <InputGroup>
+            <InputSearch
+              v-model="localSearchQuery"
+              placeholder="Suchen"
+              aria-label="Suchen" />
+          </InputGroup>
 
-        <InputGroup>
-          <InputLabel
-            id="sort_order"
-            label="Sortierfolge" />
-          <InputSelect
-            id="sort_order"
-            v-model="localSortOrder"
-            :options="sortOrderOptions"
-            variant="box" />
-        </InputGroup>
+          <InputGroup>
+            <InputLabel
+              id="sort_order"
+              label="Sortierfolge" />
+            <InputSelect
+              id="sort_order"
+              v-model="localSortOrder"
+              :options="sortOrderOptions"
+              variant="box" />
+          </InputGroup>
 
-        <InputGroup v-if="categories.length > 0">
-          <InputLabel
-            id="category"
-            label="Kategorien" />
-          <InputSelectButtons
-            v-model="localSelectedCategories"
-            legend="Kategorien"
-            :multiple="true"
-            name="categories"
-            :options="categories"
-            classes="text-black!"
-            wrapper-classes="flex flex-col gap-y-8" />
-        </InputGroup>
+          <InputGroup v-if="categories.length > 0">
+            <InputLabel
+              id="category"
+              label="Kategorien" />
+            <InputSelectButtons
+              v-model="localSelectedCategories"
+              legend="Kategorien"
+              :multiple="true"
+              name="categories"
+              :options="categories"
+              classes="text-black!"
+              wrapper-classes="flex flex-col gap-y-8" />
+          </InputGroup>
 
-        <InputGroup v-if="visibleRegisters.length > 0">
-          <InputLabel
-            id="register"
-            label="Register" />
-          <InputSelectButtons
-            v-model="localSelectedRegisters"
-            legend="Register"
-            :multiple="true"
-            name="registers"
-            :options="visibleRegisters"
-            classes="text-black!"
-            wrapper-classes="flex flex-col gap-y-8" />
-        </InputGroup>
+          <InputGroup v-if="visibleRegisters.length > 0">
+            <InputLabel
+              id="register"
+              label="Register" />
+            <InputSelectButtons
+              v-model="localSelectedRegisters"
+              legend="Register"
+              :multiple="true"
+              name="registers"
+              :options="visibleRegisters"
+              classes="text-black!"
+              wrapper-classes="flex flex-col gap-y-8" />
+          </InputGroup>
 
-        <InputGroup v-if="tags.length > 0">
-          <InputLabel
-            id="tags"
-            label="Tags" />
-          <InputSelectButtons
-            v-model="localSelectedTags"
-            legend="Tags"
-            :multiple="true"
-            name="tags"
-            :options="tags"
-            classes="text-black!"
-            wrapper-classes="flex flex-col gap-y-8" />
-        </InputGroup>
+          <InputGroup v-if="tags.length > 0">
+            <InputLabel
+              id="tags"
+              label="Tags" />
+            <InputSelectButtons
+              v-model="localSelectedTags"
+              legend="Tags"
+              :multiple="true"
+              name="tags"
+              :options="tags"
+              classes="text-black!"
+              wrapper-classes="flex flex-col gap-y-8" />
+          </InputGroup>
+        </div>
       </div>
       <!-- Fade-out over the fields only (not the scroll bar), while there is more to scroll -->
       <div
