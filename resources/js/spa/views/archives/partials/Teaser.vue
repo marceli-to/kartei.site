@@ -1,12 +1,11 @@
 <template>
   <!--
     view: "tiles" (image, title, categories), "table" (image left, title and categories right, on the
-    page's 10-column grid: 2 + 3 columns from lg up) or "images" (only the image; an empty frame without one).
+    page's 10-column grid: 2 + 3 columns from lg up) or "images" (only the image). Without an image: an empty frame in all three views.
     Image and title link to the archive. Hover on the image: black frame, image slightly larger.
   -->
   <div :class="rootClasses">
     <router-link
-      v-if="archive.image || view !== 'tiles'"
       :to="archiveLink"
       :aria-label="archive.name"
       class="group block"
