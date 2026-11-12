@@ -37,11 +37,12 @@
             :is-checked="isChecked(option.value)"></slot>
         </span>
         <template v-if="option.prefix">
-          <span>
+          <!-- labelClass covers the number too (categories: number and name in Medium) -->
+          <span :class="option.labelClass ?? ''">
             <span class="inline-block w-40">
               {{ option.prefix }}
             </span>
-            <span :class="option.labelClass ? option.labelClass : ''">
+            <span>
               {{ option.label }}
             </span>
           </span>
