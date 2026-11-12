@@ -214,6 +214,13 @@
   font-variant-ligatures: none;
 }
 
+/* Lining figures everywhere (Otto defaults to old-style); inherited, so utilities like tabular-nums still apply */
+@layer base {
+  html {
+    font-variant-numeric: lining-nums;
+  }
+}
+
 p:not(:last-of-type) {
   @apply mb-16;
 }

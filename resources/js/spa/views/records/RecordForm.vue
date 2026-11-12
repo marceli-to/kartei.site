@@ -60,7 +60,7 @@
                     :multiple="false"
                     name="categoriesRegisters"
                     :options="categoriesRegisters"
-                    classes="text-black!"
+                    classes="text-black! dark:text-white!"
                     wrapper-classes="flex flex-col gap-y-8"
                     @update:model-value="errors.category = null" />
                   <SetupHint
@@ -81,7 +81,7 @@
                     :multiple="true"
                     name="tags"
                     :options="tags"
-                    classes="text-black!"
+                    classes="text-black! dark:text-white!"
                     wrapper-classes="flex flex-col gap-y-8" />
                   <SetupHint
                     v-else-if="isInfoOpen"

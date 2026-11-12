@@ -4,7 +4,7 @@
       <div class="flex w-full leading-none">
         <div class="w-2/12 min-w-nav">
           <router-link
-            :to="{ name: 'home' }"
+            :to="{ name: 'archives' }"
             class="mt-25 block"
             @click="hide">
             <IconLogo class="text-black dark:text-white" />

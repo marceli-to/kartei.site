@@ -103,7 +103,8 @@ const props = defineProps({
   },
   activeClass: {
     type: String,
-    default: 'theme-color border-black! text-black!',
+    // peer-checked: stronger than a dark:text-white! passed in classes
+    default: 'theme-color border-black! text-black! peer-checked:text-black!',
   },
   labelClasses: {
     type: String,

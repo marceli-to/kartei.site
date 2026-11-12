@@ -72,10 +72,10 @@ const props = defineProps({
 const wrapperClasses = 'relative';
 
 const defaultClasses =
-  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
+  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow text-black border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
 
 const boxClasses =
-  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-8 py-2 border border-graphite focus:border-black bg-white placeholder:font-muoto-italic placeholder:text-black';
+  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-8 py-2 border border-graphite focus:border-black bg-white dark:bg-black dark:text-white placeholder:font-muoto-italic placeholder:text-black';
 
 const selectClasses = computed(() => {
   const baseClasses = props.variant === 'box' ? boxClasses : defaultClasses;
@@ -84,7 +84,7 @@ const selectClasses = computed(() => {
 
 const chevronClasses = computed(() => {
   return props.variant === 'box'
-    ? 'absolute inset-y-0 right-8 flex items-center pointer-events-none text-black'
+    ? 'absolute inset-y-0 right-8 flex items-center pointer-events-none text-black dark:text-white'
     : 'absolute inset-y-0 right-8 flex items-center pointer-events-none text-black';
 });
 

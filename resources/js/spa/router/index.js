@@ -16,7 +16,8 @@ const ARCHIVE_SETTINGS_ABILITIES = [
 ];
 
 const routes = [
-  { path: '/archiv', name: 'home', component: () => import('@/views/Home.vue') },
+  // The logo links here; the archive overview is the start page
+  { path: '/archiv', name: 'home', redirect: { name: 'archives' } },
   { path: '/archiv/einstellungen', name: 'settings', component: () => import('@/views/settings/Index.vue') },
   { path: '/archiv/meine-karteien', name: 'archives', component: () => import('@/views/archives/Index.vue') },
   {

@@ -4,17 +4,21 @@
     above the window bottom (left/width taken from the sidebar); the filter list ends 20px above it
     (height set in fitHeight) and scrolls inside when it doesn't fit.
     Fields, labels and spacing in the regular form sizes (decided against the smaller ones of the sidebar design, Stackr #125);
-    a 4px scroll bar in the 14px right of the fields (mr-16 / -mr-14, fields as wide as the sidebar) and a fade-out at the bottom while there is more to scroll.
+    the scroll bar sits 10px right of the fields (mr-16, fields as wide as the sidebar) and a fade-out at the bottom
+    while there is more to scroll. The bar's width is measured: Safari may draw its own wider bar instead of the
+    styled 4px one, which used to cut the fields off on the right and add a horizontal bar.
   -->
   <div
     ref="root"
     class="sticky top-20 mr-16 flex flex-col"
     :class="disabled ? 'pointer-events-none opacity-20 transition-opacity' : ''"
     :style="height ? { height: `${height}px` } : null">
-    <div class="relative -mr-14 flex min-h-0 flex-col">
+    <div
+      class="relative flex min-h-0 flex-col"
+      :style="{ marginRight: `-${GAP + scrollbarWidth}px` }">
       <div
         ref="filters"
-        class="filters flex min-h-0 flex-col overflow-y-auto"
+        class="filters flex min-h-0 flex-col overflow-x-hidden overflow-y-auto"
         @scroll.passive="updateScrollState">
         <!-- Exactly the sidebar's width (like «Voreinstellungen»), with or without a scroll bar: browsers that
              show it only while the list overflows (Safari) would otherwise change the field width -->
@@ -49,7 +53,7 @@
               :multiple="true"
               name="categories"
               :options="categories"
-              classes="text-black!"
+              classes="text-black! dark:text-white!"
               wrapper-classes="flex flex-col gap-y-8" />
           </InputGroup>
 
@@ -63,7 +67,7 @@
               :multiple="true"
               name="registers"
               :options="visibleRegisters"
-              classes="text-black!"
+              classes="text-black! dark:text-white!"
               wrapper-classes="flex flex-col gap-y-8" />
           </InputGroup>
 
@@ -77,7 +81,7 @@
               :multiple="true"
               name="tags"
               :options="tags"
-              classes="text-black!"
+              classes="text-black! dark:text-white!"
               wrapper-classes="flex flex-col gap-y-8" />
           </InputGroup>
         </div>
@@ -85,7 +89,8 @@
       <!-- Fade-out over the fields only (not the scroll bar), while there is more to scroll -->
       <div
         v-if="canScrollDown"
-        class="pointer-events-none absolute right-14 bottom-0 left-0 h-84 bg-linear-to-b from-transparent to-white dark:to-black"></div>
+        class="pointer-events-none absolute bottom-0 left-0 h-84 bg-linear-to-b from-transparent to-white dark:to-black"
+        :style="{ right: `${GAP + scrollbarWidth}px` }"></div>
     </div>
 
     <InputGroup
@@ -148,8 +153,11 @@ const emit = defineEmits(['update:modelValue']);
 // Fade the bottom of the filter list while there is more to scroll
 const filters = ref(null);
 const canScrollDown = ref(false);
+const GAP = 10; // fields to scroll bar
+const scrollbarWidth = ref(4);
 const updateScrollState = () => {
   const el = filters.value;
+  if (el) scrollbarWidth.value = el.offsetWidth - el.clientWidth;
   canScrollDown.value = !!el && el.scrollTop + el.clientHeight < el.scrollHeight - 1;
 };
 let resizeObserver = null;

@@ -11,7 +11,7 @@
     <template v-if="modelValue">
       <button
         type="button"
-        class="absolute top-1/2 right-8 -translate-y-1/2 text-black"
+        class="absolute top-1/2 right-8 -translate-y-1/2 text-black dark:text-white"
         aria-label="Suchfeld leeren"
         title="Suchfeld leeren"
         @click="$emit('update:modelValue', '')">
@@ -24,7 +24,7 @@
       <Icon
         name="magnifier"
         aria-hidden="true"
-        class="absolute top-1/2 right-8 -translate-y-1/2 text-black" />
+        class="absolute top-1/2 right-8 -translate-y-1/2 text-black dark:text-white" />
     </template>
   </div>
 </template>
