@@ -97,11 +97,10 @@ watch(
   },
 );
 
-// Load users when component mounts
+// Users load right away, so the list also shows while the slide is only a preview next to the active one
+// (Stackr #153); the subscription (seat note) only matters on the active slide
 onMounted(async () => {
-  if (props.isActive) {
-    await Promise.all([fetchUsers(), fetchSubscription()]);
-  }
+  await Promise.all([fetchUsers(), fetchSubscription()]);
 });
 
 // Fetch subscription
