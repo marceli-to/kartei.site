@@ -28,15 +28,18 @@
 
       <ContentMain>
         <template v-if="records.length > 0">
-          <!-- Same grid as Meine Karteien: from lg up 10 columns, a tile spans 3 (three per row) -->
+          <!-- Same grid as Meine Karteien: from lg up 10 columns, tiles and images span 3 (three per row),
+               table rows 2 + 3 -->
           <div
-            class="grid grid-cols-1 gap-x-16 gap-y-56 transition-opacity md:grid-cols-2 lg:grid-cols-10"
-            :class="{ 'opacity-50': isFiltering }">
+            class="grid grid-cols-1 gap-x-16 transition-opacity md:grid-cols-2 lg:grid-cols-10"
+            :class="[viewGap, { 'opacity-50': isFiltering }]">
             <Card
               v-for="record in records"
               :key="record.uuid"
               :record="record"
-              class="lg:col-span-3" />
+              :view="layout"
+              :has-images="hasImages"
+              :class="viewItemClasses" />
           </div>
           <!-- Loads the next page when scrolled into view; stops after a failed request -->
           <div
@@ -78,6 +81,7 @@ import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useRoute } from 'vue-router';
 import { usePageTitle } from '@/composables/usePageTitle';
+import { useViewToggle } from '@/composables/useViewToggle';
 import { useArchiveMeta } from '@/views/records/composables/useArchiveMeta';
 import { getArchive } from '@/services/api/archive';
 import { getRecords } from '@/services/api/record';
@@ -95,7 +99,9 @@ import AppButton from '@/components/buttons/Button.vue';
 const route = useRoute();
 const uuid = ref(route.params.uuid || null);
 
-const { categories, registers, tags, loadArchiveMeta } = useArchiveMeta();
+const { categories, registers, tags, settings, loadArchiveMeta } = useArchiveMeta();
+// Card template with an image field ("Ohne Bildfeld" = false); missing counts as on, like on the server
+const hasImages = computed(() => settings.value.has_images !== false);
 
 const { setTitle } = usePageTitle();
 
@@ -114,47 +120,13 @@ const createLink = {
   router: true,
 };
 
-const actionLinks = computed(() => [...(canCreate.value ? [createLink] : []), ...otherActionLinks]);
-
-// Not built yet: shown greyed out
-const otherActionLinks = [
-  {
-    type: 'button',
-    label: 'Ordnen',
-    icon: 'reorder',
-    disabled: true,
-  },
-  {
-    type: 'button',
-    label: 'Kacheln',
-    icon: 'tiles',
-    disabled: true,
-  },
-  {
-    type: 'button',
-    label: 'Liste',
-    icon: 'list',
-    disabled: true,
-  },
-  {
-    type: 'button',
-    label: 'Bilder',
-    icon: 'image',
-    disabled: true,
-  },
-  {
-    type: 'button',
-    label: 'Export',
-    icon: 'download',
-    disabled: true,
-  },
-  {
-    type: 'button',
-    label: 'Teilen',
-    icon: 'upload',
-    disabled: true,
-  },
-];
+// Karte, then the same bar as on Meine Karteien (Kacheln / Tabelle / Bilder, Export and Teilen greyed out);
+// the view is one setting for all archives (Stackr #148)
+const { layout, viewLinks, viewItemClasses } = useViewToggle('kartei.records.view', () =>
+  hasImages.value ? [] : ['images'],
+);
+const viewGap = computed(() => ({ tiles: 'gap-y-56', table: 'gap-y-28', images: 'gap-y-16' })[layout.value]);
+const actionLinks = computed(() => [...(canCreate.value ? [createLink] : []), ...viewLinks.value]);
 
 const filters = ref({
   searchQuery: '',

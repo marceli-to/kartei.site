@@ -23,7 +23,7 @@
           :width="slide.width"
           :height="slide.height"
           classes="absolute inset-0 flex items-center justify-center transition-transform duration-300 will-change-transform group-hover:scale-102"
-          :spacing="'m-40'" />
+          :spacing="spacing" />
       </swiper-slide>
     </swiper>
 
@@ -69,6 +69,11 @@ defineProps({
   slides: {
     type: Array,
     required: true,
+  },
+  // Margin around the image inside the frame
+  spacing: {
+    type: String,
+    default: 'm-40',
   },
 });
 

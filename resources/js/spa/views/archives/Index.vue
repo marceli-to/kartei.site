@@ -43,8 +43,9 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useInfoBox } from '@/composables/useInfoBox';
+import { useViewToggle } from '@/composables/useViewToggle';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useUserStore } from '@/stores/user';
 import { getByUser } from '@/services/api/archive';
@@ -66,32 +67,9 @@ const hasArchive = ref(true);
 const archives = ref([]);
 const loadFailed = ref(false);
 
-// View toggle above the content, remembered in the browser
-const VIEW_STORAGE_KEY = 'kartei.archives.view';
-const views = [
-  { value: 'tiles', label: 'Kacheln', icon: 'tiles' },
-  { value: 'table', label: 'Tabelle', icon: 'list' },
-  { value: 'images', label: 'Bilder', icon: 'image' },
-];
-
-const storedView = localStorage.getItem(VIEW_STORAGE_KEY);
-const layout = ref(views.some((view) => view.value === storedView) ? storedView : 'tiles');
-watch(layout, (value) => localStorage.setItem(VIEW_STORAGE_KEY, value));
-
+// View toggle above the content, remembered in the browser (same bar as above the cards)
+const { layout, viewLinks, viewItemClasses } = useViewToggle('kartei.archives.view');
 const viewGap = computed(() => ({ tiles: 'gap-y-32', table: 'gap-y-28', images: 'gap-y-16' })[layout.value]);
-const viewItemClasses = computed(() =>
-  layout.value === 'table' ? 'md:col-span-2 lg:col-span-5 lg:col-start-1' : 'lg:col-span-3',
-);
-
-const viewLinks = computed(() =>
-  views.map((view) => ({
-    type: 'button',
-    label: view.label,
-    icon: view.icon,
-    active: layout.value === view.value,
-    onClick: () => (layout.value = view.value),
-  })),
-);
 
 // Search by name or Kürzel, in the browser (the list is not paginated)
 const filteredArchives = computed(() => {
