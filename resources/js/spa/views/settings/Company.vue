@@ -40,7 +40,7 @@
               v-for="company in filteredCompanies"
               :key="company.uuid"
               :label="company.name"
-              :icon="{ name: 'ChevronRight' }"
+              :icon="{ name: 'Edit' }"
               @click="showCompany(company)" />
           </div>
         </div>

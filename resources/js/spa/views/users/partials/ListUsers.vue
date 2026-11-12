@@ -20,7 +20,7 @@
             v-for="user in roleUsers"
             :key="user.uuid"
             :label="`${user.firstname} ${user.name}`"
-            :icon="{ name: 'ChevronRight' }"
+            :icon="{ name: 'Edit' }"
             @click="$emit('user-selected', user)" />
         </div>
       </div>

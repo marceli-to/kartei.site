@@ -196,6 +196,13 @@ export default {
   edit: {
     default: 'default',
     variants: {
+      // Box with a pencil (Benedikt, Nov 2026): edit buttons of the user and customer lists
+      small: {
+        width: 12,
+        height: 12,
+        viewBox: '0 0 50 50',
+        body: '<path d="M45.8333 20.3708V45.8333H4.16667V4.16667H29.6292L33.7958 0H0V50H50V16.2042L45.8333 20.3708Z" fill="currentColor"/><path d="M12.5004 33.6692V37.4983H16.3296L18.2463 35.5858L14.4171 31.7525L12.5004 33.6692Z" fill="currentColor"/><path d="M17.3606 28.8101L46.1693 0.00140381L49.9994 3.83157L21.1907 32.6403L17.3606 28.8101Z" fill="currentColor"/>',
+      },
       default: {
         width: 24,
         height: 24,
