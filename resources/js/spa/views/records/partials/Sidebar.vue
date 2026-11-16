@@ -4,24 +4,24 @@
     above the window bottom (left/width taken from the sidebar); the filter list ends 20px above it
     (height set in fitHeight) and scrolls inside when it doesn't fit.
     Fields, labels and spacing in the regular form sizes (decided against the smaller ones of the sidebar design, Stackr #125);
-    the scroll bar sits 10px right of the fields (mr-16, fields as wide as the sidebar) and a fade-out at the bottom
-    while there is more to scroll. The bar's width is measured: Safari may draw its own wider bar instead of the
-    styled 4px one, which used to cut the fields off on the right and add a horizontal bar.
+    the fields use the column's full width while everything fits; only while the list overflows does the sidebar
+    narrow to make room for the scroll bar, 10px right of the fields («Voreinstellungen» follows, as it takes the
+    sidebar's width). Fade-out at the bottom while there is more to scroll. The bar's width is measured: Safari may
+    draw its own wider bar instead of the styled 4px one, which used to cut the fields off and add a horizontal bar.
   -->
   <div
     ref="root"
-    class="sticky top-20 mr-16 flex flex-col"
+    class="sticky top-20 flex flex-col"
     :class="disabled ? 'pointer-events-none opacity-20 transition-opacity' : ''"
-    :style="height ? { height: `${height}px` } : null">
+    :style="{ height: height ? `${height}px` : null, marginRight: `${reserve}px` }">
     <div
       class="relative flex min-h-0 flex-col"
-      :style="{ marginRight: `-${GAP + scrollbarWidth}px` }">
+      :style="{ marginRight: `-${reserve}px` }">
       <div
         ref="filters"
         class="filters flex min-h-0 flex-col overflow-x-hidden overflow-y-auto"
         @scroll.passive="updateScrollState">
-        <!-- Exactly the sidebar's width (like «Voreinstellungen»), with or without a scroll bar: browsers that
-             show it only while the list overflows (Safari) would otherwise change the field width -->
+        <!-- Exactly the sidebar's width (like «Voreinstellungen»), so the bar never squeezes the fields -->
         <div
           class="flex flex-col gap-y-20"
           :style="box.width ? { width: `${box.width}px` } : null">
@@ -90,7 +90,7 @@
       <div
         v-if="canScrollDown"
         class="pointer-events-none absolute bottom-0 left-0 h-84 bg-linear-to-b from-transparent to-white dark:to-black"
-        :style="{ right: `${GAP + scrollbarWidth}px` }"></div>
+        :style="{ right: `${reserve}px` }"></div>
     </div>
 
     <InputGroup
@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, watch, computed, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import { useUserStore } from '@/stores/user';
 
 import InputSearch from '@/components/forms/Search.vue';
@@ -154,11 +154,21 @@ const emit = defineEmits(['update:modelValue']);
 const filters = ref(null);
 const canScrollDown = ref(false);
 const GAP = 10; // fields to scroll bar
-const scrollbarWidth = ref(4);
+const scrollbarWidth = ref(0);
+const overflows = ref(false);
+// Room right of the fields for the scroll bar, only while the list overflows
+const reserve = computed(() => (overflows.value ? GAP + scrollbarWidth.value : 0));
 const updateScrollState = () => {
   const el = filters.value;
-  if (el) scrollbarWidth.value = el.offsetWidth - el.clientWidth;
-  canScrollDown.value = !!el && el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+  if (!el) return;
+  scrollbarWidth.value = el.offsetWidth - el.clientWidth;
+  canScrollDown.value = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+  const next = el.scrollHeight > el.clientHeight + 1;
+  if (next !== overflows.value) {
+    overflows.value = next;
+    // The sidebar's width changes with it: measure again for the fields and «Voreinstellungen»
+    nextTick(fitHeight);
+  }
 };
 let resizeObserver = null;
 
@@ -236,9 +246,3 @@ watch(
   { immediate: true },
 );
 </script>
-<style scoped>
-/* Keep the scroll bar's 4px (styled globally in app.css) even when nothing scrolls, so the fields keep their width */
-.filters {
-  scrollbar-gutter: stable;
-}
-</style>
