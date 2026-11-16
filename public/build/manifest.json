@@ -1,33 +1,21 @@
 {
-  "_Actions-C0RYwQb8.js": {
-    "file": "assets/Actions-C0RYwQb8.js",
+  "_Actions-BBEGDgtS.js": {
+    "file": "assets/Actions-BBEGDgtS.js",
     "name": "Actions",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js"
     ]
   },
-  "_DeleteSlide-CkgRXVUv.js": {
-    "file": "assets/DeleteSlide-CkgRXVUv.js",
+  "_DeleteSlide-BsLSZeqo.js": {
+    "file": "assets/DeleteSlide-BsLSZeqo.js",
     "name": "DeleteSlide",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
-      "_Search-B6y22nNs.js",
+      "_Search-DFq30INF.js",
       "_useFormErrors-D9bdWigO.js",
       "_SelectButtons-DutZc-Bl.js"
-    ]
-  },
-  "_Image-7NMC_qi3.js": {
-    "file": "assets/Image-7NMC_qi3.js",
-    "name": "Image",
-    "imports": [
-      "_usePageTitle-D0HZpO0h.js",
-      "resources/js/spa.js",
-      "_Image-CChXP5V3.js"
-    ],
-    "css": [
-      "assets/Image-Ci3vCQvy.css"
     ]
   },
   "_Image-CChXP5V3.js": {
@@ -41,22 +29,34 @@
     "file": "assets/Image-Ci3vCQvy.css",
     "src": "_Image-Ci3vCQvy.css"
   },
-  "_InfoBox-Ing9lz7v.js": {
-    "file": "assets/InfoBox-Ing9lz7v.js",
+  "_Image-aETzMZ-F.js": {
+    "file": "assets/Image-aETzMZ-F.js",
+    "name": "Image",
+    "imports": [
+      "_usePageTitle-D0HZpO0h.js",
+      "resources/js/spa.js",
+      "_Image-CChXP5V3.js"
+    ],
+    "css": [
+      "assets/Image-Ci3vCQvy.css"
+    ]
+  },
+  "_InfoBox-aeMywtwT.js": {
+    "file": "assets/InfoBox-aeMywtwT.js",
     "name": "InfoBox",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js"
     ]
   },
-  "_Navigation-w-m42izy.js": {
-    "file": "assets/Navigation-w-m42izy.js",
+  "_Navigation-Cu4DqfYe.js": {
+    "file": "assets/Navigation-Cu4DqfYe.js",
     "name": "Navigation",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
-      "_Search-B6y22nNs.js",
-      "_InfoBox-Ing9lz7v.js"
+      "_Search-DFq30INF.js",
+      "_InfoBox-aeMywtwT.js"
     ]
   },
   "_RadioGroup-R22dfQ9r.js": {
@@ -66,8 +66,8 @@
       "_usePageTitle-D0HZpO0h.js"
     ]
   },
-  "_Search-B6y22nNs.js": {
-    "file": "assets/Search-B6y22nNs.js",
+  "_Search-DFq30INF.js": {
+    "file": "assets/Search-DFq30INF.js",
     "name": "Search",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
@@ -81,22 +81,22 @@
       "_usePageTitle-D0HZpO0h.js"
     ]
   },
-  "_Sidebar-BlIiEqOP.css": {
-    "file": "assets/Sidebar-BlIiEqOP.css",
-    "src": "_Sidebar-BlIiEqOP.css"
-  },
-  "_Sidebar-PM8FGy8D.js": {
-    "file": "assets/Sidebar-PM8FGy8D.js",
+  "_Sidebar-BK-0-B-U.js": {
+    "file": "assets/Sidebar-BK-0-B-U.js",
     "name": "Sidebar",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
-      "_Search-B6y22nNs.js",
+      "_Search-DFq30INF.js",
       "_SelectButtons-DutZc-Bl.js"
     ],
     "css": [
       "assets/Sidebar-BlIiEqOP.css"
     ]
+  },
+  "_Sidebar-BlIiEqOP.css": {
+    "file": "assets/Sidebar-BlIiEqOP.css",
+    "src": "_Sidebar-BlIiEqOP.css"
   },
   "_useFormErrors-D9bdWigO.js": {
     "file": "assets/useFormErrors-D9bdWigO.js",
@@ -105,8 +105,8 @@
       "_usePageTitle-D0HZpO0h.js"
     ]
   },
-  "_useInfoBox-B0q0nsEO.js": {
-    "file": "assets/useInfoBox-B0q0nsEO.js",
+  "_useInfoBox-D8Mr7UfD.js": {
+    "file": "assets/useInfoBox-D8Mr7UfD.js",
     "name": "useInfoBox",
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
@@ -125,7 +125,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-llnRRJEH.css",
+    "file": "assets/app-IOoE28DS.css",
     "name": "app",
     "names": [
       "app.css"
@@ -192,7 +192,7 @@
     "isEntry": true
   },
   "resources/js/spa.js": {
-    "file": "assets/spa-D7eV0x2L.js",
+    "file": "assets/spa-BLQeY907.js",
     "name": "spa",
     "src": "resources/js/spa.js",
     "isEntry": true,
@@ -213,51 +213,51 @@
     ]
   },
   "resources/js/spa/views/archive/Index.vue": {
-    "file": "assets/Index-IRM6t0i3.js",
+    "file": "assets/Index-DQKXWOn5.js",
     "name": "Index",
     "src": "resources/js/spa/views/archive/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
-      "_Search-B6y22nNs.js",
-      "_DeleteSlide-CkgRXVUv.js",
+      "_Search-DFq30INF.js",
+      "_DeleteSlide-BsLSZeqo.js",
       "_useFormErrors-D9bdWigO.js",
-      "_Image-7NMC_qi3.js",
-      "_useInfoBox-B0q0nsEO.js",
-      "_InfoBox-Ing9lz7v.js",
+      "_Image-aETzMZ-F.js",
+      "_useInfoBox-D8Mr7UfD.js",
+      "_InfoBox-aeMywtwT.js",
       "_SelectButtons-DutZc-Bl.js",
       "_Image-CChXP5V3.js"
     ]
   },
   "resources/js/spa/views/archives/Duplicate.vue": {
-    "file": "assets/Duplicate-BDibWQ2M.js",
+    "file": "assets/Duplicate-IeUVNMPI.js",
     "name": "Duplicate",
     "src": "resources/js/spa/views/archives/Duplicate.vue",
     "isDynamicEntry": true,
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
-      "_Search-B6y22nNs.js",
-      "_Actions-C0RYwQb8.js",
-      "_Navigation-w-m42izy.js",
+      "_Search-DFq30INF.js",
+      "_Actions-BBEGDgtS.js",
+      "_Navigation-Cu4DqfYe.js",
       "_RadioGroup-R22dfQ9r.js"
     ]
   },
   "resources/js/spa/views/archives/Index.vue": {
-    "file": "assets/Index-CFuxeX6E.js",
+    "file": "assets/Index-CKoyoECw.js",
     "name": "Index",
     "src": "resources/js/spa/views/archives/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
-      "_useInfoBox-B0q0nsEO.js",
+      "_useInfoBox-D8Mr7UfD.js",
       "_useViewToggle-D7RLPiW9.js",
       "resources/js/spa.js",
-      "_Search-B6y22nNs.js",
-      "_Actions-C0RYwQb8.js",
+      "_Search-DFq30INF.js",
+      "_Actions-BBEGDgtS.js",
       "_Image-CChXP5V3.js",
-      "_Navigation-w-m42izy.js"
+      "_Navigation-Cu4DqfYe.js"
     ]
   },
   "resources/js/spa/views/error/ErrorPage.vue": {
@@ -270,7 +270,7 @@
     ]
   },
   "resources/js/spa/views/records/Index.vue": {
-    "file": "assets/Index-B4RgoaF8.js",
+    "file": "assets/Index-WEi36dPC.js",
     "name": "Index",
     "src": "resources/js/spa/views/records/Index.vue",
     "isDynamicEntry": true,
@@ -278,9 +278,9 @@
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
       "_useViewToggle-D7RLPiW9.js",
-      "_Sidebar-PM8FGy8D.js",
-      "_Search-B6y22nNs.js",
-      "_Actions-C0RYwQb8.js",
+      "_Sidebar-BK-0-B-U.js",
+      "_Search-DFq30INF.js",
+      "_Actions-BBEGDgtS.js",
       "_Image-CChXP5V3.js"
     ],
     "css": [
@@ -288,40 +288,40 @@
     ]
   },
   "resources/js/spa/views/records/RecordForm.vue": {
-    "file": "assets/RecordForm-BuuYfuQN.js",
+    "file": "assets/RecordForm-C9M0-7TL.js",
     "name": "RecordForm",
     "src": "resources/js/spa/views/records/RecordForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
       "resources/js/spa.js",
-      "_Sidebar-PM8FGy8D.js",
+      "_Sidebar-BK-0-B-U.js",
       "_useFormErrors-D9bdWigO.js",
-      "_Search-B6y22nNs.js",
-      "_Actions-C0RYwQb8.js",
+      "_Search-DFq30INF.js",
+      "_Actions-BBEGDgtS.js",
       "_SelectButtons-DutZc-Bl.js",
-      "_Image-7NMC_qi3.js",
+      "_Image-aETzMZ-F.js",
       "_Image-CChXP5V3.js",
-      "_InfoBox-Ing9lz7v.js",
-      "_useInfoBox-B0q0nsEO.js"
+      "_InfoBox-aeMywtwT.js",
+      "_useInfoBox-D8Mr7UfD.js"
     ],
     "css": [
-      "assets/RecordForm-C6abNgtx.css"
+      "assets/RecordForm-nROnmmkj.css"
     ]
   },
   "resources/js/spa/views/settings/Index.vue": {
-    "file": "assets/Index-DY36uX5j.js",
+    "file": "assets/Index-DnaSLj4t.js",
     "name": "Index",
     "src": "resources/js/spa/views/settings/Index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_usePageTitle-D0HZpO0h.js",
-      "_DeleteSlide-CkgRXVUv.js",
+      "_DeleteSlide-BsLSZeqo.js",
       "resources/js/spa.js",
-      "_useInfoBox-B0q0nsEO.js",
+      "_useInfoBox-D8Mr7UfD.js",
       "_useFormErrors-D9bdWigO.js",
-      "_Search-B6y22nNs.js",
-      "_InfoBox-Ing9lz7v.js",
+      "_Search-DFq30INF.js",
+      "_InfoBox-aeMywtwT.js",
       "_RadioGroup-R22dfQ9r.js",
       "_SelectButtons-DutZc-Bl.js"
     ],

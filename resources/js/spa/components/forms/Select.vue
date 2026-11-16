@@ -72,10 +72,10 @@ const props = defineProps({
 const wrapperClasses = 'relative';
 
 const defaultClasses =
-  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow text-black dark:bg-onyx dark:text-white dark:placeholder:text-white dark:border-x-black dark:focus:border-white dark:focus:border-x-black border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
+  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-0 py-2 border-x-white focus:border-x-white bg-snow text-black dark:bg-onyx dark:text-white dark:placeholder:text-white dark:border-x-black dark:focus:border-graphite dark:focus:border-x-black border-y border-y-graphite focus:border-black placeholder:font-muoto-italic placeholder:text-black';
 
 const boxClasses =
-  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-8 py-2 border border-graphite focus:border-black bg-white dark:bg-black dark:text-white placeholder:font-muoto-italic placeholder:text-black';
+  'w-full min-h-default bg-none! appearance-none text-md ring-0! px-8 py-2 border border-graphite focus:border-black dark:focus:border-graphite bg-white dark:bg-black dark:text-white placeholder:font-muoto-italic placeholder:text-black';
 
 const selectClasses = computed(() => {
   const baseClasses = props.variant === 'box' ? boxClasses : defaultClasses;

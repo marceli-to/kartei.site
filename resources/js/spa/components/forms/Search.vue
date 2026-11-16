@@ -60,7 +60,7 @@ const props = defineProps({
 
 // Define default classes
 const defaultClasses =
-  'w-full min-h-default text-md ring-0! px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black placeholder:text-black';
+  'w-full min-h-default text-md ring-0! px-8 py-2 bg-transparent border border-graphite dark:placeholder:text-white focus:border-black dark:focus:border-graphite placeholder:text-black';
 
 // Define emits
 defineEmits(['update:modelValue']);
